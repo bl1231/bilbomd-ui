@@ -1,5 +1,5 @@
-import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
-import React, { useRef, useState, useEffect } from "react";
+import { Container, Form, Card } from "react-bootstrap";
+import { useRef, useState, useEffect } from "react";
 import {
   faCheck,
   faTimes,
@@ -13,8 +13,8 @@ const EMAIL_REGEX = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,3})+$/;
 const REGISTER_URL = "/register";
 
 function Register() {
-  const userRef = React.useRef<HTMLInputElement>(null);
-  const errRef = React.useRef<HTMLInputElement>(null);
+  const userRef = useRef();
+  const errRef = useRef();
 
   const [user, setUser] = useState("");
   const [validName, setValidName] = useState(false);
@@ -50,7 +50,7 @@ function Register() {
     setErrMsg("");
   }, [user, email, matchEmail]);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const v1 = USER_REGEX.test(user);
     const v2 = EMAIL_REGEX.test(email);
