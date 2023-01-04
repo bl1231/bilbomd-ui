@@ -1,0 +1,50 @@
+import { Container, Row, Col, Button, Form, Card } from 'react-bootstrap';
+import { useRef, useState, useEffect } from 'react';
+import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
+
+function Register() {
+  return (
+  <Container>
+    <Row>
+      <Col/>
+      <Col>
+      <Card className='bg-dark' style={{marginTop: 50, marginBottom: 50}}>
+        <Card.Body>
+          <Card.Title style={{textAlign: 'center'}}>Create your BilboMD Account</Card.Title>
+
+        <Form>
+          <Form.Group className="mb-3" controlId="formEmail">
+            <Form.Control type="email" placeholder="Enter your email address" />
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formUsername">
+            <Form.Control type="username" placeholder="Pick a username" />
+            <Form.Text className="">You can change this later.</Form.Text>
+          </Form.Group>
+      
+          <Form.Group className="mb-3" controlId="formBasicCheckbox">
+            <Form.Check type="checkbox" label="captcha will go here eventually" />
+          </Form.Group>
+          <div className='d-grid gap-2'>
+          <Button className='btn btn-lg btn-primary' variant="primary" type="submit">
+            Create Account
+          </Button>
+          </div>
+        </Form>
+
+    </Card.Body>
+    </Card>
+    <p>By pressing “Create Account” you agree to our Terms of Service and that you will abide by our rules for acceptable use.</p>
+    </Col>
+    <Col/>
+    </Row>
+  </Container>
+    
+  );
+}
+
+
+export default Register;

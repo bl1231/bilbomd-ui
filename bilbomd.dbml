@@ -1,0 +1,44 @@
+Project bilbomd {
+  database_type: 'MySQL'
+  note: '''
+    # BilboMD Database
+    **markdown content here**
+  '''
+}
+
+Table bilbomd.users {
+  id integer [primary key, increment, not null]
+  username varchar(45)
+  role varchar(45)
+  email varchar(60)
+  last_name varchar(100)
+  first_name varchar(45)
+  created_at timestamp
+  note: "table 'users' contains user information.... duh" 
+}
+
+Table bilbomd.jobs {
+  id integer [primary key, increment, not null]
+  title varchar(60)
+  user_id integer [ref: > bilbomd.users.id]
+  status bilbomd.job_status
+  results varchar(100) [note: "path to a zip or tar.gz file containing bilbomd results"]
+  created_at timestamp
+  note: "table 'jobs' one entry per BilboMD job"
+}
+
+Enum bilbomd.job_status {
+  submitted [note: 'Submitted to queueing system']
+  pending [note: 'Waiting to be processed']
+  running [note: 'Running']
+  error
+  completed
+}
+
+Table bilbomd.sessions {
+  id integer [primary key, increment, not null]
+  user_id integer [ref: - bilbomd.users.id]
+  created_at timestamp
+  updated_at timestamp
+  note: "one session per user"
+}
