@@ -52,13 +52,12 @@ a:visited {
 
 input[type="text"],
 input[type="password"],
-input[type="email"],
 button,
 textarea {
   font-family: "Nunito", sans-serif;
   font-size: 22px;
   padding: 0.25rem;
-  border-radius: 0.2rem;
+  border-radius: 0.5rem;
 }
 
 label,
@@ -68,6 +67,10 @@ button {
 
 button {
   padding: 0.5rem;
+}
+
+li {
+  list-style-type: none;
 }
 
 .instructions {
@@ -109,6 +112,7 @@ button {
   font-weight: bold;
   padding: 0.5rem;
   margin-bottom: 0.5rem;
+  border-radius: 0.2rem;
 }
 
 .line {
