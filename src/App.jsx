@@ -1,6 +1,7 @@
-import Register from "components/Register";
+import AccountBox from "components/AccountBox";
+import Register from "components/AccountBox/Register";
+import RegisterSuccess from "components/RegisterSuccess";
 import Login from "components/Login";
-import EmailLogin from "components/EmailLogin";
 import Home from "components/Home";
 import Layout from "components/Layout";
 import Editor from "components/Editor";
@@ -10,78 +11,55 @@ import Unauthorized from "components/Unauthorized";
 import Lounge from "components/Lounge";
 import LinkPage from "components/LinkPage";
 import RequireAuth from "components/RequireAuth";
+import Dashboard from "components/Dashboard";
+import WizApp from "components/MultiStepWizard";
 import { Routes, Route } from "react-router-dom";
 
 const ROLES = {
-  User: 2001,
-  Editor: 1984,
-  Admin: 5150,
+    User: 2001,
+    Editor: 1984,
+    Admin: 5150,
 };
 
 function App() {
-  return (
-    <Routes>
-      <Route
-        path="/"
-        element={<Layout />}
-      >
-        {/* public routes */}
-        <Route
-          path="login"
-          element={<Login />}
-        />
-        <Route
-          path="register"
-          element={<Register />}
-        />
-        <Route
-          path="linkpage"
-          element={<LinkPage />}
-        />
-        <Route
-          path="unauthorized"
-          element={<Unauthorized />}
-        />
+    return (
+        <Routes>
+            <Route path="/" element={<Layout />}>
+                {/* public routes */}
+                <Route path="login" element={<Login />} />
+                <Route path="register" element={<AccountBox />} />
+                <Route path="register/success" element={<RegisterSuccess />} />
+                <Route path="linkpage" element={<LinkPage />} />
+                <Route path="unauthorized" element={<Unauthorized />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="wiz" element={<WizApp />} />
 
-        {/* we want to protect these routes */}
-        <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
-          <Route
-            path="/"
-            element={<Home />}
-          />
-        </Route>
+                {/* we want to protect these routes */}
+                <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
+                    <Route path="/" element={<Home />} />
+                </Route>
 
-        <Route element={<RequireAuth allowedRoles={[ROLES.Editor]} />}>
-          <Route
-            path="editor"
-            element={<Editor />}
-          />
-        </Route>
+                <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
+                    <Route path="dashboard" element={<Dashboard />} />
+                </Route>
 
-        <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
-          <Route
-            path="admin"
-            element={<Admin />}
-          />
-        </Route>
+                <Route element={<RequireAuth allowedRoles={[ROLES.Editor]} />}>
+                    <Route path="editor" element={<Editor />} />
+                </Route>
 
-        <Route
-          element={<RequireAuth allowedRoles={[ROLES.Editor, ROLES.Admin]} />}
-        >
-          <Route
-            path="lounge"
-            element={<Lounge />}
-          />
-        </Route>
+                <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
+                    <Route path="admin" element={<Admin />} />
+                </Route>
 
-        {/* catch all */}
-        <Route
-          path="*"
-          element={<Missing />}
-        />
-      </Route>
-    </Routes>
-  );
+                <Route element={<RequireAuth allowedRoles={[ROLES.Editor, ROLES.Admin]} />}>
+                    <Route path="lounge" element={<Lounge />} />
+                </Route>
+
+                {/* catch all */}
+                <Route path="*" element={<Missing />} />
+            </Route>
+        </Routes>
+    );
 }
 
 export default App;

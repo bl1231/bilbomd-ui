@@ -1,12 +1,11 @@
-import React from "react";
+import Container from "react-bootstrap/Container";
 
-const Footer = ({ length }) => {
-  return (
-    <footer>
-      SIBYLS Beamline &copy;2023 - {length} BilboMD{" "}
-      {length === 1 ? "Job" : "Jobs"}
-    </footer>
-  );
+const Footer = () => {
+    return (
+        <Container>
+            <h2>Footer</h2>
+        </Container>
+    );
 };
 
 export default Footer;

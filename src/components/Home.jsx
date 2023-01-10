@@ -7,11 +7,11 @@ const Home = () => {
     const navigate = useNavigate();
 
     const logout = async () => {
-        // if used in more components, this should be in context 
-        // axios to /logout endpoint 
+        // if used in more components, this should be in context
+        // axios to /logout endpoint
         setAuth({});
-        navigate('/linkpage');
-    }
+        navigate("/linkpage");
+    };
 
     return (
         <section>
@@ -26,11 +26,13 @@ const Home = () => {
             <Link to="/lounge">Go to the Lounge</Link>
             <br />
             <Link to="/linkpage">Go to the link page</Link>
+            <br />
+            <Link to="/dashboard">Go to the dashboard page</Link>
             <div className="flexGrow">
                 <button onClick={logout}>Sign Out</button>
             </div>
         </section>
-    )
-}
+    );
+};
 
-export default Home
+export default Home;
