@@ -1,6 +1,6 @@
-import { useField } from "formik";
+import { useField } from 'formik';
 
-const RegisterInputs = ({ label, ...props }) => {
+const CustomFormInputs = ({ label, ...props }) => {
     // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
     // which we can spread on <input>. We can use field meta to show an error
     // message if the field is invalid and it has been touched (i.e. visited)
@@ -8,13 +8,9 @@ const RegisterInputs = ({ label, ...props }) => {
     return (
         <>
             <label htmlFor={props.id || props.name}>{label}</label>
-            <input
-                {...field}
-                {...props}
-                className={meta.touched && meta.error ? "input-error" : ""}
-            />
+            <input {...field} {...props} className={meta.touched && meta.error ? 'input-error' : ''} />
             {meta.touched && meta.error ? <div className="error">{meta.error}</div> : null}
         </>
     );
 };
-export default RegisterInputs;
+export default CustomFormInputs;

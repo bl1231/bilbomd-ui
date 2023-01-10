@@ -1,24 +1,23 @@
-import AccountBox from "components/AccountBox";
-import Register from "components/AccountBox/Register";
-import RegisterSuccess from "components/RegisterSuccess";
-import Login from "components/Login";
-import Home from "components/Home";
-import Layout from "components/Layout";
-import Editor from "components/Editor";
-import Admin from "components/Admin";
-import Missing from "components/Missing";
-import Unauthorized from "components/Unauthorized";
-import Lounge from "components/Lounge";
-import LinkPage from "components/LinkPage";
-import RequireAuth from "components/RequireAuth";
-import Dashboard from "components/Dashboard";
-import WizApp from "components/MultiStepWizard";
-import { Routes, Route } from "react-router-dom";
+import Account from 'components/Auth/Account';
+//import Register from 'components/Auth/Register';
+import Login from 'components/Auth/Login';
+import Home from 'components/Home';
+import Layout from 'components/Layout';
+import Editor from 'components/Editor';
+import Admin from 'components/Admin';
+import Missing from 'components/Missing';
+import Unauthorized from 'components/Unauthorized';
+import Lounge from 'components/Lounge';
+import LinkPage from 'components/LinkPage';
+import RequireAuth from 'components/Auth/RequireAuth';
+import Dashboard from 'components/Dashboard';
+import WizApp from 'components/MultiStepWizard';
+import { Routes, Route } from 'react-router-dom';
 
 const ROLES = {
     User: 2001,
     Editor: 1984,
-    Admin: 5150,
+    Admin: 5150
 };
 
 function App() {
@@ -26,9 +25,9 @@ function App() {
         <Routes>
             <Route path="/" element={<Layout />}>
                 {/* public routes */}
+                <Route path="account" element={<Account />} />
+                <Route path="register" element={<Account />} />
                 <Route path="login" element={<Login />} />
-                <Route path="register" element={<AccountBox />} />
-                <Route path="register/success" element={<RegisterSuccess />} />
                 <Route path="linkpage" element={<LinkPage />} />
                 <Route path="unauthorized" element={<Unauthorized />} />
                 <Route path="dashboard" element={<Dashboard />} />

@@ -1,13 +1,13 @@
-import { useNavigate, Link } from "react-router-dom";
-import { useContext } from "react";
-import AuthContext from "../context/AuthProvider";
-import Header from "./Header";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import SideBar from "./SideBar";
-import UserContent from "./UserContent";
-import Footer from "./Footer";
+import { useNavigate, Link } from 'react-router-dom';
+import { useContext } from 'react';
+import AuthContext from '../context/AuthProvider';
+import Header from './Header';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import SideBar from './SideBar';
+//import UserContent from "./UserContent";
+import Footer from './Footer';
 const Dashboard = ({ user }) => {
     const { setAuth } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -24,7 +24,7 @@ const Dashboard = ({ user }) => {
                 </Col>
 
                 <Col md={8}>
-                    <UserContent />
+                    <p>CONTENT</p>
                 </Col>
             </Row>
 

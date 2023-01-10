@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import * as Yup from "yup";
-import { Debug } from "./AccountBox/Debug";
+import React, { useState } from 'react';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import * as Yup from 'yup';
+import { Debug } from './Auth/Debug';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -43,18 +43,14 @@ const Wizard = ({ children, initialValues, onSubmit }) => {
     };
 
     return (
-        <Formik
-            initialValues={snapshot}
-            onSubmit={handleSubmit}
-            validationSchema={step.props.validationSchema}
-        >
+        <Formik initialValues={snapshot} onSubmit={handleSubmit} validationSchema={step.props.validationSchema}>
             {(formik) => (
                 <Form>
                     <p>
                         Step {stepNumber + 1} of {totalSteps}
                     </p>
                     {step}
-                    <div style={{ display: "flex" }}>
+                    <div style={{ display: 'flex' }}>
                         {stepNumber > 0 && (
                             <button onClick={() => previous(formik.values)} type="button">
                                 Back
@@ -62,7 +58,7 @@ const Wizard = ({ children, initialValues, onSubmit }) => {
                         )}
                         <div>
                             <button disabled={formik.isSubmitting} type="submit">
-                                {isLastStep ? "Submit" : "Next"}
+                                {isLastStep ? 'Submit' : 'Next'}
                             </button>
                         </div>
                     </div>
@@ -80,17 +76,17 @@ const WizApp = () => (
         <h1>Formik Multistep Wizard</h1>
         <Wizard
             initialValues={{
-                email: "",
-                firstName: "",
-                lastName: "",
+                email: '',
+                firstName: '',
+                lastName: ''
             }}
-            onSubmit={async (values) => sleep(300).then(() => console.log("Wizard submit", values))}
+            onSubmit={async (values) => sleep(300).then(() => console.log('Wizard submit', values))}
         >
             <WizardStep
-                onSubmit={() => console.log("Step1 onSubmit")}
+                onSubmit={() => console.log('Step1 onSubmit')}
                 validationSchema={Yup.object({
-                    firstName: Yup.string().required("required"),
-                    lastName: Yup.string().required("required"),
+                    firstName: Yup.string().required('required'),
+                    lastName: Yup.string().required('required')
                 })}
             >
                 <div>
@@ -119,9 +115,9 @@ const WizApp = () => (
                 </div>
             </WizardStep>
             <WizardStep
-                onSubmit={() => console.log("Step2 onSubmit")}
+                onSubmit={() => console.log('Step2 onSubmit')}
                 validationSchema={Yup.object({
-                    email: Yup.string().email("Invalid email address").required("required"),
+                    email: Yup.string().email('Invalid email address').required('required')
                 })}
             >
                 <div>
