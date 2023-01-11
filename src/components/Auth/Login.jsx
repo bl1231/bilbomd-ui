@@ -5,6 +5,7 @@ import { Formik, Form } from 'formik';
 import { userSignInSchema } from 'schemas/ValidationSchemas';
 import useAuth from 'hooks/useAuth';
 import useInput from 'hooks/useInput';
+import useToggle from 'hooks/useToggle';
 import axios from 'api/axios';
 import CustomFormInputs from './CustomFormInputs';
 
@@ -14,6 +15,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const Login = () => {
     const { switchToSignup } = useContext(AccountContext);
     const [success, setSuccess] = useState(false);
+
     const { setAuth } = useAuth();
 
     const navigate = useNavigate();
@@ -23,18 +25,40 @@ const Login = () => {
     const userRef = useRef();
     const errRef = useRef();
 
-    const [user, resetUser, userAttribs] = useInput('user', '');
+    //const [user, resetUser, userAttribs] = useInput('user', '');
 
-    const onSubmit = async (values, { setStatus }) => {
-        console.log(values);
-        //     setStatus({ success: "Splinching the data...", css: "sending" });
-        await sleep(2000);
-        //     setStatus({ success: "Email sent !", css: "success" });
+    const [email, setEmail] = useState('');
+    const [errMsg, setErrMsg] = useState('');
+    const [check, toggleCheck] = useToggle('persist', false);
 
-        //     // REDIRECT HERE????? HOW????
-        //     setError(null);
-        //     setSuccess(true);
-        //     resetForm();
+    // useEffect(() => {
+    //     userRef.current.focus();
+    // }, []);
+
+    const onSubmit = async (values, { setStatus, resetForm, setSubmitting, setErrors }) => {
+        setStatus({ message: 'Generating magic link...', css: 'sending' });
+        const response = await axios
+            .post(LOGIN_URL, values, {
+                headers: { 'Content-Type': 'application/json' },
+                withCredentials: true
+            })
+            .catch((err) => {
+                if (err?.response) setErrMsg(err.response.data.message);
+                setSuccess(false);
+                setErrors(err);
+            });
+        console.log(response);
+        if (response.status === 200) {
+            const accessToken = response?.data?.accessToken;
+            const roles = response?.data?.roles;
+            setAuth({ email, roles, accessToken });
+            //resetUser();
+            //setPwd('');
+            navigate(from, { replace: true });
+        }
+        setSubmitting(false);
+        resetForm();
+        console.log(JSON.stringify(response?.data));
     };
 
     return (
@@ -59,7 +83,6 @@ const Login = () => {
                             <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
                                 Continue
                             </button>
-                            <p>Need an account?</p>
                             <button className="btn btn-secondary" type="button" onClick={switchToSignup}>
                                 Create an account
                             </button>

@@ -11,8 +11,8 @@ import Lounge from 'components/Lounge';
 import LinkPage from 'components/LinkPage';
 import RequireAuth from 'components/Auth/RequireAuth';
 import Dashboard from 'components/Dashboard';
-import WizApp from 'components/MultiStepWizard';
 import { Routes, Route } from 'react-router-dom';
+import VerifyUser from 'components/Auth/VerifyUser';
 
 const ROLES = {
     User: 2001,
@@ -25,18 +25,17 @@ function App() {
         <Routes>
             <Route path="/" element={<Layout />}>
                 {/* public routes */}
+                <Route exact path="/" element={<Home />} />
                 <Route path="account" element={<Account />} />
                 <Route path="register" element={<Account />} />
-                <Route path="login" element={<Login />} />
+                <Route path="verify/:code" element={<VerifyUser />} />
+
+                <Route path="login" element={<Account />} />
+                {/* <Route path="signin" element={<SignIn />} /> */}
                 <Route path="linkpage" element={<LinkPage />} />
                 <Route path="unauthorized" element={<Unauthorized />} />
-                <Route path="dashboard" element={<Dashboard />} />
-                <Route path="wiz" element={<WizApp />} />
 
                 {/* we want to protect these routes */}
-                <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
-                    <Route path="/" element={<Home />} />
-                </Route>
 
                 <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
                     <Route path="dashboard" element={<Dashboard />} />

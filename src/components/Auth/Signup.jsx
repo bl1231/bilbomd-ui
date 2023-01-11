@@ -5,34 +5,22 @@ import { userRegisterSchema } from 'schemas/ValidationSchemas';
 import CustomFormInputs from './CustomFormInputs';
 //import RegisterSuccess from "./RegisterSuccess";
 //import { Debug } from './Debug';
-import axios from '../../api/axios';
+import axios from 'api/axios';
 //import { Link } from 'react-router-dom';
 
 const REGISTER_URL = '/register';
 
 const SignupForm = () => {
     const { switchToSignin } = useContext(AccountContext);
-    const [success, setSuccess] = useState(false);
-    const [msg, setMsg] = useState('');
-    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
+    const [error, setError] = useState('');
 
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    //const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-    // const testOnSubmit = async (values, { setStatus, resetForm, setSubmitting, setErrors }) => {
-    //     console.log(values);
-    //     setStatus({ success: "Splinching the data...", css: "sending" });
-    //     await sleep(2000);
-    //     setStatus({ success: "Email sent !", css: "success" });
-
-    //     // REDIRECT HERE????? HOW????
-    //     setError(null);
-    //     setSuccess(true);
-    //     resetForm();
-    // };
     const onSubmit = async (values, { setStatus, resetForm, setSubmitting, setErrors }) => {
-        console.log(values);
+        console.log('VALUES:', values);
 
-        setStatus({ message: 'Splinching the data...', css: 'sending' });
+        setStatus({ success: 'Splinching the data...', css: 'sending' });
 
         const response = await axios
             .post(REGISTER_URL, values, {
@@ -40,31 +28,36 @@ const SignupForm = () => {
                 withCredentials: true
             })
             .catch((err) => {
-                if (err?.response) setError(err.response.data.message);
-                setSuccess(false);
-                setErrors(err);
+                if (err?.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    setError({ message: 'Duplicate User Name or Email. ' });
+                    setSuccess(null);
+                    setStatus({ error: err, css: 'error' });
+                    console.log(err.response.data);
+                    console.log(err.response.status);
+                    console.log(err.response.headers);
+                }
             });
-        await sleep(2000);
-        if (response.status === 201) {
-            setStatus({ success: 'Email sent !', css: 'success' });
-            setSuccess(true);
+        console.log('RES', response);
+
+        // all good. We got a response from server
+        if (response?.data) {
+            setError(null);
+            setSuccess(response.data.success);
+            setSubmitting(false);
             resetForm();
         }
-        setSubmitting(false);
-        resetForm();
-        console.log(JSON.stringify(response?.data));
     };
 
     return (
         <>
             {success ? (
-                <section>
-                    <h1>You are registered!</h1>
-                    <p>Please check your email for an authorization link.</p>
-                    <p>
-                        <a href="/">Go to Home</a>
-                    </p>
-                </section>
+                <div className="alert alert-dismissible alert-success">
+                    <button type="button" className="btn-close" data-bs-dismiss="alert"></button>
+                    <strong>Woot!</strong> You've been registered for a BilboMD account. Please check your email for a
+                    sign in link.
+                </div>
             ) : (
                 <Formik
                     initialValues={{ user: '', email: '' }}
@@ -80,9 +73,24 @@ const SignupForm = () => {
                                 type="email"
                                 placeholder="enter email address"
                             />
-                            <div className={`form-sending ${status ? status.css : ''}`}>
-                                {status ? status.success : ''}
-                            </div>
+                            {error ? (
+                                <div className="alert alert-dismissible alert-danger">
+                                    <button type="button" className="btn-close" data-bs-dismiss="alert"></button>
+                                    <strong>{error.message}</strong>
+                                    Please
+                                    <a href="/account" class="alert-link">
+                                        Try again
+                                    </a>{' '}
+                                    If you think you already have an account try{' '}
+                                    <a href="/account" class="alert-link">
+                                        logging in
+                                    </a>
+                                    .
+                                </div>
+                            ) : (
+                                ''
+                            )}
+
                             <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
                                 Create account
                             </button>

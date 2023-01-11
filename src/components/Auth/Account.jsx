@@ -7,11 +7,6 @@ import { Navigate } from 'react-router-dom';
 const Account = () => {
     const [isExpanded, setExpanded] = useState(false);
     const [active, setActive] = useState('signin');
-    const [success, setSuccess] = useState(false);
-
-    const fwdSuccess = () => {
-        setTimeout(() => setSuccess(true), 400);
-    };
 
     const switchActive = (active) => {
         setTimeout(() => setActive(active), 400);
@@ -27,8 +22,7 @@ const Account = () => {
 
     const contextValue = {
         switchToSignup,
-        switchToSignin,
-        fwdSuccess
+        switchToSignin
     };
 
     return (
