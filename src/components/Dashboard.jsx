@@ -1,37 +1,16 @@
-import { useNavigate, Link } from 'react-router-dom';
-import { useContext } from 'react';
-import AuthContext from '../context/AuthProvider';
-import Header from './Header';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import SideBar from './SideBar';
-//import UserContent from "./UserContent";
-import Footer from './Footer';
-const Dashboard = ({ user }) => {
-    const { setAuth } = useContext(AuthContext);
-    const navigate = useNavigate();
+import { Link } from 'react-router-dom';
 
+const Dashboard = (props) => {
+    console.log(props);
     return (
-        <Container>
-            <Row>
-                <Header />
-            </Row>
-
-            <Row>
-                <Col md={4}>
-                    <SideBar />
-                </Col>
-
-                <Col md={8}>
-                    <p>CONTENT</p>
-                </Col>
-            </Row>
-
-            <Row>
-                <Footer />
-            </Row>
-        </Container>
+        <section>
+            <h1>Dashboard {props.user}</h1>
+            <br />
+            <p>You must have been assigned an User role.</p>
+            <div className="flexGrow">
+                <Link to="/">Home</Link>
+            </div>
+        </section>
     );
 };
 

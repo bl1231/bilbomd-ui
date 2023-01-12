@@ -1,14 +1,14 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "bootstrap/dist/css/bootstrap.css";
-import "bootswatch/dist/flatly/bootstrap.min.css";
-import "./index.css";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootswatch/dist/flatly/bootstrap.min.css';
+import './index.css';
 //import "./boot.css";
-import App from "./App";
-import { AuthProvider } from "context/AuthProvider";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import App from './App';
+import { AuthProvider } from 'context/AuthProvider';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
         <BrowserRouter>

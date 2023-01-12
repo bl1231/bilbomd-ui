@@ -1,21 +1,22 @@
-import axios from "../api/axios";
-import useAuth from "./useAuth";
+import axios from 'api/axios';
+import useAuth from 'hooks/useAuth';
 
 const useLogout = () => {
-    const { setAuth } = useAuth();
+  const { setAuth } = useAuth();
 
-    const logout = async () => {
-        setAuth({});
-        try {
-            const response = await axios('/logout', {
-                withCredentials: true
-            });
-        } catch (err) {
-            console.error(err);
-        }
+  const logout = async () => {
+    setAuth({});
+    try {
+      const response = await axios('/logout', {
+        withCredentials: true
+      });
+      console.log(response);
+    } catch (err) {
+      console.error(err);
     }
+  };
 
-    return logout;
-}
+  return logout;
+};
 
-export default useLogout
+export default useLogout;

@@ -9,8 +9,14 @@ const CustomFormInputs = ({ label, ...props }) => {
     //console.log('field', field);
     return (
         <>
-            <label htmlFor={props.id || props.name}>{label}</label>
-            <input {...field} {...props} className={meta.touched && meta.error ? 'input-error' : ''} />
+            <label htmlFor={props.id || props.name} className="visually-hidden">
+                {label}
+            </label>
+            <input
+                {...field}
+                {...props}
+                className={meta.touched && meta.error ? 'input-error' : ''}
+            />
             {meta.touched && meta.error ? <div className="error">{meta.error}</div> : null}
         </>
     );

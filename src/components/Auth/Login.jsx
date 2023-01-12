@@ -1,36 +1,42 @@
-import { useRef, useContext, useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { AccountContext } from './AccountContext';
+import { useContext, useState } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+//import { AccountContext } from './AccountContext';
 import { Formik, Form } from 'formik';
 import { userSignInSchema } from 'schemas/ValidationSchemas';
+// our hooks
 import useAuth from 'hooks/useAuth';
-import useInput from 'hooks/useInput';
-import useToggle from 'hooks/useToggle';
+//import useInput from 'hooks/useInput';
+//import useToggle from 'hooks/useToggle';
 import axios from 'api/axios';
 import CustomFormInputs from './CustomFormInputs';
-
+import Dashboard from 'components/Dashboard';
+//import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 const LOGIN_URL = '/auth';
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+//const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const Login = () => {
-    const { switchToSignup } = useContext(AccountContext);
+    //const { switchToSignup } = useContext(AccountContext);
     const [success, setSuccess] = useState(false);
-
+    const [error, setError] = useState('');
+    //const [errMsg, setErrMsg] = useState('');
     const { setAuth } = useAuth();
 
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || '/';
 
-    const userRef = useRef();
-    const errRef = useRef();
+    //const userRef = useRef();
+    //const errRef = useRef();
 
     //const [user, resetUser, userAttribs] = useInput('user', '');
 
-    const [email, setEmail] = useState('');
-    const [errMsg, setErrMsg] = useState('');
-    const [check, toggleCheck] = useToggle('persist', false);
+    //const [email, setEmail] = useState('');
 
+    //const [check, toggleCheck] = useToggle('persist', false);
+
+    // in teh Dave Gray tutorials this would set initial focus to whatever element
+    // has a "useRef" associated with it.
     // useEffect(() => {
     //     userRef.current.focus();
     // }, []);
@@ -43,15 +49,25 @@ const Login = () => {
                 withCredentials: true
             })
             .catch((err) => {
-                if (err?.response) setErrMsg(err.response.data.message);
+                if (err?.response) {
+                    setError({ message: 'No Server Response' });
+                } else if (err.response?.status === 400) {
+                    setError({ message: 'No Account with that email. ' });
+                } else if (err.response?.status === 401) {
+                    setError({ message: 'Unauthorized ' });
+                } else {
+                    setError({ message: 'Login Failed ' });
+                }
                 setSuccess(false);
-                setErrors(err);
             });
-        console.log(response);
+        //console.log(response);
         if (response.status === 200) {
-            const accessToken = response?.data?.accessToken;
+            const user = response?.data?.user;
+            const email = response?.data?.email;
             const roles = response?.data?.roles;
-            setAuth({ email, roles, accessToken });
+            const accessToken = response?.data?.accessToken;
+            console.log('got 200:', { roles, accessToken });
+            setAuth({ user, email, roles, accessToken });
             //resetUser();
             //setPwd('');
             navigate(from, { replace: true });
@@ -64,11 +80,13 @@ const Login = () => {
     return (
         <>
             {success ? (
-                <section>
-                    <p>SUCCESS</p>
-                </section>
+                <Dashboard />
             ) : (
-                <Formik initialValues={{ email: '' }} validationSchema={userSignInSchema} onSubmit={onSubmit}>
+                <Formik
+                    initialValues={{ email: '' }}
+                    validationSchema={userSignInSchema}
+                    onSubmit={onSubmit}
+                >
                     {({ isSubmitting, status }) => (
                         <Form>
                             <CustomFormInputs
@@ -77,15 +95,27 @@ const Login = () => {
                                 type="email"
                                 placeholder="enter email address"
                             />
-                            <div className={`form-sending ${status ? status.css : ''}`}>
-                                {status ? status.success : ''}
-                            </div>
-                            <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
+                            {error ? (
+                                <Alert variant="danger" onClose={() => setError(false)} dismissible>
+                                    <Alert.Heading>{error.message}</Alert.Heading>
+                                    <p>Please create an account first.</p>
+                                </Alert>
+                            ) : (
+                                ''
+                            )}
+                            <button
+                                className="btn btn-primary"
+                                type="submit"
+                                disabled={isSubmitting}
+                            >
                                 Continue
                             </button>
-                            <button className="btn btn-secondary" type="button" onClick={switchToSignup}>
-                                Create an account
-                            </button>
+                            <span type="line"></span>
+                            <Link to="/register">
+                                <button type="button" className="btn btn-secondary">
+                                    Create an account
+                                </button>
+                            </Link>
                         </Form>
                     )}
                 </Formik>

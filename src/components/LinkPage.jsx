@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom';
 
 const LinkPage = () => {
     return (
@@ -14,7 +14,7 @@ const LinkPage = () => {
             <Link to="/editor">Editors Page</Link>
             <Link to="/admin">Admin Page</Link>
         </section>
-    )
-}
+    );
+};
 
-export default LinkPage
+export default LinkPage;
