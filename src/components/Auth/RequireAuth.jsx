@@ -13,8 +13,8 @@ const RequireAuth = ({ allowedRoles }) => {
     // allowedRoles -> is an array passed into RequireAuth that contains
     //   the roles allowed to access this particular component.
     return auth?.roles?.find((role) => allowedRoles?.includes(role)) ? (
-        <Outlet user={auth.user} />
-    ) : auth?.user ? (
+        <Outlet />
+    ) : auth?.accessToken ? ( //changed from user to accessToken to persist login after refresh
         <Navigate to="/unauthorized" state={{ from: location }} replace />
     ) : (
         <Navigate to="/login" state={{ from: location }} replace />

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 //import { AccountContext } from './AccountContext';
 import { Formik, Form } from 'formik';
@@ -20,7 +20,7 @@ const Login = () => {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
     //const [errMsg, setErrMsg] = useState('');
-    const { setAuth } = useAuth();
+    const { setAuth, persist, setPersist } = useAuth();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -76,6 +76,14 @@ const Login = () => {
         resetForm();
         console.log(JSON.stringify(response?.data));
     };
+
+    const togglePersist = () => {
+        setPersist((prev) => !prev);
+    };
+
+    useEffect(() => {
+        localStorage.setItem('persist', persist);
+    }, [persist]);
 
     return (
         <>
