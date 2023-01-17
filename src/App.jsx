@@ -1,6 +1,7 @@
-//import Account from 'components/Auth/Account';
 import Signup from 'components/Auth/Signup';
 import Login from 'components/Auth/Login';
+import MagickLinkAuth from 'components/Auth/MagickLinkAuth';
+import MagickLink from 'components/Auth/MagickLink';
 import Home from 'components/Home';
 import Layout from 'components/Layout';
 import Editor from 'components/Editor';
@@ -28,6 +29,8 @@ function App() {
                 {/* public routes */}
                 <Route path="register" element={<Signup />} />
                 <Route path="verify/:code" element={<VerifyUser />} />
+                <Route path="magicklink" element={<MagickLink />} />
+                <Route path="auth/:otp" element={<MagickLinkAuth />} />
                 <Route path="login" element={<Login />} />
                 <Route path="linkpage" element={<LinkPage />} />
                 <Route path="unauthorized" element={<Unauthorized />} />

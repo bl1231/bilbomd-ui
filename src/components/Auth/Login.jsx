@@ -10,36 +10,19 @@ import useAuth from 'hooks/useAuth';
 import axios from 'api/axios';
 import CustomFormInputs from './CustomFormInputs';
 import Dashboard from 'components/Dashboard';
-//import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 const LOGIN_URL = '/auth';
-//const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const Login = () => {
     //const { switchToSignup } = useContext(AccountContext);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
     //const [errMsg, setErrMsg] = useState('');
-    const { setAuth, persist, setPersist } = useAuth();
-
+    //const { setAuth, persist, setPersist } = useAuth();
+    const { setAuth, persist } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || '/';
-
-    //const userRef = useRef();
-    //const errRef = useRef();
-
-    //const [user, resetUser, userAttribs] = useInput('user', '');
-
-    //const [email, setEmail] = useState('');
-
-    //const [check, toggleCheck] = useToggle('persist', false);
-
-    // in teh Dave Gray tutorials this would set initial focus to whatever element
-    // has a "useRef" associated with it.
-    // useEffect(() => {
-    //     userRef.current.focus();
-    // }, []);
 
     const onSubmit = async (values, { setStatus, resetForm, setSubmitting, setErrors }) => {
         setStatus({ message: 'Generating magic link...', css: 'sending' });
@@ -77,9 +60,9 @@ const Login = () => {
         console.log(JSON.stringify(response?.data));
     };
 
-    const togglePersist = () => {
-        setPersist((prev) => !prev);
-    };
+    // const togglePersist = () => {
+    //     setPersist((prev) => !prev);
+    // };
 
     useEffect(() => {
         localStorage.setItem('persist', persist);
