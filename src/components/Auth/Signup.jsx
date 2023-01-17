@@ -1,9 +1,7 @@
-import React, { useContext, useState } from 'react';
-//import { AccountContext } from './AccountContext';
+import { useState } from 'react';
 import { Formik, Form } from 'formik';
 import { userRegisterSchema } from 'schemas/ValidationSchemas';
 import CustomFormInputs from './CustomFormInputs';
-//import RegisterSuccess from "./RegisterSuccess";
 //import { Debug } from './Debug';
 import axios from 'api/axios';
 import { Link } from 'react-router-dom';
@@ -12,15 +10,10 @@ import Alert from 'react-bootstrap/Alert';
 const REGISTER_URL = '/register';
 
 const Signup = () => {
-    //const { switchToSignin } = useContext(AccountContext);
     const [success, setSuccess] = useState(null);
     const [error, setError] = useState('');
 
-    //const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
     const onSubmit = async (values, { setStatus, resetForm, setSubmitting, setErrors }) => {
-        //console.log('VALUES:', values);
-
         setStatus({ success: 'Splinching the data...', css: 'sending' });
 
         const response = await axios
@@ -60,14 +53,10 @@ const Signup = () => {
                 <div className="alert alert-success" role="alert">
                     <h4 className="alert-heading">Woot!</h4>
                     <p>
-                        Aww yeah, you successfully read this important alert message. This example
-                        text is going to run a bit longer so that you can see how spacing within an
-                        alert works with this kind of content.
-                    </p>
-                    <hr />
-                    <p className="mb-0">
-                        Whenever you need to, be sure to use margin utilities to keep things nice
-                        and tidy.
+                        You have been registered for an account. Before you can log in we need you
+                        to verify your email. Please check your inbox for a verification email from
+                        <br />
+                        <span className="text-primary">bilbomd-noreply@bl1231.als.lbl.gov</span>.
                     </p>
                 </div>
             ) : (

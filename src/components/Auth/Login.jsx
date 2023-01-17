@@ -96,35 +96,43 @@ const Login = () => {
                     onSubmit={onSubmit}
                 >
                     {({ isSubmitting, status }) => (
-                        <Form>
-                            <CustomFormInputs
-                                label="Email address"
-                                name="email"
-                                type="email"
-                                placeholder="enter email address"
-                            />
-                            {error ? (
-                                <Alert variant="danger" onClose={() => setError(false)} dismissible>
-                                    <Alert.Heading>{error.message}</Alert.Heading>
-                                    <p>Please create an account first.</p>
-                                </Alert>
-                            ) : (
-                                ''
-                            )}
-                            <button
-                                className="btn btn-primary"
-                                type="submit"
-                                disabled={isSubmitting}
-                            >
-                                Continue
-                            </button>
-                            <span type="line"></span>
-                            <Link to="/register">
-                                <button type="button" className="btn btn-secondary">
-                                    Create an account
+                        <>
+                            <h1>Login</h1> -{' '}
+                            <p>this route should be removed once we have MagickLink OTP working.</p>
+                            <Form>
+                                <CustomFormInputs
+                                    label="Email address"
+                                    name="email"
+                                    type="email"
+                                    placeholder="enter email address"
+                                />
+                                {error ? (
+                                    <Alert
+                                        variant="danger"
+                                        onClose={() => setError(false)}
+                                        dismissible
+                                    >
+                                        <Alert.Heading>{error.message}</Alert.Heading>
+                                        <p>Please create an account first.</p>
+                                    </Alert>
+                                ) : (
+                                    ''
+                                )}
+                                <button
+                                    className="btn btn-primary"
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                >
+                                    Continue
                                 </button>
-                            </Link>
-                        </Form>
+                                <span type="line"></span>
+                                <Link to="/register">
+                                    <button type="button" className="btn btn-secondary">
+                                        Create an account
+                                    </button>
+                                </Link>
+                            </Form>
+                        </>
                     )}
                 </Formik>
             )}

@@ -48,7 +48,7 @@ const VerifyUser = () => {
                             <p className="card-text">
                                 Please login by obtaining a <strong>MagicLink</strong>&#8482;
                             </p>
-                            <Link to="/login">
+                            <Link to="/magicklink">
                                 <button type="button" class="btn btn-primary">
                                     Get <strong>MagicLink</strong>&#8482;
                                 </button>

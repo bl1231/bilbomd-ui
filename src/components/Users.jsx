@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -7,30 +7,38 @@ const Users = () => {
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
     const location = useLocation();
+    const effectRan = useRef(false);
 
     useEffect(() => {
-        let isMounted = true;
+        console.log('Users effect ran');
+        //let isMounted = true;
+
         //const controller = new AbortController();
 
-        const getUsers = async () => {
-            try {
-                const response = await axiosPrivate.get('/users', {
-                    //signal: controller.signal
-                });
-                console.log(response.data);
-                isMounted && setUsers(response.data);
-            } catch (err) {
-                console.error(err);
-                navigate('/login', { state: { from: location }, replace: true });
-            }
-        };
+        if (effectRan.current === false) {
+            const getUsers = async () => {
+                try {
+                    const response = await axiosPrivate.get('/users', {
+                        //signal: controller.signal
+                    });
+                    console.log(response.data);
+                    //isMounted && setUsers(response.data);
+                    setUsers(response.data);
+                } catch (err) {
+                    console.error(err);
+                    navigate('/login', { state: { from: location }, replace: true });
+                }
+            };
 
-        getUsers();
+            getUsers();
 
-        return () => {
-            isMounted = false;
-            //controller.abort();
-        };
+            return () => {
+                console.log('Users effect unmounted');
+                //isMounted = false;
+                effectRan.current = true;
+                //controller.abort();
+            };
+        }
     }, []);
 
     return (
