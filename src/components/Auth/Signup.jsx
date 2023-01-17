@@ -83,7 +83,7 @@ const Signup = () => {
                                 <Alert variant="danger" onClose={() => setError('')} dismissible>
                                     <Alert.Heading>{error.message}</Alert.Heading>
                                     If you think you already have an account try{' '}
-                                    <a href="/account" className="alert-link">
+                                    <a href="/magicklink" className="alert-link">
                                         logging in
                                     </a>
                                 </Alert>
@@ -99,9 +99,9 @@ const Signup = () => {
                                 Create account
                             </button>
                             <p>Already have an account?</p>
-                            <Link to="/login">
+                            <Link to="/magicklink">
                                 <button type="button" className="btn btn-secondary">
-                                    Sign In
+                                    Get a MagickLink&#8482;
                                 </button>
                             </Link>
                         </Form>

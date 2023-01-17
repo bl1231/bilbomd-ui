@@ -1,5 +1,5 @@
 import Signup from 'components/Auth/Signup';
-import Login from 'components/Auth/Login';
+//import Login from 'components/Auth/Login';
 import MagickLinkAuth from 'components/Auth/MagickLinkAuth';
 import MagickLink from 'components/Auth/MagickLink';
 import Home from 'components/Home';
@@ -31,7 +31,8 @@ function App() {
                 <Route path="verify/:code" element={<VerifyUser />} />
                 <Route path="magicklink" element={<MagickLink />} />
                 <Route path="auth/:otp" element={<MagickLinkAuth />} />
-                <Route path="login" element={<Login />} />
+                {/* <Route path="login" element={<Login />} /> */}
+                <Route path="login" element={<MagickLink />} />
                 <Route path="linkpage" element={<LinkPage />} />
                 <Route path="unauthorized" element={<Unauthorized />} />
 

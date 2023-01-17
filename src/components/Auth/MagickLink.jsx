@@ -24,7 +24,7 @@ const MagickLink = () => {
                 } else if (err?.response?.status) {
                     // The request was made and the server responded with a status code
                     // that falls out of the range of 2xx
-                    setError({ message: 'User Name or Email Already Registered.' });
+                    setError({ message: 'You must register and verify your email first.' });
                     setSuccess(null);
                     setStatus({ error: err, css: 'error' });
                     console.log(err.response.data);
@@ -67,10 +67,11 @@ const MagickLink = () => {
                             {error ? (
                                 <Alert variant="danger" onClose={() => setError('')} dismissible>
                                     <Alert.Heading>{error.message}</Alert.Heading>
-                                    If you think you already have an account try{' '}
-                                    <a href="/account" className="alert-link">
-                                        logging in
-                                    </a>
+                                    If you need an account please{' '}
+                                    <a href="/register" className="alert-link">
+                                        register
+                                    </a>{' '}
+                                    first.
                                 </Alert>
                             ) : (
                                 ''
@@ -80,7 +81,7 @@ const MagickLink = () => {
                                 type="submit"
                                 disabled={isSubmitting}
                             >
-                                Get a MagickLink&#8482;
+                                Send my MagickLink&#8482;
                             </button>
                         </Form>
                     )}
