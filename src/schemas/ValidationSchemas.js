@@ -1,35 +1,24 @@
-import * as yup from 'yup';
+//import * as yup from 'yup';
+import { array, boolean, number, object, string, ValidationError } from 'yup';
 
-const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/;
-// min 5 characters, 1 upper case letter, 1 lower case letter, 1 numeric digit.
-
-export const userRegisterSchema = yup.object().shape({
-    email: yup.string().email('Please enter a valid email').required('Required'),
-    user: yup
-        .string()
-        .min(4, 'Username must be at least 4 characters')
-        .max(15, 'Username must be less than 15 characters')
-        .required('Required')
+export const userRegisterSchema = object().shape({
+  email: string().email('Please enter a valid email').required('Required'),
+  user: string()
+    .min(4, 'Username must be at least 4 characters')
+    .max(15, 'Username must be less than 15 characters')
+    .required('Required')
 });
-export const userSignInSchema = yup.object().shape({
-    email: yup.string().email('Please enter a valid email').required('Required')
+export const userSignInSchema = object().shape({
+  email: string().email('Please enter a valid email').required('Required')
 });
-export const basicSchema = yup.object().shape({
-    email: yup.string().email('Please enter a valid email').required('Required'),
-    age: yup.number().positive().integer().required('Required'),
-    password: yup
-        .string()
-        .min(5)
-        .matches(passwordRules, { message: 'Please create a stronger password' })
-        .required('Required'),
-    confirmPassword: yup
-        .string()
-        .oneOf([yup.ref('password'), null], 'Passwords must match')
-        .required('Required')
-});
-
-export const advancedSchema = yup.object().shape({
-    username: yup.string().min(3, 'Username must be at least 3 characters long').required('Required'),
-    jobType: yup.string().oneOf(['designer', 'developer', 'manager', 'other'], 'Invalid Job Type').required('Required'),
-    acceptedTos: yup.boolean().oneOf([true], 'Please accept the terms of service')
+export const bilbomdJobSchema = object().shape({
+  title: string().required('Please provide a title for your BilboMD Job.').min(4).max(20),
+  files: array(object({ url: string() }))
+    .min(1, 'upload at least one PDB')
+    .max(3),
+  constinp: string().required(),
+  expdata: string().required(),
+  num_conf: number().integer().min(200).max(800).required(),
+  rg_min: number().integer().positive().min(10).max(100).required(),
+  rg_max: number().integer().positive().min(10).max(100).required()
 });

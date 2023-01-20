@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Formik, Form } from 'formik';
 import { userSignInSchema } from 'schemas/ValidationSchemas';
 import axios from 'api/axios';
-import CustomFormInputs from './CustomFormInputs';
+import CustomFormInputs from '../Common/CustomFormInputs';
 import Alert from 'react-bootstrap/Alert';
 
 const MAGICKLINK_URL = '/magicklink';

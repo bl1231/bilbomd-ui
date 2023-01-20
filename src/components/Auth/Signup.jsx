@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Formik, Form } from 'formik';
 import { userRegisterSchema } from 'schemas/ValidationSchemas';
-import CustomFormInputs from './CustomFormInputs';
+import CustomFormInputs from '../Common/CustomFormInputs';
 //import { Debug } from './Debug';
 import axios from 'api/axios';
 import { Link } from 'react-router-dom';

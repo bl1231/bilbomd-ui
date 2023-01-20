@@ -8,7 +8,7 @@ import useAuth from 'hooks/useAuth';
 //import useInput from 'hooks/useInput';
 //import useToggle from 'hooks/useToggle';
 import axios from 'api/axios';
-import CustomFormInputs from './CustomFormInputs';
+import CustomFormInputs from '../Common/CustomFormInputs';
 import Dashboard from 'components/Dashboard';
 import Alert from 'react-bootstrap/Alert';
 const LOGIN_URL = '/auth';
