@@ -16,41 +16,47 @@ import myFormData from 'form-data';
 import axios from 'api/axios';
 const axios_upload_url = '/upload';
 //const fetch_upload_url = 'http://localhost:3500/upload';
-const emptyPDB = { name: '' };
+const emptyPdbs = { name: '', file: '' };
 
-const BilboMDJob = (props) => {
+const initialValues = {
+  title: '',
+  pdbs: [emptyPdbs],
+  constinp: '',
+  expdata: '',
+  num_conf: '',
+  rg_min: '',
+  rg_max: ''
+};
+
+const BilboMDJob = () => {
+  //console.log('props:', props);
+  const [fileName, setFileName] = useState();
+  // this will store array of PDB file objects
+  //{ name: '', file: '' }
+  const [pdb, setPDBs] = useState([]);
+  //const [src, setSrc] = useState();
+
   return (
     <Card>
       <CardContent>
         <Formik
-          initialValues={{
-            title: '',
-            files: [emptyPDB],
-            constinp: '',
-            expdata: '',
-            num_conf: '',
-            rg_min: '',
-            rg_max: ''
-          }}
-          validationSchema={bilbomdJobSchema}
+          initialValues={initialValues}
+          validationSchema={''}
           onSubmit={(values) => {
-            console.log('BilboMD values:', values);
+            console.log('BilboMD onSubmit values:', values);
             //return new Promise((res) => setTimeout(res, 2000));
             const form = new myFormData();
             form.append('title', values.title);
+            //form.append('pdbs', pdbs);
+            console.log(values.pdbs);
+            Object.keys(values.pdbs).forEach((key) => {
+              form.append(values.pdbs.item(key).name, values.pdbs.item(key));
+            });
             form.append('num_conf', values.num_conf);
             form.append('rg_min', values.rg_min);
             form.append('rg_max', values.rg_max);
             form.append('expdata', values.expdata);
             form.append('constinp', values.constinp);
-            //const b = form.getBoundary();
-            // const post_config = {
-            //   headers: {
-            //     'Content-Type':
-            //       'multipart/form-data; boundary=--------------------------515890814546601021194782'
-            //   },
-            //   withCredentials: true,
-            // };
             const upload = async () => {
               const result = await axios
                 .post(axios_upload_url, form)
@@ -58,35 +64,67 @@ const BilboMDJob = (props) => {
                 .catch((err) => console.log(err));
               console.log(result);
             };
-            // const upload_using_fetch = async () => {
-            //   const result = await fetch(fetch_upload_url, { method: 'POST', body: data });
-            // };
+            // call upload
             upload();
           }}
         >
-          {({ values, errors, isValid, isSubmitting }) => (
+          {({ values, errors, setFieldValue, isSubmitting, isValid }) => (
             <Form autoComplete="off">
               <Grid container spacing={2} direction="column">
                 <Grid item>
                   <Field name="title" component={TextField} label="Job Title" type="text" />
                 </Grid>
-                <FieldArray name="files">
+                <FieldArray name="pdbs">
                   {({ push, remove }) => (
                     <React.Fragment>
                       <Grid item>
                         <Typography variant="body1">All your PDB Files.</Typography>
                       </Grid>
-                      {values.files.map((_, index) => (
+                      {values.pdbs.map((pdb, index) => (
                         <Grid container item style={{ flexWrap: 'nowrap' }} key={index} spacing={2}>
                           <Grid item container spacing={2} xs={12} sm="auto">
                             <Grid item xs={12} sm="auto">
+                              <label htmlFor={`pdbs.${index}.name`}>{`pdbs.${index}.name`}</label>
                               <Button variant="contained" component="label" size="small">
-                                Select File
-                                <Field name={`files.${index}.name`} type="file" hidden />
+                                Select PDB
+                                <Field
+                                  name={`pdbs.${index}.name`}
+                                  type="file"
+                                  id={`pdbs.${index}.name`}
+                                  // onChange={(event) => {
+                                  //   let file = event.target.files[index];
+                                  //   console.log('fn1:', file.name);
+                                  //   setFieldValue(file);
+                                  // }}
+                                  //
+                                  // onChange={(event) => {
+                                  //   let reader = new FileReader();
+                                  //   let file = event.target.files[index];
+                                  //   console.log('fn1:', file.name);
+                                  //   if (file) {
+                                  //     reader.onloadend = () => setFileName(file.name);
+                                  //     console.log('fn2:', file.name);
+                                  //     if (file.name !== fileName) {
+                                  //       reader.readAsDataURL(file);
+                                  //       console.log('fn3:', file.name);
+                                  //       console.log(file);
+                                  //       console.log(reader);
+                                  //       const newPDB = { name: file.name, file: file };
+                                  //       //
+                                  //       // push/update element at end of array of objects:
+                                  //       //setTheArray(prevState => [...prevState, {currentOrNewKey: newValue}]);
+                                  //       setFiles((curr) => [...curr, newPDB]);
+                                  //       console.log('files1:', files);
+                                  //     }
+                                  //     console.log('files2:', files);
+                                  //   }
+                                  // }}
+                                  hidden
+                                />
                               </Button>
                             </Grid>
                             <Grid item xs={12} sm="auto">
-                              <Typography variant="body1">{values.files[index].name}</Typography>
+                              <Typography variant="body1">{values.pdbs[index].name}</Typography>
                             </Grid>
                             <Grid item xs={12} sm="auto">
                               <IconButton
@@ -105,7 +143,7 @@ const BilboMDJob = (props) => {
                           disabled={isSubmitting}
                           variant="outlined"
                           size="small"
-                          onClick={() => push(emptyPDB)}
+                          onClick={() => push(emptyPdbs)}
                         >
                           Add PDB
                         </Button>
@@ -113,6 +151,7 @@ const BilboMDJob = (props) => {
                     </React.Fragment>
                   )}
                 </FieldArray>
+
                 <Grid item xs={6}>
                   <Typography>const.inp file</Typography>
                   <Button variant="contained" component="label" size="small">
@@ -121,6 +160,7 @@ const BilboMDJob = (props) => {
                   </Button>
                   <Field label={values.constinp} component={Chip}></Field>
                 </Grid>
+
                 <Grid item xs={6}>
                   <Typography>Experimental Data</Typography>
                   <Button variant="contained" component="label" size="small">
@@ -129,6 +169,7 @@ const BilboMDJob = (props) => {
                   </Button>
                   <Field label={values.expdata ? values.expdata : '     '} component={Chip}></Field>
                 </Grid>
+
                 <Grid item>
                   <Field
                     component={Select}

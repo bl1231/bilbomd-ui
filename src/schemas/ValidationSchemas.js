@@ -13,7 +13,7 @@ export const userSignInSchema = object().shape({
 });
 export const bilbomdJobSchema = object().shape({
   title: string().required('Please provide a title for your BilboMD Job.').min(4).max(20),
-  files: array(object({ url: string() }))
+  pdbs: array(object({ uuid: string() }))
     .min(1, 'upload at least one PDB')
     .max(3),
   constinp: string().required(),

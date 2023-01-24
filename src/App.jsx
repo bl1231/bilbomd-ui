@@ -28,6 +28,8 @@ import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Header from 'components/Header/Header';
 import Footer from 'components/Footer/Footer';
+//import MUITest from 'components/Uploads/MUITest';
+import NewUpload2 from 'components/Uploads/NewUpload2';
 
 const ROLES = {
   User: 2001,
@@ -61,7 +63,7 @@ function App() {
           <Route path="login" element={<MagickLink />} />
           <Route path="linkpage" element={<LinkPage />} />
           <Route path="unauthorized" element={<Unauthorized />} />
-          <Route path="job" element={<BilboMDJob />} />
+          <Route path="job" element={<NewUpload2 />} />
           <Route path="dashboard" element={<Dashboard />} />
 
           {/* we want to protect these routes */}

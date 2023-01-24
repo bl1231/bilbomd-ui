@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { FileRejection, useDropzone, FileError } from 'react-dropzone';
 import { Grid } from '@mui/material';
 import { useField } from 'formik';
-import SingleFileUploadWithProgress from './SingleFileUploadWithProgress';
+import { SingleFileUploadWithProgress } from './SingleFileUploadWithProgress';
 import { UploadError } from './UploadError';
 let currentId = 0;
 
@@ -18,7 +18,7 @@ export interface UploadableFile {
   id: number;
   file: File;
   errors: FileError[];
-  url?: string;
+  uuid?: string;
 }
 
 export function MultipleFileUploadField({ name }: { name: string }) {
@@ -36,11 +36,11 @@ export function MultipleFileUploadField({ name }: { name: string }) {
     // helpers.setTouched(true);
   }, [files]);
 
-  function onUpload(file: File, url: string) {
+  function onUpload(file: File, uuid: string) {
     setFiles((curr) =>
       curr.map((fw) => {
         if (fw.file === file) {
-          return { ...fw, url };
+          return { ...fw, uuid };
         }
         return fw;
       })
@@ -54,16 +54,16 @@ export function MultipleFileUploadField({ name }: { name: string }) {
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
-      'text/*': ['.pdb'],
+      'text/*': ['.pdb', '.dat', '.inp'],
       'chemical/x-pdb': []
     },
-    maxSize: 1000 * 1024
+    maxSize: 5000 * 1024
   });
 
   return (
     <React.Fragment>
-      <Grid item>
-        <div {...getRootProps()}>
+      <Grid item style={{ backgroundColor: 'blue' }}>
+        <div {...getRootProps()} style={{ backgroundColor: 'lightblue' }}>
           <input {...getInputProps()} />
           <p>Drag 'n' drop your PDB files here, or click to select files</p>
         </div>
