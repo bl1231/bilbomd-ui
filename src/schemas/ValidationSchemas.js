@@ -16,9 +16,9 @@ export const bilbomdJobSchema = object().shape({
   pdbs: array(object({ uuid: string() }))
     .min(1, 'upload at least one PDB')
     .max(3),
-  constinp: string().required(),
-  expdata: string().required(),
+  constinp: string().required('const.inp is required'),
+  expdata: string().required('experimental data is required'),
   num_conf: number().integer().min(200).max(800).required(),
   rg_min: number().integer().positive().min(10).max(100).required(),
-  rg_max: number().integer().positive().min(10).max(100).required()
+  rg_max: number('Please specify a number').integer().positive().min(10).max(100).required()
 });

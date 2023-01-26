@@ -1,8 +1,9 @@
 import { Grid, LinearProgress } from '@mui/material';
+//import { LinearProgress } from '@mui/joy';
 import React, { useEffect, useState, useRef } from 'react';
 import { FileHeader } from './FileHeader';
 import axios from 'api/axios';
-import { number } from 'yup/lib/locale';
+import { ErrorSharp } from '@mui/icons-material';
 const axios_upload_url = '/upload/pdb';
 
 export interface SingleFileUploadWithProgressProps {
@@ -18,21 +19,23 @@ export function SingleFileUploadWithProgress({
 }: SingleFileUploadWithProgressProps) {
   const [progress, setProgress] = useState(0);
 
+  // for preventing useEffect from running twice when component mounts
   const effectRan = useRef(false);
 
-  useEffect(() => {
-    if (effectRan.current === false) {
-      const upload = async () => {
-        const uuid = await uploadFile(file, setProgress);
-        console.log('uuid:', uuid);
-        onUpload(file, uuid);
-      };
-      upload();
-      return () => {
-        effectRan.current = true;
-      };
-    }
-  }, []);
+  // try removing this so PDBs are only uploaded with main form.
+  // useEffect(() => {
+  //   if (effectRan.current === false) {
+  //     const upload = async () => {
+  //       const uuid = await uploadFile(file, setProgress);
+  //       //console.log('uuid:', uuid);
+  //       onUpload(file, uuid);
+  //     };
+  //     upload();
+  //     return () => {
+  //       effectRan.current = true;
+  //     };
+  //   }
+  // }, []);
 
   return (
     <Grid item>
@@ -62,6 +65,7 @@ function uploadFile(file: File, onProgress: (percentage: number) => void) {
               (axiosProgressEvent?.total ? axiosProgressEvent.total : 1)) *
               100
           );
+          onProgress(percentage);
           console.log(percentage);
         }
       })
@@ -75,6 +79,7 @@ function uploadFile(file: File, onProgress: (percentage: number) => void) {
         res(response.data.uuid);
       })
       .catch((err) => {
+        rej(err);
         console.log(err);
       });
 

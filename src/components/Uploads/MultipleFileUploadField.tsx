@@ -4,6 +4,20 @@ import { Grid } from '@mui/material';
 import { useField } from 'formik';
 import { SingleFileUploadWithProgress } from './SingleFileUploadWithProgress';
 import { UploadError } from './UploadError';
+
+const dropzone = {
+  border: '1px dashed blue',
+  borderRadius: '0.2em',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  background: 'lightblue',
+  height: '1em',
+  outline: 'none',
+  marginBottom: '1em',
+  padding: '1em'
+};
+
 let currentId = 0;
 
 function getNewId() {
@@ -62,15 +76,15 @@ export function MultipleFileUploadField({ name }: { name: string }) {
 
   return (
     <React.Fragment>
-      <Grid item style={{ backgroundColor: 'blue' }}>
-        <div {...getRootProps()} style={{ backgroundColor: 'lightblue' }}>
+      <Grid item>
+        <div {...getRootProps()} style={dropzone}>
           <input {...getInputProps()} />
           <p>Drag 'n' drop your PDB files here, or click to select files</p>
         </div>
       </Grid>
 
       {files.map((fileWrapper) => (
-        <Grid item key={fileWrapper.id}>
+        <Grid item key={fileWrapper.id} sx={{ bgcolor: 'info-main' }}>
           {fileWrapper.errors.length ? (
             <UploadError file={fileWrapper.file} errors={fileWrapper.errors} onDelete={onDelete} />
           ) : (
