@@ -30,11 +30,20 @@ const Dashboard = () => {
     navigate('/linkpage');
   };
   const [jobs, setJobs] = useState([]);
+
   useEffect(() => {
     fetch('http://localhost:3333/jobs')
       .then((res) => res.json())
       .then((data) => setJobs(data));
   }, []);
+
+  const handelDelete = async (uuid) => {
+    await fetch('http://localhost:3333/jobs' + uuid, {
+      method: 'DELETE'
+    });
+    const newJobs = jobs.filter((job) => job.uuid != uuid);
+    setJobs(newJobs);
+  };
 
   return (
     <Container>
@@ -47,10 +56,10 @@ const Dashboard = () => {
       >
         DASHBOARD
       </Typography>
-      <Grid container>
+      <Grid container spacing={3}>
         {jobs.map((job) => (
           <Grid item xs={12} md={6} lg={4} key={job.uuid}>
-            <JobCard />
+            <JobCard job={job} handelDelete={handelDelete} />
           </Grid>
         ))}
       </Grid>
