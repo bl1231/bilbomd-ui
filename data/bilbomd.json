@@ -1,0 +1,28 @@
+{
+  "jobs": [
+    {
+      "title": "Topo II domain1 flex",
+      "pdbs": [{ "name": "1pvg.pdb" }, { "name": "1pcg.pdb" }, { "name": "7vve.pdb" }],
+      "constinp": "my_const.inp",
+      "expdata": "topoII_data.dat",
+      "num_conf": "200",
+      "rg_min": "20",
+      "rg_max": "60",
+      "uuid": "fab8a42a-a61f-4315-a207-efdc424c1644",
+      "status": "submitted",
+      "message": "Incididunt ut fugiat nisi est ullamco cupidatat mollit sunt ipsum velit."
+    },
+    {
+      "title": "Topo II domain2-3 flex",
+      "pdbs": [{ "name": "1pvg.pdb" }, { "name": "1pcg.pdb" }, { "name": "7vve.pdb" }],
+      "constinp": "my_const.inp",
+      "expdata": "topoII_data.dat",
+      "num_conf": "300",
+      "rg_min": "22",
+      "rg_max": "66",
+      "uuid": "eebb7520-1581-4e25-ad17-73e068c72dde",
+      "status": "running",
+      "message": "Anim et Lorem sit exercitation anim ea adipisicing."
+    }
+  ]
+}
