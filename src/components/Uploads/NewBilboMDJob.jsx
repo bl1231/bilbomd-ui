@@ -15,10 +15,10 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import SendIcon from '@mui/icons-material/Send';
 import { Form, Formik, Field } from 'formik';
 import { Select, SimpleFileUpload } from 'formik-mui';
-//import { CustomFileUpload } from 'components/Common/CustomFileUpload';
 import { MultipleFileUploadField } from './MultipleFileUploadField';
 import { Debug } from 'components/Debug';
 import { bilbomdJobSchema } from '../../schemas/ValidationSchemas';
+import { useNavigate } from 'react-router-dom';
 import axios from 'api/axios';
 
 const axios_upload_url = '/upload';
@@ -107,17 +107,50 @@ const onSubmit = async (values, { setSubmitting, setErrors, setStatus, resetForm
     console.log('result: ', result);
   };
   upload();
-  //resetForm();
 };
 
 const UploadBilboMDJob = () => {
+  const history = useNavigate();
   return (
     <Card>
       <CardContent>
         <Formik
           initialValues={initialValues}
-          validationSchema={bilbomdJobSchema}
-          onSubmit={onSubmit}
+          //validationSchema={bilbomdJobSchema}
+          onSubmit={async (values, { setSubmitting, setErrors, setStatus, resetForm }) => {
+            console.log('form values: ', values);
+            await sleep(2000);
+            const form = new FormData();
+            form.append('title', values.title);
+            //console.log('have this many PDBs: ', values.pdbs.length);
+            values.pdbs.forEach((pdb, index) => {
+              //console.log(pdb.uuid);
+              form.append(`pdb_${index + 1}`, pdb.file);
+            });
+            form.append('num_conf', values.num_conf);
+            form.append('rg_min', values.rg_min);
+            form.append('rg_max', values.rg_max);
+            form.append('expdata', values.expdata);
+            form.append('constinp', values.constinp);
+
+            const upload = async () => {
+              const result = await axios
+                .post(axios_upload_url, form)
+                .then((res) => {
+                  console.log(res);
+                  resetForm({});
+                  setStatus({ success: true });
+                })
+                .then(() => history('/dashboard'))
+                .catch((error) => {
+                  console.log(error);
+                  setStatus({ success: false });
+                  setSubmitting(false);
+                });
+              console.log('result: ', result);
+            };
+            upload();
+          }}
         >
           {({
             values,
