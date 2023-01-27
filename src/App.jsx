@@ -19,15 +19,14 @@ import Dashboard from 'components/Dashboard';
 import BilboMDJob from 'components/BilboMDJob';
 //import { SubmitJob } from 'components/SubmitJob';
 //import ImageForm from 'components/UploadForm';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Outlet } from 'react-router-dom';
 import VerifyUser from 'components/Auth/VerifyUser';
 //import Dashboard from 'components/DashBoardExample';
 
 import { darkTheme, lightTheme } from './theme';
 import { useState } from 'react';
 import { styled } from '@mui/material/styles';
-import Header from 'components/Header/Header';
-import Footer from 'components/Footer/Footer';
+
 //import MUITest from 'components/Uploads/MUITest';
 import UploadBilboMDJob from 'components/Uploads/NewBilboMDJob';
 import { purple } from '@mui/material/colors';
@@ -41,9 +40,11 @@ const ROLES = {
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#000'
+      main: purple[500]
     },
-    secondary: purple
+    secondary: {
+      main: '#f44336'
+    }
   },
   typography: {
     fontFamily: 'Quicksand',
@@ -62,89 +63,48 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Routes>
-        <Route
-          path="/"
-          element={<Layout />}
-        >
-          {/* public routes */}
-          <Route
-            path="register"
-            element={<Signup />}
-          />
-          <Route
-            path="verify/:code"
-            element={<VerifyUser />}
-          />
-          <Route
-            path="magicklink"
-            element={<MagickLink />}
-          />
-          <Route
-            path="auth/:otp"
-            element={<MagickLinkAuth />}
-          />
-          {/* <Route path="login" element={<Login />} /> */}
-          <Route
-            path="login"
-            element={<MagickLink />}
-          />
-          <Route
-            path="linkpage"
-            element={<LinkPage />}
-          />
-          <Route
-            path="unauthorized"
-            element={<Unauthorized />}
-          />
-          <Route
-            path="job"
-            element={<UploadBilboMDJob />}
-          />
-          <Route
-            path="dashboard"
-            element={<Dashboard />}
-          />
+        {/* public routes */}
+        <Route path="register" element={<Signup />} />
+        <Route path="verify/:code" element={<VerifyUser />} />
+        <Route path="magicklink" element={<MagickLink />} />
+        <Route path="auth/:otp" element={<MagickLinkAuth />} />
+        {/* <Route path="login" element={<Login />} /> */}
+        <Route path="login" element={<MagickLink />} />
+        <Route path="linkpage" element={<LinkPage />} />
+        <Route path="unauthorized" element={<Unauthorized />} />
+
+        {/* EVERYTHING BELOW HERE WILL HAVE OUR LAYOUT*/}
+        <Route path="/" element={<Layout />}>
+          {/*testing area*/}
+          <Route path="job" element={<UploadBilboMDJob />} />
+          <Route path="dashboard" element={<Dashboard />} />
 
           {/* we want to protect these routes */}
           <Route element={<PersistLogin />}>
             <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
-              <Route
-                path="/"
-                element={<Home />}
-              />
-              <Route
-                path="dashboard"
-                element={<Dashboard />}
-              />
+              <Route path="/" element={<Home />} />
+              <Route path="dashboard" element={<Dashboard />} />
             </Route>
 
             <Route element={<RequireAuth allowedRoles={[ROLES.Editor]} />}>
-              <Route
-                path="editor"
-                element={<Editor />}
-              />
+              <Route path="editor" element={<Editor />} />
             </Route>
 
             <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
-              <Route
-                path="admin"
-                element={<Admin />}
-              />
+              <Route path="admin" element={<Admin />} />
             </Route>
 
-            <Route element={<RequireAuth allowedRoles={[ROLES.Editor, ROLES.Admin]} />}>
-              <Route
-                path="lounge"
-                element={<Lounge />}
-              />
+            <Route
+              element={
+                <RequireAuth allowedRoles={[ROLES.Editor, ROLES.Admin]} />
+              }
+            >
+              <Route path="lounge" element={<Lounge />} />
             </Route>
           </Route>
 
           {/* catch all */}
-          <Route
-            path="*"
-            element={<Missing />}
-          />
+          <Route path="*" element={<Missing />} />
         </Route>
       </Routes>
     </ThemeProvider>

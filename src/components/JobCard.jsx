@@ -4,7 +4,7 @@ import React from 'react';
 
 const JobCard = ({ job, handelDelete }) => {
   return (
-    <Card elevation={1}>
+    <Card elevation={1} sx={{ color: '#000' }}>
       <CardHeader
         action={
           <IconButton onClick={() => handelDelete(job.uuid)}>
