@@ -1,7 +1,6 @@
 {
   "jobs": [
     {
-      "id": "1",
       "title": "Topo II domain1 flex",
       "pdbs": [
         { "name": "1pvg.pdb" },
@@ -16,10 +15,10 @@
       "uuid": "fab8a42a-a61f-4315-a207-efdc424c1644",
       "status": "submitted",
       "message": "Incididunt ut fugiat nisi est ullamco cupidatat mollit sunt ipsum velit.",
-      "submitted": "2023-03-17T18:06:24.000+00:00"
+      "submitted": "2022-03-17T18:06:24.000+00:00",
+      "completed": ""
     },
     {
-      "id": "2",
       "title": "Topo II domain2-3 flex",
       "pdbs": [
         { "name": "1pvg.pdb" },
@@ -34,10 +33,10 @@
       "uuid": "eebb7520-1581-4e25-ad17-73e068c72dde",
       "status": "running",
       "message": "Anim et Lorem sit exercitation anim ea adipisicing.",
-      "submitted": "2023-01-17T18:06:24.000+00:00"
+      "submitted": "2023-01-17T18:06:24.000+00:00",
+      "completed": ""
     },
     {
-      "id": "3",
       "title": "MRE11 Doing a Science",
       "pdbs": [
         { "name": "1pvg.pdb" },
@@ -52,10 +51,10 @@
       "uuid": "a7552c0f-2c86-4761-9312-6f2f5d82aa03",
       "status": "error",
       "message": "Incididunt ut fugiat nisi est ullamco cupidatat mollit sunt ipsum velit.",
-      "submitted": "2023-01-18T18:06:24.000+00:00"
+      "submitted": "2023-01-18T18:16:24.000+00:00",
+      "completed": "2023-01-18T18:23:46.000+00:00"
     },
     {
-      "id": "4",
       "title": "MRE11 Doing a Science with more options n stuff flex",
       "pdbs": [
         { "name": "1pvg.pdb" },
@@ -70,7 +69,26 @@
       "uuid": "bd4c498d-d9e1-4ed8-b8e8-932069b052f3",
       "status": "completed",
       "message": "Aute dolore esse sunt voluptate ea eiusmod sint id consequat sunt officia.",
-      "submitted": "2023-02-17T18:06:24.000+00:00"
+      "submitted": "2023-02-17T18:26:24.000+00:00",
+      "completed": "2023-02-17T21:26:24.000+00:00"
+    },
+    {
+      "title": "Title of my BilboMD Job",
+      "pdbs": [
+        { "name": "4jis.pdb" },
+        { "name": "5pnq.pdb" },
+        { "name": "7hgh.pdb" }
+      ],
+      "constinp": "const.inp",
+      "expdata": "saxs_data.dat",
+      "num_conf": "800",
+      "rg_min": "40",
+      "rg_max": "44",
+      "uuid": "4425eef5-72fd-4d48-ad7f-d8c31ed98b75",
+      "status": "completed",
+      "message": "Voluptate irure eiusmod laboris nisi cillum velit ex aliquip fugiat reprehenderit laborum ipsum.",
+      "submitted": "2023-02-27T11:21:24.000+00:00",
+      "completed": "2023-02-28T01:21:24.000+00:00"
     }
   ]
 }
