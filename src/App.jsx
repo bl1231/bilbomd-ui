@@ -1,7 +1,5 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-//import { red } from '@mui/material/colors';
 import Signup from 'components/Auth/Signup';
-//import Login from 'components/Auth/Login';
 import MagickLinkAuth from 'components/Auth/MagickLinkAuth';
 import MagickLink from 'components/Auth/MagickLink';
 import Home from 'components/Home';
@@ -19,7 +17,7 @@ import Dashboard from 'components/Dashboard';
 import BilboMDJob from 'components/BilboMDJob';
 //import { SubmitJob } from 'components/SubmitJob';
 //import ImageForm from 'components/UploadForm';
-import { Routes, Route, Outlet } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import VerifyUser from 'components/Auth/VerifyUser';
 //import Dashboard from 'components/DashBoardExample';
 
@@ -43,7 +41,7 @@ const theme = createTheme({
       main: purple[500]
     },
     secondary: {
-      main: '#f44336'
+      main: '#7d6d99'
     }
   },
   typography: {
