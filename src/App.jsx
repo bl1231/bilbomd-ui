@@ -9,21 +9,15 @@ import Admin from 'components/Admin';
 import Missing from 'components/Missing';
 import Unauthorized from 'components/Unauthorized';
 import Lounge from 'components/Lounge';
-import LinkPage from 'components/LinkPage';
 import RequireAuth from 'components/Auth/RequireAuth';
 import PersistLogin from 'components/PersistLogin';
 import Dashboard from 'components/Dashboard';
-//import AddBilboMDJob from 'components/AddBilboMDJob';
-import BilboMDJob from 'components/BilboMDJob';
-//import { SubmitJob } from 'components/SubmitJob';
-//import ImageForm from 'components/UploadForm';
 import { Routes, Route } from 'react-router-dom';
 import VerifyUser from 'components/Auth/VerifyUser';
-//import Dashboard from 'components/DashBoardExample';
 
-import { darkTheme, lightTheme } from './theme';
-import { useState } from 'react';
-import { styled } from '@mui/material/styles';
+//import { darkTheme, lightTheme } from './theme';
+//import { useState } from 'react';
+//import { styled } from '@mui/material/styles';
 
 //import MUITest from 'components/Uploads/MUITest';
 import UploadBilboMDJob from 'components/Uploads/NewBilboMDJob';
@@ -65,14 +59,12 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Routes>
-        {/* public routes */}
+        {/* PUBLIC & UNAUTHENTICATED ROUTES */}
         <Route path="register" element={<Signup />} />
         <Route path="verify/:code" element={<VerifyUser />} />
         <Route path="magicklink" element={<MagickLink />} />
         <Route path="auth/:otp" element={<MagickLinkAuth />} />
-        {/* <Route path="login" element={<Login />} /> */}
         <Route path="login" element={<MagickLink />} />
-        <Route path="linkpage" element={<LinkPage />} />
         <Route path="unauthorized" element={<Unauthorized />} />
 
         {/* EVERYTHING BELOW HERE WILL HAVE OUR LAYOUT*/}
@@ -81,7 +73,7 @@ function App() {
           <Route path="job" element={<UploadBilboMDJob />} />
           <Route path="dashboard" element={<JobTable />} />
 
-          {/* we want to protect these routes */}
+          {/* PROTECTED ROUTES BELOW */}
           <Route element={<PersistLogin />}>
             <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
               <Route path="/" element={<Home />} />
