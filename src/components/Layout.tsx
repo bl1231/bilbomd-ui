@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import AppBar from '@mui/material/AppBar';
@@ -16,14 +17,19 @@ import MailIcon from '@mui/icons-material/Mail';
 import { AddCircleOutlineOutlined, SubjectOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { Outlet, useLocation } from 'react-router-dom';
-
+import { Avatar, Button } from '@mui/material';
+import { format } from 'date-fns';
 const drawerWidth = 240;
 
 export default function ClippedDrawer() {
   const history = useNavigate();
   const location = useLocation();
   const menuItems = [
-    { text: 'My Jobs', icon: <SubjectOutlined color="secondary" />, path: '/dashboard' },
+    {
+      text: 'My Jobs',
+      icon: <SubjectOutlined color="secondary" />,
+      path: '/dashboard'
+    },
     {
       text: 'New Job',
       icon: <AddCircleOutlineOutlined color="secondary" />,
@@ -31,77 +37,65 @@ export default function ClippedDrawer() {
     }
   ];
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
+    <Container>
+      <Box sx={{ mb: 9 }}>
+        <AppBar
+          position="fixed"
+          elevation={0}
+          sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          color="secondary"
+        >
+          <Toolbar>
+            <Typography variant="h6">BilboMD</Typography>
+            <Typography>{format(new Date(), 'do MMMM Y')}</Typography>
+            <Typography>Scott</Typography>
+            <Avatar src="/me.png" />
 
-      <AppBar
-        position="fixed"
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      >
-        <Toolbar>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-          >
-            BilboMD
-          </Typography>
-        </Toolbar>
-      </AppBar>
-
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' }
-        }}
-      >
-        <Toolbar />
-        <Box sx={{ overflow: 'auto' }}>
-          <List>
-            {menuItems.map((item) => (
-              <ListItem
-                key={item.text}
-                disablePadding
-              >
-                <ListItemButton
-                  onClick={() => history(item.path)}
-                  sx={{
-                    backgroundColor: location.pathname === item.path ? '#efefef' : null
-                  }}
-                >
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText>{item.text}</ListItemText>
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-          <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem
-                key={text}
-                disablePadding
-              >
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      </Drawer>
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, p: 3 }}
-      >
-        <Outlet />
-        <Toolbar />
+            <Button color="inherit">Login</Button>
+          </Toolbar>
+        </AppBar>
       </Box>
-    </Box>
+
+      <Box sx={{ display: 'flex' }}>
+        <Drawer
+          variant="permanent"
+          sx={{
+            width: drawerWidth,
+            flexShrink: 0,
+            [`& .MuiDrawer-paper`]: {
+              width: drawerWidth,
+              boxSizing: 'border-box'
+            }
+          }}
+        >
+          <Toolbar />
+          <Box sx={{ overflow: 'auto' }}>
+            <List>
+              {menuItems.map((item) => (
+                <ListItem key={item.text} disablePadding>
+                  <ListItemButton
+                    onClick={() => history(item.path)}
+                    sx={{
+                      backgroundColor:
+                        location.pathname === item.path ? '#efefef' : null
+                    }}
+                  >
+                    <ListItemIcon>{item.icon}</ListItemIcon>
+                    <ListItemText>{item.text}</ListItemText>
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+            <Divider />
+            {/** add more items to the drawer  */}
+          </Box>
+        </Drawer>
+
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <Outlet />
+          <Toolbar />
+        </Box>
+      </Box>
+    </Container>
   );
 }

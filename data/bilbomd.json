@@ -1,8 +1,13 @@
 {
   "jobs": [
     {
+      "id": "1",
       "title": "Topo II domain1 flex",
-      "pdbs": [{ "name": "1pvg.pdb" }, { "name": "1pcg.pdb" }, { "name": "7vve.pdb" }],
+      "pdbs": [
+        { "name": "1pvg.pdb" },
+        { "name": "1pcg.pdb" },
+        { "name": "7vve.pdb" }
+      ],
       "constinp": "my_const.inp",
       "expdata": "topoII_data.dat",
       "num_conf": "200",
@@ -10,11 +15,17 @@
       "rg_max": "60",
       "uuid": "fab8a42a-a61f-4315-a207-efdc424c1644",
       "status": "submitted",
-      "message": "Incididunt ut fugiat nisi est ullamco cupidatat mollit sunt ipsum velit."
+      "message": "Incididunt ut fugiat nisi est ullamco cupidatat mollit sunt ipsum velit.",
+      "submitted": "2023-03-17T18:06:24.000+00:00"
     },
     {
+      "id": "2",
       "title": "Topo II domain2-3 flex",
-      "pdbs": [{ "name": "1pvg.pdb" }, { "name": "1pcg.pdb" }, { "name": "7vve.pdb" }],
+      "pdbs": [
+        { "name": "1pvg.pdb" },
+        { "name": "1pcg.pdb" },
+        { "name": "7vve.pdb" }
+      ],
       "constinp": "my_const.inp",
       "expdata": "topoII_data.dat",
       "num_conf": "300",
@@ -22,11 +33,17 @@
       "rg_max": "66",
       "uuid": "eebb7520-1581-4e25-ad17-73e068c72dde",
       "status": "running",
-      "message": "Anim et Lorem sit exercitation anim ea adipisicing."
+      "message": "Anim et Lorem sit exercitation anim ea adipisicing.",
+      "submitted": "2023-01-17T18:06:24.000+00:00"
     },
     {
+      "id": "3",
       "title": "MRE11 Doing a Science",
-      "pdbs": [{ "name": "1pvg.pdb" }, { "name": "1pcg.pdb" }, { "name": "7vve.pdb" }],
+      "pdbs": [
+        { "name": "1pvg.pdb" },
+        { "name": "1pcg.pdb" },
+        { "name": "7vve.pdb" }
+      ],
       "constinp": "my_const.inp",
       "expdata": "topoII_data.dat",
       "num_conf": "200",
@@ -34,11 +51,17 @@
       "rg_max": "60",
       "uuid": "a7552c0f-2c86-4761-9312-6f2f5d82aa03",
       "status": "error",
-      "message": "Incididunt ut fugiat nisi est ullamco cupidatat mollit sunt ipsum velit."
+      "message": "Incididunt ut fugiat nisi est ullamco cupidatat mollit sunt ipsum velit.",
+      "submitted": "2023-01-18T18:06:24.000+00:00"
     },
     {
+      "id": "4",
       "title": "MRE11 Doing a Science with more options n stuff flex",
-      "pdbs": [{ "name": "1pvg.pdb" }, { "name": "1pcg.pdb" }, { "name": "7vve.pdb" }],
+      "pdbs": [
+        { "name": "1pvg.pdb" },
+        { "name": "1pcg.pdb" },
+        { "name": "7vve.pdb" }
+      ],
       "constinp": "my_const.inp",
       "expdata": "topoII_data.dat",
       "num_conf": "300",
@@ -46,7 +69,8 @@
       "rg_max": "66",
       "uuid": "bd4c498d-d9e1-4ed8-b8e8-932069b052f3",
       "status": "completed",
-      "message": "Anim et Lorem sit exercitation anim ea adipisicing."
+      "message": "Aute dolore esse sunt voluptate ea eiusmod sint id consequat sunt officia.",
+      "submitted": "2023-02-17T18:06:24.000+00:00"
     }
   ]
 }

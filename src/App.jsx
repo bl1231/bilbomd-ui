@@ -28,6 +28,7 @@ import { styled } from '@mui/material/styles';
 //import MUITest from 'components/Uploads/MUITest';
 import UploadBilboMDJob from 'components/Uploads/NewBilboMDJob';
 import { purple } from '@mui/material/colors';
+import JobTable from 'components/JobTable';
 
 const ROLES = {
   User: 2001,
@@ -38,7 +39,7 @@ const ROLES = {
 const theme = createTheme({
   palette: {
     primary: {
-      main: purple[500]
+      main: purple[300]
     },
     secondary: {
       main: '#7d6d99'
@@ -50,6 +51,9 @@ const theme = createTheme({
     fontWeightRegular: 500,
     fontWeightMedium: 600,
     fontWeightBold: 700
+  },
+  date: {
+    flexGrow: 1
   }
 });
 
@@ -75,7 +79,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           {/*testing area*/}
           <Route path="job" element={<UploadBilboMDJob />} />
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="dashboard" element={<JobTable />} />
 
           {/* we want to protect these routes */}
           <Route element={<PersistLogin />}>
