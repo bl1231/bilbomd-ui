@@ -12,6 +12,7 @@ import { Alert, AlertTitle, Grid, TextField, Typography } from '@mui/material';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import Divider from '@mui/material/Divider';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { Link } from 'react-router-dom';
 
 const MAGICKLINK_URL = '/magicklink';
 
@@ -175,6 +176,7 @@ const MagickLink = () => {
                     Send my MagickLink&#8482;
                   </Button>
                   <Divider variant="middle" />
+
                   <Button
                     fullWidth
                     sx={{ my: 2 }}
@@ -182,6 +184,8 @@ const MagickLink = () => {
                     type="button"
                     color="secondary"
                     endIcon={<ChevronRightIcon />}
+                    component={Link}
+                    to="/register"
                   >
                     Create an Account
                   </Button>

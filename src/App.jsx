@@ -14,7 +14,7 @@ import RequireAuth from 'components/Auth/RequireAuth';
 import PersistLogin from 'components/PersistLogin';
 import Dashboard from 'components/Dashboard';
 //import AddBilboMDJob from 'components/AddBilboMDJob';
-import BilboMDJob from 'components/BilboMDJob';
+//import BilboMDJob from 'components/BilboMDJob';
 //import { SubmitJob } from 'components/SubmitJob';
 //import ImageForm from 'components/UploadForm';
 import { Routes, Route } from 'react-router-dom';
@@ -78,14 +78,14 @@ function App() {
         {/* EVERYTHING BELOW HERE WILL HAVE OUR LAYOUT*/}
         <Route path="/" element={<Layout />}>
           {/*testing area*/}
-          <Route path="job" element={<UploadBilboMDJob />} />
-          <Route path="dashboard" element={<JobTable />} />
+          {/* <Route path="job" element={<UploadBilboMDJob />} /> */}
+          {/* <Route path="dashboard" element={<Dashboard />} /> */}
 
           {/* we want to protect these routes */}
           <Route element={<PersistLogin />}>
             <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
-              <Route path="/" element={<Home />} />
-              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="job" element={<UploadBilboMDJob />} />
+              <Route path="dashboard" element={<JobTable />} />
             </Route>
 
             <Route element={<RequireAuth allowedRoles={[ROLES.Editor]} />}>

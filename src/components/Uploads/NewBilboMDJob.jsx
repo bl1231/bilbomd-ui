@@ -73,7 +73,10 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 //   }
 // };
 
-const onSubmit = async (values, { setSubmitting, setErrors, setStatus, resetForm }) => {
+const onSubmit = async (
+  values,
+  { setSubmitting, setErrors, setStatus, resetForm }
+) => {
   console.log('form values: ', values);
   await sleep(2000);
   const form = new FormData();
@@ -109,7 +112,7 @@ const onSubmit = async (values, { setSubmitting, setErrors, setStatus, resetForm
   upload();
 };
 
-const UploadBilboMDJob = () => {
+const NewBilboMDJob = () => {
   const history = useNavigate();
   return (
     <Card>
@@ -117,7 +120,10 @@ const UploadBilboMDJob = () => {
         <Formik
           initialValues={initialValues}
           //validationSchema={bilbomdJobSchema}
-          onSubmit={async (values, { setSubmitting, setErrors, setStatus, resetForm }) => {
+          onSubmit={async (
+            values,
+            { setSubmitting, setErrors, setStatus, resetForm }
+          ) => {
             console.log('form values: ', values);
             await sleep(2000);
             const form = new FormData();
@@ -163,11 +169,7 @@ const UploadBilboMDJob = () => {
             resetForm
           }) => (
             <Form>
-              <Grid
-                container
-                spacing={2}
-                direction="column"
-              >
+              <Grid container spacing={2} direction="column">
                 <Grid item>
                   <Field
                     value={values.title || ''}
@@ -189,20 +191,16 @@ const UploadBilboMDJob = () => {
                   />
                 </Grid>
 
-                <Grid
-                  item
-                  sx={{ mb: 3 }}
-                >
+                <Grid item sx={{ mb: 3 }}>
                   <FormControl>
-                    <FormLabel sx={{ marginBottom: '6px' }}>PDB Files</FormLabel>
+                    <FormLabel sx={{ marginBottom: '6px' }}>
+                      PDB Files
+                    </FormLabel>
                     <MultipleFileUploadField name="pdbs" />
                   </FormControl>
                 </Grid>
 
-                <Grid
-                  item
-                  sx={{ my: 1 }}
-                >
+                <Grid item sx={{ my: 1 }}>
                   <Field
                     fullWidth
                     value={values.constinp || ''}
@@ -222,10 +220,7 @@ const UploadBilboMDJob = () => {
                   </Typography> */}
                 </Grid>
 
-                <Grid
-                  item
-                  sx={{ my: 1 }}
-                >
+                <Grid item sx={{ my: 1 }}>
                   <Field
                     name="expdata"
                     label="Upload your expermental data file"
@@ -241,14 +236,13 @@ const UploadBilboMDJob = () => {
                   </Typography> */}
                 </Grid>
 
-                <Grid
-                  item
-                  sx={{ my: 1 }}
-                >
+                <Grid item sx={{ my: 1 }}>
                   <Field
                     fullWidth
                     component={Select}
-                    formHelperText={{ children: 'Extent of Conformational Sampling' }}
+                    formHelperText={{
+                      children: 'Extent of Conformational Sampling'
+                    }}
                     id="num_conf"
                     name="num_conf"
                     labelId="num_conf"
@@ -262,10 +256,7 @@ const UploadBilboMDJob = () => {
                   </Field>
                 </Grid>
 
-                <Grid
-                  item
-                  sx={{ my: 1 }}
-                >
+                <Grid item sx={{ my: 1 }}>
                   <Field
                     fullWidth
                     id="rg_min"
@@ -285,10 +276,7 @@ const UploadBilboMDJob = () => {
                   />
                 </Grid>
 
-                <Grid
-                  item
-                  sx={{ my: 1 }}
-                >
+                <Grid item sx={{ my: 1 }}>
                   <Field
                     fullWidth
                     id="rg_max"
@@ -307,10 +295,7 @@ const UploadBilboMDJob = () => {
                     error={Boolean(errors.rg_max) && Boolean(touched.rg_max)}
                   />
                 </Grid>
-                <Grid
-                  item
-                  sx={{ my: 2 }}
-                >
+                <Grid item sx={{ my: 2 }}>
                   <LoadingButton
                     type="submit"
                     loading={isSubmitting}
@@ -333,4 +318,4 @@ const UploadBilboMDJob = () => {
   );
 };
 
-export default UploadBilboMDJob;
+export default NewBilboMDJob;
