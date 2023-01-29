@@ -1,17 +1,23 @@
 import { useState } from 'react';
 import { Formik, Form } from 'formik';
 import { userRegisterSchema } from 'schemas/ValidationSchemas';
-import CustomFormInputs from '../Common/CustomFormInputs';
-//import { Debug } from './Debug';
-import axios from 'api/axios';
 import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import Alert from '@mui/material/Alert';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import Button from '@mui/material/Button';
 import CloseIcon from '@mui/icons-material/Close';
-import { Container } from '@mui/system';
+import { Container, Stack } from '@mui/system';
+import {
+  Alert,
+  AlertTitle,
+  Divider,
+  TextField,
+  Typography
+} from '@mui/material';
+import axios from 'api/axios';
 
 const REGISTER_URL = '/register';
 
@@ -57,97 +63,141 @@ const Signup = () => {
   };
 
   return (
-    <Container>
-      {success ? (
-        <div className="alert alert-success" role="alert">
-          <h4 className="alert-heading">Woot!</h4>
-          <p>
-            You have been registered for an account. Before you can log in we
-            need you to verify your email. Please check your inbox for a
-            verification email from
-            <br />
-            <span className="text-primary">
-              bilbomd-noreply@bl1231.als.lbl.gov
-            </span>
-            .
-          </p>
-        </div>
-      ) : (
-        <Formik
-          initialValues={{ user: '', email: '' }}
-          validationSchema={userRegisterSchema}
-          onSubmit={onSubmit}
-        >
-          {({ isSubmitting, status }) => (
-            <Form>
-              <CustomFormInputs
-                label="User Name"
-                name="user"
-                type="text"
-                placeholder="pick username"
-              />
-              <CustomFormInputs
-                label="Email Address"
-                name="email"
-                type="email"
-                placeholder="enter email address"
-              />
-              {error ? (
-                // <Alert
-                //   variant="danger"
-                //   onClose={() => setError('')}
-                //   dismissible
-                // >
-                //   <Alert.Heading>{error.message}</Alert.Heading>
-                //   If you think you already have an account try{' '}
-                //   <a href="/magicklink" className="alert-link">
-                //     logging in
-                //   </a>
-                // </Alert>
-                <Box sx={{ width: '100%' }}>
-                  <Collapse in={error}>
-                    <Alert
-                      severity="error"
-                      action={
-                        <IconButton
-                          aria-label="close"
-                          color="inherit"
-                          size="small"
-                          onClick={() => setError('')}
+    <Container maxWidth="sm">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+        width="400px"
+      >
+        <Stack spacing={1}>
+          {success ? (
+            <Alert severity="success">
+              <AlertTitle>Woot!</AlertTitle>You have been registered for an
+              account. Before you can log in we need you to verify your email.
+              Please check your inbox for a verification email from
+              <br />
+              <strong>bilbomd-noreply@bl1231.als.lbl.gov</strong>
+            </Alert>
+          ) : (
+            <Formik
+              initialValues={{ user: '', email: '' }}
+              validationSchema={userRegisterSchema}
+              onSubmit={onSubmit}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                isValid,
+                isSubmitting,
+                handleChange,
+                handleBlur,
+                resetForm
+              }) => (
+                <Form>
+                  <Typography>
+                    Select a user name & enter your email address to create a
+                    BilboMD account.
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    margin="normal"
+                    label="Pick a User Name"
+                    name="user"
+                    type="text"
+                    variant="outlined"
+                    disabled={isSubmitting}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={Boolean(errors.user) && Boolean(touched.user)}
+                    helperText={
+                      Boolean(errors.user) && Boolean(touched.user)
+                        ? errors.user
+                        : null
+                    }
+                  />
+                  <TextField
+                    fullWidth
+                    margin="normal"
+                    label="Email address"
+                    name="email"
+                    type="email"
+                    variant="outlined"
+                    disabled={isSubmitting}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={Boolean(errors.email) && Boolean(touched.email)}
+                    helperText={
+                      Boolean(errors.email) && Boolean(touched.email)
+                        ? errors.email
+                        : null
+                    }
+                  />
+                  {error ? (
+                    <Box sx={{ width: '100%' }}>
+                      <Collapse in={error}>
+                        <Alert
+                          severity="error"
+                          action={
+                            <IconButton
+                              aria-label="close"
+                              color="inherit"
+                              size="small"
+                              onClick={() => setError('')}
+                            >
+                              <CloseIcon fontSize="inherit" />
+                            </IconButton>
+                          }
+                          sx={{ mb: 2 }}
                         >
-                          <CloseIcon fontSize="inherit" />
-                        </IconButton>
-                      }
-                      sx={{ mb: 2 }}
-                    >
-                      If you think you already have an account try{' '}
-                      <a href="/magicklink" className="alert-link">
-                        logging in
-                      </a>
-                    </Alert>
-                  </Collapse>
-                </Box>
-              ) : (
-                ''
-              )}
+                          If you think you already have an account try{' '}
+                          <a href="/magicklink" className="alert-link">
+                            logging in
+                          </a>
+                        </Alert>
+                      </Collapse>
+                    </Box>
+                  ) : (
+                    ''
+                  )}
 
-              <button
-                className="btn btn-primary"
-                type="submit"
-                disabled={isSubmitting}
-              >
-                Create account
-              </button>
-              <p>Already have an account?</p>
-              <Link to="/magicklink">
-                <button type="button" className="btn btn-secondary">
-                  Get a MagickLink&#8482;
-                </button>
-              </Link>
-            </Form>
+                  <Button
+                    fullWidth
+                    sx={{ my: 2 }}
+                    variant="contained"
+                    type="submit"
+                    color="primary"
+                    disabled={isSubmitting}
+                    startIcon={<AddCircleOutlineIcon />}
+                  >
+                    Create an Account
+                  </Button>
+                  <Divider variant="middle" sx={{ my: 3 }} />
+
+                  <Typography variant="body2" sx={{ mt: 2 }}>
+                    Already have an account?
+                  </Typography>
+
+                  <Button
+                    fullWidth
+                    sx={{ my: 2 }}
+                    variant="contained"
+                    type="button"
+                    color="secondary"
+                    endIcon={<AutoFixHighIcon />}
+                    component={Link}
+                    to="/magicklink"
+                  >
+                    Get a MagickLink&#8482;
+                  </Button>
+                </Form>
+              )}
+            </Formik>
           )}
-        </Formik>
-      )}
+        </Stack>
+      </Box>
     </Container>
   );
 };

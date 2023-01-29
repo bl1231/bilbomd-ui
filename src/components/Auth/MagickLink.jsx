@@ -1,45 +1,19 @@
 import { useState } from 'react';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import { userSignInSchema } from 'schemas/ValidationSchemas';
-import axios from 'api/axios';
-import CustomFormInputs from '../Common/CustomFormInputs';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import Button from '@mui/material/Button';
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, Container, Stack } from '@mui/system';
-import { Alert, AlertTitle, Grid, TextField, Typography } from '@mui/material';
+import { Alert, AlertTitle, TextField, Typography } from '@mui/material';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import Divider from '@mui/material/Divider';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Link } from 'react-router-dom';
+import axios from 'api/axios';
 
 const MAGICKLINK_URL = '/magicklink';
-
-function Item(props) {
-  const { sx, ...other } = props;
-  return (
-    <Box
-      sx={{
-        bgcolor: (theme) =>
-          theme.palette.mode === 'dark' ? '#101010' : '#fff',
-        color: (theme) =>
-          theme.palette.mode === 'dark' ? 'grey.300' : 'grey.800',
-        border: '1px solid',
-        borderColor: (theme) =>
-          theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
-        p: 1,
-        m: 1,
-        borderRadius: 1,
-        fontFamily: 'Quicksand',
-        fontSize: '0.875rem',
-        fontWeight: '700',
-        ...sx
-      }}
-      {...other}
-    />
-  );
-}
 
 const MagickLink = () => {
   const [success, setSuccess] = useState(null);
@@ -83,6 +57,7 @@ const MagickLink = () => {
         justifyContent="center"
         alignItems="center"
         minHeight="100vh"
+        width="400px"
       >
         <Stack spacing={1}>
           {success ? (
@@ -109,13 +84,7 @@ const MagickLink = () => {
                 resetForm
               }) => (
                 <Form>
-                  {/* <CustomFormInputs
-                    label="Email Address"
-                    name="email"
-                    type="email"
-                    placeholder="enter email address"
-                  /> */}
-                  <Typography justifyContent="center">
+                  <Typography>
                     Enter your email address to sign in to BilboMD
                   </Typography>
                   <TextField
@@ -161,7 +130,7 @@ const MagickLink = () => {
                       </Collapse>
                     </Box>
                   ) : (
-                    <></>
+                    ''
                   )}
 
                   <Button
@@ -175,8 +144,10 @@ const MagickLink = () => {
                   >
                     Send my MagickLink&#8482;
                   </Button>
-                  <Divider variant="middle" />
-
+                  <Divider variant="middle" sx={{ my: 3 }} />
+                  <Typography variant="body2" sx={{ mt: 2 }}>
+                    Need an account?
+                  </Typography>
                   <Button
                     fullWidth
                     sx={{ my: 2 }}
