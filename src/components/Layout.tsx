@@ -3,7 +3,7 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import AppBar from '@mui/material/AppBar';
-import CssBaseline from '@mui/material/CssBaseline';
+//import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
@@ -12,18 +12,25 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import LogoutIcon from '@mui/icons-material/Logout';
+//import InboxIcon from '@mui/icons-material/MoveToInbox';
+//import MailIcon from '@mui/icons-material/Mail';
 import { AddCircleOutlineOutlined, SubjectOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Avatar, Button } from '@mui/material';
 import { format } from 'date-fns';
+import useLogout from 'hooks/useLogout';
 const drawerWidth = 240;
 
 export default function ClippedDrawer() {
-  const history = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
+  const logout = useLogout();
+  const signOut = async () => {
+    await logout();
+    navigate('/');
+  };
   const menuItems = [
     {
       text: 'My Jobs',
@@ -34,6 +41,11 @@ export default function ClippedDrawer() {
       text: 'New Job',
       icon: <AddCircleOutlineOutlined color="secondary" />,
       path: '/job'
+    },
+    {
+      text: 'Logout',
+      icon: <LogoutIcon color="secondary" />,
+      path: ''
     }
   ];
   return (
@@ -74,7 +86,7 @@ export default function ClippedDrawer() {
               {menuItems.map((item) => (
                 <ListItem key={item.text} disablePadding>
                   <ListItemButton
-                    onClick={() => history(item.path)}
+                    onClick={() => navigate(item.path)}
                     sx={{
                       backgroundColor:
                         location.pathname === item.path ? '#efefef' : null

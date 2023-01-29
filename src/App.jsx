@@ -70,7 +70,6 @@ function App() {
         <Route path="verify/:code" element={<VerifyUser />} />
         <Route path="magicklink" element={<MagickLink />} />
         <Route path="auth/:otp" element={<MagickLinkAuth />} />
-        {/* <Route path="login" element={<Login />} /> */}
         <Route path="login" element={<MagickLink />} />
         <Route path="linkpage" element={<LinkPage />} />
         <Route path="unauthorized" element={<Unauthorized />} />
@@ -78,14 +77,14 @@ function App() {
         {/* EVERYTHING BELOW HERE WILL HAVE OUR LAYOUT*/}
         <Route path="/" element={<Layout />}>
           {/*testing area*/}
-          {/* <Route path="job" element={<UploadBilboMDJob />} /> */}
-          {/* <Route path="dashboard" element={<Dashboard />} /> */}
+          <Route path="dashboard" element={<JobTable />} />
+          <Route path="job" element={<UploadBilboMDJob />} />
 
           {/* we want to protect these routes */}
           <Route element={<PersistLogin />}>
             <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
-              <Route path="job" element={<UploadBilboMDJob />} />
-              <Route path="dashboard" element={<JobTable />} />
+              {/* <Route path="job" element={<UploadBilboMDJob />} />
+              <Route path="dashboard" element={<JobTable />} /> */}
             </Route>
 
             <Route element={<RequireAuth allowedRoles={[ROLES.Editor]} />}>
