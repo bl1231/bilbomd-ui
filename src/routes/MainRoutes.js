@@ -13,6 +13,9 @@ const NewBilboMDJob = Loadable(
 // render - sample page
 //const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
 const JobTable = Loadable(lazy(() => import('pages/dashboard/JobTable')));
+const SingleJobPage = Loadable(
+  lazy(() => import('pages/dashboard/SingleJobPage'))
+);
 
 // render - utilities
 //const Typography = Loadable(lazy(() => import('pages/components-overview/Typography')));
@@ -31,8 +34,12 @@ const MainRoutes = {
       element: <DashboardDefault />
     },
     {
-      path: 'newjob',
+      path: 'job',
       element: <NewBilboMDJob />
+    },
+    {
+      path: 'job/:uuid',
+      element: <SingleJobPage />
     },
     {
       path: 'dashboard',
@@ -44,7 +51,7 @@ const MainRoutes = {
       ]
     },
     {
-      path: 'jobtable',
+      path: 'jobs',
       element: <JobTable />
     }
     // {

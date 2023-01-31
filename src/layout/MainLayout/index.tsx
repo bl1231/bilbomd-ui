@@ -20,7 +20,10 @@ import { Avatar, Button } from '@mui/material';
 import { format } from 'date-fns';
 import useAuth from 'hooks/useAuth';
 import useLogout from 'hooks/useLogout';
-const drawerWidth = 240;
+
+// ==============================|| MAIN LAYOUT ||============================== //
+
+const drawerWidth = 140;
 
 export default function ClippedDrawer() {
   const navigate = useNavigate();
@@ -34,12 +37,12 @@ export default function ClippedDrawer() {
     {
       text: 'My Jobs',
       icon: <SubjectOutlined color="secondary" />,
-      path: '/jobtable'
+      path: '/jobs'
     },
     {
       text: 'New Job',
       icon: <AddCircleOutlineOutlined color="secondary" />,
-      path: '/newjob'
+      path: '/job'
     },
     {
       text: 'Logout',
@@ -57,7 +60,9 @@ export default function ClippedDrawer() {
           color="secondary"
         >
           <Toolbar>
-            <Typography variant="h6">BilboMD</Typography>
+            <Typography variant="h3" component="h1">
+              BilboMD
+            </Typography>
             {/* <Typography>{format(new Date(), 'do MMMM Y')}</Typography>
             <Typography>Scott</Typography>
             <Avatar src="/me.png" />

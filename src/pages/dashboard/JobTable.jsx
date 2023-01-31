@@ -1,22 +1,22 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import {
   DataGrid,
-  GridCellParams,
   GridColDef,
+  GridCellParams,
   GridValueFormatterParams,
-  GridRowId,
-  GridActionsCellItem,
-  GridColumns
+  GridActionsCellItem
 } from '@mui/x-data-grid';
 import { format, parseISO } from 'date-fns';
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import SecurityIcon from '@mui/icons-material/Security';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
+import InfoIcon from '@mui/icons-material/Info';
+// import EditIcon from '@mui/icons-material/Edit';
+// import SecurityIcon from '@mui/icons-material/Security';
+// import FileCopyIcon from '@mui/icons-material/FileCopy';
 import clsx from 'clsx';
 import { Box } from '@mui/system';
 
 import { green, red, amber } from '@mui/material/colors';
+import { Link, useNavigate } from 'react-router-dom';
 
 const emptyJob = [
   {
@@ -35,10 +35,9 @@ const emptyJob = [
   }
 ];
 
-//type Job = typeof emptyJob[];
-
 export default function JobTable() {
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState(emptyJob);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch('http://localhost:3333/jobs')
@@ -47,9 +46,20 @@ export default function JobTable() {
   }, []);
 
   const deleteJob = useCallback(
-    (uuid) => () => {
+    (id) => () => {
       setTimeout(() => {
-        setJobs((prevJobs) => prevJobs.filter((job) => job.uuid !== uuid));
+        console.log('delete: ', id);
+        setJobs((prevJobs) => prevJobs.filter((job) => job.id !== id));
+      });
+    },
+    []
+  );
+
+  const viewJob = useCallback(
+    (id) => () => {
+      setTimeout(() => {
+        console.log('view: ', id);
+        navigate(`/job/${id}`);
       });
     },
     []
@@ -64,6 +74,7 @@ export default function JobTable() {
         width: 160,
         valueFormatter: (params: GridValueFormatterParams<string>) => {
           if (params?.value) {
+            //console.log(params);
             return format(parseISO(params?.value), 'MM/dd/yyyy HH:mm:ss');
           } else {
             return '--/--/-- 00:00:00';
@@ -101,18 +112,30 @@ export default function JobTable() {
       },
       {
         field: 'actions',
+        headerName: 'Delete/Details',
         type: 'actions',
-        width: 80,
+        width: 110,
         getActions: (params) => [
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={deleteJob(params.uuid)}
+            onClick={deleteJob(params.id)}
+          />,
+          <GridActionsCellItem
+            icon={<InfoIcon />}
+            label="View"
+            onClick={viewJob(params.id)}
           />
         ]
+      },
+      {
+        field: 'test',
+        headerName: 'Test',
+        width: 60,
+        renderCell: (params) => <Link to={`/job/${params.id}`}>VIEW</Link>
       }
     ],
-    [deleteJob]
+    [deleteJob, viewJob]
   );
 
   return (
