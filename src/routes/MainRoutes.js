@@ -4,24 +4,19 @@ import { lazy } from 'react';
 import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
 
+// our Dave Gray redux Authentication wrapper
+import RequireAuth from 'pages/authentication/RequireAuth';
+
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
-//const DashboardDefault = Loadable(lazy(() => import('components/Dashboard')));
-const NewBilboMDJob = Loadable(
-  lazy(() => import('components/Uploads/NewBilboMDJob'))
-);
-// render - sample page
-//const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
-const JobTable = Loadable(lazy(() => import('pages/dashboard/JobTable')));
-const SingleJobPage = Loadable(
-  lazy(() => import('pages/dashboard/SingleJobPage'))
-);
+// prettier-ignore
+const NewBilboMDJob = Loadable(lazy(() => import('components/Uploads/NewBilboMDJob')));
 
-// render - utilities
-//const Typography = Loadable(lazy(() => import('pages/components-overview/Typography')));
-//const Color = Loadable(lazy(() => import('pages/components-overview/Color')));
-//const Shadow = Loadable(lazy(() => import('pages/components-overview/Shadow')));
-//const AntIcons = Loadable(lazy(() => import('pages/components-overview/AntIcons')));
+const JobTable = Loadable(lazy(() => import('pages/dashboard/JobTable')));
+// prettier-ignore
+const SingleJobPage = Loadable(lazy(() => import('pages/dashboard/SingleJobPage')));
+const Welcome = Loadable(lazy(() => import('pages/authentication/Welcome')));
+const UsersList = Loadable(lazy(() => import('pages/users/UsersList')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -54,19 +49,54 @@ const MainRoutes = {
       path: 'jobs',
       element: <JobTable />
     }
-    // {
-    //     path: 'shadow',
-    //     element: <Shadow />
-    // },
-    // {
-    //     path: 'typography',
-    //     element: <Typography />
-    // },
-    // {
-    //     path: 'icons/ant',
-    //     element: <AntIcons />
-    // }
   ]
 };
 
-export default MainRoutes;
+const ProtectedMainRoutes = {
+  element: <RequireAuth />,
+  children: [
+    {
+      path: '/',
+      element: <MainLayout />,
+      children: [
+        {
+          path: '/',
+          element: <DashboardDefault />
+        },
+        {
+          path: 'welcome',
+          element: <Welcome />
+        },
+        {
+          path: 'userslist',
+          element: <UsersList />
+        },
+        {
+          path: 'job',
+          element: <NewBilboMDJob />
+        },
+        {
+          path: 'job/:uuid',
+          element: <SingleJobPage />
+        },
+        {
+          path: 'dashboard',
+          children: [
+            {
+              path: 'default',
+              element: <DashboardDefault />
+            }
+          ]
+        },
+        {
+          path: 'jobs',
+          element: <JobTable />
+        }
+      ]
+    }
+  ]
+};
+
+// export default MainRoutes;
+
+export { MainRoutes, ProtectedMainRoutes };

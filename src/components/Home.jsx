@@ -1,35 +1,34 @@
-import { useNavigate, Link } from 'react-router-dom';
-import useLogout from 'hooks/useLogout';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
-    const navigate = useNavigate();
-    const logout = useLogout();
-
-    const signOut = async () => {
-        await logout();
-        navigate('/linkpage');
-    };
-
-    return (
-        <section>
-            <h1>Home</h1>
-            <br />
-            <p>You are logged in!</p>
-            <br />
-            <Link to="/editor">Go to the Editor page</Link>
-            <br />
-            <Link to="/admin">Go to the Admin page</Link>
-            <br />
-            <Link to="/lounge">Go to the Lounge</Link>
-            <br />
-            <Link to="/linkpage">Go to the link page</Link>
-            <br />
-            <Link to="/dashboard">Go to the dashboard page</Link>
-            <div className="flexGrow">
-                <button onClick={signOut}>Sign Out</button>
-            </div>
-        </section>
-    );
+  const content = (
+    <section className="public">
+      <header>
+        <h1>Welcome to BilboMD!</h1>
+      </header>
+      <main>
+        <p>
+          Located in building 15 room 234 on teh LBNL campus in Sunny Berkeley,
+          CA , BilboMD provides an advanced Molecular Dynamics tool to analyze
+          your SAXS needs.
+        </p>
+        <p>&nbsp;</p>
+        <address>
+          Repair Store
+          <br />
+          555 Foo Drive
+          <br />
+          Foo City, CA 12345
+          <br />
+          <a href="tel:+15555555555">(555) 555-5555</a>
+        </address>
+      </main>
+      <footer>
+        <Link to="/login">Login</Link>
+      </footer>
+    </section>
+  );
+  return content;
 };
 
 export default Home;

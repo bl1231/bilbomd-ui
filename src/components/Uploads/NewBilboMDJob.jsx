@@ -61,18 +61,6 @@ export interface BilboMDUploadForm {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-// const onSubmit2 = async (values, { setSubmitting, setErrors, setStatus, resetForm }) => {
-//   try {
-//     await auth.passwordUpdate(values.oldPassword, values.passwordOne);
-//     resetForm({});
-//     setStatus({ success: true });
-//   } catch (error) {
-//     setStatus({ success: false });
-//     setSubmitting(false);
-//     setErrors({ submit: error.message });
-//   }
-// };
-
 const onSubmit = async (
   values,
   { setSubmitting, setErrors, setStatus, resetForm }
@@ -125,7 +113,7 @@ const NewBilboMDJob = () => {
             { setSubmitting, setErrors, setStatus, resetForm }
           ) => {
             console.log('form values: ', values);
-            await sleep(2000);
+            await sleep(500);
             const form = new FormData();
             form.append('title', values.title);
             //console.log('have this many PDBs: ', values.pdbs.length);
@@ -141,13 +129,15 @@ const NewBilboMDJob = () => {
 
             const upload = async () => {
               const result = await axios
-                .post(axios_upload_url, form)
+                .post(axios_upload_url, form, {
+                  withCredentials: true
+                })
                 .then((res) => {
                   console.log(res);
                   resetForm({});
                   setStatus({ success: true });
                 })
-                .then(() => history('/dashboard'))
+                .then(() => history('/jobs'))
                 .catch((error) => {
                   console.log(error);
                   setStatus({ success: false });

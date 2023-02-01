@@ -10,14 +10,20 @@ import { Alert, AlertTitle, TextField, Typography } from '@mui/material';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import Divider from '@mui/material/Divider';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'api/axios';
+
+import { useDispatch } from 'react-redux';
+import { setCredentials } from 'store/reducers/authSlice';
+import { useLoginMutation } from 'store/reducers/authApiSlice';
 
 const MAGICKLINK_URL = '/magicklink';
 
 const MagickLink = () => {
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState('');
+
+  const dispatch = useDispatch();
 
   const onSubmit = async (values, { setStatus, resetForm, setSubmitting }) => {
     setStatus({ success: 'Splinching the data...', css: 'sending' });

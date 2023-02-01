@@ -18,9 +18,11 @@ import { useNavigate } from 'react-router-dom';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Avatar, Button } from '@mui/material';
 import { format } from 'date-fns';
-import useAuth from 'hooks/useAuth';
-import useLogout from 'hooks/useLogout';
-
+import { useSelector } from 'react-redux';
+import {
+  selectCurrentUser,
+  selectCurrentToken
+} from 'store/reducers/authSlice';
 // ==============================|| MAIN LAYOUT ||============================== //
 
 const drawerWidth = 140;
@@ -28,11 +30,12 @@ const drawerWidth = 140;
 export default function ClippedDrawer() {
   const navigate = useNavigate();
   const location = useLocation();
-  const logout = useLogout();
-  const signOut = async () => {
-    await logout();
-    navigate('/');
-  };
+  const user = useSelector(selectCurrentUser);
+  //const logout = useLogout();
+  // const signOut = async () => {
+  //   await logout();
+  //   navigate('/');
+  // };
   const menuItems = [
     {
       text: 'My Jobs',
@@ -68,6 +71,7 @@ export default function ClippedDrawer() {
             <Avatar src="/me.png" />
 
             <Button color="inherit">Login</Button> */}
+            <Typography>{user}</Typography>
           </Toolbar>
         </AppBar>
       </Box>
