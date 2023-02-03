@@ -12,12 +12,12 @@ const Home = Loadable(lazy(() => import('components/Home')));
 // const AuthRegister = Loadable(lazy(() => import('pages/authentication/Register')));
 
 // prettier-ignore
-const MagickLink = Loadable(lazy(() => import('pages/authentication/MagickLink')));
-const Signup = Loadable(lazy(() => import('pages/authentication/Signup')));
+const MagickLink = Loadable(lazy(() => import('features/auth/MagickLink')));
+const Signup = Loadable(lazy(() => import('features/auth/Signup')));
 // prettier-ignore
-const VerifyUser = Loadable(lazy(() => import('pages/authentication/VerifyUser')));
+const VerifyUser = Loadable(lazy(() => import('features/auth/VerifyUser')));
 // prettier-ignore
-const MagickLinkAuth = Loadable(lazy(() => import('pages/authentication/MagickLinkAuth')));
+const MagickLinkAuth = Loadable(lazy(() => import('features/auth/MagickLinkAuth')));
 const Unauthorized = Loadable(lazy(() => import('components/Unauthorized')));
 
 // ==============================|| AUTH ROUTING ||============================== //

@@ -5,18 +5,19 @@ import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
 
 // our Dave Gray redux Authentication wrapper
-import RequireAuth from 'pages/authentication/RequireAuth';
+import RequireAuth from 'features/auth/RequireAuth';
 
 // render - dashboard
-const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
+const DashboardDefault = Loadable(lazy(() => import('features/dashboard/DashBoard')));
 // prettier-ignore
-const NewBilboMDJob = Loadable(lazy(() => import('components/Uploads/NewBilboMDJob')));
+const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')));
 
-const JobTable = Loadable(lazy(() => import('pages/dashboard/JobTable')));
+const JobsList = Loadable(lazy(() => import('features/jobs/JobsList')));
 // prettier-ignore
-const SingleJobPage = Loadable(lazy(() => import('pages/dashboard/SingleJobPage')));
-const Welcome = Loadable(lazy(() => import('pages/authentication/Welcome')));
-const UsersList = Loadable(lazy(() => import('pages/users/UsersList')));
+const SingleJobPage = Loadable(lazy(() => import('features/dashboard/SingleJobPage')));
+const Welcome = Loadable(lazy(() => import('features/auth/Welcome')));
+const UsersList = Loadable(lazy(() => import('features/users/UsersList')));
+const EditUser = Loadable(lazy(() => import('features/users/EditUser')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -30,7 +31,7 @@ const MainRoutes = {
     },
     {
       path: 'job',
-      element: <NewBilboMDJob />
+      element: <NewJob />
     },
     {
       path: 'job/:uuid',
@@ -47,13 +48,13 @@ const MainRoutes = {
     },
     {
       path: 'jobs',
-      element: <JobTable />
+      element: <JobsList />
     }
   ]
 };
 
 const ProtectedMainRoutes = {
-  element: <RequireAuth />,
+  //element: <RequireAuth />,
   children: [
     {
       path: '/',
@@ -61,23 +62,7 @@ const ProtectedMainRoutes = {
       children: [
         {
           path: '/',
-          element: <DashboardDefault />
-        },
-        {
-          path: 'welcome',
           element: <Welcome />
-        },
-        {
-          path: 'userslist',
-          element: <UsersList />
-        },
-        {
-          path: 'job',
-          element: <NewBilboMDJob />
-        },
-        {
-          path: 'job/:uuid',
-          element: <SingleJobPage />
         },
         {
           path: 'dashboard',
@@ -85,12 +70,29 @@ const ProtectedMainRoutes = {
             {
               path: 'default',
               element: <DashboardDefault />
+            },
+            {
+              path: 'users',
+              element: <UsersList />
+            },
+            {
+              path: 'users/:id',
+              element: <EditUser />
+            },
+            {
+              path: 'jobs',
+              element: <JobsList />
+            },
+            {
+              path: 'jobs/:uuid',
+              element: <SingleJobPage />
+            },
+            {
+              path: 'jobs/new',
+              //element: <NewJobForm />
+              element: <NewJob />
             }
           ]
-        },
-        {
-          path: 'jobs',
-          element: <JobTable />
         }
       ]
     }
