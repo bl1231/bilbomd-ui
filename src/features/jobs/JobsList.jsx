@@ -1,55 +1,36 @@
-import { useGetJobsQuery } from './jobsApiSlice';
+import { useGetJobsQuery } from './jobsApiSlice'
 import {
   DataGrid,
   GridColDef,
   GridCellParams,
   GridValueFormatterParams,
   GridActionsCellItem
-} from '@mui/x-data-grid';
-import { useState, useCallback, useMemo } from 'react';
-import { format, parseISO } from 'date-fns';
+} from '@mui/x-data-grid'
+import { useState, useCallback, useMemo } from 'react'
+import { format, parseISO } from 'date-fns'
 
-import { useSelector } from 'react-redux';
-import { selectJobById } from './jobsApiSlice';
-import PulseLoader from 'react-spinners/PulseLoader';
-
-import DeleteIcon from '@mui/icons-material/Delete';
-import InfoIcon from '@mui/icons-material/Info';
+import { useSelector } from 'react-redux'
+import { selectJobById } from './jobsApiSlice'
+import PulseLoader from 'react-spinners/PulseLoader'
+import useTitle from 'hooks/useTitle'
+import DeleteIcon from '@mui/icons-material/Delete'
+import InfoIcon from '@mui/icons-material/Info'
 // import EditIcon from '@mui/icons-material/Edit';
 // import SecurityIcon from '@mui/icons-material/Security';
 // import FileCopyIcon from '@mui/icons-material/FileCopy';
-import clsx from 'clsx';
-import { Box } from '@mui/system';
-import { green, red, amber } from '@mui/material/colors';
-import { Link, useNavigate } from 'react-router-dom';
-
-const emptyJob = [
-  {
-    title: '',
-    uuid: '',
-    pdbs: [{ name: '', size: '' }],
-    constinp: '',
-    expdata: '',
-    num_conf: '',
-    rg_min: '',
-    rg_max: '',
-    status: '',
-    message: '',
-    time_submitted: '',
-    time_started: '',
-    time_completed: ''
-  }
-];
+import clsx from 'clsx'
+import { Box } from '@mui/system'
+import { green, red, amber } from '@mui/material/colors'
+import { Link, useNavigate } from 'react-router-dom'
+import { createSelector } from '@reduxjs/toolkit'
+import { convertCompilerOptionsFromJson } from 'typescript'
 
 const JobsList = () => {
-  //const [jobs, setJobs] = useState(emptyJob);
-  const navigate = useNavigate();
+  useTitle('BilboMD: Jobs List')
 
-  // useEffect(() => {
-  //   fetch('http://localhost:3500/jobs')
-  //     .then((res) => res.json())
-  //     .then((data) => setJobs(data));
-  // }, []);
+  //const { username, isManager, isAdmin } = useAuth()
+
+  const navigate = useNavigate()
 
   const {
     data: jobs,
@@ -58,10 +39,10 @@ const JobsList = () => {
     isError,
     error
   } = useGetJobsQuery('jobsList', {
-    pollingInterval: 0,
+    pollingInterval: 15000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
-  });
+  })
 
   //console.log(jobs);
   // const deleteJob = useCallback(
@@ -84,43 +65,54 @@ const JobsList = () => {
   //   []
   // );
 
-  let content;
+  let content
 
-  if (isLoading) content = <PulseLoader color={'#FFF'} />;
+  if (isLoading) content = <PulseLoader color={'#FFF'} />
 
   if (isError) {
-    content = <p className="errmsg">{error?.data?.message}</p>;
+    content = <p className="errmsg">{error?.data?.message}</p>
   }
   if (isSuccess) {
-    //console.log('jobs: ', jobs);
-    const { ids, entities } = jobs;
-    console.log(entities);
+    const { ids, entities } = jobs
+
+    //console.log('jobs: ', jobs)
+    //console.log(Object.values(jobs))
+    //console.log('ids:', ids)
+    //console.log('entities:', entities)
+
+    // This is some magic shit. Why do I find map so difficult to understand?
+    // This is where we will need to filter teh jobs so that Users only see
+    // their jobs NOT all jobs.
+    const rows = ids?.length ? ids.map((jobId) => entities[jobId]) : []
+    console.log(rows)
     const columns: GridColDef[] = [
-      // {
-      //   field: 'time_submitted',
-      //   type: 'dateTime',
-      //   width: 160,
-      //   valueFormatter: (params: GridValueFormatterParams<string>) => {
-      //     if (params?.value) {
-      //       //console.log(params);
-      //       return format(parseISO(params?.value), 'MM/dd/yyyy HH:mm:ss');
-      //     } else {
-      //       return '--/--/-- 00:00:00';
-      //     }
-      //   }
-      // },
-      // {
-      //   field: 'completed',
-      //   type: 'dateTime',
-      //   width: 160,
-      //   valueFormatter: (params: GridValueFormatterParams<string>) => {
-      //     if (params?.value) {
-      //       return format(parseISO(params?.value), 'MM/dd/yyyy HH:mm:ss');
-      //     } else {
-      //       return '--/--/-- 00:00:00';
-      //     }
-      //   }
-      // },
+      {
+        field: 'time_submitted',
+        headerName: 'Submitted',
+        type: 'dateTime',
+        width: 160,
+        valueFormatter: (params: GridValueFormatterParams<string>) => {
+          if (params?.value) {
+            //console.log(params);
+            return format(parseISO(params?.value), 'MM/dd/yyyy HH:mm:ss')
+          } else {
+            return '--/--/-- 00:00:00'
+          }
+        }
+      },
+      {
+        field: 'time_completed',
+        headerName: 'Completed',
+        type: 'dateTime',
+        width: 160,
+        valueFormatter: (params: GridValueFormatterParams<string>) => {
+          if (params?.value) {
+            return format(parseISO(params?.value), 'MM/dd/yyyy HH:mm:ss')
+          } else {
+            return '--/--/-- 00:00:00'
+          }
+        }
+      },
       { field: 'title', headerName: 'Title', width: 200 },
       {
         field: 'status',
@@ -128,14 +120,14 @@ const JobsList = () => {
         width: 100,
         cellClassName: (params: GridCellParams<string>) => {
           if (params.value == null) {
-            return '';
+            return ''
           }
           return clsx('bilbomd', {
-            submitted: params.value === 'submitted',
-            running: params.value === 'running',
-            error: params.value === 'error',
-            completed: params.value === 'completed'
-          });
+            submitted: params.value === 'Submitted',
+            running: params.value === 'Running',
+            error: params.value === 'Error',
+            completed: params.value === 'Completed'
+          })
         }
       },
       {
@@ -160,15 +152,16 @@ const JobsList = () => {
         field: 'test',
         headerName: 'Test',
         width: 60,
-        renderCell: (params) => <Link to={`/jobs/${params.id}`}>VIEW</Link>
+        renderCell: (params) => <Link to={`/dashboard/jobs/${params.id}`}>VIEW</Link>
       }
-    ];
+    ]
 
     content = (
       <Box
         sx={{
-          height: 500,
+          height: 600,
           width: '100%',
+          background: 'grey',
           '& .bilbomd.completed': {
             backgroundColor: green[400],
             color: '#1a3e72',
@@ -192,18 +185,18 @@ const JobsList = () => {
         }}
       >
         <DataGrid
-          rows={entities}
+          rows={rows}
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5]}
-          checkboxSelection
-          getRowId={(row) => row.id}
+          //checkboxSelection
+          getRowId={(row) => row._id}
         />
       </Box>
-    );
+    )
   }
 
-  return content;
-};
+  return content
+}
 
-export default JobsList;
+export default JobsList

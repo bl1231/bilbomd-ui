@@ -1,9 +1,10 @@
-import { AppBar, Toolbar, Typography } from '@mui/material';
-import { useSelector } from 'react-redux';
-import { selectCurrentUser } from 'features/auth/authSlice';
+import { AppBar, Toolbar, Typography } from '@mui/material'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from 'features/auth/authSlice'
+import { Link } from 'react-router-dom'
 
 const Header = () => {
-  const user = useSelector(selectCurrentUser);
+  const user = useSelector(selectCurrentUser)
   return (
     <AppBar
       position="fixed"
@@ -12,13 +13,16 @@ const Header = () => {
       color="secondary"
     >
       <Toolbar>
-        <Typography variant="h3" component="h1">
-          BilboMD
+        <Typography
+          variant="h3"
+          component="h1"
+        >
+          <Link to="/dashboard">BilboMD</Link>
         </Typography>
         <Typography>{user}</Typography>
       </Toolbar>
     </AppBar>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

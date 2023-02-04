@@ -10,18 +10,18 @@ import {
   FormControlLabel,
   FormLabel,
   FormControl
-} from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton';
-import SendIcon from '@mui/icons-material/Send';
-import { Form, Formik, Field } from 'formik';
-import { Select, SimpleFileUpload } from 'formik-mui';
-import { MultipleFileUploadField } from './MultipleFileUploadField';
-import { Debug } from 'components/Debug';
-import { bilbomdJobSchema } from 'schemas/ValidationSchemas';
-import { useNavigate } from 'react-router-dom';
-import axios from 'app/api/axios';
+} from '@mui/material'
+import LoadingButton from '@mui/lab/LoadingButton'
+import SendIcon from '@mui/icons-material/Send'
+import { Form, Formik, Field } from 'formik'
+import { Select, SimpleFileUpload } from 'formik-mui'
+import { MultipleFileUploadField } from './MultipleFileUploadField'
+import { Debug } from 'components/Debug'
+import { bilbomdJobSchema } from 'schemas/ValidationSchemas'
+import { useNavigate } from 'react-router-dom'
+import axios from 'app/api/axios'
 
-const axios_upload_url = '/upload';
+const axios_upload_url = '/upload'
 
 const initialValues = {
   title: '',
@@ -38,7 +38,7 @@ const initialValues = {
   num_conf: '',
   rg_min: '',
   rg_max: ''
-};
+}
 
 export interface BilboMDUploadForm {
   title: string;
@@ -59,23 +59,23 @@ export interface BilboMDUploadForm {
   rg_max: number;
 }
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 const onSubmit = async (values, { setSubmitting, setErrors, setStatus, resetForm }) => {
-  console.log('form values: ', values);
-  await sleep(2000);
-  const form = new FormData();
-  form.append('title', values.title);
+  console.log('form values: ', values)
+  await sleep(2000)
+  const form = new FormData()
+  form.append('title', values.title)
   //console.log('have this many PDBs: ', values.pdbs.length);
   values.pdbs.forEach((pdb, index) => {
     //console.log(pdb.uuid);
-    form.append(`pdb_${index + 1}`, pdb.file);
-  });
-  form.append('num_conf', values.num_conf);
-  form.append('rg_min', values.rg_min);
-  form.append('rg_max', values.rg_max);
-  form.append('expdata', values.expdata);
-  form.append('constinp', values.constinp);
+    form.append(`pdb_${index + 1}`, pdb.file)
+  })
+  form.append('num_conf', values.num_conf)
+  form.append('rg_min', values.rg_min)
+  form.append('rg_max', values.rg_max)
+  form.append('expdata', values.expdata)
+  form.append('constinp', values.constinp)
 
   //console.log(form);
 
@@ -83,22 +83,22 @@ const onSubmit = async (values, { setSubmitting, setErrors, setStatus, resetForm
     const result = await axios
       .post(axios_upload_url, form)
       .then((res) => {
-        console.log(res);
-        resetForm({});
-        setStatus({ success: true });
+        console.log(res)
+        resetForm({})
+        setStatus({ success: true })
       })
       .catch((error) => {
-        console.log(error);
-        setStatus({ success: false });
-        setSubmitting(false);
-      });
-    console.log('result: ', result);
-  };
-  upload();
-};
+        console.log(error)
+        setStatus({ success: false })
+        setSubmitting(false)
+      })
+    console.log('result: ', result)
+  }
+  upload()
+}
 
 const NewBilboMDJob = () => {
-  const history = useNavigate();
+  const history = useNavigate()
   return (
     <Card>
       <CardContent>
@@ -106,20 +106,20 @@ const NewBilboMDJob = () => {
           initialValues={initialValues}
           //validationSchema={bilbomdJobSchema}
           onSubmit={async (values, { setSubmitting, setErrors, setStatus, resetForm }) => {
-            console.log('form values: ', values);
-            await sleep(500);
-            const form = new FormData();
-            form.append('title', values.title);
+            console.log('form values: ', values)
+            await sleep(500)
+            const form = new FormData()
+            form.append('title', values.title)
             //console.log('have this many PDBs: ', values.pdbs.length);
             values.pdbs.forEach((pdb, index) => {
               //console.log(pdb.uuid);
-              form.append(`pdb_${index + 1}`, pdb.file);
-            });
-            form.append('num_conf', values.num_conf);
-            form.append('rg_min', values.rg_min);
-            form.append('rg_max', values.rg_max);
-            form.append('expdata', values.expdata);
-            form.append('constinp', values.constinp);
+              form.append(`pdb_${index + 1}`, pdb.file)
+            })
+            form.append('num_conf', values.num_conf)
+            form.append('rg_min', values.rg_min)
+            form.append('rg_max', values.rg_max)
+            form.append('expdata', values.expdata)
+            form.append('constinp', values.constinp)
 
             const upload = async () => {
               const result = await axios
@@ -127,19 +127,19 @@ const NewBilboMDJob = () => {
                   withCredentials: true
                 })
                 .then((res) => {
-                  console.log(res);
-                  resetForm({});
-                  setStatus({ success: true });
+                  console.log(res)
+                  resetForm({})
+                  setStatus({ success: true })
                 })
-                .then(() => history('/jobs'))
+                .then(() => history('/dashboard/jobs'))
                 .catch((error) => {
-                  console.log(error);
-                  setStatus({ success: false });
-                  setSubmitting(false);
-                });
-              console.log('result: ', result);
-            };
-            upload();
+                  console.log(error)
+                  setStatus({ success: false })
+                  setSubmitting(false)
+                })
+              console.log('result: ', result)
+            }
+            upload()
           }}
         >
           {({
@@ -153,7 +153,11 @@ const NewBilboMDJob = () => {
             resetForm
           }) => (
             <Form>
-              <Grid container spacing={2} direction="column">
+              <Grid
+                container
+                spacing={2}
+                direction="column"
+              >
                 <Grid item>
                   <Field
                     value={values.title || ''}
@@ -175,14 +179,20 @@ const NewBilboMDJob = () => {
                   />
                 </Grid>
 
-                <Grid item sx={{ mb: 3 }}>
+                <Grid
+                  item
+                  sx={{ mb: 3 }}
+                >
                   <FormControl>
                     <FormLabel sx={{ marginBottom: '6px' }}>PDB Files</FormLabel>
                     <MultipleFileUploadField name="pdbs" />
                   </FormControl>
                 </Grid>
 
-                <Grid item sx={{ my: 1 }}>
+                <Grid
+                  item
+                  sx={{ my: 1 }}
+                >
                   <Field
                     fullWidth
                     value={values.constinp || ''}
@@ -202,7 +212,10 @@ const NewBilboMDJob = () => {
                   </Typography> */}
                 </Grid>
 
-                <Grid item sx={{ my: 1 }}>
+                <Grid
+                  item
+                  sx={{ my: 1 }}
+                >
                   <Field
                     name="expdata"
                     label="Upload your expermental data file"
@@ -218,7 +231,10 @@ const NewBilboMDJob = () => {
                   </Typography> */}
                 </Grid>
 
-                <Grid item sx={{ my: 1 }}>
+                <Grid
+                  item
+                  sx={{ my: 1 }}
+                >
                   <Field
                     fullWidth
                     component={Select}
@@ -238,7 +254,10 @@ const NewBilboMDJob = () => {
                   </Field>
                 </Grid>
 
-                <Grid item sx={{ my: 1 }}>
+                <Grid
+                  item
+                  sx={{ my: 1 }}
+                >
                   <Field
                     fullWidth
                     id="rg_min"
@@ -258,7 +277,10 @@ const NewBilboMDJob = () => {
                   />
                 </Grid>
 
-                <Grid item sx={{ my: 1 }}>
+                <Grid
+                  item
+                  sx={{ my: 1 }}
+                >
                   <Field
                     fullWidth
                     id="rg_max"
@@ -277,7 +299,10 @@ const NewBilboMDJob = () => {
                     error={Boolean(errors.rg_max) && Boolean(touched.rg_max)}
                   />
                 </Grid>
-                <Grid item sx={{ my: 2 }}>
+                <Grid
+                  item
+                  sx={{ my: 2 }}
+                >
                   <LoadingButton
                     type="submit"
                     loading={isSubmitting}
@@ -297,7 +322,7 @@ const NewBilboMDJob = () => {
         </Formik>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default NewBilboMDJob;
+export default NewBilboMDJob

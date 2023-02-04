@@ -1,59 +1,84 @@
-import { lazy } from 'react';
+import { lazy } from 'react'
 
 // project import
-import Loadable from 'components/Loadable';
-import MainLayout from 'layout/MainLayout';
+import Loadable from 'components/Loadable'
+import MainLayout from 'layout/MainLayout'
 
 // our Dave Gray redux Authentication wrapper
-import RequireAuth from 'features/auth/RequireAuth';
+import RequireAuth from 'features/auth/RequireAuth'
 
 // render - dashboard
-const DashboardDefault = Loadable(lazy(() => import('features/dashboard/DashBoard')));
+const DashBoard = Loadable(lazy(() => import('features/dashboard/DashBoard')))
+const Prefetch = Loadable(lazy(() => import('features/auth/Prefetch')))
 // prettier-ignore
 const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')));
 
-const JobsList = Loadable(lazy(() => import('features/jobs/JobsList')));
+const JobsList = Loadable(lazy(() => import('features/jobs/JobsList')))
 // prettier-ignore
-const SingleJobPage = Loadable(lazy(() => import('features/dashboard/SingleJobPage')));
-const Welcome = Loadable(lazy(() => import('features/auth/Welcome')));
-const UsersList = Loadable(lazy(() => import('features/users/UsersList')));
-const EditUser = Loadable(lazy(() => import('features/users/EditUser')));
+const SingleJobPage = Loadable(lazy(() => import('features/jobs/SingleJobPage')));
+const Welcome = Loadable(lazy(() => import('features/auth/UnAuthWelcome')))
+const UsersList = Loadable(lazy(() => import('features/users/UsersList')))
+const NewUserForm = Loadable(lazy(() => import('features/users/NewUserForm')))
+const EditUser = Loadable(lazy(() => import('features/users/EditUser')))
 
 // ==============================|| MAIN ROUTING ||============================== //
 
-const MainRoutes = {
-  path: '/',
-  element: <MainLayout />,
+const ProtectedMainRoutes = {
+  //element: <RequireAuth />,
   children: [
     {
       path: '/',
-      element: <DashboardDefault />
-    },
-    {
-      path: 'job',
-      element: <NewJob />
-    },
-    {
-      path: 'job/:uuid',
-      element: <SingleJobPage />
-    },
-    {
-      path: 'dashboard',
+      element: <MainLayout />,
       children: [
         {
-          path: 'default',
-          element: <DashboardDefault />
+          path: 'welcome',
+          element: <Welcome />
+        },
+        {
+          element: <Prefetch />,
+          children: [
+            {
+              path: 'dashboard',
+              children: [
+                {
+                  path: 'default',
+                  element: <DashBoard />
+                },
+                {
+                  path: 'users',
+                  element: <UsersList />
+                },
+                {
+                  path: 'users/new',
+                  element: <NewUserForm />
+                },
+                {
+                  path: 'users/:id',
+                  element: <EditUser />
+                },
+                {
+                  path: 'jobs',
+                  element: <JobsList />
+                },
+                {
+                  path: 'jobs/:id',
+                  element: <SingleJobPage />
+                },
+                {
+                  path: 'jobs/new',
+                  //element: <NewJobForm />
+                  element: <NewJob />
+                }
+              ]
+            }
+          ]
         }
       ]
-    },
-    {
-      path: 'jobs',
-      element: <JobsList />
     }
   ]
-};
+}
 
-const ProtectedMainRoutes = {
+const ProtectedMainRoutes2 = {
   //element: <RequireAuth />,
   children: [
     {
@@ -65,40 +90,48 @@ const ProtectedMainRoutes = {
           element: <Welcome />
         },
         {
-          path: 'dashboard',
+          element: Prefetch,
           children: [
             {
-              path: 'default',
-              element: <DashboardDefault />
-            },
-            {
-              path: 'users',
-              element: <UsersList />
-            },
-            {
-              path: 'users/:id',
-              element: <EditUser />
-            },
-            {
-              path: 'jobs',
-              element: <JobsList />
-            },
-            {
-              path: 'jobs/:uuid',
-              element: <SingleJobPage />
-            },
-            {
-              path: 'jobs/new',
-              //element: <NewJobForm />
-              element: <NewJob />
+              path: 'dashboard',
+              children: [
+                {
+                  path: 'default',
+                  element: <DashBoard />
+                },
+                {
+                  path: 'users',
+                  element: <UsersList />
+                },
+                {
+                  path: 'users/new',
+                  element: <NewUserForm />
+                },
+                {
+                  path: 'users/:id',
+                  element: <EditUser />
+                },
+                {
+                  path: 'jobs',
+                  element: <JobsList />
+                },
+                {
+                  path: 'jobs/:uuid',
+                  element: <SingleJobPage />
+                },
+                {
+                  path: 'jobs/new',
+                  //element: <NewJobForm />
+                  element: <NewJob />
+                }
+              ]
             }
           ]
         }
       ]
     }
   ]
-};
-
+}
 // export default MainRoutes;
 
-export { MainRoutes, ProtectedMainRoutes };
+export { ProtectedMainRoutes }

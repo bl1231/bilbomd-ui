@@ -11,8 +11,8 @@ import Button from '@mui/material/Button';
 import CloseIcon from '@mui/icons-material/Close';
 import { Container, Stack } from '@mui/system';
 import { Alert, AlertTitle, Divider, TextField, Typography } from '@mui/material';
-import axios from 'app/api/axios';
 
+import axios from 'app/api/axios';
 const REGISTER_URL = '/register';
 
 const Signup = () => {
@@ -138,7 +138,10 @@ const Signup = () => {
                           sx={{ mb: 2 }}
                         >
                           If you think you already have an account try{' '}
-                          <a href="/magicklink" className="alert-link">
+                          <a
+                            href="/magicklink"
+                            className="alert-link"
+                          >
                             logging in
                           </a>
                         </Alert>
@@ -159,9 +162,15 @@ const Signup = () => {
                   >
                     Create an Account
                   </Button>
-                  <Divider variant="middle" sx={{ my: 3 }} />
+                  <Divider
+                    variant="middle"
+                    sx={{ my: 3 }}
+                  />
 
-                  <Typography variant="body2" sx={{ mt: 2 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ mt: 2 }}
+                  >
                     Already have an account?
                   </Typography>
 
