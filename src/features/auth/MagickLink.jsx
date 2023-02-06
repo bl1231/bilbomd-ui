@@ -72,7 +72,7 @@ const MagickLink = () => {
           xs={4}
           sx={{
             p: 2,
-            bgcolor: 'background.paper',
+            bgcolor: 'background.login',
             border: 1,
             borderRadius: 1,
             borderColor: 'secondary.main'
@@ -107,7 +107,13 @@ const MagickLink = () => {
                   </Typography>
                   <TextField
                     fullWidth
-                    sx={{ my: 2 }}
+                    sx={{
+                      my: 2,
+                      bgcolor: 'background.paper',
+                      border: 1,
+                      borderRadius: 1,
+                      borderColor: 'secondary.main'
+                    }}
                     label="Email address"
                     name="email"
                     type="email"

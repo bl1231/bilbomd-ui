@@ -138,16 +138,8 @@ const JobsList = () => {
         type: 'actions',
         width: 110,
         getActions: (params) => [
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={() => {}}
-          />,
-          <GridActionsCellItem
-            icon={<InfoIcon />}
-            label="View"
-            onClick={() => {}}
-          />
+          <GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={() => {}} />,
+          <GridActionsCellItem icon={<InfoIcon />} label="View" onClick={() => {}} />
         ]
       },
       {
@@ -163,7 +155,7 @@ const JobsList = () => {
         sx={{
           height: 600,
           width: '100%',
-          background: 'grey',
+
           '& .bilbomd.completed': {
             backgroundColor: green[400],
             color: '#1a3e72',
