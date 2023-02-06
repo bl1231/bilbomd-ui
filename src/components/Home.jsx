@@ -13,7 +13,7 @@ const Home = () => {
       </Typography>
       <Typography variant="body1">A Molecualr Dynamics tool for your SAXS data.</Typography>
       <Typography variant="body1">
-        <b>BilboMD</b> runs on dedicated servers at the SIBYSL beamline. Please register for an
+        <b>BilboMD</b> runs on dedicated servers at the SIBYLS beamline. Please register for an
         account in order to use this public resource.
       </Typography>
       <Button

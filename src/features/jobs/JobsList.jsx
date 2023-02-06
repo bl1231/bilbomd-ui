@@ -81,9 +81,11 @@ const JobsList = () => {
     //console.log('entities:', entities)
 
     // This is some magic shit. Why do I find map so difficult to understand?
-    // This is where we will need to filter teh jobs so that Users only see
+    // This is where we will need to filter the jobs so that Users only see
     // their jobs NOT all jobs.
+
     const rows = ids?.length ? ids.map((jobId) => entities[jobId]) : []
+
     console.log(rows)
     const columns: GridColDef[] = [
       {

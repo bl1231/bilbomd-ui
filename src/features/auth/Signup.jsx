@@ -1,26 +1,25 @@
-import { useState } from 'react';
-import { Formik, Form } from 'formik';
-import { userRegisterSchema } from 'schemas/ValidationSchemas';
-import { Link } from 'react-router-dom';
-import Box from '@mui/material/Box';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import IconButton from '@mui/material/IconButton';
-import Collapse from '@mui/material/Collapse';
-import Button from '@mui/material/Button';
-import CloseIcon from '@mui/icons-material/Close';
-import { Container, Stack } from '@mui/system';
-import { Alert, AlertTitle, Divider, TextField, Typography } from '@mui/material';
+import React, { useState } from 'react'
+import { Formik, Form } from 'formik'
+import { userRegisterSchema } from 'schemas/ValidationSchemas'
+import { Link } from 'react-router-dom'
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
+import IconButton from '@mui/material/IconButton'
+import Collapse from '@mui/material/Collapse'
+import Button from '@mui/material/Button'
+import CloseIcon from '@mui/icons-material/Close'
+import { Container, Stack, Box } from '@mui/system'
+import { Alert, AlertTitle, Divider, Grid, TextField, Typography } from '@mui/material'
 
-import axios from 'app/api/axios';
-const REGISTER_URL = '/register';
+import axios from 'app/api/axios'
+const REGISTER_URL = '/register'
 
 const Signup = () => {
-  const [success, setSuccess] = useState(null);
-  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(null)
+  const [error, setError] = useState('')
 
   const onSubmit = async (values, { setStatus, resetForm, setSubmitting, setErrors }) => {
-    setStatus({ success: 'Splinching the data...', css: 'sending' });
+    setStatus({ success: 'Splinching the data...', css: 'sending' })
 
     const response = await axios
       .post(REGISTER_URL, values, {
@@ -29,41 +28,51 @@ const Signup = () => {
       })
       .catch((err) => {
         if (!err?.response) {
-          setError({ message: 'No Server Response' });
+          setError({ message: 'No Server Response' })
         } else if (err?.response?.status === 409) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
-          setError({ message: 'User Name or Email Already Registered.' });
-          setSuccess(null);
-          setStatus({ error: err, css: 'error' });
-          console.log(err.response.data);
-          console.log(err.response.status);
-          console.log(err.response.headers);
+          setError({ message: 'User Name or Email Already Registered.' })
+          setSuccess(null)
+          setStatus({ error: err, css: 'error' })
+          console.log(err.response.data)
+          console.log(err.response.status)
+          console.log(err.response.headers)
         } else {
-          setError({ message: 'Registration Failed!' });
+          setError({ message: 'Registration Failed!' })
         }
-      });
+      })
 
     // all good. We got a response from server
     if (response?.data) {
-      setError(null);
-      setSuccess(response.data.success);
-      setSubmitting(false);
-      resetForm();
+      setError(null)
+      setSuccess(response.data.success)
+      setSubmitting(false)
+      resetForm()
     }
-  };
+  }
 
-  return (
-    <Container>
-      <Box
-        display="flex"
-        justifyContent="center"
+  const content = (
+    <React.Fragment>
+      <Grid
+        container
+        columns={12}
+        direction="row"
+        sx={{ height: '100vh' }}
         alignItems="center"
-        height="100vh"
-        width="100vw"
-        minWidth="200px"
+        justifyContent="center"
       >
-        <Stack spacing={1}>
+        <Grid
+          item
+          xs={4}
+          sx={{
+            p: 2,
+            bgcolor: 'background.paper',
+            border: 1,
+            borderRadius: 1,
+            borderColor: 'secondary.main'
+          }}
+        >
           {success ? (
             <Alert severity="success">
               <AlertTitle>Woot!</AlertTitle>You have been registered for an account. Before you can
@@ -89,12 +98,13 @@ const Signup = () => {
                 resetForm
               }) => (
                 <Form>
-                  <Typography>
-                    Select a user name & enter your email address to create a BilboMD account.
+                  <Typography sx={{ my: 2 }}>
+                    Select a user name and enter your email address to create a <b>BilboMD</b>{' '}
+                    account.
                   </Typography>
                   <TextField
                     fullWidth
-                    margin="normal"
+                    sx={{ my: 1 }}
                     label="Pick a User Name"
                     name="user"
                     type="text"
@@ -107,8 +117,8 @@ const Signup = () => {
                   />
                   <TextField
                     fullWidth
-                    margin="normal"
-                    label="Email address"
+                    sx={{ my: 2 }}
+                    label="Enter an Email address"
                     name="email"
                     type="email"
                     variant="outlined"
@@ -121,32 +131,27 @@ const Signup = () => {
                     }
                   />
                   {error ? (
-                    <Box sx={{ width: '100%' }}>
-                      <Collapse in={error}>
-                        <Alert
-                          severity="error"
-                          action={
-                            <IconButton
-                              aria-label="close"
-                              color="inherit"
-                              size="small"
-                              onClick={() => setError('')}
-                            >
-                              <CloseIcon fontSize="inherit" />
-                            </IconButton>
-                          }
-                          sx={{ mb: 2 }}
-                        >
-                          If you think you already have an account try{' '}
-                          <a
-                            href="/magicklink"
-                            className="alert-link"
+                    <Collapse in={error}>
+                      <Alert
+                        severity="error"
+                        action={
+                          <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => setError('')}
                           >
-                            logging in
-                          </a>
-                        </Alert>
-                      </Collapse>
-                    </Box>
+                            <CloseIcon fontSize="inherit" />
+                          </IconButton>
+                        }
+                        sx={{ mb: 1 }}
+                      >
+                        {error.message} If you already have an account try{' '}
+                        <a href="/magicklink" className="alert-link">
+                          logging in
+                        </a>
+                      </Alert>
+                    </Collapse>
                   ) : (
                     ''
                   )}
@@ -162,15 +167,9 @@ const Signup = () => {
                   >
                     Create an Account
                   </Button>
-                  <Divider
-                    variant="middle"
-                    sx={{ my: 3 }}
-                  />
+                  <Divider variant="middle" sx={{ my: 3 }} />
 
-                  <Typography
-                    variant="body2"
-                    sx={{ mt: 2 }}
-                  >
+                  <Typography variant="body2" sx={{ mt: 2 }}>
                     Already have an account?
                   </Typography>
 
@@ -190,10 +189,12 @@ const Signup = () => {
               )}
             </Formik>
           )}
-        </Stack>
-      </Box>
-    </Container>
-  );
-};
+        </Grid>
+      </Grid>
+    </React.Fragment>
+  )
 
-export default Signup;
+  return content
+}
+
+export default Signup
