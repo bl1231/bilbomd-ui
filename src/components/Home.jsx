@@ -1,35 +1,38 @@
-import { useNavigate, Link } from 'react-router-dom';
-import useLogout from 'hooks/useLogout';
+import { Button, Typography } from '@mui/material'
+import { Container } from '@mui/system'
+import { Link } from 'react-router-dom'
 
 const Home = () => {
-    const navigate = useNavigate();
-    const logout = useLogout();
+  const content = (
+    <Container>
+      <Typography
+        variant="h1"
+        sx={{ my: 3 }}
+      >
+        Welcome to BilboMD
+      </Typography>
+      <Typography variant="body1">A Molecualr Dynamics tool for your SAXS data.</Typography>
+      <Typography variant="body1">
+        <b>BilboMD</b> runs on dedicated servers at the SIBYLS beamline. Please register for an
+        account in order to use this public resource.
+      </Typography>
+      <Button
+        variant="contained"
+        href="/register"
+        sx={{ my: 2, mr: 2 }}
+      >
+        Register
+      </Button>
+      <Button
+        variant="contained"
+        href="/login"
+        sx={{ my: 2, mr: 2 }}
+      >
+        Login
+      </Button>
+    </Container>
+  )
+  return content
+}
 
-    const signOut = async () => {
-        await logout();
-        navigate('/linkpage');
-    };
-
-    return (
-        <section>
-            <h1>Home</h1>
-            <br />
-            <p>You are logged in!</p>
-            <br />
-            <Link to="/editor">Go to the Editor page</Link>
-            <br />
-            <Link to="/admin">Go to the Admin page</Link>
-            <br />
-            <Link to="/lounge">Go to the Lounge</Link>
-            <br />
-            <Link to="/linkpage">Go to the link page</Link>
-            <br />
-            <Link to="/dashboard">Go to the dashboard page</Link>
-            <div className="flexGrow">
-                <button onClick={signOut}>Sign Out</button>
-            </div>
-        </section>
-    );
-};
-
-export default Home;
+export default Home

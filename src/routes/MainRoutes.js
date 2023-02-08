@@ -1,72 +1,88 @@
-import { lazy } from 'react';
+import { lazy } from 'react'
 
 // project import
-import Loadable from 'components/Loadable';
-import MainLayout from 'layout/MainLayout';
+import Loadable from 'components/Loadable'
+import MainLayout from 'layout/MainLayout'
+
+// our Dave Gray redux Authentication wrapper
+import RequireAuth from 'features/auth/RequireAuth'
+import PersistLogin from 'features/auth/PersistLogin'
+import { ROLES } from 'config/roles'
 
 // render - dashboard
-const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
-//const DashboardDefault = Loadable(lazy(() => import('components/Dashboard')));
-const NewBilboMDJob = Loadable(
-  lazy(() => import('components/Uploads/NewBilboMDJob'))
-);
-// render - sample page
-//const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
-const JobTable = Loadable(lazy(() => import('pages/dashboard/JobTable')));
-const SingleJobPage = Loadable(
-  lazy(() => import('pages/dashboard/SingleJobPage'))
-);
+const DashBoard = Loadable(lazy(() => import('features/dashboard/DashBoard')))
+const Prefetch = Loadable(lazy(() => import('features/auth/Prefetch')))
 
-// render - utilities
-//const Typography = Loadable(lazy(() => import('pages/components-overview/Typography')));
-//const Color = Loadable(lazy(() => import('pages/components-overview/Color')));
-//const Shadow = Loadable(lazy(() => import('pages/components-overview/Shadow')));
-//const AntIcons = Loadable(lazy(() => import('pages/components-overview/AntIcons')));
+// prettier-ignore
+const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')));
+
+const JobsList = Loadable(lazy(() => import('features/jobs/JobsList')))
+// prettier-ignore
+const SingleJobPage = Loadable(lazy(() => import('features/jobs/SingleJobPage')));
+const Welcome = Loadable(lazy(() => import('features/auth/UnAuthWelcome')))
+const UsersList = Loadable(lazy(() => import('features/users/UsersList')))
+const NewUserForm = Loadable(lazy(() => import('features/users/NewUserForm')))
+const EditUser = Loadable(lazy(() => import('features/users/EditUser')))
 
 // ==============================|| MAIN ROUTING ||============================== //
 
-const MainRoutes = {
-  path: '/',
-  element: <MainLayout />,
+const ProtectedMainRoutes = {
+  element: <PersistLogin />,
   children: [
     {
       path: '/',
-      element: <DashboardDefault />
-    },
-    {
-      path: 'job',
-      element: <NewBilboMDJob />
-    },
-    {
-      path: 'job/:uuid',
-      element: <SingleJobPage />
-    },
-    {
-      path: 'dashboard',
+      element: <MainLayout />,
       children: [
         {
-          path: 'default',
-          element: <DashboardDefault />
+          path: 'welcome',
+          element: <Welcome />
+        },
+        {
+          element: <RequireAuth allowedRoles={[...Object.values(ROLES)]} />,
+          children: [
+            {
+              element: <Prefetch />,
+              children: [
+                {
+                  path: 'dashboard',
+                  children: [
+                    {
+                      path: 'default',
+                      element: <DashBoard />
+                    },
+                    {
+                      path: 'users',
+                      element: <UsersList />
+                    },
+                    {
+                      path: 'users/new',
+                      element: <NewUserForm />
+                    },
+                    {
+                      path: 'users/:id',
+                      element: <EditUser />
+                    },
+                    {
+                      path: 'jobs',
+                      element: <JobsList />
+                    },
+                    {
+                      path: 'jobs/:id',
+                      element: <SingleJobPage />
+                    },
+                    {
+                      path: 'jobs/new',
+                      element: <NewJob />
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
-    },
-    {
-      path: 'jobs',
-      element: <JobTable />
     }
-    // {
-    //     path: 'shadow',
-    //     element: <Shadow />
-    // },
-    // {
-    //     path: 'typography',
-    //     element: <Typography />
-    // },
-    // {
-    //     path: 'icons/ant',
-    //     element: <AntIcons />
-    // }
   ]
-};
+}
 
-export default MainRoutes;
+export { ProtectedMainRoutes }

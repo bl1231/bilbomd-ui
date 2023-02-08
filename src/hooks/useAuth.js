@@ -1,10 +1,28 @@
-import { useContext, useDebugValue } from 'react';
-import AuthContext from '../context/AuthProvider';
+import { useSelector } from 'react-redux'
+import { selectCurrentToken } from 'features/auth/authSlice'
+import jwtDecode from 'jwt-decode'
 
 const useAuth = () => {
-  const { auth } = useContext(AuthContext);
-  useDebugValue(auth, (auth) => (auth?.user ? 'Logged In' : 'Logged Out'));
-  return useContext(AuthContext);
-};
+  const token = useSelector(selectCurrentToken)
+  let isManager = false
+  let isAdmin = false
+  let status = 'User'
 
-export default useAuth;
+  if (token) {
+    const decoded = jwtDecode(token)
+    const { username, roles, email } = decoded.UserInfo
+    //console.log('useAuth1:', username, roles, email)
+
+    isManager = roles.includes('Manager')
+    isAdmin = roles.includes('Admin')
+
+    if (isManager) status = 'Manager'
+    if (isAdmin) status = 'Admin'
+
+    //console.log('aueAuth2:', username, roles, status, isManager, isAdmin, email)
+    return { username, roles, status, isManager, isAdmin, email }
+  }
+  // Returned if we do not have a token
+  return { username: '', roles: [], email: '', isManager, isAdmin, status }
+}
+export default useAuth
