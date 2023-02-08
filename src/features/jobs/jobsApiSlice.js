@@ -31,10 +31,11 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
       }
     }),
     addNewJob: builder.mutation({
-      query: (initialJob) => ({
+      query: (newJob) => ({
         url: '/jobs',
         method: 'POST',
-        headers: { 'Content-Type': 'multipart/form-data' }
+        body: newJob
+        // headers: { 'Content-Type': 'multipart/form-data' }
       }),
       invalidatesTags: [{ type: 'Job', id: 'LIST' }]
     }),

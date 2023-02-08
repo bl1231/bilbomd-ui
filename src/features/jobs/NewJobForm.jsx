@@ -80,6 +80,7 @@ const NewJobForm = () => {
 
   const content = (
     <Card>
+      {email}
       <CardContent>
         <Formik
           initialValues={initialValues}
