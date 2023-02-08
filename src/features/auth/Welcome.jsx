@@ -1,21 +1,43 @@
-import { useSelector } from 'react-redux'
-import { selectCurrentUser, selectCurrentToken } from 'features/auth/authSlice'
 import { Link } from 'react-router-dom'
+import useAuth from 'hooks/useAuth'
+import useTitle from 'hooks/useTitle'
 
 const Welcome = () => {
-  const user = useSelector(selectCurrentUser)
-  const token = useSelector(selectCurrentToken)
+  const { username, isManager, isAdmin } = useAuth()
 
-  const welcome = user ? `Welcome ${user}!` : 'Welcome!'
-  const tokenAbbr = `${token.slice(0, 9)}...`
+  useTitle(`techNotes: ${username}`)
+
+  const date = new Date()
+  const today = new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'full',
+    timeStyle: 'long'
+  }).format(date)
 
   const content = (
     <section className="welcome">
-      <h1>{welcome}</h1>
-      <p>Token: {tokenAbbr}</p>
+      <p>{today}</p>
+
+      <h1>Welcome {username}!</h1>
+
       <p>
-        <Link to="/users">Go to the Users List</Link>
+        <Link to="/dash/notes">View techNotes</Link>
       </p>
+
+      <p>
+        <Link to="/dash/notes/new">Add New techNote</Link>
+      </p>
+
+      {(isManager || isAdmin) && (
+        <p>
+          <Link to="/dash/users">View User Settings</Link>
+        </p>
+      )}
+
+      {(isManager || isAdmin) && (
+        <p>
+          <Link to="/dash/users/new">Add New User</Link>
+        </p>
+      )}
     </section>
   )
 

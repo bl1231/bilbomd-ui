@@ -14,17 +14,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import { grey } from '@ant-design/colors'
 import axios from 'app/api/axios'
 
-import { useDispatch } from 'react-redux'
-import { setCredentials } from 'features/auth/authSlice'
-import { useLoginMutation } from 'features/auth/authApiSlice'
-
 const MAGICKLINK_URL = '/magicklink'
 
 const MagickLink = () => {
   const [success, setSuccess] = useState(null)
   const [error, setError] = useState('')
-
-  const dispatch = useDispatch()
 
   const onSubmit = async (values, { setStatus, resetForm, setSubmitting }) => {
     setStatus({ success: 'Splinching the data...', css: 'sending' })
@@ -80,8 +74,8 @@ const MagickLink = () => {
         >
           {success ? (
             <Alert severity="success">
-              <AlertTitle>Woot!</AlertTitle>A MagickLink&#8482; has been generated and sent to your
-              email address.
+              <AlertTitle>Woot!</AlertTitle>A MagickLink&#8482; has been generated and
+              sent to your email address.
               <br />
               <strong>Please check your inbox.</strong>
             </Alert>
@@ -123,7 +117,9 @@ const MagickLink = () => {
                     onBlur={handleBlur}
                     error={Boolean(errors.email) && Boolean(touched.email)}
                     helperText={
-                      Boolean(errors.email) && Boolean(touched.email) ? errors.email : null
+                      Boolean(errors.email) && Boolean(touched.email)
+                        ? errors.email
+                        : null
                     }
                   />
 
@@ -144,7 +140,10 @@ const MagickLink = () => {
                         sx={{ mb: 1 }}
                       >
                         If you need an account please{' '}
-                        <a href="/register" className="alert-link">
+                        <a
+                          href="/register"
+                          className="alert-link"
+                        >
                           register
                         </a>
                       </Alert>
@@ -164,8 +163,14 @@ const MagickLink = () => {
                   >
                     Send a MagickLink&#8482;
                   </Button>
-                  <Divider variant="middle" sx={{ my: 3 }} />
-                  <Typography variant="body2" sx={{ mt: 2 }}>
+                  <Divider
+                    variant="middle"
+                    sx={{ my: 3 }}
+                  />
+                  <Typography
+                    variant="body2"
+                    sx={{ mt: 2 }}
+                  >
                     Need an account?
                   </Typography>
                   <Button

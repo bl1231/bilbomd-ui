@@ -39,7 +39,7 @@ const JobsList = () => {
     isError,
     error
   } = useGetJobsQuery('jobsList', {
-    pollingInterval: 15000,
+    pollingInterval: 60000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
   })
@@ -138,8 +138,16 @@ const JobsList = () => {
         type: 'actions',
         width: 110,
         getActions: (params) => [
-          <GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={() => {}} />,
-          <GridActionsCellItem icon={<InfoIcon />} label="View" onClick={() => {}} />
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={() => {}}
+          />,
+          <GridActionsCellItem
+            icon={<InfoIcon />}
+            label="View"
+            onClick={() => {}}
+          />
         ]
       },
       {
