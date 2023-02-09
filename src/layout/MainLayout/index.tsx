@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useEffect } from 'react'
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import Drawer from '@mui/material/Drawer'
@@ -64,26 +64,9 @@ export default function ClippedDrawer() {
     }
   ]
 
-  const onJobListClicked = () => navigate('/dashboard/jobs')
-
-  const jobListButton = (
-    <ListItem
-      key="Job List"
-      disablePadding
-    >
-      <ListItemButton
-        onClick={onJobListClicked}
-        sx={{
-          backgroundColor: location.pathname === '/dashboard/jobs' ? '#efefef' : null
-        }}
-      >
-        <ListItemIcon>
-          <SubjectOutlined color="secondary" />
-        </ListItemIcon>
-        <ListItemText>Job List</ListItemText>
-      </ListItemButton>
-    </ListItem>
-  )
+  useEffect(() => {
+    if (isSuccess) navigate('/')
+  }, [isSuccess, navigate])
 
   let buttonContent
   if (isLoading) {
