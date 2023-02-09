@@ -1,4 +1,3 @@
-import { useGetJobsQuery } from './jobsApiSlice'
 import {
   DataGrid,
   GridColDef,
@@ -6,26 +5,17 @@ import {
   GridValueFormatterParams,
   GridActionsCellItem
 } from '@mui/x-data-grid'
-import { useState, useCallback, useMemo } from 'react'
 import { format, parseISO } from 'date-fns'
-
-import { useSelector } from 'react-redux'
-import { selectJobById } from './jobsApiSlice'
-//import { useGetUsersQuery } from './usersApiSlice'
-//import User from './User'
+import { useGetJobsQuery } from './jobsApiSlice'
 import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
 import DeleteIcon from '@mui/icons-material/Delete'
 import InfoIcon from '@mui/icons-material/Info'
-// import EditIcon from '@mui/icons-material/Edit';
-// import SecurityIcon from '@mui/icons-material/Security';
-// import FileCopyIcon from '@mui/icons-material/FileCopy';
 import clsx from 'clsx'
 import { Box } from '@mui/system'
 import { green, red, amber } from '@mui/material/colors'
 import { Link, useNavigate } from 'react-router-dom'
-import { createSelector } from '@reduxjs/toolkit'
-import { convertCompilerOptionsFromJson } from 'typescript'
+
 import useAuth from '../../hooks/useAuth'
 
 const JobsList = () => {
