@@ -84,7 +84,7 @@ const NewJobForm = () => {
       <CardContent>
         <Formik
           initialValues={initialValues}
-          //validationSchema={bilbomdJobSchema}
+          validationSchema={bilbomdJobSchema}
           onSubmit={onSubmit}
         >
           {({

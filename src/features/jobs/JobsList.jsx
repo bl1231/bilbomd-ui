@@ -11,6 +11,8 @@ import { format, parseISO } from 'date-fns'
 
 import { useSelector } from 'react-redux'
 import { selectJobById } from './jobsApiSlice'
+//import { useGetUsersQuery } from './usersApiSlice'
+//import User from './User'
 import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -24,11 +26,12 @@ import { green, red, amber } from '@mui/material/colors'
 import { Link, useNavigate } from 'react-router-dom'
 import { createSelector } from '@reduxjs/toolkit'
 import { convertCompilerOptionsFromJson } from 'typescript'
+import useAuth from '../../hooks/useAuth'
 
 const JobsList = () => {
   useTitle('BilboMD: Jobs List')
 
-  //const { username, isManager, isAdmin } = useAuth()
+  const { username, isManager, isAdmin } = useAuth()
 
   const navigate = useNavigate()
 
@@ -78,15 +81,24 @@ const JobsList = () => {
     //console.log('jobs: ', jobs)
     //console.log(Object.values(jobs))
     //console.log('ids:', ids)
-    //console.log('entities:', entities)
+    console.log('entities:', entities)
 
     // This is some magic shit. Why do I find map so difficult to understand?
     // This is where we will need to filter the jobs so that Users only see
     // their jobs NOT all jobs.
 
-    const rows = ids?.length ? ids.map((jobId) => entities[jobId]) : []
+    let filteredIds
+    if (isManager || isAdmin) {
+      filteredIds = [...ids]
+    } else {
+      filteredIds = ids.filter((jobId) => entities[jobId].username === username)
+    }
+    console.log(filteredIds)
 
-    console.log(rows)
+    // const rows = ids?.length ? ids.map((jobId) => entities[jobId]) : []
+    const rows = ids?.length && filteredIds.map((jobId) => entities[jobId])
+
+    //console.log(rows)
     const columns: GridColDef[] = [
       {
         field: 'time_submitted',
@@ -116,6 +128,7 @@ const JobsList = () => {
         }
       },
       { field: 'title', headerName: 'Title', width: 200 },
+      { field: 'username', headerName: 'User' },
       {
         field: 'status',
         headerName: 'Status',
