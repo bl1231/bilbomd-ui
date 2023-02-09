@@ -45,13 +45,13 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 const NewJobForm = () => {
   const [addNewJob, { isLoading, isSuccess, isError, error }] = useAddNewJobMutation()
   const { username, email } = useAuth()
-  const history = useNavigate()
+  const navigate = useNavigate()
 
   const onSubmit = async (values, { setSubmitting, setErrors, setStatus, resetForm }) => {
-    console.log('form values: ', values)
+    //console.log('form values: ', values)
     //await sleep(500)
     const form = new FormData()
-    await sleep(1000)
+    //await sleep(1000)
     form.append('title', values.title)
 
     values.pdbs.forEach((pdb, index) => {
@@ -65,14 +65,17 @@ const NewJobForm = () => {
     form.append('constinp', values.constinp)
     form.append('email', email)
     // Display the values
-    for (const value of form.values()) {
-      console.log(value)
-    }
-    //await addNewJob(form)
+    // for (const value of form.values()) {
+    //   console.log(value)
+    // }
 
     try {
-      const payload = await addNewJob(form).unwrap()
-      console.log('fulfilled', payload)
+      const result = await addNewJob(form).unwrap()
+      console.log('fulfilled', result)
+      setStatus(result)
+      resetForm()
+      //await sleep(1000)
+      //navigate('/dashboard/jobs')
     } catch (error) {
       console.error('rejected', error)
     }
@@ -80,7 +83,6 @@ const NewJobForm = () => {
 
   const content = (
     <Card>
-      {email}
       <CardContent>
         <Formik
           initialValues={initialValues}
@@ -95,7 +97,8 @@ const NewJobForm = () => {
             isSubmitting,
             handleChange,
             handleBlur,
-            resetForm
+            resetForm,
+            status
           }) => (
             <Form>
               <Grid
@@ -103,10 +106,13 @@ const NewJobForm = () => {
                 spacing={2}
                 direction="column"
               >
-                <Grid item>
+                <Grid
+                  item
+                  sx={{ bgcolor: 'lightgray' }}
+                  xs={8}
+                >
                   <Field
                     value={values.title || ''}
-                    fullWidth
                     id="title"
                     name="title"
                     label="BilboMD Job Title"
@@ -232,10 +238,12 @@ const NewJobForm = () => {
                 </Grid>
                 <Grid
                   item
+                  xs={6}
                   sx={{ my: 2 }}
                 >
                   <LoadingButton
                     type="submit"
+                    disabled={!isValid}
                     loading={isSubmitting}
                     endIcon={<SendIcon />}
                     loadingPosition="end"
@@ -244,6 +252,7 @@ const NewJobForm = () => {
                   >
                     <span>Submit</span>
                   </LoadingButton>
+                  {isSuccess ? <Alert severity="success">{status}</Alert> : ''}
                 </Grid>
               </Grid>
               <Debug />
