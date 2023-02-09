@@ -18,6 +18,11 @@ import {
   OutlinedInput,
   ListItemText
 } from '@mui/material'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import { Field, Form, Formik } from 'formik'
@@ -39,11 +44,28 @@ const MenuProps = {
   }
 }
 
-const EditUserForm2 = ({ user }) => {
+const EditUserForm = ({ user }) => {
+  const [open, setOpen] = React.useState(false)
+
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+    console.log('cancel')
+  }
+
+  const handleDeleteUser = async () => {
+    setOpen(false)
+    console.log('delete')
+    await deleteUser({ id: user.id })
+  }
+
   const initialValues = {
     username: user.username,
     email: user.email,
-    active: true,
+    active: user.active,
     roles: user.roles
   }
 
@@ -64,6 +86,8 @@ const EditUserForm2 = ({ user }) => {
 
   const navigate = useNavigate()
 
+  const errContent = (error?.data?.message || delerror?.data?.message) ?? ''
+
   useEffect(() => {
     console.log(isSuccess)
     if (isSuccess || isDelSuccess) {
@@ -74,21 +98,14 @@ const EditUserForm2 = ({ user }) => {
     }
   }, [isSuccess, isDelSuccess, navigate])
 
-  // const onSaveUserClicked = async (e) => {
-  //   await updateUser({ id: user.id, userbane: values.username, values.roles, valies.isActive })
-  // }
-
-  const onDeleteUserClicked = async () => {
-    await deleteUser({ id: user.id })
-  }
-
-  const onSubmit = async (values, { isLoading, isSuccess, isError, error }) => {
+  const myOnSubmit = async (values, { isLoading, isSuccess, isError, error }) => {
     console.log('clicked')
     await updateUser({
       id: user.id,
       username: values.username,
       roles: values.roles,
-      active: values.active
+      active: values.active,
+      email: values.email
     })
   }
 
@@ -98,7 +115,7 @@ const EditUserForm2 = ({ user }) => {
         <Formik
           initialValues={initialValues}
           validationSchema={editUserSchema}
-          onSubmit={onSubmit}
+          onSubmit={myOnSubmit}
           enableReinitialize={true}
         >
           {({
@@ -130,6 +147,7 @@ const EditUserForm2 = ({ user }) => {
                     disabled={isSubmitting}
                     component={TextField}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     value={values.username || ''}
                   />
                 </Grid>
@@ -147,6 +165,7 @@ const EditUserForm2 = ({ user }) => {
                     disabled={isSubmitting}
                     component={TextField}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     value={values.email || ''}
                   />
                 </Grid>
@@ -199,22 +218,56 @@ const EditUserForm2 = ({ user }) => {
                 <Grid item>
                   <Button
                     variant="contained"
-                    startIcon={<DeleteIcon />}
-                    sx={{ mr: 2 }}
-                    onClick={onDeleteUserClicked}
-                  >
-                    Delete
-                  </Button>
-                  <Button
-                    variant="contained"
                     startIcon={<EditIcon />}
                     sx={{ mr: 2 }}
+                    type="submit"
                   >
                     Update
                   </Button>
+                  <Button
+                    variant="contained"
+                    startIcon={<DeleteIcon />}
+                    sx={{ mr: 2 }}
+                    color="error"
+                    type="button"
+                    disabled={isSubmitting}
+                    onClick={handleClickOpen}
+                    // onClick={onDeleteUserClicked}
+                  >
+                    {`Delete ${values.username}`}
+                  </Button>
+                  <Dialog
+                    open={open}
+                    onClose={handleClose}
+                  >
+                    <DialogContent>
+                      <DialogContentText>
+                        {`Delete ${values.username} ?`}
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleClose}>Cancel</Button>
+                      <Button
+                        onClick={handleDeleteUser}
+                        autoFocus
+                      >
+                        Delete
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </Grid>
+                <Grid
+                  item
+                  sx={{ mt: 2 }}
+                >
+                  {error || delerror ? (
+                    <Alert severity="warning">{errContent}</Alert>
+                  ) : (
+                    ''
+                  )}
                 </Grid>
               </Grid>
-              <Debug />
+              {/* <Debug /> */}
             </Form>
           )}
         </Formik>
@@ -224,4 +277,4 @@ const EditUserForm2 = ({ user }) => {
   return content
 }
 
-export default EditUserForm2
+export default EditUserForm

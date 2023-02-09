@@ -47,27 +47,6 @@ const JobsList = () => {
     refetchOnMountOrArgChange: true
   })
 
-  //console.log(jobs);
-  // const deleteJob = useCallback(
-  //   (id) => () => {
-  //     setTimeout(() => {
-  //       console.log('delete: ', id);
-  //       setJobs((prevJobs) => prevJobs.filter((job) => job.id !== id));
-  //     });
-  //   },
-  //   []
-  // );
-
-  // const viewJob = useCallback(
-  //   (id) => () => {
-  //     setTimeout(() => {
-  //       console.log('view: ', id);
-  //       navigate(`/job/${id}`);
-  //     });
-  //   },
-  //   []
-  // );
-
   let content
 
   if (isLoading) content = <PulseLoader color={'#FFF'} />
@@ -81,7 +60,7 @@ const JobsList = () => {
     //console.log('jobs: ', jobs)
     //console.log(Object.values(jobs))
     //console.log('ids:', ids)
-    console.log('entities:', entities)
+    //console.log('entities:', entities)
 
     // This is some magic shit. Why do I find map so difficult to understand?
     // This is where we will need to filter the jobs so that Users only see
@@ -93,7 +72,7 @@ const JobsList = () => {
     } else {
       filteredIds = ids.filter((jobId) => entities[jobId].username === username)
     }
-    console.log(filteredIds)
+    //console.log(filteredIds)
 
     // const rows = ids?.length ? ids.map((jobId) => entities[jobId]) : []
     const rows = ids?.length && filteredIds.map((jobId) => entities[jobId])
@@ -150,7 +129,7 @@ const JobsList = () => {
         headerName: 'Delete/Details',
         type: 'actions',
         width: 110,
-        getActions: (params) => [
+        getActions: (params: GridRowParams) => [
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"

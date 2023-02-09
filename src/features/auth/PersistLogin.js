@@ -5,6 +5,8 @@ import usePersist from '../../hooks/usePersist'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from './authSlice'
 import PulseLoader from 'react-spinners/PulseLoader'
+import { Alert, AlertTitle, Button, Grid } from '@mui/material'
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 
 const PersistLogin = () => {
   const [persist] = usePersist()
@@ -55,10 +57,40 @@ const PersistLogin = () => {
     //persist: yes, token: no
     console.log('error')
     content = (
-      <p className="errmsg">
-        {`${error?.data?.message} - `}
-        <Link to="/login">Please login again</Link>.
-      </p>
+      <Grid
+        container
+        columns={12}
+        direction="row"
+        sx={{ height: '100vh' }}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Grid
+          item
+          xs={6}
+          md={4}
+        >
+          <Alert
+            variant="filled"
+            severity="error"
+          >
+            <AlertTitle>{error?.data?.message}</AlertTitle>
+            Please login again
+          </Alert>
+          <Button
+            fullWidth
+            sx={{ my: 2 }}
+            variant="contained"
+            type="button"
+            color="primary"
+            startIcon={<AutoFixHighIcon />}
+            component={Link}
+            to="/magicklink"
+          >
+            Request a new MagickLink&#8482;
+          </Button>
+        </Grid>
+      </Grid>
     )
   } else if (isSuccess && trueSuccess) {
     //persist: yes, token: yes
