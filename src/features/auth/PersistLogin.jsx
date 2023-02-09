@@ -5,7 +5,7 @@ import usePersist from '../../hooks/usePersist'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from './authSlice'
 import PulseLoader from 'react-spinners/PulseLoader'
-import { Alert, AlertTitle, Button, Grid } from '@mui/material'
+import { Alert, AlertTitle, Button, CircularProgress, Grid } from '@mui/material'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 
 const PersistLogin = () => {
@@ -52,7 +52,7 @@ const PersistLogin = () => {
   } else if (isLoading) {
     //persist: yes, token: no
     console.log('loading')
-    content = <PulseLoader color={'#FFF'} />
+    content = <CircularProgress />
   } else if (isError) {
     //persist: yes, token: no
     console.log('error')

@@ -4,10 +4,11 @@ import React, { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import Button from '@mui/material/Button'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
-
+import useTitle from 'hooks/useTitle'
 const VERIFY_URL = '/verify'
 
 const VerifyUser = () => {
+  useTitle('BilboMD: Verify Email')
   let { code } = useParams()
   const data = JSON.stringify({ code })
   //console.log(data);

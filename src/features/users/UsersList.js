@@ -13,7 +13,7 @@ import useTitle from '../../hooks/useTitle'
 import PulseLoader from 'react-spinners/PulseLoader'
 import { Box } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
-import { Button, Link } from '@mui/material'
+import { Button, CircularProgress, Link } from '@mui/material'
 
 const UsersList = () => {
   useTitle('BilboMD: Users List')
@@ -32,7 +32,7 @@ const UsersList = () => {
   const handleEdit = (id) => navigate(`/dashboard/users/${id}`)
   let content
 
-  if (isLoading) content = <PulseLoader color={'#FFF'} />
+  if (isLoading) content = <CircularProgress />
 
   if (isError) {
     content = <p className="errmsg">{error?.data?.message}</p>

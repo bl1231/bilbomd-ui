@@ -1,21 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useParams, useNavigate, useLocation } from 'react-router-dom'
-
-// for new redux-jwt-auth
+import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from 'features/auth/authSlice'
 import { useLoginMutation } from 'features/auth/authApiSlice'
-import { Alert, AlertTitle, Grid } from '@mui/material'
+import { Alert, AlertTitle, CircularProgress, Grid } from '@mui/material'
 import usePersist from 'hooks/usePersist'
 import useTitle from 'hooks/useTitle'
-import PulseLoader from 'react-spinners/PulseLoader'
 
-// Should check OTP and then forward authenticated user on to the Dashboard
 const MagickLinkAuth = () => {
+  useTitle('BilboMD: Check OTP')
   let { otp } = useParams()
   const [success, setSuccess] = useState(null)
   const [error, setError] = useState('')
-  // hard code for now
   const [persist, setPersist] = usePersist()
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -26,13 +22,11 @@ const MagickLinkAuth = () => {
   const effectRan = useRef(false)
 
   useEffect(() => {
-    //console.log('MagickLinkAuth useEffect ran')
-    //console.log('MagickLinkAuth NODE_ENV:', process.env.NODE_ENV)
     if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
       const authenticateOTP = async () => {
         try {
           const { accessToken } = await login({ otp }).unwrap()
-          console.log('MagickLinkAuth accessToken:', accessToken)
+          //console.log('MagickLinkAuth accessToken:', accessToken)
           dispatch(setCredentials({ accessToken }))
           setSuccess('y')
           // because we don't have a user interface for logging in we manually set persist
@@ -82,7 +76,7 @@ const MagickLinkAuth = () => {
           }}
         >
           {isLoading ? (
-            <h1>Loading...</h1>
+            <CircularProgress />
           ) : success ? (
             <Alert severity="success">
               <AlertTitle>Woot!</AlertTitle>Your OTP has been successfully validated. You
@@ -100,22 +94,6 @@ const MagickLinkAuth = () => {
         </Grid>
       </Grid>
     </React.Fragment>
-  )
-
-  const content2 = isLoading ? (
-    <h1>Loading...</h1>
-  ) : success ? (
-    <Alert severity="success">
-      <AlertTitle>Woot!</AlertTitle>Your OTP has been successfully validated. You will be
-      forwarded to your dashboard in a three seconds.
-    </Alert>
-  ) : (
-    <Alert severity="warning">
-      <AlertTitle>Warning!</AlertTitle>Hmmmmm. Maybe your MagickLink&#8482; has expired?
-      Please try <a href="http://localhost:3001/magicklink">generating another</a>. If
-      that doesn't work please contact us.
-      <p>{error}</p>
-    </Alert>
   )
 
   return content

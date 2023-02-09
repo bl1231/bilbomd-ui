@@ -17,6 +17,7 @@ import { green, red, amber } from '@mui/material/colors'
 import { Link, useNavigate } from 'react-router-dom'
 
 import useAuth from '../../hooks/useAuth'
+import { CircularProgress } from '@mui/material'
 
 const JobsList = () => {
   useTitle('BilboMD: Jobs List')
@@ -39,7 +40,7 @@ const JobsList = () => {
 
   let content
 
-  if (isLoading) content = <PulseLoader color={'#FFF'} />
+  if (isLoading) content = <CircularProgress />
 
   if (isError) {
     content = <p className="errmsg">{error?.data?.message}</p>

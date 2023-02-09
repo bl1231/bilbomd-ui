@@ -8,13 +8,13 @@ import IconButton from '@mui/material/IconButton'
 import Collapse from '@mui/material/Collapse'
 import Button from '@mui/material/Button'
 import CloseIcon from '@mui/icons-material/Close'
-import { Container, Stack, Box } from '@mui/system'
 import { Alert, AlertTitle, Divider, Grid, TextField, Typography } from '@mui/material'
-
+import useTitle from 'hooks/useTitle'
 import axios from 'app/api/axios'
 const REGISTER_URL = '/register'
 
 const Signup = () => {
+  useTitle('BilboMD: Signup')
   const [success, setSuccess] = useState(null)
   const [error, setError] = useState('')
 
@@ -75,9 +75,9 @@ const Signup = () => {
         >
           {success ? (
             <Alert severity="success">
-              <AlertTitle>Woot!</AlertTitle>You have been registered for an account. Before you can
-              log in we need you to verify your email. Please check your inbox for a verification
-              email from
+              <AlertTitle>Woot!</AlertTitle>You have been registered for an account.
+              Before you can log in we need you to verify your email. Please check your
+              inbox for a verification email from
               <br />
               <strong>bilbomd-noreply@bl1231.als.lbl.gov</strong>
             </Alert>
@@ -99,8 +99,8 @@ const Signup = () => {
               }) => (
                 <Form>
                   <Typography sx={{ my: 2 }}>
-                    Select a user name and enter your email address to create a <b>BilboMD</b>{' '}
-                    account.
+                    Select a user name and enter your email address to create a{' '}
+                    <b>BilboMD</b> account.
                   </Typography>
                   <TextField
                     fullWidth
@@ -113,7 +113,9 @@ const Signup = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={Boolean(errors.user) && Boolean(touched.user)}
-                    helperText={Boolean(errors.user) && Boolean(touched.user) ? errors.user : null}
+                    helperText={
+                      Boolean(errors.user) && Boolean(touched.user) ? errors.user : null
+                    }
                   />
                   <TextField
                     fullWidth
@@ -127,7 +129,9 @@ const Signup = () => {
                     onBlur={handleBlur}
                     error={Boolean(errors.email) && Boolean(touched.email)}
                     helperText={
-                      Boolean(errors.email) && Boolean(touched.email) ? errors.email : null
+                      Boolean(errors.email) && Boolean(touched.email)
+                        ? errors.email
+                        : null
                     }
                   />
                   {error ? (
@@ -147,7 +151,10 @@ const Signup = () => {
                         sx={{ mb: 1 }}
                       >
                         {error.message} If you already have an account try{' '}
-                        <a href="/magicklink" className="alert-link">
+                        <a
+                          href="/magicklink"
+                          className="alert-link"
+                        >
                           logging in
                         </a>
                       </Alert>
@@ -167,9 +174,15 @@ const Signup = () => {
                   >
                     Create an Account
                   </Button>
-                  <Divider variant="middle" sx={{ my: 3 }} />
+                  <Divider
+                    variant="middle"
+                    sx={{ my: 3 }}
+                  />
 
-                  <Typography variant="body2" sx={{ mt: 2 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ mt: 2 }}
+                  >
                     Already have an account?
                   </Typography>
 

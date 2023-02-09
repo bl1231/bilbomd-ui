@@ -19,7 +19,7 @@ const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')));
 const JobsList = Loadable(lazy(() => import('features/jobs/JobsList')))
 // prettier-ignore
 const SingleJobPage = Loadable(lazy(() => import('features/jobs/SingleJobPage')));
-const Welcome = Loadable(lazy(() => import('features/auth/UnAuthWelcome')))
+const Welcome = Loadable(lazy(() => import('features/auth/Welcome')))
 const UsersList = Loadable(lazy(() => import('features/users/UsersList')))
 const NewUserForm = Loadable(lazy(() => import('features/users/NewUserForm')))
 const EditUser = Loadable(lazy(() => import('features/users/EditUser')))

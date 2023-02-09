@@ -7,16 +7,16 @@ import Button from '@mui/material/Button'
 import CloseIcon from '@mui/icons-material/Close'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
-import { Box, Container, Stack } from '@mui/system'
 import { Alert, AlertTitle, TextField, Typography, Grid } from '@mui/material'
 import Divider from '@mui/material/Divider'
-import { Link, useNavigate } from 'react-router-dom'
-import { grey } from '@ant-design/colors'
+import { Link } from 'react-router-dom'
+import useTitle from 'hooks/useTitle'
 import axios from 'app/api/axios'
 
 const MAGICKLINK_URL = '/magicklink'
 
 const MagickLink = () => {
+  useTitle('BilboMD: Get a MagickLink')
   const [success, setSuccess] = useState(null)
   const [error, setError] = useState('')
 

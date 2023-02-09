@@ -5,7 +5,7 @@ import useTitle from 'hooks/useTitle'
 const Welcome = () => {
   const { username, isManager, isAdmin } = useAuth()
 
-  useTitle(`techNotes: ${username}`)
+  useTitle(`BilboMD: ${username}`)
 
   const date = new Date()
   const today = new Intl.DateTimeFormat('en-US', {
