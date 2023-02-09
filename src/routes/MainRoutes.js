@@ -51,16 +51,23 @@ const ProtectedMainRoutes = {
                       element: <DashBoard />
                     },
                     {
-                      path: 'users',
-                      element: <UsersList />
-                    },
-                    {
-                      path: 'users/new',
-                      element: <NewUserForm />
-                    },
-                    {
-                      path: 'users/:id',
-                      element: <EditUser />
+                      element: (
+                        <RequireAuth allowedRoles={[ROLES.Manager, ROLES.Admin]} />
+                      ),
+                      children: [
+                        {
+                          path: 'users',
+                          element: <UsersList />
+                        },
+                        {
+                          path: 'users/new',
+                          element: <NewUserForm />
+                        },
+                        {
+                          path: 'users/:id',
+                          element: <EditUser />
+                        }
+                      ]
                     },
                     {
                       path: 'jobs',
