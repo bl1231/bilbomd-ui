@@ -10,7 +10,7 @@ import PersistLogin from 'features/auth/PersistLogin'
 import { ROLES } from 'config/roles'
 
 // render - dashboard
-const DashBoard = Loadable(lazy(() => import('features/dashboard/DashBoard')))
+//const DashBoard = Loadable(lazy(() => import('features/dashboard/DashBoard')))
 const Prefetch = Loadable(lazy(() => import('features/auth/Prefetch')))
 
 // prettier-ignore
@@ -23,6 +23,7 @@ const Welcome = Loadable(lazy(() => import('features/auth/Welcome')))
 const UsersList = Loadable(lazy(() => import('features/users/UsersList')))
 const NewUserForm = Loadable(lazy(() => import('features/users/NewUserForm')))
 const EditUser = Loadable(lazy(() => import('features/users/EditUser')))
+const UserAccount = Loadable(lazy(() => import('features/users/UserAccount')))
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -48,7 +49,7 @@ const ProtectedMainRoutes = {
                   children: [
                     {
                       path: 'default',
-                      element: <DashBoard />
+                      element: <Welcome />
                     },
                     {
                       element: (
@@ -80,6 +81,10 @@ const ProtectedMainRoutes = {
                     {
                       path: 'jobs/new',
                       element: <NewJob />
+                    },
+                    {
+                      path: 'account',
+                      element: <UserAccount />
                     }
                   ]
                 }
