@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useParams } from 'react-router-dom'
-
 //import EditNoteForm from './EditNoteForm'
 import { useGetJobsQuery } from './jobsApiSlice'
 import { useGetUsersQuery } from '../users/usersApiSlice'
@@ -25,7 +24,7 @@ const SingleJobPage = () => {
   useTitle('BilboMD: Job Details')
 
   const { id } = useParams()
-  console.log('id', id)
+  //console.log('id', id)
 
   //const { username, isManager, isAdmin } = useAuth()
 
@@ -34,7 +33,7 @@ const SingleJobPage = () => {
       job: data?.entities[id]
     })
   })
-  console.log('job', job)
+  //console.log('job', job)
 
   const { users } = useGetUsersQuery('usersList', {
     selectFromResult: ({ data }) => ({
