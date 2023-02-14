@@ -56,6 +56,7 @@ const JobsList = () => {
     // This is some magic shit. Why do I find map so difficult to understand?
     // This is where we will need to filter the jobs so that Users only see
     // their jobs NOT all jobs.
+    // apparently ids is iterable and entities is NOT --- ned ref for this.
 
     let filteredIds
     if (isManager || isAdmin) {
@@ -124,20 +125,18 @@ const JobsList = () => {
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={() => {}}
+            onClick={() => {
+              console.log('delete...')
+            }}
           />,
           <GridActionsCellItem
             icon={<InfoIcon />}
             label="View"
-            onClick={() => {}}
+            onClick={() => {
+              navigate(`/dashboard/jobs/${params.id}`)
+            }}
           />
         ]
-      },
-      {
-        field: 'test',
-        headerName: 'Test',
-        width: 60,
-        renderCell: (params) => <Link to={`/dashboard/jobs/${params.id}`}>VIEW</Link>
       }
     ]
 
