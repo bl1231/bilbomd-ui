@@ -1,17 +1,16 @@
-import { Button, Grid, Typography } from '@mui/material';
-import React from 'react';
+import { Button, Grid, Typography } from '@mui/material'
+import React from 'react'
 
 export interface FileHeaderProps {
-  file: File;
-  onDelete: (file: File) => void;
+  file: File
+  onDelete: (file: File) => void
 }
 
 export function FileHeader({ file, onDelete }: FileHeaderProps) {
   return (
     <Grid
       container
-      justifyContent="space-between"
-      alignItems="center"
+      sx={{ justifyContent: 'space-between', alignItems: 'center' }}
     >
       <Grid item>
         <Typography>{file.name}</Typography>
@@ -25,5 +24,5 @@ export function FileHeader({ file, onDelete }: FileHeaderProps) {
         </Button>
       </Grid>
     </Grid>
-  );
+  )
 }

@@ -18,14 +18,23 @@ export const bilbomdJobSchema = object().shape({
     .max(3),
   constinp: string().required('const.inp is required'),
   expdata: string().required('experimental data is required'),
-  num_conf: number().integer().min(200).max(800).required(),
-  rg_min: number().integer().positive().min(10).max(100).required(),
+  num_conf: number()
+    .integer()
+    .min(200)
+    .max(800)
+    .required('Please select a number of Conformations to sample'),
+  rg_min: number()
+    .integer()
+    .positive()
+    .min(10)
+    .max(100)
+    .required('Please provide a Minimum Rg value'),
   rg_max: number('Please specify a number')
     .integer()
     .positive()
     .min(10)
     .max(100)
-    .required()
+    .required('Please provide a Maximum Rg value')
 })
 export const editUserSchema = object().shape({
   active: boolean()
