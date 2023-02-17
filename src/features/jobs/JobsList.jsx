@@ -1,30 +1,26 @@
+import React from 'react'
 import {
   DataGrid,
   GridColDef,
   GridCellParams,
-  GridValueFormatterParams,
-  GridActionsCellItem
+  GridValueFormatterParams
 } from '@mui/x-data-grid'
 import { format, parseISO } from 'date-fns'
-import { useGetJobsQuery, useDeleteJobMutation } from './jobsApiSlice'
+import { useGetJobsQuery } from './jobsApiSlice'
 import { useNavigate } from 'react-router-dom'
 import useTitle from 'hooks/useTitle'
-import DeleteIcon from '@mui/icons-material/Delete'
-import InfoIcon from '@mui/icons-material/Info'
 import clsx from 'clsx'
 import { Box } from '@mui/system'
 import { green, red, amber } from '@mui/material/colors'
-
 import useAuth from '../../hooks/useAuth'
 import { CircularProgress } from '@mui/material'
+import DeleteJob from './DeleteJob'
+import InfoJob from './InfoJob'
 
 const JobsList = () => {
   useTitle('BilboMD: Jobs List')
-  const [deleteJob, { isSuccess: isDelSuccess, isError: isDelError, error: delerror }] =
-    useDeleteJobMutation()
-  const { username, isManager, isAdmin } = useAuth()
 
-  const navigate = useNavigate()
+  const { username, isManager, isAdmin } = useAuth()
 
   const {
     data: jobs,
@@ -38,14 +34,6 @@ const JobsList = () => {
     refetchOnMountOrArgChange: true
   })
 
-  const onDeleteJobClicked = async (id) => {
-    try {
-      await deleteJob({ id: id })
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   let content
 
   if (isLoading) content = <CircularProgress />
@@ -55,11 +43,6 @@ const JobsList = () => {
   }
   if (isSuccess) {
     const { ids, entities } = jobs
-
-    //console.log('jobs: ', jobs)
-    //console.log(Object.values(jobs))
-    //console.log('ids:', ids)
-    //console.log('entities:', entities)
 
     // This is some magic shit. Why do I find map so difficult to understand?
     // This is where we will need to filter the jobs so that Users only see
@@ -72,13 +55,12 @@ const JobsList = () => {
     } else {
       filteredIds = ids.filter((jobId) => entities[jobId].username === username)
     }
-    //console.log(filteredIds)
 
-    // const rows = ids?.length ? ids.map((jobId) => entities[jobId]) : []
     const rows = ids?.length && filteredIds.map((jobId) => entities[jobId])
 
-    //console.log(rows)
     const columns: GridColDef[] = [
+      { field: 'title', headerName: 'Title', width: 200 },
+      { field: 'id', headerName: 'ID', width: 100, hide: true },
       {
         field: 'time_submitted',
         headerName: 'Submitted',
@@ -102,11 +84,11 @@ const JobsList = () => {
           if (params?.value) {
             return format(parseISO(params?.value), 'MM/dd/yyyy HH:mm:ss')
           } else {
-            return '--/--/-- 00:00:00'
+            return ''
           }
         }
       },
-      { field: 'title', headerName: 'Title', width: 200 },
+
       { field: 'username', headerName: 'User' },
       {
         field: 'status',
@@ -124,26 +106,15 @@ const JobsList = () => {
           })
         }
       },
+
       {
         field: 'actions',
-        headerName: 'Delete/Details',
         type: 'actions',
-        width: 110,
+        sortable: false,
+        headerName: 'manage',
         getActions: (params: GridRowParams) => [
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={() => {
-              onDeleteJobClicked(params.id)
-            }}
-          />,
-          <GridActionsCellItem
-            icon={<InfoIcon />}
-            label="View"
-            onClick={() => {
-              navigate(`/dashboard/jobs/${params.id}`)
-            }}
-          />
+          <DeleteJob job={params.row} />,
+          <InfoJob job={params.row} />
         ]
       }
     ]
@@ -179,10 +150,10 @@ const JobsList = () => {
         <DataGrid
           rows={rows}
           columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[5]}
+          pageSize={8}
+          rowsPerPageOptions={[8]}
           //checkboxSelection
-          getRowId={(row) => row._id}
+          //getRowId={(row) => row._id}
         />
       </Box>
     )
