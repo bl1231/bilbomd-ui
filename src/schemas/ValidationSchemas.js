@@ -20,8 +20,7 @@ export const bilbomdJobSchema = object().shape({
   expdata: string().required('experimental data is required'),
   num_conf: number()
     .integer()
-    .min(200)
-    .max(800)
+    .oneOf([1, 2, 3, 4])
     .required('Please select a number of Conformations to sample'),
   rg_min: number()
     .integer()
