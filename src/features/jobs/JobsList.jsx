@@ -6,22 +6,22 @@ import {
   GridActionsCellItem
 } from '@mui/x-data-grid'
 import { format, parseISO } from 'date-fns'
-import { useGetJobsQuery } from './jobsApiSlice'
-import PulseLoader from 'react-spinners/PulseLoader'
+import { useGetJobsQuery, useDeleteJobMutation } from './jobsApiSlice'
+import { useNavigate } from 'react-router-dom'
 import useTitle from 'hooks/useTitle'
 import DeleteIcon from '@mui/icons-material/Delete'
 import InfoIcon from '@mui/icons-material/Info'
 import clsx from 'clsx'
 import { Box } from '@mui/system'
 import { green, red, amber } from '@mui/material/colors'
-import { Link, useNavigate } from 'react-router-dom'
 
 import useAuth from '../../hooks/useAuth'
 import { CircularProgress } from '@mui/material'
 
 const JobsList = () => {
   useTitle('BilboMD: Jobs List')
-
+  const [deleteJob, { isSuccess: isDelSuccess, isError: isDelError, error: delerror }] =
+    useDeleteJobMutation()
   const { username, isManager, isAdmin } = useAuth()
 
   const navigate = useNavigate()
@@ -37,6 +37,14 @@ const JobsList = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
   })
+
+  const onDeleteJobClicked = async (id) => {
+    try {
+      await deleteJob({ id: id })
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   let content
 
@@ -81,7 +89,7 @@ const JobsList = () => {
             //console.log(params);
             return format(parseISO(params?.value), 'MM/dd/yyyy HH:mm:ss')
           } else {
-            return '--/--/-- 00:00:00'
+            return ''
           }
         }
       },
@@ -126,7 +134,7 @@ const JobsList = () => {
             icon={<DeleteIcon />}
             label="Delete"
             onClick={() => {
-              console.log('delete...')
+              onDeleteJobClicked(params.id)
             }}
           />,
           <GridActionsCellItem
