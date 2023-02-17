@@ -224,16 +224,16 @@ const NewJobForm = () => {
                           : 'Number of conformations to sample per Rg'
                       }
                     >
-                      <MenuItem key={200} value={200}>
+                      <MenuItem key={1} value={1}>
                         200
                       </MenuItem>
-                      <MenuItem key={400} value={400}>
+                      <MenuItem key={2} value={2}>
                         400
                       </MenuItem>
-                      <MenuItem key={600} value={600}>
+                      <MenuItem key={3} value={3}>
                         600
                       </MenuItem>
-                      <MenuItem key={800} value={800}>
+                      <MenuItem key={4} value={4}>
                         800
                       </MenuItem>
                     </TextField>
