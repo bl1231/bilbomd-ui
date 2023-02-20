@@ -15,7 +15,7 @@
     "@mui/lab": "^5.0.0-alpha.117",
     "@mui/material": "^5.11.5",
     "@mui/system": "^5.11.5",
-    "@mui/x-data-grid": "^5.17.23",
+    "@mui/x-data-grid": "^5.17.24",
     "@reduxjs/toolkit": "^1.9.2",
     "@types/jest": "^27.5.2",
     "@types/node": "^18.13.0",
