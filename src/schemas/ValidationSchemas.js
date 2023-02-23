@@ -12,7 +12,10 @@ export const userSignInSchema = object().shape({
   email: string().email('Please enter a valid email').required('Required')
 })
 export const bilbomdJobSchema = object().shape({
-  title: string().required('Please provide a title for your BilboMD Job.').min(4).max(20),
+  title: string()
+    .required('Please provide a title for your BilboMD Job.')
+    .min(4, 'Title must contain at least 4 characters.')
+    .max(20, 'Title must contain less than 20 characters.'),
   // pdbs: array(object({ uuid: string() }))
   //   .min(1, 'upload at least one PDB')
   //   .max(3),
