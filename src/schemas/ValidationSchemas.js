@@ -18,12 +18,14 @@ export const bilbomdJobSchema = object().shape({
   //   .max(3),
   psf_file: string().required('PSF file obtained from CHARMM-GUI is required'),
   crd_file: string().required('CRD file obtained from CHARMM-GUI is required'),
-  constinp: string().required('const.inp is required'),
-  expdata: string().required('experimental data is required'),
+  constinp: string().required('A const.inp file is required'),
+  expdata: string().required('experimental SAXS data is required'),
   num_conf: number()
     .integer()
     .oneOf([1, 2, 3, 4])
-    .required('Please select a number of Conformations to sample'),
+    .required(
+      'Please select a number of Conformations to sample during CHARMM dynamics step'
+    ),
   rg_min: number()
     .integer()
     .positive()
