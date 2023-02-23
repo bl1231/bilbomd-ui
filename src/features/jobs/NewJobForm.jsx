@@ -13,28 +13,20 @@ import {
   Link
 } from '@mui/material'
 import Input from '@mui/material/Input'
-//import InputLabel, { InputLabelProps } from '@mui/material/InputLabel'
 import { useAddNewJobMutation } from './jobsApiSlice'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import { Form, Formik, Field } from 'formik'
-import { MultipleFileUploadField } from './MultipleFileUploadField'
-//import { Debug } from 'components/Debug'
 import { bilbomdJobSchema } from 'schemas/ValidationSchemas'
 import { useNavigate } from 'react-router-dom'
 import useAuth from 'hooks/useAuth'
 import React, { useState } from 'react'
+//import { Debug } from 'components/Debug'
 
 const initialValues = {
   title: '',
-  pdbs: [
-    {
-      file: '',
-      errors: [],
-      id: '',
-      uuid: ''
-    }
-  ],
+  psf_file: '',
+  crd_file: '',
   constinp: '',
   expdata: '',
   num_conf: '',
@@ -43,27 +35,20 @@ const initialValues = {
   email: ''
 }
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
-
 const NewJobForm = () => {
   const [addNewJob, { isLoading, isSuccess, isError, error }] = useAddNewJobMutation()
   const { email } = useAuth()
-  const navigate = useNavigate()
+  const [psfFileName, setPsfFileName] = useState('')
+  const [crdFileName, setCrdFileName] = useState('')
   const [expdataFileName, setExpdataFileName] = useState('')
   const [constinpFileName, setConstinpFileName] = useState('')
   const [jobid, setJobid] = useState('')
 
   const onSubmit = async (values, { setSubmitting, setErrors, setStatus, resetForm }) => {
-    //console.log('form values: ', values)
-    //await sleep(500)
     const form = new FormData()
-    //await sleep(1000)
     form.append('title', values.title)
-
-    values.pdbs.forEach((pdb, index) => {
-      form.append(`pdb_${index + 1}`, pdb.file)
-    })
-
+    form.append('psf_file', values.psf_file)
+    form.append('crd_file', values.crd_file)
     form.append('num_conf', values.num_conf)
     form.append('rg_min', values.rg_min)
     form.append('rg_max', values.rg_max)
@@ -82,6 +67,10 @@ const NewJobForm = () => {
       // console.log(newJob.jobid)
       setJobid(newJob.jobid)
       setStatus(newJob)
+      setPsfFileName('')
+      setCrdFileName('')
+      setExpdataFileName('')
+      setConstinpFileName('')
     } catch (error) {
       console.error('rejected', error)
     }
@@ -137,14 +126,93 @@ const NewJobForm = () => {
                     />
                   </Grid>
 
-                  <Grid item sx={{ my: 2, display: 'flex', width: '400px' }}>
-                    <FormControl>
-                      <FormLabel sx={{ marginBottom: '0.8em' }}>PDB Files</FormLabel>
-                      <MultipleFileUploadField name="pdbs" />
-                    </FormControl>
+                  <Grid
+                    container
+                    direction="row"
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      width: '400px'
+                    }}
+                  >
+                    <Grid item sx={{ my: 2 }}>
+                      <FormControl>
+                        <FormLabel sx={{ marginBottom: '0.8em' }}>
+                          Upload your <b>*.psf</b> file
+                        </FormLabel>
+                        <Button
+                          variant="contained"
+                          component="label"
+                          sx={{ mr: 2, width: '100px' }}
+                        >
+                          Select File
+                          <Input
+                            sx={{ display: 'none' }}
+                            type="file"
+                            disabled={isSubmitting}
+                            name="psf_file"
+                            onChange={(event) => {
+                              const file = event.currentTarget.files[0]
+                              setPsfFileName(event.currentTarget.files[0].name)
+                              setFieldValue('psf_file', file)
+                            }}
+                          />
+                        </Button>
+                      </FormControl>
+                    </Grid>
+                    <Grid item sx={{ m: 2, display: 'flex', alignItems: 'end' }}>
+                      <Typography variant="h5">{psfFileName}</Typography>
+                    </Grid>
                   </Grid>
 
-                  <Grid container direction="row">
+                  <Grid
+                    container
+                    direction="row"
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      width: '400px'
+                    }}
+                  >
+                    <Grid item sx={{ my: 2, display: 'flex' }}>
+                      <FormControl>
+                        <FormLabel sx={{ marginBottom: '0.8em' }}>
+                          Upload your <b>*.crd</b> file
+                        </FormLabel>
+                        <Button
+                          variant="contained"
+                          component="label"
+                          sx={{ mr: 2, width: '100px' }}
+                        >
+                          Select File
+                          <Input
+                            sx={{ display: 'none' }}
+                            type="file"
+                            disabled={isSubmitting}
+                            name="crd_file"
+                            onChange={(event) => {
+                              const file = event.currentTarget.files[0]
+                              setCrdFileName(event.currentTarget.files[0].name)
+                              setFieldValue('crd_file', file)
+                            }}
+                          />
+                        </Button>
+                      </FormControl>
+                    </Grid>
+                    <Grid item sx={{ m: 2, display: 'flex', alignItems: 'end' }}>
+                      <Typography variant="h5">{crdFileName}</Typography>
+                    </Grid>
+                  </Grid>
+
+                  <Grid
+                    container
+                    direction="row"
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      width: '400px'
+                    }}
+                  >
                     <Grid item sx={{ my: 2, display: 'flex' }}>
                       <FormControl>
                         <FormLabel sx={{ marginBottom: '0.8em' }}>
@@ -175,11 +243,20 @@ const NewJobForm = () => {
                     </Grid>
                   </Grid>
 
-                  <Grid container direction="row" sx={{ mb: 2 }}>
+                  <Grid
+                    container
+                    direction="row"
+                    sx={{
+                      mb: 2,
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      width: '400px'
+                    }}
+                  >
                     <Grid item sx={{ my: 2, display: 'flex' }}>
                       <FormControl>
                         <FormLabel sx={{ marginBottom: '0.8em' }}>
-                          Upload your experimental data
+                          Upload your experimental <b>SAXS data</b>
                         </FormLabel>
                         <Button
                           variant="contained"
