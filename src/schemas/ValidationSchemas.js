@@ -13,9 +13,11 @@ export const userSignInSchema = object().shape({
 })
 export const bilbomdJobSchema = object().shape({
   title: string().required('Please provide a title for your BilboMD Job.').min(4).max(20),
-  pdbs: array(object({ uuid: string() }))
-    .min(1, 'upload at least one PDB')
-    .max(3),
+  // pdbs: array(object({ uuid: string() }))
+  //   .min(1, 'upload at least one PDB')
+  //   .max(3),
+  psf_file: string().required('PSF file obtained from CHARMM-GUI is required'),
+  crd_file: string().required('CRD file obtained from CHARMM-GUI is required'),
   constinp: string().required('const.inp is required'),
   expdata: string().required('experimental data is required'),
   num_conf: number()
