@@ -15,21 +15,21 @@ export const bilbomdJobSchema = object().shape({
   title: string()
     .required('Please provide a title for your BilboMD Job.')
     .min(4, 'Title must contain at least 4 characters.')
-    .max(20, 'Title must contain less than 20 characters.'),
-  // pdbs: array(object({ uuid: string() }))
-  //   .min(1, 'upload at least one PDB')
-  //   .max(3),
+    .max(20, 'Title must contain less than 20 characters.')
+    .matches(/^[\w\s-]+$/, 'no special characters allowed'),
+
   psf_file: string().required('PSF file obtained from CHARMM-GUI is required'),
   crd_file: string().required('CRD file obtained from CHARMM-GUI is required'),
   constinp: string().required('A const.inp file is required'),
-  expdata: string().required('experimental SAXS data is required'),
+  expdata: string().required('Experimental SAXS data is required'),
+
   num_conf: number()
     .integer()
     .oneOf([1, 2, 3, 4])
     .required(
       'Please select a number of Conformations to sample during CHARMM dynamics step'
     ),
-  rg_min: number()
+  rg_min: number('Please specify a number')
     .integer()
     .positive()
     .min(10)
