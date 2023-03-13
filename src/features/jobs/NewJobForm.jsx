@@ -97,7 +97,8 @@ const NewJobForm = () => {
               handleBlur,
               resetForm,
               status,
-              setFieldValue
+              setFieldValue,
+              setFieldTouched
             }) => (
               <Form>
                 <Grid container columns={12} direction="column" sx={{ display: 'flex' }}>
@@ -136,10 +137,10 @@ const NewJobForm = () => {
                         title="Select File"
                         disabled={isSubmitting}
                         setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched}
+                        error={errors.psf_file && touched.psf_file}
                         errorMessage={errors.psf_file ? errors.psf_file : ''}
-                        // touched={touched.psf_file}
-                        // onChange={handleChange}
-                        onBlur={handleBlur}
+                        // onBlur={handleBlur}
                         helperText="Select a PSF file to upload"
                         fileType="*.PSF"
                         fileExt=".psf"
@@ -164,10 +165,10 @@ const NewJobForm = () => {
                         title="Select File"
                         disabled={isSubmitting}
                         setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched}
+                        error={errors.crd_file && touched.crd_file}
                         errorMessage={errors.crd_file ? errors.crd_file : ''}
-                        // touched={touched.crd_file}
-                        // onChange={handleChange}
-                        onBlur={handleBlur}
+                        // onBlur={handleBlur}
                         helperText="Select a CRD file to upload"
                         fileType="*.CRD"
                         fileExt=".crd"
@@ -192,10 +193,10 @@ const NewJobForm = () => {
                         title="Select File"
                         disabled={isSubmitting}
                         setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched}
+                        error={errors.constinp && touched.constinp}
                         errorMessage={errors.constinp ? errors.constinp : ''}
-                        // touched={touched.constinp}
-                        // onChange={handleChange}
-                        onBlur={handleBlur}
+                        // onBlur={handleBlur}
                         helperText="Select a const.inp file to upload"
                         fileType="const.inp"
                         fileExt=".inp"
@@ -220,11 +221,10 @@ const NewJobForm = () => {
                         title="Select File"
                         disabled={isSubmitting}
                         setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched}
                         error={errors.expdata && touched.expdata}
                         errorMessage={errors.expdata ? errors.expdata : ''}
-                        // touched={touched.expdata}
-                        // onChange={handleChange}
-                        onBlur={handleBlur}
+                        // onBlur={handleBlur}
                         helperText="Select a const.inp file to upload"
                         fileType="experimental SAXS data"
                         fileExt=".dat"

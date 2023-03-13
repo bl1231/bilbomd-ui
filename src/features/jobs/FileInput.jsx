@@ -6,6 +6,7 @@ const FileInput = (props) => {
 
   const handleFileChange = (event) => {
     event.preventDefault()
+    props.setFieldTouched(props.name, true, true)
     let reader = new FileReader()
     let file = event.target.files[0]
     if (file) {
@@ -27,19 +28,22 @@ const FileInput = (props) => {
         type="file"
         accept={props.fileExt}
         onChange={handleFileChange}
-        onBlur={props.onBlur}
+        // onBlur={(e) => {
+        //   console.log('onBlur triggered', e)
+        // }}
+        // {...props}
       />
       <label htmlFor={props.id}>
         <Button variant="contained" component="span" sx={{ mr: 2, width: '100px' }}>
           {props.title}
         </Button>
       </label>
-      {fileName ? (
+      {fileName && !props.errorMessage ? (
         <FormHelperText sx={{ ml: 0, color: '#389e0d', fontSize: 16 }}>
           {fileName}
         </FormHelperText>
       ) : null}
-      {props.errorMessage ? (
+      {props.error ? (
         <FormHelperText sx={{ ml: 0, color: '#cf1322', fontSize: 16 }} error={true}>
           {props.errorMessage}
         </FormHelperText>
