@@ -1,5 +1,4 @@
 import {
-  Button,
   Card,
   CardContent,
   Grid,
@@ -8,20 +7,18 @@ import {
   Typography,
   Alert,
   AlertTitle,
-  FormLabel,
-  FormControl,
   Link
 } from '@mui/material'
-import Input from '@mui/material/Input'
+import FileInput from './FileInput'
 import { useAddNewJobMutation } from './jobsApiSlice'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import { Form, Formik, Field } from 'formik'
 import { bilbomdJobSchema } from 'schemas/ValidationSchemas'
-import { useNavigate } from 'react-router-dom'
+//import { useNavigate } from 'react-router-dom'
 import useAuth from 'hooks/useAuth'
 import React, { useState } from 'react'
-//import { Debug } from 'components/Debug'
+import { Debug } from 'components/Debug'
 
 const initialValues = {
   title: '',
@@ -100,12 +97,13 @@ const NewJobForm = () => {
               handleBlur,
               resetForm,
               status,
-              setFieldValue
+              setFieldValue,
+              setFieldTouched
             }) => (
               <Form>
                 <Grid container columns={12} direction="column" sx={{ display: 'flex' }}>
                   <Typography variant="h3">New BilboMD Job Form</Typography>
-                  <Grid item sx={{ my: 2, display: 'flex', width: '400px' }}>
+                  <Grid item sx={{ my: 2, display: 'flex', width: '440px' }}>
                     <Field
                       fullWidth
                       label="Title"
@@ -116,12 +114,8 @@ const NewJobForm = () => {
                       as={TextField}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      error={Boolean(errors.title) && Boolean(touched.title)}
-                      helperText={
-                        Boolean(errors.title) && Boolean(touched.title)
-                          ? errors.title
-                          : ''
-                      }
+                      error={errors.title && touched.title}
+                      helperText={errors.title && touched.title ? errors.title : ''}
                       value={values.title || ''}
                     />
                   </Grid>
@@ -132,36 +126,25 @@ const NewJobForm = () => {
                     sx={{
                       display: 'flex',
                       justifyContent: 'space-between',
-                      width: '400px'
+                      width: '440px'
                     }}
                   >
-                    <Grid item sx={{ my: 2 }}>
-                      <FormControl>
-                        <FormLabel sx={{ marginBottom: '0.8em' }}>
-                          Upload your <b>*.psf</b> file
-                        </FormLabel>
-                        <Button
-                          variant="contained"
-                          component="label"
-                          sx={{ mr: 2, width: '100px' }}
-                        >
-                          Select File
-                          <Input
-                            sx={{ display: 'none' }}
-                            type="file"
-                            disabled={isSubmitting}
-                            name="psf_file"
-                            onChange={(event) => {
-                              const file = event.currentTarget.files[0]
-                              setPsfFileName(event.currentTarget.files[0].name)
-                              setFieldValue('psf_file', file)
-                            }}
-                          />
-                        </Button>
-                      </FormControl>
-                    </Grid>
-                    <Grid item sx={{ m: 2, display: 'flex', alignItems: 'end' }}>
-                      <Typography variant="h5">{psfFileName}</Typography>
+                    <Grid item sx={{ my: 1, display: 'flex' }}>
+                      <Field
+                        name="psf_file"
+                        id="psf-file-upload"
+                        as={FileInput}
+                        title="Select File"
+                        disabled={isSubmitting}
+                        setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched}
+                        error={errors.psf_file && touched.psf_file}
+                        errorMessage={errors.psf_file ? errors.psf_file : ''}
+                        // onBlur={handleBlur}
+                        helperText="Select a PSF file to upload"
+                        fileType="*.PSF"
+                        fileExt=".psf"
+                      />
                     </Grid>
                   </Grid>
 
@@ -171,36 +154,25 @@ const NewJobForm = () => {
                     sx={{
                       display: 'flex',
                       justifyContent: 'space-between',
-                      width: '400px'
+                      width: '440px'
                     }}
                   >
-                    <Grid item sx={{ my: 2, display: 'flex' }}>
-                      <FormControl>
-                        <FormLabel sx={{ marginBottom: '0.8em' }}>
-                          Upload your <b>*.crd</b> file
-                        </FormLabel>
-                        <Button
-                          variant="contained"
-                          component="label"
-                          sx={{ mr: 2, width: '100px' }}
-                        >
-                          Select File
-                          <Input
-                            sx={{ display: 'none' }}
-                            type="file"
-                            disabled={isSubmitting}
-                            name="crd_file"
-                            onChange={(event) => {
-                              const file = event.currentTarget.files[0]
-                              setCrdFileName(event.currentTarget.files[0].name)
-                              setFieldValue('crd_file', file)
-                            }}
-                          />
-                        </Button>
-                      </FormControl>
-                    </Grid>
-                    <Grid item sx={{ m: 2, display: 'flex', alignItems: 'end' }}>
-                      <Typography variant="h5">{crdFileName}</Typography>
+                    <Grid item sx={{ my: 1, display: 'flex' }}>
+                      <Field
+                        name="crd_file"
+                        id="crd-file-upload"
+                        as={FileInput}
+                        title="Select File"
+                        disabled={isSubmitting}
+                        setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched}
+                        error={errors.crd_file && touched.crd_file}
+                        errorMessage={errors.crd_file ? errors.crd_file : ''}
+                        // onBlur={handleBlur}
+                        helperText="Select a CRD file to upload"
+                        fileType="*.CRD"
+                        fileExt=".crd"
+                      />
                     </Grid>
                   </Grid>
 
@@ -210,36 +182,25 @@ const NewJobForm = () => {
                     sx={{
                       display: 'flex',
                       justifyContent: 'space-between',
-                      width: '400px'
+                      width: '440px'
                     }}
                   >
-                    <Grid item sx={{ my: 2, display: 'flex' }}>
-                      <FormControl>
-                        <FormLabel sx={{ marginBottom: '0.8em' }}>
-                          Upload your <b>const.inp</b> file
-                        </FormLabel>
-                        <Button
-                          variant="contained"
-                          component="label"
-                          sx={{ mr: 2, width: '100px' }}
-                        >
-                          Select File
-                          <Input
-                            sx={{ display: 'none' }}
-                            type="file"
-                            disabled={isSubmitting}
-                            name="constinp"
-                            onChange={(event) => {
-                              const file = event.currentTarget.files[0]
-                              setConstinpFileName(event.currentTarget.files[0].name)
-                              setFieldValue('constinp', file)
-                            }}
-                          />
-                        </Button>
-                      </FormControl>
-                    </Grid>
-                    <Grid item sx={{ m: 2, display: 'flex', alignItems: 'end' }}>
-                      <Typography variant="h5">{constinpFileName}</Typography>
+                    <Grid item sx={{ my: 1, display: 'flex' }}>
+                      <Field
+                        name="constinp"
+                        id="constinp-file-upload"
+                        as={FileInput}
+                        title="Select File"
+                        disabled={isSubmitting}
+                        setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched}
+                        error={errors.constinp && touched.constinp}
+                        errorMessage={errors.constinp ? errors.constinp : ''}
+                        // onBlur={handleBlur}
+                        helperText="Select a const.inp file to upload"
+                        fileType="const.inp"
+                        fileExt=".inp"
+                      />
                     </Grid>
                   </Grid>
 
@@ -247,43 +208,31 @@ const NewJobForm = () => {
                     container
                     direction="row"
                     sx={{
-                      mb: 2,
                       display: 'flex',
                       justifyContent: 'space-between',
-                      width: '400px'
+                      width: '440px'
                     }}
                   >
-                    <Grid item sx={{ my: 2, display: 'flex' }}>
-                      <FormControl>
-                        <FormLabel sx={{ marginBottom: '0.8em' }}>
-                          Upload your experimental <b>SAXS data</b>
-                        </FormLabel>
-                        <Button
-                          variant="contained"
-                          component="label"
-                          sx={{ mr: 2, width: '100px' }}
-                        >
-                          Select File
-                          <Input
-                            sx={{ display: 'none' }}
-                            type="file"
-                            disabled={isSubmitting}
-                            name="expdata"
-                            onChange={(event) => {
-                              const file = event.currentTarget.files[0]
-                              setExpdataFileName(event.currentTarget.files[0].name)
-                              setFieldValue('expdata', file)
-                            }}
-                          />
-                        </Button>
-                      </FormControl>
-                    </Grid>
-                    <Grid item sx={{ m: 2, display: 'flex', alignItems: 'end' }}>
-                      <Typography variant="h5">{expdataFileName}</Typography>
+                    <Grid item sx={{ my: 1, display: 'flex' }}>
+                      <Field
+                        name="expdata"
+                        id="expdata-file-upload"
+                        as={FileInput}
+                        title="Select File"
+                        disabled={isSubmitting}
+                        setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched}
+                        error={errors.expdata && touched.expdata}
+                        errorMessage={errors.expdata ? errors.expdata : ''}
+                        // onBlur={handleBlur}
+                        helperText="Select a const.inp file to upload"
+                        fileType="experimental SAXS data"
+                        fileExt=".dat"
+                      />
                     </Grid>
                   </Grid>
 
-                  <Grid item sx={{ my: 2, display: 'flex', width: '400px' }}>
+                  <Grid item sx={{ my: 2, display: 'flex', width: '440px' }}>
                     <TextField
                       label="Conformations per Rg"
                       variant="outlined"
@@ -291,12 +240,12 @@ const NewJobForm = () => {
                       name="num_conf"
                       select
                       defaultValue=""
-                      sx={{ width: '400px' }}
+                      sx={{ width: '440px' }}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      error={Boolean(errors.num_conf) && Boolean(touched.num_conf)}
+                      error={errors.num_conf && touched.num_conf}
                       helperText={
-                        Boolean(errors.num_conf) && Boolean(touched.num_conf)
+                        errors.num_conf && touched.num_conf
                           ? errors.num_conf
                           : 'Number of conformations to sample per Rg'
                       }
@@ -316,7 +265,7 @@ const NewJobForm = () => {
                     </TextField>
                   </Grid>
 
-                  <Grid item sx={{ my: 2, display: 'flex', width: '400px' }}>
+                  <Grid item sx={{ my: 2, display: 'flex', width: '440px' }}>
                     <Field
                       label="Rg Min"
                       fullWidth
@@ -327,16 +276,16 @@ const NewJobForm = () => {
                       as={TextField}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      error={Boolean(errors.rg_min) && Boolean(touched.rg_min)}
+                      error={errors.rg_min && touched.rg_min}
                       helperText={
-                        Boolean(errors.rg_min) && Boolean(touched.rg_min)
+                        errors.rg_min && touched.rg_min
                           ? errors.rg_min
                           : 'Min value of Rg ...(between 10 and 100)'
                       }
                     />
                   </Grid>
 
-                  <Grid item sx={{ my: 2, display: 'flex', width: '400px' }}>
+                  <Grid item sx={{ my: 2, display: 'flex', width: '440px' }}>
                     <Field
                       label="Rg Max"
                       fullWidth
@@ -345,14 +294,14 @@ const NewJobForm = () => {
                       type="text"
                       disabled={isSubmitting}
                       as={TextField}
+                      error={errors.rg_max && touched.rg_max}
                       helperText={
-                        Boolean(errors.rg_max) && Boolean(touched.rg_max)
+                        errors.rg_max && touched.rg_max
                           ? errors.rg_max
                           : 'Max value of Rg ...(between 10 and 100)'
                       }
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      error={Boolean(errors.rg_max) && Boolean(touched.rg_max)}
                     />
                   </Grid>
 
@@ -371,7 +320,7 @@ const NewJobForm = () => {
                     {isSuccess ? <Alert severity="success">{status}</Alert> : ''}
                   </Grid>
                 </Grid>
-                {/* <Debug /> */}
+                <Debug />
               </Form>
             )}
           </Formik>

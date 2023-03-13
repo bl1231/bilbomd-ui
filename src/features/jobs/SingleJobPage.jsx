@@ -131,7 +131,7 @@ const SingleJobPage = () => {
               </Grid>
               <Grid item xs={3}>
                 <Typography>
-                  {job.time_completed
+                  {job.time_started
                     ? format(new Date(job.time_started), 'MM/dd/yyyy HH:mm:ss')
                     : job.status}
                 </Typography>
