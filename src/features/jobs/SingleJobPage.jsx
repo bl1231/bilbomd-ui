@@ -8,7 +8,7 @@ import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
 //import { Box, Container, Stack } from '@mui/system'
 // import { green } from '@ant-design/colors'
-import { Button, Chip, Divider, Grid, Typography } from '@mui/material'
+import { Button, Divider, Grid, Typography } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import axios from 'app/api/axios'
@@ -73,10 +73,6 @@ const SingleJobPage = () => {
       })
       .then((response) => {
         console.log(response)
-        // if (!response.data) {
-        //   console.error('no data')
-        //   return
-        // }
         const url = window.URL.createObjectURL(new Blob([response.data]))
         //console.log('url:', url)
         const link = document.createElement('a')
@@ -97,7 +93,7 @@ const SingleJobPage = () => {
         <Grid item xs={9}>
           <Typography sx={HeaderThingee}>JOB TITLE</Typography>
           <Item>
-            <Typography variant="h3" sx={{ ml: 1 }}>
+            <Typography variant="h4" sx={{ ml: 1 }}>
               {job.title}
             </Typography>
           </Item>
@@ -105,7 +101,7 @@ const SingleJobPage = () => {
         <Grid item xs={3}>
           <Typography sx={HeaderThingee}>STATUS</Typography>
           <Item>
-            <Typography variant="h3" sx={{ ml: 1 }}>
+            <Typography variant="h4" sx={{ ml: 1 }}>
               {job.status}
             </Typography>
           </Item>
@@ -114,34 +110,34 @@ const SingleJobPage = () => {
           <Typography sx={HeaderThingee}>DETAILS</Typography>
           <Item>
             <Grid container>
-              <Grid item xs={1}>
+              <Grid item xs={2}>
                 <Typography>
                   <b>Time Submitted:</b>
                 </Typography>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={2}>
                 <Typography>
                   {format(new Date(job.time_submitted), 'MM/dd/yyyy HH:mm:ss')}
                 </Typography>
               </Grid>
-              <Grid item xs={1}>
+              <Grid item xs={2}>
                 <Typography>
                   <b>Time Started:</b>
                 </Typography>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={2}>
                 <Typography>
                   {job.time_completed
                     ? format(new Date(job.time_started), 'MM/dd/yyyy HH:mm:ss')
                     : job.status}
                 </Typography>
               </Grid>
-              <Grid item xs={1}>
+              <Grid item xs={2}>
                 <Typography>
                   <b>Time Completed:</b>{' '}
                 </Typography>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={2}>
                 <Typography>
                   {job.time_completed
                     ? format(new Date(job.time_completed), 'MM/dd/yyyy HH:mm:ss')

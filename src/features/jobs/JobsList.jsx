@@ -7,7 +7,7 @@ import {
 } from '@mui/x-data-grid'
 import { format, parseISO } from 'date-fns'
 import { useGetJobsQuery } from './jobsApiSlice'
-import { useNavigate } from 'react-router-dom'
+//import { useNavigate } from 'react-router-dom'
 import useTitle from 'hooks/useTitle'
 import clsx from 'clsx'
 import { Box } from '@mui/system'
@@ -60,7 +60,7 @@ const JobsList = () => {
 
     const columns: GridColDef[] = [
       { field: 'title', headerName: 'Title', width: 200 },
-      { field: 'id', headerName: 'ID', width: 100, hide: true },
+      // { field: 'id', headerName: 'ID', width: 100, hide: true },
       {
         field: 'time_submitted',
         headerName: 'Submitted',
@@ -68,7 +68,6 @@ const JobsList = () => {
         width: 160,
         valueFormatter: (params: GridValueFormatterParams<string>) => {
           if (params?.value) {
-            //console.log(params);
             return format(parseISO(params?.value), 'MM/dd/yyyy HH:mm:ss')
           } else {
             return ''
@@ -89,7 +88,7 @@ const JobsList = () => {
         }
       },
 
-      { field: 'username', headerName: 'User' },
+      // { field: 'username', headerName: 'User' },
       {
         field: 'status',
         headerName: 'Status',
