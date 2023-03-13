@@ -1,6 +1,47 @@
 //import * as yup from 'yup';
 
-import { mixed, boolean, number, object, string, ValidationError } from 'yup'
+import { mixed, boolean, number, object, string } from 'yup'
+
+const fromCharmmGui = (file) => {
+  const charmmGui = /CHARMM-GUI/
+  return new Promise((resolve) => {
+    const reader = new FileReader()
+    reader.readAsText(file)
+    reader.onloadend = () => {
+      let lines = reader.result.split(/[\r\n]+/g)
+      for (let line = 0; line < 5; line++) {
+        // console.log(charmmGui.test(lines[line]), 'line', line, lines[line])
+        if (charmmGui.test(lines[line])) {
+          // console.log(lines[line])
+          resolve(true)
+        }
+      }
+      resolve(false)
+    }
+  })
+}
+
+const isSaxsData = (file) => {
+  const sciNotation = /-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?/g
+  return new Promise((resolve) => {
+    const reader = new FileReader()
+    reader.readAsText(file)
+    reader.onloadend = () => {
+      let lines = reader.result.split(/[\r\n]+/g)
+      for (let line = 0; line < 5; line++) {
+        // console.log(charmmGui.test(lines[line]), 'line', line, lines[line])
+        if (sciNotation.test(lines[line])) {
+          // console.log('LINE: ', lines[line])
+          let arr = lines[line].match(sciNotation)
+          // console.log(arr)
+          // console.log(arr.length)
+          if (arr.length === 3) resolve(true)
+        }
+      }
+      resolve(false)
+    }
+  })
+}
 
 export const userRegisterSchema = object().shape({
   email: string().email('Please enter a valid email').required('Required'),
@@ -27,7 +68,7 @@ export const bilbomdJobSchema = object().shape({
       if (file) return true
       return false
     })
-    .test('fileSize', 'Max file size is 2MB', (file) => {
+    .test('file-size-check', 'Max file size is 2MB', (file) => {
       if (file && file.size <= 2000000) {
         // console.log(file.size)
         return true
@@ -35,13 +76,28 @@ export const bilbomdJobSchema = object().shape({
       // console.log(file.size)
       return false
     })
-    .test('fileType', 'Only accepts a PSF file obtained from CHARMM-GUI', (file) => {
-      if (file && file.name.split('.').pop().toUpperCase() === 'PSF') {
-        console.log(file.name.split('.').pop())
-        return true
+    .test(
+      'file-type-check',
+      'Only accepts a PSF file obtained from CHARMM-GUI',
+      (file) => {
+        if (file && file.name.split('.').pop().toUpperCase() === 'PSF') {
+          // console.log(file.name.split('.').pop())
+          return true
+        }
+        return false
       }
-      return false
-    }),
+    )
+    .test(
+      'charmm-gui-check',
+      'File does not appear to be a PSF file output from CHARMM-GUI',
+      async (file) => {
+        if (file) {
+          const fromCharmm = await fromCharmmGui(file)
+          console.log('fromCharmm:', fromCharmm)
+          return fromCharmm
+        }
+      }
+    ),
   crd_file: mixed()
     .test('required', 'CRD file obtained from CHARMM-GUI is required', (file) => {
       if (file) return true
@@ -61,7 +117,18 @@ export const bilbomdJobSchema = object().shape({
         return true
       }
       return false
-    }),
+    })
+    .test(
+      'charmm-gui-check',
+      'File does not appear to be a CRD file output from CHARMM-GUI',
+      async (file) => {
+        if (file) {
+          const fromCharmm = await fromCharmmGui(file)
+          console.log('fromCharmm:', fromCharmm)
+          return fromCharmm
+        }
+      }
+    ),
   constinp: mixed()
     .test('required', 'A const.inp file is required', (file) => {
       if (file) return true
@@ -101,6 +168,13 @@ export const bilbomdJobSchema = object().shape({
         return true
       }
       return false
+    })
+    .test('saxs-data-check', 'File does not appear to be SAXS data', async (file) => {
+      if (file) {
+        const saxsData = await isSaxsData(file)
+        console.log('saxsData:', saxsData)
+        return saxsData
+      }
     }),
 
   num_conf: number()
