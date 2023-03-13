@@ -59,10 +59,6 @@ export const bilbomdJobSchema = object().shape({
     .min(4, 'Title must contain at least 4 characters.')
     .max(20, 'Title must contain less than 20 characters.')
     .matches(/^[\w\s-]+$/, 'no special characters allowed'),
-
-  // psf_file: string()
-  //   .required('PSF file obtained from CHARMM-GUI is required')
-  //   .matches(/^[\w]+(\.psf)$/, 'Upload a *.psf file only'),
   psf_file: mixed()
     .test('required', 'PSF file obtained from CHARMM-GUI is required', (file) => {
       if (file) return true
@@ -103,7 +99,7 @@ export const bilbomdJobSchema = object().shape({
       if (file) return true
       return false
     })
-    .test('fileSize', 'Max file size is 2MB', (file) => {
+    .test('file-size-check', 'Max file size is 2MB', (file) => {
       if (file && file.size <= 2000000) {
         // console.log(file.size)
         return true
@@ -111,13 +107,17 @@ export const bilbomdJobSchema = object().shape({
       // console.log(file.size)
       return false
     })
-    .test('fileType', 'Only accepts a CRD file obtained from CHARMM-GUI', (file) => {
-      if (file && file.name.split('.').pop().toUpperCase() === 'CRD') {
-        console.log(file.name.split('.').pop())
-        return true
+    .test(
+      'file-type-check',
+      'Only accepts a CRD file obtained from CHARMM-GUI',
+      (file) => {
+        if (file && file.name.split('.').pop().toUpperCase() === 'CRD') {
+          console.log(file.name.split('.').pop())
+          return true
+        }
+        return false
       }
-      return false
-    })
+    )
     .test(
       'charmm-gui-check',
       'File does not appear to be a CRD file output from CHARMM-GUI',
@@ -134,7 +134,7 @@ export const bilbomdJobSchema = object().shape({
       if (file) return true
       return false
     })
-    .test('fileSize', 'Max file size is 2MB', (file) => {
+    .test('file-size-check', 'Max file size is 2MB', (file) => {
       if (file && file.size <= 2000000) {
         // console.log(file.size)
         return true
@@ -142,7 +142,7 @@ export const bilbomdJobSchema = object().shape({
       // console.log(file.size)
       return false
     })
-    .test('fileType', 'Only accepts a const.inp file.', (file) => {
+    .test('file-type-check', 'Only accepts a const.inp file.', (file) => {
       if (file && file.name.split('.').pop().toUpperCase() === 'INP') {
         // console.log(file.name.split('.').pop())
         return true
@@ -154,7 +154,7 @@ export const bilbomdJobSchema = object().shape({
       if (file) return true
       return false
     })
-    .test('fileSize', 'Max file size is 2MB', (file) => {
+    .test('file-size-check', 'Max file size is 2MB', (file) => {
       if (file && file.size <= 2000000) {
         // console.log(file.size)
         return true
@@ -162,7 +162,7 @@ export const bilbomdJobSchema = object().shape({
       // console.log(file.size)
       return false
     })
-    .test('fileType', 'Only accepts a *.dat file.', (file) => {
+    .test('file-type-check', 'Only accepts a *.dat file.', (file) => {
       if (file && file.name.split('.').pop().toUpperCase() === 'DAT') {
         console.log(file.name.split('.').pop())
         return true
