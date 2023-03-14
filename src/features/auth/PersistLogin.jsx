@@ -24,7 +24,7 @@ const PersistLogin = () => {
       // React 18 Strict Mode
 
       const verifyRefreshToken = async () => {
-        console.log('verifying refresh token')
+        // console.log('verifying refresh token')
         try {
           //const response =
           await refresh()
@@ -47,11 +47,11 @@ const PersistLogin = () => {
   let content
   if (!persist) {
     // persist: no
-    console.log('no persist')
+    // console.log('no persist')
     content = <Outlet />
   } else if (isLoading) {
     //persist: yes, token: no
-    console.log('loading')
+    // console.log('loading')
     content = <CircularProgress />
   } else if (isError) {
     //persist: yes, token: no
@@ -65,15 +65,8 @@ const PersistLogin = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <Grid
-          item
-          xs={6}
-          md={4}
-        >
-          <Alert
-            variant="filled"
-            severity="error"
-          >
+        <Grid item xs={6} md={4}>
+          <Alert variant="filled" severity="error">
             <AlertTitle>{error?.data?.message}</AlertTitle>
             Please login again
           </Alert>
@@ -94,12 +87,12 @@ const PersistLogin = () => {
     )
   } else if (isSuccess && trueSuccess) {
     //persist: yes, token: yes
-    console.log('success')
+    // console.log('success')
     content = <Outlet />
   } else if (token && isUninitialized) {
     //persist: yes, token: yes
-    console.log('token and uninit')
-    console.log('isUninitialized:', isUninitialized)
+    // console.log('token and uninit')
+    // console.log('isUninitialized:', isUninitialized)
     content = <Outlet />
   }
 
