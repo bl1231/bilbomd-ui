@@ -202,6 +202,9 @@ const NewJobForm = () => {
                         fileExt=".inp"
                       />
                     </Grid>
+                    <Grid item sx={{ my: 1, display: 'flex' }}>
+                      Make your own const.inp file
+                    </Grid>
                   </Grid>
 
                   <Grid
