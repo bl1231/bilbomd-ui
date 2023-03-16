@@ -135,7 +135,7 @@ const ConstInpStepper = () => {
               <Formik initialValues={initialValues}>
                 <Form id={formId}>
                   {renderStepContent(activeStep)}
-                  {/* <Debug /> */}
+                  <Debug />
                 </Form>
               </Formik>
             </React.Fragment>
