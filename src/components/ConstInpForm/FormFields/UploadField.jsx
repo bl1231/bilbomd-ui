@@ -10,7 +10,7 @@ const UploadField = ({
   ...props
 }) => {
   return (
-    <>
+    <React.Fragment>
       <Field
         variant="outlined"
         name="uploader"
@@ -23,7 +23,7 @@ const UploadField = ({
         {...props}
       />
       {/* {isError && <FormHelperText>{errors[field.name]}</FormHelperText>} */}
-    </>
+    </React.Fragment>
   )
 }
 

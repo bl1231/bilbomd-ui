@@ -1,12 +1,31 @@
 import formModel from './formModel'
+
 const {
-  formField: { crdFile }
+  formField: { crdFile, domains }
 } = formModel
 
-export default {
+const initialValues = {
   [crdFile.name]: {
     file: null,
     src: null,
-    name: ''
-  }
+    name: '',
+    chains: [
+      {
+        id: '',
+        atoms: '',
+        first_res: '',
+        last_res: '',
+        num_res: ''
+      }
+    ]
+  },
+  [domains.name]: [
+    {
+      id: '',
+      start: '',
+      end: ''
+    }
+  ]
 }
+
+export default initialValues

@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography'
 import UploadForm from './Forms/UploadForm'
 import DomainForm from './Forms/DomainForm'
 import formModel from './FormModel/formModel'
-import formInitialValues from './FormModel/formInitialValues'
+import initialValues from './FormModel/formInitialValues'
 import { Form, Formik } from 'formik'
 import { Debug } from 'components/Debug'
 
@@ -108,15 +108,38 @@ const ConstInpStepper = () => {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>Steppp {activeStep + 1}</Typography>
-          <React.Fragment>
-            <Formik initialValues={formInitialValues}>
-              <Form id={formId}>
-                {renderStepContent(activeStep)}
-                <Debug />
-              </Form>
-            </Formik>
-          </React.Fragment>
+          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+            <Button
+              color="inherit"
+              disabled={activeStep === 0}
+              onClick={handleBack}
+              sx={{ mr: 1 }}
+            >
+              Back
+            </Button>
+            <Box sx={{ flex: '1 1 auto' }} />
+            {isStepOptional(activeStep) && (
+              <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
+                Skip
+              </Button>
+            )}
+
+            <Button onClick={handleNext}>
+              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+            </Button>
+          </Box>
+
+          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+            {/* <Typography sx={{ mt: 2, mb: 1 }}>Steppp {activeStep + 1}</Typography> */}
+            <React.Fragment>
+              <Formik initialValues={initialValues}>
+                <Form id={formId}>
+                  {renderStepContent(activeStep)}
+                  {/* <Debug /> */}
+                </Form>
+              </Formik>
+            </React.Fragment>
+          </Box>
 
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Button
