@@ -4,6 +4,8 @@ import { Typography, Grid, Button } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import useTitle from 'hooks/useTitle'
+import DomainCard from '../Helpers/DomainCard'
+import { ChargingStation } from '@mui/icons-material'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.primary,
@@ -75,74 +77,9 @@ const DomainForm = (props) => {
         <Grid item xs={12}>
           <Typography sx={HeaderThingee}>Define Rigid Domains</Typography>
           <Item>
-            <FieldArray name="domains">
-              {({ insert, remove, push }) => (
-                <div>
-                  {values.domains.length > 0 &&
-                    values.domains.map((domain, index) => (
-                      <React.Fragment>
-                        <div className="row" key={index}>
-                          <div className="col">
-                            <label htmlFor={`domains.${index}.id`}>Domain ID</label>
-                            <Field
-                              name={`domains.${index}.id`}
-                              placeholder="chain ID"
-                              type="text"
-                            />
-                            <ErrorMessage
-                              name={`domains.${index}.id`}
-                              component="div"
-                              className="field-error"
-                            />
-                          </div>
-                          <div className="col">
-                            <label htmlFor={`domains.${index}.start`}>Domain Start</label>
-                            <Field
-                              name={`domains.${index}.start`}
-                              placeholder="start residue"
-                              type="text"
-                            />
-                            <ErrorMessage
-                              name={`domains.${index}.start`}
-                              component="div"
-                              className="field-error"
-                            />
-                          </div>
-                          <div className="col">
-                            <label htmlFor={`domains.${index}.end`}>Domain End</label>
-                            <Field
-                              name={`domains.${index}.end`}
-                              placeholder="end residue"
-                              type="text"
-                            />
-                            <ErrorMessage
-                              name={`values.crdFile.domains.${index}.end`}
-                              component="div"
-                              className="field-error"
-                            />
-                          </div>
-                          <div className="col">
-                            <button
-                              type="button"
-                              className="secondary"
-                              onClick={() => remove(index)}
-                            >
-                              Delete Domain {index + 1}
-                            </button>
-                          </div>
-                        </div>
-                      </React.Fragment>
-                    ))}
-                  <button
-                    type="button"
-                    className="secondary"
-                    onClick={() => push({ id: '', start: '', end: '' })}
-                  >
-                    Add Domain
-                  </button>
-                </div>
-              )}
-            </FieldArray>
+            {values.crdFile.chains.map((chain) => (
+              <DomainCard values={values} />
+            ))}
           </Item>
         </Grid>
       </Grid>
