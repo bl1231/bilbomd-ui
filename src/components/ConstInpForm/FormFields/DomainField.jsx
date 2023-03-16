@@ -13,13 +13,10 @@ const DomainField = ({
     <React.Fragment>
       <Field
         variant="outlined"
-        name="uploader"
+        name="temporary"
         title={label}
         type="file"
-        style={{
-          display: 'flex',
-          color: isError ? 'red' : 'var(--main-color)'
-        }}
+        sx={{ display: 'flex' }}
         {...props}
       />
     </React.Fragment>

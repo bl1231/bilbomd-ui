@@ -4,12 +4,14 @@ const formModel = {
     crdFile: {
       name: 'crdFile',
       label: 'Please upload a CRD File obtained from CHARMM-GUI:',
-      reviewLabel: 'Your crdFile is still here: ',
-      requiredErrorMsg: 'Image is required',
+      reviewLabel: 'Your CRD file is still here: ',
+      requiredErrorMsg: 'CRD file is required',
       type: 'file'
     },
-    chains: {
-      name: 'chains'
+    domains: {
+      name: 'domains',
+      label: 'Select some domains',
+      type: 'text'
     }
   }
 }
