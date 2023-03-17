@@ -7,6 +7,7 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import UploadForm from './Forms/UploadForm'
 import DomainForm from './Forms/DomainForm'
+import DownloadForm from './Forms/DownloadForm'
 import formModel from './FormModel/formModel'
 import initialValues from './FormModel/formInitialValues'
 import { Form, Formik } from 'formik'
@@ -25,7 +26,7 @@ function renderStepContent(step) {
     case 1:
       return <DomainForm formField={formField} />
     case 2:
-      return <div>step 3 - aka three</div>
+      return <DownloadForm formField={formField} />
     default:
       return <div>Not Found</div>
   }
@@ -138,7 +139,7 @@ const ConstInpStepper = () => {
                 {({ values, errors, touched, handleChange }) => (
                   <Form id={formId}>
                     {renderStepContent(activeStep)}
-                    <Debug />
+                    {/* <Debug /> */}
                   </Form>
                 )}
               </Formik>
