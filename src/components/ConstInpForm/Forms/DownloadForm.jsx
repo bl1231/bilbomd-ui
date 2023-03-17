@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useFormikContext } from 'formik'
 import { Button, Grid, Typography } from '@mui/material'
 import Paper from '@mui/material/Paper'
@@ -25,17 +25,61 @@ const HeaderThingee = {
 }
 const DownloadForm = (props) => {
   useTitle('BilboMD: Download const.inp file')
+  const [constFilePreview, setConstFilePreview] = useState('init const.inp file')
   const { values } = useFormikContext()
 
   const prepareConstInpFile = () => {
-    console.log('prep const.inp file')
-    const content = []
+    // Example const.inp
+    //
+    // define fixed1 sele ( resid 40:137 .and. segid PROA) end
+    // define fixed2 sele ( resid 150:203 .and. segid PROA) end
+    // define fixed3 sele ( segid DNAA) end
+    // define fixed4 sele ( segid DNAB) end
+    // cons fix sele fixed1 .or. fixed2 .or. fixed3 .or. fixed4 end
+    // return
+    //
+    const contentArray = []
+    const chains = values.crdFile.chains
+    let domainTotal = 0
+
+    for (const chain in chains) {
+      let chainId = chains[chain].id
+      for (const domain in chains[chain].domains) {
+        domainTotal++
+        let start = chains[chain].domains[domain].start
+        let end = chains[chain].domains[domain].end
+
+        const line =
+          'define fixed' +
+          domainTotal +
+          ' sele ( resid ' +
+          start +
+          ':' +
+          end +
+          ' .and. segid ' +
+          chainId +
+          ' ) end'
+        contentArray.push(line)
+      }
+    }
+    // There has to be a better way to construct this last line
+    let ll = 'cons fix sele '
+    for (let d = 1; d <= domainTotal; d++) {
+      ll += 'fixed' + d + ' .or. '
+    }
+    // console.log(ll.slice(0, ll.length - 6))
+    const lastLine = ll.slice(0, ll.length - 6) + ' end'
+    contentArray.push(lastLine)
+    const returnLine = 'return'
+    contentArray.push(returnLine)
+    const content = contentArray.join('\n')
+    console.log(content)
+    setConstFilePreview(content)
     const file = new Blob([content], { type: 'text/plain' })
     return file
   }
 
   const handleDownload = () => {
-    console.log('download de file')
     // 1. Get the Blob object (aka our file)
     const file = prepareConstInpFile()
     // 2. Create HTML <a> element
@@ -52,13 +96,25 @@ const DownloadForm = (props) => {
     link.parentNode.removeChild(link)
   }
 
+  const effectRan = useRef(false)
+
+  useEffect(() => {
+    if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
+      if (values) {
+        prepareConstInpFile()
+      }
+    }
+    return () => (effectRan.current = true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values])
+
   return (
     <React.Fragment>
       <Grid container spacing={3} justify="center" alignItems="center">
         <Grid item xs={12}>
           <Typography sx={HeaderThingee}>Preview</Typography>
           <Item>
-            <Typography xs={12}>preview here</Typography>
+            <pre>{constFilePreview}</pre>
           </Item>
         </Grid>
         <Grid item>
