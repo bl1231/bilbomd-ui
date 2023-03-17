@@ -1,16 +1,34 @@
-import React from 'react'
-import { Field, ErrorMessage, FieldArray } from 'formik'
+import React, { useState } from 'react'
+import { Field, ErrorMessage, FieldArray, useFormikContext } from 'formik'
 import { Typography } from '@mui/material'
 
-const DomainCard = ({ values }) => {
+const DomainCard = ({ chainIndex }) => {
+  const [domain, setDomain] = useState('')
+  const { values } = useFormikContext()
+
+  const handleAddDomain = () => {
+    const domain = {}
+    domain.start = '1'
+    domain.end = '33'
+  }
+
   return (
     <React.Fragment>
-      <Typography>{values.crdFile.chains[0].id}</Typography>
-      <FieldArray name="domains">
+      {/* <Typography variant="h5">{chain.id}</Typography> */}
+      {/* <Typography variant="h5">{values.crdFile.chains[idx].id}</Typography> */}
+      {/* <Typography variant="h5">{values.crdFile.chains[idx].atoms}</Typography> */}
+      {/* <Typography variant="h5">{values.crdFile.chains[idx].domains[0].id}</Typography> */}
+      {/* {<pre>{JSON.stringify(chain, null, 3)}</pre>} */}
+      <FieldArray name={`values.crdFile.chains[${chainIndex}].domains`}>
         {({ insert, remove, push }) => (
           <React.Fragment>
-            {values.domains.length > 0 &&
-              values.domains.map((domain, index) => (
+            {`values.crdFile.chains[${chainIndex}].domains.length` > 0 &&
+              `values.crdFile.chains[${chainIndex}].domains.map`((domain, index) => (
+                // <p key={index}>
+                //   domain{domain} index{index}
+                // </p>
+                // <pre key={index}>{JSON.stringify(domain, null, 3)}</pre>
+
                 <React.Fragment>
                   <div className="row" key={index}>
                     <div className="col">
