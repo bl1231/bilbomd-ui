@@ -43,11 +43,10 @@ const DomainForm = (props) => {
 
   useEffect(() => {
     if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
-      console.log('DomainForm useEffect ran')
+      //console.log('DomainForm useEffect ran')
       // console.log(JSON.stringify(crdFile, null, 2))
-      console.log(JSON.stringify(values, null, 2))
+      //console.log(JSON.stringify(values, null, 2))
     }
-
     return () => {
       effectRan.current = true
     }
