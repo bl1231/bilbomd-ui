@@ -4,6 +4,7 @@ import { Button, Grid, Typography } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import useTitle from 'hooks/useTitle'
+
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.primary,
   ...theme.typography.body2,
@@ -23,21 +24,13 @@ const HeaderThingee = {
   color: '#fff',
   letterSpacing: '1px'
 }
+
 const DownloadForm = (props) => {
   useTitle('BilboMD: Preview const.inp file')
   const [constFilePreview, setConstFilePreview] = useState('init const.inp file')
   const { values } = useFormikContext()
 
   const prepareConstInpFile = () => {
-    // Example const.inp
-    //
-    // define fixed1 sele ( resid 40:137 .and. segid PROA) end
-    // define fixed2 sele ( resid 150:203 .and. segid PROA) end
-    // define fixed3 sele ( segid DNAA) end
-    // define fixed4 sele ( segid DNAB) end
-    // cons fix sele fixed1 .or. fixed2 .or. fixed3 .or. fixed4 end
-    // return
-    //
     const contentArray = []
     const chains = values.crdFile.chains
     let domainTotal = 0
