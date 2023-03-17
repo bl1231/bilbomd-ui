@@ -15,17 +15,17 @@ const initialValues = {
         atoms: '',
         first_res: '',
         last_res: '',
-        num_res: ''
+        num_res: '',
+        domains: [
+          {
+            id: '',
+            start: '',
+            end: ''
+          }
+        ]
       }
     ]
-  },
-  [domains.name]: [
-    {
-      id: '',
-      start: '',
-      end: ''
-    }
-  ]
+  }
 }
 
 export default initialValues
