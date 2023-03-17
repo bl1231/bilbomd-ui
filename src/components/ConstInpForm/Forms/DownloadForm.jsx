@@ -24,7 +24,7 @@ const HeaderThingee = {
   letterSpacing: '1px'
 }
 const DownloadForm = (props) => {
-  useTitle('BilboMD: Download const.inp file')
+  useTitle('BilboMD: Preview const.inp file')
   const [constFilePreview, setConstFilePreview] = useState('init const.inp file')
   const { values } = useFormikContext()
 
@@ -67,14 +67,16 @@ const DownloadForm = (props) => {
     for (let d = 1; d <= domainTotal; d++) {
       ll += 'fixed' + d + ' .or. '
     }
-    // console.log(ll.slice(0, ll.length - 6))
+    // Trim off the last " .or " and add the "end" keyword.
     const lastLine = ll.slice(0, ll.length - 6) + ' end'
     contentArray.push(lastLine)
+    // and the last line needs to be "return"
     const returnLine = 'return'
     contentArray.push(returnLine)
     const content = contentArray.join('\n')
     console.log(content)
     setConstFilePreview(content)
+    // Can't seem to store a Blob is useState so return a Blob for file download
     const file = new Blob([content], { type: 'text/plain' })
     return file
   }

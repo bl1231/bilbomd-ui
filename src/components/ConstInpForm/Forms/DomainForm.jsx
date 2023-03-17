@@ -28,7 +28,7 @@ const HeaderThingee = {
 }
 
 const DomainForm = (props) => {
-  useTitle('BilboMD: Create const.inp file')
+  useTitle('BilboMD: define domains')
   // const {
   //   formField: { crdFile }
   // } = props
