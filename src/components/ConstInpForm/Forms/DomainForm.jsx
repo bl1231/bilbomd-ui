@@ -29,23 +29,15 @@ const HeaderThingee = {
 
 const DomainForm = (props) => {
   useTitle('BilboMD: define domains')
-  // const {
-  //   formField: { crdFile }
-  // } = props
   const { values } = useFormikContext()
-  // const [field, meta, helper] = useField(domains.name)
-  // const { touched, error } = meta
-  // const { setValue } = helper
-  // const isError = touched && error && true
-  // const { value } = field
 
   const effectRan = useRef(false)
 
   useEffect(() => {
     if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
-      //console.log('DomainForm useEffect ran')
+      // console.log('DomainForm useEffect ran')
       // console.log(JSON.stringify(crdFile, null, 2))
-      //console.log(JSON.stringify(values, null, 2))
+      // console.log(JSON.stringify(values, null, 2))
     }
     return () => {
       effectRan.current = true
@@ -59,18 +51,17 @@ const DomainForm = (props) => {
         <Grid item xs={12}>
           <Typography sx={HeaderThingee}>Instructions</Typography>
           <Item>
-            <Typography variant="h4" sx={{ ml: 1 }}>
+            <Typography variant="h4" sx={{ m: 1 }}>
               Define regions to remain rigid
             </Typography>
-            <p>
-              Instructions here. Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-              sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-              ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-              ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-              velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-              cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-              est laborum.
-            </p>
+            <Typography sx={{ m: 1 }}>
+              This is pretty straight forward. You need to define which ranges of residues
+              are to remain rigid during the Molecular Dynamics steps of a BilboMD run.
+              There are a few rules to follow
+              <li>No overlapping regions</li>
+              <li>Minimum rigid body domain is 5 residues?</li>
+              <li>Maximum number of rigid body domain?</li>
+            </Typography>
           </Item>
         </Grid>
         <Grid item xs={12}>
