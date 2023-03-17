@@ -54,7 +54,7 @@ const UploadForm = (props) => {
     // split on newline and carrage return
     let lines = src.result.split(/[\r\n]+/g)
 
-    // grab 7th column = chain IDs
+    // CRD file: 7th column = chain IDs
     const chainId = /^\s*(?:\S+\s+){7}(\S+)/
 
     const allChainIds = []
@@ -67,16 +67,9 @@ const UploadForm = (props) => {
     const uniqueChains = allChainIds.filter(
       (value, index, array) => array.indexOf(value) === index
     )
-    // setChains(unique)
+
     console.log('unique chains', uniqueChains)
-    // Want to construct a chain object
-    // { id: 'PROA', length: 236 }
-    //
-    // Put each chainid in seperate object
-    // look for contoguous segments
-    // report first residue #
-    // report last  residue #
-    // reposrt total length
+
     let group = []
     let charmmChains = []
     uniqueChains.forEach((element, i) => {
@@ -93,6 +86,7 @@ const UploadForm = (props) => {
       }
 
       group[i] = c
+      // CRD file: 8th column = Residue Number
       const residueNumber = /^\s*(?:\S+\s+){8}(\S+)/
       let length = group[i].length
       let firstLine = group[i][0]
@@ -111,7 +105,8 @@ const UploadForm = (props) => {
         atoms: length,
         first_res: firstRes,
         last_res: lastRes,
-        num_res: numResidues
+        num_res: numResidues,
+        domains: [{ id: element, start: firstRes, end: lastRes }]
       }
       charmmChains.push(charmmChain)
     })
@@ -128,7 +123,7 @@ const UploadForm = (props) => {
     })
   }
 
-  const _onChange = (event) => {
+  const onChange = (event) => {
     console.log('onChange triggered')
     let reader = new FileReader()
     let file = event.target.files[0]
@@ -207,7 +202,7 @@ const UploadForm = (props) => {
                 variant="outlined"
                 field={field}
                 component={UploadField}
-                onChange={_onChange}
+                onChange={onChange}
                 isError={isError}
               />
               {isError && <FormHelperText color={'red'}>{error}</FormHelperText>}

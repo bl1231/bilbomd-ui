@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react'
-import { useField, Field, ErrorMessage, FieldArray, useFormikContext } from 'formik'
-import { Typography, Grid, Button } from '@mui/material'
+import { useFormikContext, FieldArray } from 'formik'
+import { Typography, Grid } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import useTitle from 'hooks/useTitle'
 import DomainCard from '../Helpers/DomainCard'
-import { ChargingStation } from '@mui/icons-material'
+import Domains from '../Helpers/Domains'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.primary,
@@ -29,9 +29,9 @@ const HeaderThingee = {
 
 const DomainForm = (props) => {
   useTitle('BilboMD: Create const.inp file')
-  const {
-    formField: { domains }
-  } = props
+  // const {
+  //   formField: { crdFile }
+  // } = props
   const { values } = useFormikContext()
   // const [field, meta, helper] = useField(domains.name)
   // const { touched, error } = meta
@@ -44,7 +44,7 @@ const DomainForm = (props) => {
   useEffect(() => {
     if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
       console.log('DomainForm useEffect ran')
-      console.log(JSON.stringify(domains, null, 2))
+      // console.log(JSON.stringify(crdFile, null, 2))
       console.log(JSON.stringify(values, null, 2))
     }
 
@@ -52,7 +52,7 @@ const DomainForm = (props) => {
       effectRan.current = true
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [domains])
+  }, [])
 
   return (
     <React.Fragment>
@@ -77,9 +77,28 @@ const DomainForm = (props) => {
         <Grid item xs={12}>
           <Typography sx={HeaderThingee}>Define Rigid Domains</Typography>
           <Item>
-            {values.crdFile.chains.map((chain) => (
-              <DomainCard values={values} />
-            ))}
+            <Typography variant="h5">
+              Found {values.crdFile.chains.length} Chains
+            </Typography>
+            <Grid item sx={{ my: 1, backgroundColor: '#fcffe6' }}>
+              {values.crdFile.chains.map((chain, index) => (
+                // <DomainCard chain={chain} chainIndex={index} values={values} />
+                <div key={chain.id + index}>
+                  <br />
+                  <span>
+                    chain {index + 1}: {chain.id} domains:
+                  </span>
+                  <FieldArray name={`crdFile.chains[${index}].domains`}>
+                    {(arrayHelpers) => (
+                      <>
+                        <br />
+                        <Domains chainIndex={index} domainsArrayHelpers={arrayHelpers} />
+                      </>
+                    )}
+                  </FieldArray>
+                </div>
+              ))}
+            </Grid>
           </Item>
         </Grid>
       </Grid>

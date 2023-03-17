@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useState } from 'react'
 import Box from '@mui/material/Box'
 import Stepper from '@mui/material/Stepper'
 import Step from '@mui/material/Step'
@@ -18,7 +18,7 @@ const steps = ['Upload CRD File', 'Select Rigid domains', 'Create const.inp file
 const { formId, formField } = formModel
 
 function renderStepContent(step) {
-  console.log('step', step)
+  // console.log('step', step)
   switch (step) {
     case 0:
       return <UploadForm formField={formField} />
@@ -32,8 +32,8 @@ function renderStepContent(step) {
 }
 
 const ConstInpStepper = () => {
-  const [activeStep, setActiveStep] = React.useState(0)
-  const [skipped, setSkipped] = React.useState(new Set())
+  const [activeStep, setActiveStep] = useState(0)
+  const [skipped, setSkipped] = useState(new Set())
 
   const isStepOptional = (step) => {
     //return step === 1
@@ -117,7 +117,9 @@ const ConstInpStepper = () => {
             >
               Back
             </Button>
+
             <Box sx={{ flex: '1 1 auto' }} />
+
             {isStepOptional(activeStep) && (
               <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
                 Skip
@@ -133,10 +135,12 @@ const ConstInpStepper = () => {
             {/* <Typography sx={{ mt: 2, mb: 1 }}>Steppp {activeStep + 1}</Typography> */}
             <React.Fragment>
               <Formik initialValues={initialValues}>
-                <Form id={formId}>
-                  {renderStepContent(activeStep)}
-                  <Debug />
-                </Form>
+                {({ values, errors, touched, handleChange }) => (
+                  <Form id={formId}>
+                    {renderStepContent(activeStep)}
+                    <Debug />
+                  </Form>
+                )}
               </Formik>
             </React.Fragment>
           </Box>
