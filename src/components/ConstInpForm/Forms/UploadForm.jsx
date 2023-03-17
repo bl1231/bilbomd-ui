@@ -7,6 +7,7 @@ import CrdSummary from '../Helpers/CrdSummary'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import useTitle from 'hooks/useTitle'
+import { Box } from '@mui/system'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.primary,
@@ -170,18 +171,51 @@ const UploadForm = (props) => {
         <Grid item xs={12}>
           <Typography sx={HeaderThingee}>Instructions</Typography>
           <Item>
-            <Typography variant="h4" sx={{ ml: 1 }}>
+            <Typography variant="h4" sx={{ m: 1 }}>
               Select a *CRD file to upload
             </Typography>
-            <p>
-              Instructions here. Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-              sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-              ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-              ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-              velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-              cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-              est laborum.
-            </p>
+            <Typography sx={{ m: 1 }}>
+              <b>BilboMD</b> uses <a href="https://academiccharmm.org/">CHARMM</a> to
+              generate an ensemble of molecular models. In order for the Molecular
+              Dynamics steps to run successfully it is imperative that the rigid and
+              flexible regions of your molecule are defined in proper CHARMM{' '}
+              <a href="https://academiccharmm.org/documentation/version/c47b2/select">
+                atom selection
+              </a>{' '}
+              syntax. This web jiffy should help you get started. You will need to use the{' '}
+              <b>PDB Reader</b> tool available from{' '}
+              <a href="https://www.charmm-gui.org/">CHARMM-GUI</a>. You will need to
+              register for a account before you can use CHARMM-GUI tools.
+            </Typography>
+            <Typography sx={{ m: 1 }}>
+              Example{' '}
+              <b>
+                <code>const.inp</code>
+              </b>{' '}
+              file:
+            </Typography>
+            <Box sx={{ backgroundColor: '#f0f0f0', m: 1, p: 1 }}>
+              <Typography
+                component="pre"
+                sx={{
+                  m: 1,
+                  fontFamily:
+                    'Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New;'
+                }}
+              >
+                define fixed1 sele ( resid 40:137 .and. segid PROA) end
+                <br />
+                define fixed2 sele ( resid 150:203 .and. segid PROA) end
+                <br />
+                define fixed3 sele ( segid DNAA) end
+                <br />
+                define fixed4 sele ( segid DNAB) end
+                <br />
+                cons fix sele fixed1 .or. fixed2 .or. fixed3 .or. fixed4 end
+                <br />
+                return
+              </Typography>
+            </Box>
           </Item>
         </Grid>
         <Grid item xs={12}>
