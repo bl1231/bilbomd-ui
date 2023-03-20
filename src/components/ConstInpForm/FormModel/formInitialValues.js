@@ -1,11 +1,11 @@
 import formModel from './formModel'
 
 const {
-  formField: { crdFile, domains }
+  formField: { crd_file, domains }
 } = formModel
 
 const initialValues = {
-  [crdFile.name]: {
+  [crd_file.name]: {
     file: null,
     src: null,
     name: '',

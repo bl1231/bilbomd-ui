@@ -1,27 +1,20 @@
-import React from 'react'
-import { Formik, Form, Field, useFormikContext } from 'formik'
-import {
-  Card,
-  CardContent,
-  Grid,
-  TextField,
-  MenuItem,
-  Typography,
-  Alert,
-  AlertTitle,
-  Link,
-  Button,
-  Chip
-} from '@mui/material'
+import React, { useState } from 'react'
+import { useField, Field, useFormikContext } from 'formik'
+import { Grid, TextField, Typography, Button, Chip } from '@mui/material'
 import { Box } from '@mui/system'
 
 const Domains = ({ chainIndex, domainsArrayHelpers }) => {
-  const [id, setId] = React.useState('')
-  const [start, setStart] = React.useState('')
-  const [end, setEnd] = React.useState('')
+  const [field, meta, helper] = useField('crd_file')
+  const { touched, error } = meta
+  const { setValue, setError } = helper
+  const isError = Boolean(touched && error)
+  const { value } = field
+  const [id, setId] = useState('')
+  const [start, setStart] = useState('')
+  const [end, setEnd] = useState('')
   const { values } = useFormikContext()
 
-  const handleAddContactNumber = () => {
+  const handleAddRigidDomain = () => {
     const domain = {}
     domain.id = id
     domain.start = start
@@ -45,7 +38,7 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
   return (
     <Grid container direction="column" sx={{ my: 1, backgroundColor: '#f4ffb8' }}>
       <Grid item sx={{ flex: '0 1 auto' }}>
-        {values.crdFile.chains[chainIndex].domains.map((domain, index) => (
+        {values.crd_file.chains[chainIndex].domains.map((domain, index) => (
           <Grid
             item
             key={domain.id + index}
@@ -57,13 +50,20 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
             }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-              <Typography
-                variant="h5"
-                sx={{ display: 'flex', flex: '0 1 auto', alignItems: 'center', mr: 2 }}
-              >
-                domain {index + 1}:
-              </Typography>
-              <Chip label={`${domain.start} - ${domain.end}`} />
+              <React.Fragment>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    display: 'flex',
+                    flex: '0 1 auto',
+                    alignItems: 'center',
+                    mr: 2
+                  }}
+                >
+                  domain {index + 1}:
+                </Typography>
+                <Chip label={`${domain.start} - ${domain.end}`} />
+              </React.Fragment>
             </Box>
 
             <Box sx={{ flex: '1 1 auto' }} />
@@ -87,12 +87,8 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
           type="text"
           // disabled={isSubmitting}
           as={TextField}
-          // error={errors.rg_max && touched.rg_max}
-          // helperText={
-          //   errors.rg_max && touched.rg_max
-          //     ? errors.rg_max
-          //     : 'Max value of Rg ...(between 10 and 100)'
-          // }
+          // error={isError}
+          helperText="starting residue"
           onChange={handleChangeStart}
           // onBlur={handleBlur}
         />
@@ -103,11 +99,23 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
           name="end"
           type="text"
           as={TextField}
+          helperText="ending residue"
           onChange={handleChangeEnd}
         />
-        <Button type="button" variant="contained" onClick={handleAddContactNumber}>
-          add rigid domain to {values.crdFile.chains[chainIndex].id}
+        <Button
+          type="button"
+          variant="contained"
+          onClick={handleAddRigidDomain}
+          // disabled={!isValid}
+        >
+          add rigid domain to {values.crd_file.chains[chainIndex].id}
         </Button>
+      </Grid>
+      <Grid item>
+        <React.Fragment>
+          {isError ? JSON.stringify(error.chains[chainIndex], null, 2) : null}
+          {/* {isError ? error.chains[chainIndex] : 'no error'} */}
+        </React.Fragment>
       </Grid>
     </Grid>
   )

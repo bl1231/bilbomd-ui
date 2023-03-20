@@ -15,15 +15,15 @@ const DomainCard = ({ chainIndex }) => {
   return (
     <React.Fragment>
       {/* <Typography variant="h5">{chain.id}</Typography> */}
-      {/* <Typography variant="h5">{values.crdFile.chains[idx].id}</Typography> */}
-      {/* <Typography variant="h5">{values.crdFile.chains[idx].atoms}</Typography> */}
-      {/* <Typography variant="h5">{values.crdFile.chains[idx].domains[0].id}</Typography> */}
+      {/* <Typography variant="h5">{values.crd_file.chains[idx].id}</Typography> */}
+      {/* <Typography variant="h5">{values.crd_file.chains[idx].atoms}</Typography> */}
+      {/* <Typography variant="h5">{values.crd_file.chains[idx].domains[0].id}</Typography> */}
       {/* {<pre>{JSON.stringify(chain, null, 3)}</pre>} */}
-      <FieldArray name={`values.crdFile.chains[${chainIndex}].domains`}>
+      <FieldArray name={`values.crd_file.chains[${chainIndex}].domains`}>
         {({ insert, remove, push }) => (
           <React.Fragment>
-            {`values.crdFile.chains[${chainIndex}].domains.length` > 0 &&
-              `values.crdFile.chains[${chainIndex}].domains.map`((domain, index) => (
+            {`values.crd_file.chains[${chainIndex}].domains.length` > 0 &&
+              `values.crd_file.chains[${chainIndex}].domains.map`((domain, index) => (
                 // <p key={index}>
                 //   domain{domain} index{index}
                 // </p>
@@ -65,7 +65,7 @@ const DomainCard = ({ chainIndex }) => {
                         type="text"
                       />
                       <ErrorMessage
-                        name={`values.crdFile.domains.${index}.end`}
+                        name={`values.crd_file.domains.${index}.end`}
                         component="div"
                         className="field-error"
                       />

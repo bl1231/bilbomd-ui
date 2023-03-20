@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Field, useField, validateYupSchema } from 'formik'
-import { Grid, Typography, FormHelperText } from '@mui/material'
-import { UploadField } from '../FormFields/UploadField'
+import { Field, useField, useFormikContext } from 'formik'
+import { Alert, Button, Grid, Typography } from '@mui/material'
+// import { UploadField } from '../FormFields/UploadField'
+import CrdFileField from '../FormFields/CrdFileField'
+// import FileInput from 'features/jobs/FileInput'
 // import Thumb from '../common/Thumb'
 import CrdSummary from '../Helpers/CrdSummary'
 import Paper from '@mui/material/Paper'
@@ -31,83 +33,73 @@ const HeaderThingee = {
 
 const UploadForm = (props) => {
   useTitle('BilboMD: Create const.inp file')
+  const { resetForm } = useFormikContext()
   const {
-    formField: { crdFile }
+    formField: { crd_file }
   } = props
 
-  const [field, meta, helper] = useField(crdFile.name)
+  const [field, meta, helper] = useField('crd_file')
   const { touched, error } = meta
-  const { setValue } = helper
-  const isError = touched && error && true
+  const { setValue, setError, setTouched } = helper
+  const isError = touched && error
   const { value } = field
 
   const [fileName, setFileName] = useState(value.name)
   const [file, setFile] = useState(value.file)
   const [src, setSrc] = useState(value.src)
-  //const [lines, setLines] = useState()
   const [chains, setChains] = useState(value.chains)
-  // const [domains, setDomains] = useState(value.domains)
+  // const [chains, setChains] = useState('')
 
   const parseCrdFile = () => {
-    console.log('src', src)
-    console.log('file', file)
+    // setFileName('')
+    // setFile('')
+    // setSrc('')
+    // setChains('')
+    // setError('')
+    setValue({
+      file: file,
+      src: src,
+      name: fileName,
+      chains: chains
+    })
 
-    // split on newline and carrage return
-    let lines = src.result.split(/[\r\n]+/g)
-
-    // CRD file: 7th column = chain IDs
-    const chainId = /^\s*(?:\S+\s+){7}(\S+)/
-
-    const allChainIds = []
-    for (let line = 5; line < lines.length - 1; line++) {
-      let id = chainId.exec(lines[line])[1]
-      //   console.log(id)
-      allChainIds.push(id)
-    }
-
+    const loi =
+      /^\s*(?:\d+\s+){2}(?:\S+\s+){2}(?:\d+\.\d+\s+){3}(?:\D+\s+){1}(?:\d+\s+){1}(?:\d+\.\d+){1}$/gm
+    const data = src.result.match(loi)
+    if (!data) return
+    // console.log('data:', data)
+    // data is now an Array so grab 8th item from every element. use map?
+    const allChainIds = data.map((line) => {
+      const items = line.split(/\s+/)
+      return items[8]
+    })
     const uniqueChains = allChainIds.filter(
       (value, index, array) => array.indexOf(value) === index
     )
-
-    console.log('unique chains', uniqueChains)
-
-    let group = []
+    console.log(uniqueChains)
     let charmmChains = []
-    uniqueChains.forEach((element, i) => {
-      console.log('chainID:', element)
-      const re = new RegExp('(.+' + element + '.+)')
-      // console.log(re)
-      let c = []
-      for (let line = 5; line < lines.length - 1; line++) {
-        let item = re.exec(lines[line])
-        if (item !== null) {
-          // console.log(item)
-          c.push(item[0])
-        }
-      }
-
-      group[i] = c
-      // CRD file: 8th column = Residue Number
-      const residueNumber = /^\s*(?:\S+\s+){8}(\S+)/
-      let length = group[i].length
-      let firstLine = group[i][0]
-      let lastLine = group[i][length - 1]
-      console.log('num atoms:', length)
+    uniqueChains.forEach((chainId, i) => {
+      console.log('chainID:', chainId)
+      const chainArray = data.filter((value) => value.includes(chainId))
+      let length = chainArray.length
+      let firstLine = chainArray[0]
+      let lastLine = chainArray[length - 1]
+      // console.log('num atoms:', length)
       // console.log('firstLine:', firstLine)
       // console.log('lastLine:', lastLine)
-      let firstRes = residueNumber.exec(firstLine)[1]
-      let lastRes = residueNumber.exec(lastLine)[1]
+      let firstRes = firstLine.split(/\s+/)[9]
+      let lastRes = lastLine.split(/\s+/)[9]
       let numResidues = lastRes - firstRes
-      console.log('first res:', firstRes)
-      console.log('last res:', lastRes)
-      console.log('num res:', numResidues)
+      // console.log('first res:', firstRes)
+      // console.log('last res:', lastRes)
+      // console.log('num res:', numResidues)
       let charmmChain = {
-        id: element,
+        id: chainId,
         atoms: length,
         first_res: firstRes,
         last_res: lastRes,
         num_res: numResidues,
-        domains: [{ id: element, start: firstRes, end: lastRes }]
+        domains: [{ id: chainId, start: firstRes, end: lastRes }]
       }
       charmmChains.push(charmmChain)
     })
@@ -116,54 +108,52 @@ const UploadForm = (props) => {
     // console.log(charmmChains)
     setChains(charmmChains)
 
-    setValue({
-      file: file,
-      src: src,
-      name: fileName,
-      chains: chains
-    })
+    // setValue({
+    //   file: file,
+    //   src: src,
+    //   name: fileName,
+    //   chains: chains
+    // })
   }
 
-  const onChange = (event) => {
+  const onChange = async (event) => {
     console.log('onChange triggered')
-    let reader = new FileReader()
+    setTouched()
     let file = event.target.files[0]
-
-    if (file) {
-      console.log(file)
-      reader.onloadend = () => {
-        setFileName(file.name)
-        console.log('fileName:', fileName)
-        // setSrc(reader)
-        // console.log('src:', src)
-        // setFile(file)
+    const filePromise = new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = async () => {
+        try {
+          const result = await reader.DONE
+          setSrc(reader)
+          setFile(file)
+          setFileName(file.name)
+          resolve(result)
+        } catch (error) {
+          reject(error)
+        }
       }
-      if (file.name !== fileName) {
-        console.log('reading file', file.name)
-        reader.readAsText(file)
-        setSrc(reader)
-        setFile(file)
+      reader.onerror = (error) => {
+        reject(error)
       }
-    }
+      reader.readAsText(file)
+    })
+    await filePromise
   }
 
   const effectRan = useRef(false)
 
   useEffect(() => {
     if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
+      console.log('in useEffect')
       if (file && fileName && src && chains) {
-        // setValue({
-        //   file: file,
-        //   src: src,
-        //   name: fileName,
-        //   chains: chains
-        // })
+        console.log('useEffect:', src)
         parseCrdFile()
       }
     }
     return () => (effectRan.current = true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [src, fileName, file, chains[0].id])
+  }, [src, fileName, file, chains[0]?.id])
 
   return (
     <React.Fragment>
@@ -203,13 +193,13 @@ const UploadForm = (props) => {
                     'Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New;'
                 }}
               >
-                define fixed1 sele ( resid 40:137 .and. segid PROA) end
+                define fixed1 sele ( resid 40:137 .and. segid PROA ) end
                 <br />
-                define fixed2 sele ( resid 150:203 .and. segid PROA) end
+                define fixed2 sele ( resid 150:203 .and. segid PROA ) end
                 <br />
-                define fixed3 sele ( segid DNAA) end
+                define fixed3 sele ( segid DNAA ) end
                 <br />
-                define fixed4 sele ( segid DNAB) end
+                define fixed4 sele ( segid DNAB ) end
                 <br />
                 cons fix sele fixed1 .or. fixed2 .or. fixed3 .or. fixed4 end
                 <br />
@@ -221,29 +211,66 @@ const UploadForm = (props) => {
         <Grid item xs={12}>
           <Typography sx={HeaderThingee}>File Upload</Typography>
           <Item>
-            <label style={{ color: `${isError ? 'red' : 'var(--main-color)'}` }}>
-              {crdFile.label}
-            </label>
-            <br />
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-start',
-                fontSize: '1.2em'
-              }}
-            >
+            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+              {/* <label>{crd_file.label}</label>
+            <br /> */}
+
               <Field
+                name="crd_file"
+                id="crd_file"
+                title="Select File"
                 variant="outlined"
-                field={field}
-                component={UploadField}
+                // field={field}
+                as={CrdFileField}
                 onChange={onChange}
-                isError={isError}
+                isError={Boolean(error && touched)}
+                error={error}
+                errorMessage={isError ? error : ''}
               />
-              {isError && <FormHelperText color={'red'}>{error}</FormHelperText>}
-            </div>
+              {/* {error ? (
+              <Alert severity="error" sx={{ my: 1 }}>
+                {error}
+              </Alert>
+            ) : (
+              ''
+            )} */}
+              {/* <Field
+              name="crd_file"
+              id="crd-file-upload"
+              as={FileInput}
+              title="Select File"
+              // disabled={isSubmitting}
+              // setFieldValue={setFieldValue}
+              // setFieldTouched={setFieldTouched}
+              // error={errors.crd_file && touched.crd_file}
+              // errorMessage={errors.crd_file ? errors.crd_file : ''}
+
+              helperText="Select a CRD file to upload"
+              fileType="*.CRD"
+              fileExt=".crd"
+            /> */}
+
+              <Box sx={{ flex: '1 1 auto' }} />
+
+              <Button
+                type="button"
+                variant="contained"
+                onClick={() => {
+                  console.log('reset Form')
+                  setFileName('')
+                  setFile('')
+                  setSrc('')
+                  setChains('')
+                  // setError('')
+                  resetForm()
+                }}
+              >
+                Reset
+              </Button>
+            </Box>
           </Item>
         </Grid>
-        {fileName ? (
+        {fileName && !error ? (
           <Grid item xs={12}>
             <Typography sx={HeaderThingee}>Summary</Typography>
 
@@ -251,6 +278,7 @@ const UploadForm = (props) => {
               <Typography variant="h4" sx={{ my: 2 }}>
                 {fileName}
               </Typography>
+              summary
               {file && src && chains && (
                 <CrdSummary file={file} src={src} chains={chains}></CrdSummary>
               )}

@@ -10,6 +10,7 @@ import DomainForm from './Forms/DomainForm'
 import DownloadForm from './Forms/DownloadForm'
 import formModel from './FormModel/formModel'
 import initialValues from './FormModel/formInitialValues'
+import validationSchemas from './FormModel/validationSchemas'
 import { Form, Formik } from 'formik'
 import { Debug } from 'components/Debug'
 
@@ -34,6 +35,7 @@ function renderStepContent(step) {
 
 const ConstInpStepper = () => {
   const [activeStep, setActiveStep] = useState(0)
+  const currentValidationSchema = validationSchemas[activeStep]
   const [skipped, setSkipped] = useState(new Set())
 
   const isStepOptional = (step) => {
@@ -135,11 +137,14 @@ const ConstInpStepper = () => {
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             {/* <Typography sx={{ mt: 2, mb: 1 }}>Steppp {activeStep + 1}</Typography> */}
             <React.Fragment>
-              <Formik initialValues={initialValues}>
-                {({ values, errors, touched, handleChange }) => (
+              <Formik
+                initialValues={initialValues}
+                validationSchema={currentValidationSchema}
+              >
+                {({ values, errors, touched, resetForm }) => (
                   <Form id={formId}>
                     {renderStepContent(activeStep)}
-                    {/* <Debug /> */}
+                    <Debug />
                   </Form>
                 )}
               </Formik>

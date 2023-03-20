@@ -1,5 +1,6 @@
 import React from 'react'
 import { Field } from 'formik'
+import { FormHelperText } from '@mui/material'
 
 const UploadField = ({
   field,
@@ -11,18 +12,8 @@ const UploadField = ({
 }) => {
   return (
     <React.Fragment>
-      <Field
-        variant="outlined"
-        name="uploader"
-        title={label}
-        type="file"
-        style={{
-          display: 'flex',
-          color: isError ? 'red' : 'var(--main-color)'
-        }}
-        {...props}
-      />
-      {/* {isError && <FormHelperText>{errors[field.name]}</FormHelperText>} */}
+      <Field variant="outlined" name="uploaderrr" title={label} type="file" {...props} />
+      {isError && <FormHelperText>{errors[field.name]}</FormHelperText>}
     </React.Fragment>
   )
 }

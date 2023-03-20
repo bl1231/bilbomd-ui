@@ -6,9 +6,6 @@ import ChainCard from './ChainCard'
 
 const CrdSummary = (props) => {
   const { file, src, chains } = props
-  // const [lines, setLines] = useState()
-  // const [chainIds, setChainIds] = useState()
-  // const [numChainIds, setNumChainIds] = useState()
 
   const effectRan = useRef(false)
 

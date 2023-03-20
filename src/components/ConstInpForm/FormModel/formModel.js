@@ -1,8 +1,8 @@
 const formModel = {
   formId: 'formId',
   formField: {
-    crdFile: {
-      name: 'crdFile',
+    crd_file: {
+      name: 'crd_file',
       label: 'Please upload a CRD File obtained from CHARMM-GUI:',
       reviewLabel: 'Your CRD file is still here: ',
       requiredErrorMsg: 'CRD file is required',
