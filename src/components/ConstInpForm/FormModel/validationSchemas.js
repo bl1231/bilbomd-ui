@@ -89,7 +89,9 @@ const validationSchemas = [
                 .typeError('Must be a number')
                 .integer('Only Integeger values allowed')
                 .required('Please provide a starting residue'),
+
               end: Yup.number('Please specify a number')
+                .moreThan(Yup.ref('start'), 'End should be greater than Start')
                 .typeError('Must be a number')
                 .integer('Only Integeger values allowed')
                 .required('Please provide a starting residue')
