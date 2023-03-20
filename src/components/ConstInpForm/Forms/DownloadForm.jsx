@@ -32,7 +32,7 @@ const DownloadForm = (props) => {
 
   const prepareConstInpFile = () => {
     const contentArray = []
-    const chains = values.crdFile.chains
+    const chains = values.crd_file.chains
     let domainTotal = 0
 
     for (const chain in chains) {
