@@ -59,8 +59,7 @@ const DomainForm = (props) => {
               are to remain rigid during the Molecular Dynamics steps of a BilboMD run.
               There are a few rules to follow.
               <li>No overlapping regions</li>
-              <li>Minimum rigid body domain is 5 residues?</li>
-              <li>Maximum number of rigid body domain?</li>
+              <li>There is no Minimum or Maximum numbers of rigid body domains</li>
             </Typography>
           </Item>
         </Grid>

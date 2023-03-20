@@ -99,7 +99,7 @@ const UploadForm = (props) => {
         first_res: firstRes,
         last_res: lastRes,
         num_res: numResidues,
-        domains: [{ id: chainId, start: firstRes, end: lastRes }]
+        domains: [{ start: firstRes, end: lastRes }]
       }
       charmmChains.push(charmmChain)
     })
@@ -174,8 +174,9 @@ const UploadForm = (props) => {
               </a>{' '}
               syntax. This web jiffy should help you get started. You will need to use the{' '}
               <b>PDB Reader</b> tool available from{' '}
-              <a href="https://www.charmm-gui.org/">CHARMM-GUI</a>. You will need to
-              register for a account before you can use CHARMM-GUI tools.
+              <a href="https://www.charmm-gui.org/">CHARMM-GUI</a> to convert your PDB
+              file to CRD. You will need to register for a account before you can use
+              CHARMM-GUI tools.
             </Typography>
             <Typography sx={{ m: 1 }}>
               Example{' '}

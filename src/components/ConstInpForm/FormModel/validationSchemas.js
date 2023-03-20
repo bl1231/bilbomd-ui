@@ -85,11 +85,16 @@ const validationSchemas = [
           num_res: Yup.number(),
           domains: Yup.array(
             Yup.object().shape({
-              id: Yup.string().max(4),
-              start: Yup.number('Please specify a number').required(),
-              end: Yup.number('Please specify a number').required()
+              start: Yup.number('Please specify a number')
+                .typeError('Must be a number')
+                .integer('Only Integeger values allowed')
+                .required('Please provide a starting residue'),
+              end: Yup.number('Please specify a number')
+                .typeError('Must be a number')
+                .integer('Only Integeger values allowed')
+                .required('Please provide a starting residue')
             })
-          ).min(1, 'please prove at least one rigid domain')
+          ).min(0, 'please prove at least one rigid domain')
         })
       ).min(1, 'Need at least one protein or nucleic acid chain')
     })

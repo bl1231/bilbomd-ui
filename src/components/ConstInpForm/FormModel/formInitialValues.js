@@ -18,7 +18,6 @@ const initialValues = {
         num_res: '',
         domains: [
           {
-            id: '',
             start: '',
             end: ''
           }
