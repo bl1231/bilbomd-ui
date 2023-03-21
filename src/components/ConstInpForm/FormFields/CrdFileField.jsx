@@ -23,14 +23,11 @@ const CrdFileField = (props) => {
         </Button>
       </label>
 
-      {props.isError ? (
+      {/* {props.isError ? (
         <FormHelperText sx={{ ml: 0, color: '#cf1322', fontSize: 16 }}>
-          <React.Fragment>
-            {/* {JSON.stringify(props.error, null, 2)} */}
-            Error: {props.error.file}
-          </React.Fragment>
+          <React.Fragment>Error: {props.error.file}</React.Fragment>
         </FormHelperText>
-      ) : null}
+      ) : null} */}
     </FormControl>
   )
 }

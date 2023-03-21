@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
 import Stepper from '@mui/material/Stepper'
 import Step from '@mui/material/Step'
@@ -19,27 +19,29 @@ const steps = ['Upload CRD File', 'Select Rigid domains', 'Create const.inp file
 // interesting idea see Niiima Bastani on codesandbox
 const { formId, formField } = formModel
 
-function renderStepContent(step) {
-  // console.log('step', step)
-  switch (step) {
-    case 0:
-      return <UploadForm formField={formField} />
-    case 1:
-      return <DomainForm formField={formField} />
-    case 2:
-      return <DownloadForm formField={formField} />
-    default:
-      return <div>Not Found</div>
-  }
-}
-
 const ConstInpStepper = () => {
   const [activeStep, setActiveStep] = useState(0)
   const currentValidationSchema = validationSchemas[activeStep]
   const [skipped, setSkipped] = useState(new Set())
+  const [stepIsValid, setStepIsValid] = useState(false)
+
+  // const formRef = useRef()
+  function renderStepContent(step) {
+    // console.log('step', step)
+    switch (step) {
+      case 0:
+        return <UploadForm setStepIsValid={setStepIsValid} />
+      case 1:
+        return <DomainForm setStepIsValid={setStepIsValid} />
+      case 2:
+        return <DownloadForm setStepIsValid={setStepIsValid} />
+      default:
+        return <div>Not Found</div>
+    }
+  }
 
   const isStepOptional = (step) => {
-    //return step === 1
+    // return step === 1
   }
 
   const isStepSkipped = (step) => {
@@ -52,7 +54,7 @@ const ConstInpStepper = () => {
       newSkipped = new Set(newSkipped.values())
       newSkipped.delete(activeStep)
     }
-
+    // formRef.current.validate()
     setActiveStep((prevActiveStep) => prevActiveStep + 1)
     setSkipped(newSkipped)
   }
@@ -79,6 +81,12 @@ const ConstInpStepper = () => {
   const handleReset = () => {
     setActiveStep(0)
   }
+
+  // useEffect(() => {
+  //   if (formRef.current) {
+  //     formRef.current.validateForm()
+  //   }
+  // }, [])
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -129,19 +137,20 @@ const ConstInpStepper = () => {
               </Button>
             )}
 
-            <Button onClick={handleNext}>
+            <Button onClick={handleNext} disabled={!stepIsValid}>
               {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
             </Button>
           </Box>
 
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            {/* <Typography sx={{ mt: 2, mb: 1 }}>Steppp {activeStep + 1}</Typography> */}
             <React.Fragment>
               <Formik
                 initialValues={initialValues}
                 validationSchema={currentValidationSchema}
+                validateOnMount={true}
+                enableReinitialize={true}
               >
-                {({ values, errors, touched, resetForm }) => (
+                {({ values, errors, touched, resetForm, isValid }) => (
                   <Form id={formId}>
                     {renderStepContent(activeStep)}
                     <Debug />

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useField, Field, useFormikContext, ErrorMessage } from 'formik'
 import { Grid, TextField, Typography, Button, Chip } from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
 import { Box } from '@mui/system'
 
 const Domains = ({ chainIndex, domainsArrayHelpers }) => {
@@ -47,7 +48,7 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
   return (
     <React.Fragment>
       <Grid container direction="column" sx={{ my: 1, backgroundColor: '#f4ffb8' }}>
-        <Grid item sx={{ flex: '0 1 auto' }}>
+        <Grid item sx={{ flex: '1 1 auto', alignItems: 'center' }}>
           {values.crd_file.chains[chainIndex].domains.map((domain, index) => (
             <React.Fragment>
               {/* <pre>{JSON.stringify(domain, null, 2)}</pre> */}
@@ -85,7 +86,7 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
 
                 <Box sx={{ flex: '1 1 auto' }} />
 
-                <Grid item sx={{ flex: '0 1 auto' }}>
+                <Grid item sx={{ flex: '0 1 auto', alignItems: 'center' }}>
                   <Field
                     label="Start"
                     id="start"
@@ -104,6 +105,7 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
                         ? errors.crd_file?.chains[chainIndex]?.domains[index]?.start
                         : ''
                     }
+                    sx={{ mx: 4 }}
                   />
 
                   <Field
@@ -124,6 +126,7 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
                         ? errors.crd_file?.chains[chainIndex]?.domains[index]?.end
                         : ''
                     }
+                    sx={{ mx: 4 }}
                   />
                   {value.chains[chainIndex].domains[index] ? (
                     <Button
@@ -132,6 +135,7 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
                       size="regular"
                       color="error"
                       onClick={() => domainsArrayHelpers.remove(index)}
+                      sx={{ marginTop: '0.1em', ml: 2 }}
                     >
                       Delete
                     </Button>
@@ -152,6 +156,7 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
                   </Button> */}
                 </Grid>
               </Grid>
+
               <Grid item sx={{ flex: '0 1 auto' }}>
                 <ErrorMessage
                   name={`crd_file.chains[${chainIndex}].domains[${index}].start`}
@@ -162,11 +167,14 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
               </Grid>
             </React.Fragment>
           ))}
-          <Grid item sx={{ flex: '0 1 auto' }}>
-            <Button variant="contained" onClick={handleAddNewRigidDomain}>
-              +
-            </Button>
-          </Grid>
+
+          <Box sx={{ justifyContent: 'flex-end' }}>
+            <Grid container justifyContent="flex-end">
+              <Button variant="contained" onClick={handleAddNewRigidDomain}>
+                <AddIcon />
+              </Button>
+            </Grid>
+          </Box>
         </Grid>
       </Grid>
     </React.Fragment>

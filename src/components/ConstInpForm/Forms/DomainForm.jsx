@@ -27,23 +27,22 @@ const HeaderThingee = {
   letterSpacing: '1px'
 }
 
-const DomainForm = (props) => {
+const DomainForm = ({ setStepIsValid }) => {
   useTitle('BilboMD: define domains')
-  const { values } = useFormikContext()
+  const { values, isValid } = useFormikContext()
 
   const effectRan = useRef(false)
 
   useEffect(() => {
     if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
-      // console.log('DomainForm useEffect ran')
-      // console.log(JSON.stringify(crd_file, null, 2))
+      setStepIsValid(isValid)
       // console.log(JSON.stringify(values, null, 2))
     }
     return () => {
       effectRan.current = true
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isValid])
 
   return (
     <React.Fragment>
@@ -72,10 +71,10 @@ const DomainForm = (props) => {
             <Grid item sx={{ my: 1, backgroundColor: '#fcffe6' }}>
               {values.crd_file.chains.map((chain, index) => (
                 <React.Fragment key={chain.id + index}>
-                  {/* <div key={chain.id + index}> */}
                   <br />
-                  <Typography variant="h5" sx={{ ml: 1 }}>
-                    {chain.id}: <b>{chain.num_res}</b> Residues.
+                  <Typography variant="h6" sx={{ ml: 1 }}>
+                    {chain.id} Number of Residues: <b>{chain.num_res}</b> Start:{' '}
+                    <b>{chain.first_res}</b> End: <b>{chain.last_res}</b>
                   </Typography>
 
                   <FieldArray name={`crd_file.chains[${index}].domains`}>
@@ -86,7 +85,6 @@ const DomainForm = (props) => {
                       </>
                     )}
                   </FieldArray>
-                  {/* </div> */}
                 </React.Fragment>
               ))}
             </Grid>
