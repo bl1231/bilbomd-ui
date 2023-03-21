@@ -81,13 +81,25 @@ const validationSchemas = [
                 .typeError('Must be a number')
                 .integer('Integer values only')
                 .positive('Positive values only')
-                .required('Please provide a starting residue'),
+                .required('Please provide start residue')
+                .test(
+                  'check-valid-start-res',
+                  'please chose number between chain start and end residue',
+                  (value, context) => {
+                    const objectToValidate = context.from[1].value.first_res
+                    console.log(JSON.stringify(objectToValidate, null, 2))
+                    if (value >= objectToValidate) {
+                      return true
+                    }
+                    return false
+                  }
+                ),
               end: Yup.number('')
                 .typeError('Must be a number.')
                 .integer('Integer values only')
                 .positive('Positive values only')
-                .moreThan(Yup.ref('start'), 'End should be greater than Start')
-                .required('Please provide a starting residue')
+                .moreThan(Yup.ref('start'), 'End should be greater than start')
+                .required('Please provide end residue')
             })
           ).min(0, 'please prove at least one rigid domain')
         })

@@ -142,18 +142,6 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
                   ) : (
                     ''
                   )}
-                  {/* <Button
-                    type="button"
-                    variant="contained"
-                    size="regular"
-                    onClick={() => {
-                      console.log('update domain')
-                      // handleUpdateRigidDomain()
-                    }}
-                    // disabled={!isValid}
-                  >
-                    Update
-                  </Button> */}
                 </Grid>
               </Grid>
 
