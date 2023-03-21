@@ -73,7 +73,7 @@ const DomainForm = ({ setStepIsValid }) => {
                 <React.Fragment key={chain.id + index}>
                   <br />
                   <Typography variant="h6" sx={{ ml: 1 }}>
-                    {chain.id} Number of Residues: <b>{chain.num_res}</b> Start:{' '}
+                    <b>{chain.id}</b> Number of Residues: <b>{chain.num_res}</b> Start:{' '}
                     <b>{chain.first_res}</b> End: <b>{chain.last_res}</b>
                   </Typography>
 
