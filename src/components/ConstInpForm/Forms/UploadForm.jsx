@@ -31,24 +31,21 @@ const HeaderThingee = {
   letterSpacing: '1px'
 }
 
-const UploadForm = (props) => {
+const UploadForm = ({ setStepIsValid }) => {
   useTitle('BilboMD: Create const.inp file')
-  const { resetForm } = useFormikContext()
-  const {
-    formField: { crd_file }
-  } = props
+
+  const { resetForm, isValid } = useFormikContext()
 
   const [field, meta, helper] = useField('crd_file')
-  const { touched, error } = meta
-  const { setValue, setError, setTouched } = helper
-  const isError = touched && error
   const { value } = field
+  const { touched, error } = meta
+  const { setValue, setTouched } = helper
+  const isError = touched && error
 
   const [fileName, setFileName] = useState(value.name)
   const [file, setFile] = useState(value.file)
   const [src, setSrc] = useState(value.src)
   const [chains, setChains] = useState(value.chains)
-  // const [chains, setChains] = useState('')
 
   const parseCrdFile = () => {
     // setFileName('')
@@ -148,12 +145,23 @@ const UploadForm = (props) => {
       console.log('in useEffect')
       if (file && fileName && src && chains) {
         console.log('useEffect:', src)
+
         parseCrdFile()
+        // console.log('valid:', isValid)
+        // setStepIsValid(isValid)
       }
     }
     return () => (effectRan.current = true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src, fileName, file, chains[0]?.id])
+
+  useEffect(() => {
+    // not exactly sure of best place for this.
+    // Need to update parent of isValid so we can enable/disable the "NEXT" button
+    console.log('valid:', isValid)
+    setStepIsValid(isValid)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isValid])
 
   return (
     <React.Fragment>
@@ -212,63 +220,46 @@ const UploadForm = (props) => {
         <Grid item xs={12}>
           <Typography sx={HeaderThingee}>File Upload</Typography>
           <Item>
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              {/* <label>{crd_file.label}</label>
-            <br /> */}
-
-              <Field
-                name="crd_file"
-                id="crd_file"
-                title="Select File"
-                variant="outlined"
-                // field={field}
-                as={CrdFileField}
-                onChange={onChange}
-                isError={Boolean(error && touched)}
-                error={error}
-                errorMessage={isError ? error : ''}
-              />
-              {/* {error ? (
-              <Alert severity="error" sx={{ my: 1 }}>
-                {error}
-              </Alert>
-            ) : (
-              ''
-            )} */}
-              {/* <Field
-              name="crd_file"
-              id="crd-file-upload"
-              as={FileInput}
-              title="Select File"
-              // disabled={isSubmitting}
-              // setFieldValue={setFieldValue}
-              // setFieldTouched={setFieldTouched}
-              // error={errors.crd_file && touched.crd_file}
-              // errorMessage={errors.crd_file ? errors.crd_file : ''}
-
-              helperText="Select a CRD file to upload"
-              fileType="*.CRD"
-              fileExt=".crd"
-            /> */}
-
-              <Box sx={{ flex: '1 1 auto' }} />
-
-              <Button
-                type="button"
-                variant="contained"
-                onClick={() => {
-                  console.log('reset Form')
-                  setFileName('')
-                  setFile('')
-                  setSrc('')
-                  setChains('')
-                  // setError('')
-                  resetForm()
-                }}
-              >
-                Reset
-              </Button>
-            </Box>
+            <Grid container direction="column">
+              <Grid item xs={6}>
+                <Field
+                  name="crd_file"
+                  id="crd_file"
+                  title="Select File"
+                  variant="outlined"
+                  // field={field}
+                  as={CrdFileField}
+                  onChange={onChange}
+                  isError={Boolean(error && touched)}
+                  error={error}
+                  errorMessage={isError ? error : ''}
+                />
+                <Button
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    console.log('reset Form')
+                    setFileName('')
+                    setFile('')
+                    setSrc('')
+                    setChains('')
+                    resetForm()
+                    setStepIsValid(false)
+                  }}
+                >
+                  Reset
+                </Button>
+              </Grid>
+              <Grid item>
+                {isError ? (
+                  <Alert severity="error" sx={{ my: 1 }}>
+                    <Typography>{error.file}</Typography>
+                  </Alert>
+                ) : (
+                  ''
+                )}
+              </Grid>
+            </Grid>
           </Item>
         </Grid>
         {fileName && !error ? (
@@ -279,10 +270,7 @@ const UploadForm = (props) => {
               <Typography variant="h4" sx={{ my: 2 }}>
                 {fileName}
               </Typography>
-              summary
-              {file && src && chains && (
-                <CrdSummary file={file} src={src} chains={chains}></CrdSummary>
-              )}
+              {file && src && chains && <CrdSummary chains={chains}></CrdSummary>}
             </Item>
           </Grid>
         ) : (

@@ -1,9 +1,4 @@
 import * as Yup from 'yup'
-import formModel from './formModel'
-
-const {
-  formField: { crd_file }
-} = formModel
 
 const fromCharmmGui = (file) => {
   const charmmGui = /CHARMM-GUI/
@@ -31,7 +26,8 @@ const validationSchemas = [
   Yup.object().shape({
     crd_file: Yup.object().shape({
       file: Yup.mixed()
-        .test('required', 'CRD file obtained from CHARMM-GUI is required', (file) => {
+        .required('Please select a *.crd file')
+        .test('required', '*.crd file obtained from CHARMM-GUI is required', (file) => {
           if (file) return true
           return false
         })
@@ -42,22 +38,18 @@ const validationSchemas = [
           }
           return false
         })
-        .test(
-          'file-type-check',
-          'Only accepts a CRD file obtained from CHARMM-GUI',
-          (file) => {
-            if (file && file.name.split('.').pop().toUpperCase() === 'CRD') {
-              console.log('file-type-check1:', file.name.split('.').pop())
-              return true
-            }
-            //console.log('file-type-check2:', file.name.split('.').pop())
-            console.log('file-type-check: not a *.CRD file')
-            return false
+        .test('file-type-check', 'Please obtain a *.crd file from CHARMM-GUI', (file) => {
+          if (file && file.name.split('.').pop().toUpperCase() === 'CRD') {
+            console.log('file-type-check1:', file.name.split('.').pop())
+            return true
           }
-        )
+          //console.log('file-type-check2:', file.name.split('.').pop())
+          console.log('file-type-check: not a *.crd file')
+          return false
+        })
         .test(
           'charmm-gui-check',
-          'File does not appear to be a CRD file output from CHARMM-GUI',
+          'File does not appear to be a *.crd file output from CHARMM-GUI',
           async (file) => {
             if (file) {
               const fromCharmm = await fromCharmmGui(file)
@@ -85,15 +77,16 @@ const validationSchemas = [
           num_res: Yup.number(),
           domains: Yup.array(
             Yup.object().shape({
-              start: Yup.number('Please specify a number')
+              start: Yup.number('')
                 .typeError('Must be a number')
-                .integer('Only Integeger values allowed')
+                .integer('Integer values only')
+                .positive('Positive values only')
                 .required('Please provide a starting residue'),
-
-              end: Yup.number('Please specify a number')
+              end: Yup.number('')
+                .typeError('Must be a number.')
+                .integer('Integer values only')
+                .positive('Positive values only')
                 .moreThan(Yup.ref('start'), 'End should be greater than Start')
-                .typeError('Must be a number')
-                .integer('Only Integeger values allowed')
                 .required('Please provide a starting residue')
             })
           ).min(0, 'please prove at least one rigid domain')
