@@ -16,16 +16,16 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
   // const { nextDomainIndex, setNextDomainIndex } = useState(chainIndex + 1)
   const { values, handleChange, handleBlur, isValid, errors } = useFormikContext()
 
-  const handleUpdateRigidDomain = () => {
-    const domain = {}
-    // domain.id = id
-    domain.start = start
-    domain.end = end
-    domainsArrayHelpers.push(domain)
-    // setId('')
-    // setStart('')
-    // setEnd('')
-  }
+  // const handleUpdateRigidDomain = () => {
+  //   const domain = {}
+  //   // domain.id = id
+  //   domain.start = start
+  //   domain.end = end
+  //   domainsArrayHelpers.push(domain)
+  //   // setId('')
+  //   // setStart('')
+  //   // setEnd('')
+  // }
 
   const handleAddNewRigidDomain = () => {
     const domain = {
@@ -38,12 +38,12 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
   // const handleChangeId = (event) => {
   //   setId(event.currentTarget.value)
   // }
-  const handleChangeStart = (event) => {
-    setStart(event.currentTarget.value)
-  }
-  const handleChangeEnd = (event) => {
-    setEnd(event.currentTarget.value)
-  }
+  // const handleChangeStart = (event) => {
+  //   setStart(event.currentTarget.value)
+  // }
+  // const handleChangeEnd = (event) => {
+  //   setEnd(event.currentTarget.value)
+  // }
 
   return (
     <React.Fragment>
@@ -145,21 +145,25 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
                 </Grid>
               </Grid>
 
-              <Grid item sx={{ flex: '0 1 auto' }}>
+              {/* <Grid item sx={{ flex: '0 1 auto' }}>
                 <ErrorMessage
                   name={`crd_file.chains[${chainIndex}].domains[${index}].start`}
                 />
                 <ErrorMessage
                   name={`crd_file.chains[${chainIndex}].domains[${index}].end`}
                 />
-              </Grid>
+              </Grid> */}
             </React.Fragment>
           ))}
 
           <Box sx={{ justifyContent: 'flex-end' }}>
             <Grid container justifyContent="flex-end">
-              <Button variant="contained" onClick={handleAddNewRigidDomain}>
-                <AddIcon />
+              <Button
+                variant="contained"
+                onClick={handleAddNewRigidDomain}
+                startIcon={<AddIcon />}
+              >
+                Add Domain
               </Button>
             </Grid>
           </Box>

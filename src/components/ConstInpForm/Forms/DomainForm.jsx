@@ -55,10 +55,10 @@ const DomainForm = ({ setStepIsValid }) => {
             </Typography>
             <Typography sx={{ m: 1 }}>
               This is pretty straight forward. You need to define which ranges of residues
-              are to remain rigid during the Molecular Dynamics steps of a BilboMD run.
-              There are a few rules to follow.
+              are to remain rigid during the Molecular Dynamics steps of a <b>BilboMD</b>{' '}
+              run. Please be aware of teh following.
               <li>No overlapping regions</li>
-              <li>There is no Minimum or Maximum numbers of rigid body domains</li>
+              <li>No Minimum or Maximum numbers of rigid body domains</li>
             </Typography>
           </Item>
         </Grid>
