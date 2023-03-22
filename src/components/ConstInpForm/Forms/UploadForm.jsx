@@ -73,10 +73,10 @@ const UploadForm = ({ setStepIsValid }) => {
     const uniqueChains = allChainIds.filter(
       (value, index, array) => array.indexOf(value) === index
     )
-    console.log(uniqueChains)
+    // console.log(uniqueChains)
     let charmmChains = []
     uniqueChains.forEach((chainId, i) => {
-      console.log('chainID:', chainId)
+      // console.log('chainID:', chainId)
       const chainArray = data.filter((value) => value.includes(chainId))
       let length = chainArray.length
       let firstLine = chainArray[0]
@@ -142,9 +142,9 @@ const UploadForm = ({ setStepIsValid }) => {
 
   useEffect(() => {
     if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
-      console.log('in useEffect')
+      // console.log('in useEffect')
       if (file && fileName && src && chains) {
-        console.log('useEffect:', src)
+        // console.log('useEffect:', src)
 
         parseCrdFile()
         // console.log('valid:', isValid)
@@ -158,7 +158,7 @@ const UploadForm = ({ setStepIsValid }) => {
   useEffect(() => {
     // not exactly sure of best place for this.
     // Need to update parent of isValid so we can enable/disable the "NEXT" button
-    console.log('valid:', isValid)
+    // console.log('valid:', isValid)
     setStepIsValid(isValid)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid])
