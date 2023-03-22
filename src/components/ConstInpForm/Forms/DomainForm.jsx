@@ -65,24 +65,22 @@ const DomainForm = ({ setStepIsValid }) => {
         <Grid item xs={12}>
           <Typography sx={HeaderThingee}>Define Rigid Domains</Typography>
           <Item>
-            <Typography variant="h5">
-              Your CRD File has {values.crd_file.chains.length} Chains
+            <Typography variant="h5" sx={{ mx: 1, my: 2 }}>
+              {values.crd_file.name} has {values.crd_file.chains.length} Chains
             </Typography>
             <Grid item sx={{ my: 1, backgroundColor: '#fcffe6' }}>
               {values.crd_file.chains.map((chain, index) => (
-                <React.Fragment key={chain.id + index}>
-                  <br />
-                  <Typography variant="h6" sx={{ ml: 1 }}>
-                    <b>{chain.id}</b> Number of Residues: <b>{chain.num_res}</b> Start:{' '}
-                    <b>{chain.first_res}</b> End: <b>{chain.last_res}</b>
+                <React.Fragment key={index}>
+                  <Typography variant="h6" sx={{ ml: 1, mb: 1 }}>
+                    ChainID: <b>{chain.id}</b> Number of Residues: <b>{chain.num_res}</b>{' '}
+                    Start: <b>{chain.first_res}</b> End: <b>{chain.last_res}</b>
                   </Typography>
 
                   <FieldArray name={`crd_file.chains[${index}].domains`}>
                     {(arrayHelpers) => (
-                      <>
-                        <br />
+                      <React.Fragment>
                         <Domains chainIndex={index} domainsArrayHelpers={arrayHelpers} />
-                      </>
+                      </React.Fragment>
                     )}
                   </FieldArray>
                 </React.Fragment>
