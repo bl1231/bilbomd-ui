@@ -153,7 +153,7 @@ const ConstInpStepper = () => {
                 {({ values, errors, touched, resetForm, isValid }) => (
                   <Form id={formId}>
                     {renderStepContent(activeStep)}
-                    <Debug />
+                    {/* <Debug /> */}
                   </Form>
                 )}
               </Formik>
@@ -176,7 +176,7 @@ const ConstInpStepper = () => {
               </Button>
             )}
 
-            <Button onClick={handleNext}>
+            <Button onClick={handleNext} disabled={!stepIsValid}>
               {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
             </Button>
           </Box>
