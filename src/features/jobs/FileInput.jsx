@@ -9,6 +9,7 @@ const FileInput = (props) => {
     props.setFieldTouched(props.name, true, true)
     let reader = new FileReader()
     let file = event.target.files[0]
+    console.log(file)
     if (file) {
       reader.onloadend = () => setFileName(file.name)
       reader.readAsDataURL(file)

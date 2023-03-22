@@ -15,6 +15,9 @@ const Prefetch = Loadable(lazy(() => import('features/auth/Prefetch')))
 
 // prettier-ignore
 const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')));
+const ConstInpStepper = Loadable(
+  lazy(() => import('components/ConstInpForm/ConstInpStepper'))
+)
 
 const JobsList = Loadable(lazy(() => import('features/jobs/JobsList')))
 // prettier-ignore
@@ -81,6 +84,10 @@ const ProtectedMainRoutes = {
                     {
                       path: 'jobs/new',
                       element: <NewJob />
+                    },
+                    {
+                      path: 'jobs/constinp',
+                      element: <ConstInpStepper />
                     },
                     {
                       path: 'account',
