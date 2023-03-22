@@ -34,7 +34,7 @@ const ConstInpStepper = () => {
       case 1:
         return <DomainForm setStepIsValid={setStepIsValid} />
       case 2:
-        return <DownloadForm setStepIsValid={setStepIsValid} />
+        return <DownloadForm />
       default:
         return <div>Not Found</div>
     }
