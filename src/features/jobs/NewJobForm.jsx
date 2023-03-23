@@ -293,7 +293,7 @@ const NewJobForm = () => {
                         >
                           <Paper variant="outlined">
                             <Typography sx={{ m: 1 }}>
-                              Jiffy to help:
+                              <b>*.inp</b> Jiffy:
                               <Button
                                 href="constinp"
                                 variant="contained"
