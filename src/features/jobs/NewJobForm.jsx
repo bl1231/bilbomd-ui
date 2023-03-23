@@ -95,22 +95,30 @@ const NewJobForm = () => {
               Dynamics steps to run successfully it is imperative that you provide input
               files that are fully compatible.
               <li>
-                A *.crd file (CHARMM compatible coordinate file derived from your PDB
+                <b>*.crd</b> file (CHARMM compatible coordinate file derived from your PDB
                 file)
               </li>
               <li>
-                A *.psf file (the central{' '}
+                <b>*.psf</b> file (the central{' '}
                 <a href="https://academiccharmm.org/documentation/version/c47b2/struct">
                   data structure
                 </a>{' '}
                 in CHARMM)
               </li>
-              <li>a const.inp file (defining the rigid domains)</li>
+              <li>
+                <b>*.inp</b> file (typically named <b>const.inp</b> defining the rigid
+                domains)
+              </li>
+              <li>
+                <b>*.dat</b> file (SAXS data containing 3 columns)
+              </li>
             </Typography>
             <Typography sx={{ m: 1 }}>
               You will need to use the <b>PDB Reader</b> tool available from{' '}
               <a href="https://www.charmm-gui.org/">CHARMM-GUI</a> to convert your PDB
-              file to a CRD file.
+              file to a CRD file. If you need help generating a valid <b>const.inp</b>{' '}
+              file you can use out little Jiffy (green button below) to help get you
+              started.
             </Typography>
           </Item>
         </Grid>
