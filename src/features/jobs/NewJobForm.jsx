@@ -42,7 +42,8 @@ const HeaderThingee = {
   padding: '0.5rem',
   background: '#888',
   color: '#fff',
-  letterSpacing: '1px'
+  letterSpacing: '1px',
+  py: 2
 }
 
 const initialValues = {
