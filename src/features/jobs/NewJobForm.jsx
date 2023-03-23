@@ -103,9 +103,7 @@ const NewJobForm = () => {
                 backgroundColor: '#888',
                 borderTopLeftRadius: 4,
                 borderTopRightRadius: 4,
-                ml: 0,
-                pl: 1,
-                mx: 0
+                pl: 1
               }}
             >
               <Typography
@@ -114,8 +112,7 @@ const NewJobForm = () => {
                   fontSize: 12,
                   fontWeight: 500,
                   color: '#fff',
-                  letterSpacing: '1px',
-                  m: 0
+                  letterSpacing: '1px'
                 }}
               >
                 Instructions
