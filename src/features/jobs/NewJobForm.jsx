@@ -8,7 +8,10 @@ import {
   AlertTitle,
   Link,
   Paper,
-  Button
+  Button,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails
 } from '@mui/material'
 import { Form, Formik, Field } from 'formik'
 import FileInput from './FileInput'
@@ -16,6 +19,7 @@ import { useAddNewJobMutation } from './jobsApiSlice'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { bilbomdJobSchema } from 'schemas/ValidationSchemas'
 import useAuth from 'hooks/useAuth'
 import { styled } from '@mui/material/styles'
@@ -87,40 +91,70 @@ const NewJobForm = () => {
     <React.Fragment>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Typography sx={HeaderThingee}>Instructions</Typography>
-          <Item>
-            <Typography sx={{ m: 1 }}>
-              <b>BilboMD</b> uses <a href="https://academiccharmm.org/">CHARMM</a> to
-              generate an ensemble of molecular models. In order for the Molecular
-              Dynamics steps to run successfully it is imperative that you provide input
-              files that are fully compatible.
-              <li>
-                <b>*.crd</b> file (CHARMM compatible coordinate file derived from your PDB
-                file)
-              </li>
-              <li>
-                <b>*.psf</b> file (the central{' '}
-                <a href="https://academiccharmm.org/documentation/version/c47b2/struct">
-                  data structure
-                </a>{' '}
-                in CHARMM)
-              </li>
-              <li>
-                <b>*.inp</b> file (typically named <b>const.inp</b> defining the rigid
-                domains)
-              </li>
-              <li>
-                <b>*.dat</b> file (SAXS data containing 3 columns)
-              </li>
-            </Typography>
-            <Typography sx={{ m: 1 }}>
-              You will need to use the <b>PDB Reader</b> tool available from{' '}
-              <a href="https://www.charmm-gui.org/">CHARMM-GUI</a> to convert your PDB
-              file to a CRD file. If you need help generating a valid <b>const.inp</b>{' '}
-              file you can use out little Jiffy (green button below) to help get you
-              started.
-            </Typography>
-          </Item>
+          {/* <Typography sx={HeaderThingee}>Instructions</Typography> */}
+          {/* <Item> */}
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+              sx={{
+                backgroundColor: '#888',
+                borderTopLeftRadius: 4,
+                borderTopRightRadius: 4,
+                ml: 0,
+                pl: 1,
+                mx: 0
+              }}
+            >
+              <Typography
+                sx={{
+                  textTransform: 'uppercase',
+                  fontSize: 12,
+                  fontWeight: 500,
+                  color: '#fff',
+                  letterSpacing: '1px',
+                  m: 0
+                }}
+              >
+                Instructions
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography sx={{ m: 1 }}>
+                <b>BilboMD</b> uses <a href="https://academiccharmm.org/">CHARMM</a> to
+                generate an ensemble of molecular models. In order for the Molecular
+                Dynamics steps to run successfully it is imperative that you provide input
+                files that are fully compatible.
+                <li>
+                  <b>*.crd</b> file (CHARMM compatible coordinate file derived from your
+                  PDB file)
+                </li>
+                <li>
+                  <b>*.psf</b> file (the central{' '}
+                  <a href="https://academiccharmm.org/documentation/version/c47b2/struct">
+                    data structure
+                  </a>{' '}
+                  in CHARMM)
+                </li>
+                <li>
+                  <b>*.inp</b> file (defining the rigid domains of your protein. Typically
+                  named <b>const.inp</b> )
+                </li>
+                <li>
+                  <b>*.dat</b> file (SAXS data containing 3 columns)
+                </li>
+              </Typography>
+              <Typography sx={{ m: 1 }}>
+                You will need to use the <b>PDB Reader</b> tool available from{' '}
+                <a href="https://www.charmm-gui.org/">CHARMM-GUI</a> to convert your PDB
+                file to a CRD file. If you need help generating a valid <b>const.inp</b>{' '}
+                file you can use out little Jiffy (green button below) to help get you
+                started.
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+          {/* </Item> */}
         </Grid>
 
         <Grid item xs={12}>
