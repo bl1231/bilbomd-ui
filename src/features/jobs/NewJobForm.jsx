@@ -6,13 +6,13 @@ import {
   Typography,
   Alert,
   AlertTitle,
-  Link,
   Paper,
   Button,
   Accordion,
   AccordionSummary,
   AccordionDetails
 } from '@mui/material'
+import { Link } from 'react-router-dom'
 import { Form, Formik, Field } from 'formik'
 import FileInput from './FileInput'
 import { useAddNewJobMutation } from './jobsApiSlice'
@@ -23,7 +23,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { bilbomdJobSchema } from 'schemas/ValidationSchemas'
 import useAuth from 'hooks/useAuth'
 import { styled } from '@mui/material/styles'
-import { Debug } from 'components/Debug'
+// import { Debug } from 'components/Debug'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.primary,
@@ -59,7 +59,8 @@ const initialValues = {
 }
 
 const NewJobForm = () => {
-  const [addNewJob, { isLoading, isSuccess, isError, error }] = useAddNewJobMutation()
+  // const [addNewJob, { isLoading, isSuccess, isError, error }] = useAddNewJobMutation()
+  const [addNewJob, { isSuccess }] = useAddNewJobMutation()
   const { email } = useAuth()
   const [jobid, setJobid] = useState('')
 
@@ -92,8 +93,6 @@ const NewJobForm = () => {
     <React.Fragment>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          {/* <Typography sx={HeaderThingee}>Instructions</Typography> */}
-          {/* <Item> */}
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
@@ -161,7 +160,7 @@ const NewJobForm = () => {
             {isSuccess ? (
               <Alert severity="success">
                 <AlertTitle>Woot!</AlertTitle>Your job has been submitted. Check out the{' '}
-                <Link href={'/dashboard/jobs/' + jobid}>details</Link>.
+                <Link to={`../${jobid}`}>details</Link>.
               </Alert>
             ) : (
               <Formik

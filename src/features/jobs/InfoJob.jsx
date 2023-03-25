@@ -12,7 +12,7 @@ const InfoJob = ({ job }) => {
         <IconButton
           color="secondary"
           onClick={() => {
-            navigate(`/dashboard/jobs/${id}`)
+            navigate(id)
           }}
         >
           <InfoIcon />

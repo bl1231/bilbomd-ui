@@ -151,12 +151,9 @@ const Signup = () => {
                         sx={{ mb: 1 }}
                       >
                         {error.message} If you already have an account try{' '}
-                        <a
-                          href="/magicklink"
-                          className="alert-link"
-                        >
+                        <Link to="../magicklink" className="alert-link">
                           logging in
-                        </a>
+                        </Link>
                       </Alert>
                     </Collapse>
                   ) : (
@@ -174,15 +171,9 @@ const Signup = () => {
                   >
                     Create an Account
                   </Button>
-                  <Divider
-                    variant="middle"
-                    sx={{ my: 3 }}
-                  />
+                  <Divider variant="middle" sx={{ my: 3 }} />
 
-                  <Typography
-                    variant="body2"
-                    sx={{ mt: 2 }}
-                  >
+                  <Typography variant="body2" sx={{ mt: 2 }}>
                     Already have an account?
                   </Typography>
 
@@ -194,7 +185,7 @@ const Signup = () => {
                     color="secondary"
                     endIcon={<AutoFixHighIcon />}
                     component={Link}
-                    to="/magicklink"
+                    to="../magicklink"
                   >
                     Get a MagickLink&#8482;
                   </Button>

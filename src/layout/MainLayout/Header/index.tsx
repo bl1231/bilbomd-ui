@@ -25,17 +25,17 @@ const Header = () => {
   const settings = [
     {
       text: 'My Jobs',
-      onclick: () => navigate('/dashboard/jobs')
+      onclick: () => navigate('dashboard/jobs')
     },
     {
       text: 'Account',
       onclick: () => {
-        navigate('/dashboard/account')
+        navigate('dashboard/account')
       }
     },
     {
       text: 'Dashboard',
-      onclick: () => navigate('/welcome')
+      onclick: () => navigate('welcome')
     },
     {
       text: 'Logout',
@@ -95,10 +95,7 @@ const Header = () => {
               BilboMD
             </Typography>
 
-            <Typography
-              variant="h5"
-              sx={{ display: { xs: 'none', sm: 'flex' } }}
-            >
+            <Typography variant="h5" sx={{ display: { xs: 'none', sm: 'flex' } }}>
               {today}
             </Typography>
 
@@ -139,10 +136,7 @@ const Header = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem
-                  key={setting.text}
-                  onClick={setting.onclick}
-                >
+                <MenuItem key={setting.text} onClick={setting.onclick}>
                   <Typography textAlign="center">{setting.text}</Typography>
                 </MenuItem>
               ))}

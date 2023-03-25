@@ -37,22 +37,22 @@ export default function ClippedDrawer() {
     {
       text: 'My Jobs',
       icon: <SubjectOutlined color="secondary" />,
-      path: '/dashboard/jobs',
-      onclick: () => navigate('/dashboard/jobs'),
+      path: 'dashboard/jobs',
+      onclick: () => navigate('dashboard/jobs'),
       roles: ['user', 'manager']
     },
     {
       text: 'New Job',
       icon: <AddCircleOutlineOutlined color="secondary" />,
-      path: '/dashboard/jobs/new',
-      onclick: () => navigate('/dashboard/jobs/new'),
+      path: 'dashboard/jobs/new',
+      onclick: () => navigate('dashboard/jobs/new'),
       roles: ['user', 'manager']
     },
     {
       text: 'Users',
       icon: <PeopleIcon color="secondary" />,
-      path: '/dashboard/users',
-      onclick: () => navigate('/dashboard/users'),
+      path: 'dashboard/users',
+      onclick: () => navigate('dashboard/users'),
       roles: ['admin']
     },
     {
@@ -75,10 +75,7 @@ export default function ClippedDrawer() {
     buttonContent = (
       <>
         {menuItems.map((item) => (
-          <ListItem
-            key={item.text}
-            disablePadding
-          >
+          <ListItem key={item.text} disablePadding>
             <ListItemButton
               onClick={item.onclick}
               sx={{
@@ -121,10 +118,7 @@ export default function ClippedDrawer() {
           </Box>
         </Drawer>
 
-        <Box
-          component="main"
-          sx={{ flexGrow: 1, p: 3 }}
-        >
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <Outlet />
           <Toolbar />
         </Box>
