@@ -2,7 +2,7 @@
   "name": "bilbomd-ui",
   "version": "0.2.0",
   "private": true,
-  "homepage": "/bilbomd-dev/",
+  "homepage": "https://bl1231.als.lbl.gov/bilbomd-dev/",
   "dependencies": {
     "@ant-design/colors": "^7.0.0",
     "@emotion/core": "^11.0.0",
