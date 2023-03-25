@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { alpha, styled } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
+import * as React from 'react'
+import { alpha, styled } from '@mui/material/styles'
+import InputBase from '@mui/material/InputBase'
+import Box from '@mui/material/Box'
+import InputLabel from '@mui/material/InputLabel'
+import TextField from '@mui/material/TextField'
+import FormControl from '@mui/material/FormControl'
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -24,7 +24,7 @@ const CssTextField = styled(TextField)({
       borderColor: 'green'
     }
   }
-});
+})
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
   'label + &': {
@@ -38,7 +38,11 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     fontSize: 16,
     width: 'auto',
     padding: '10px 12px',
-    transition: theme.transitions.create(['border-color', 'background-color', 'box-shadow']),
+    transition: theme.transitions.create([
+      'border-color',
+      'background-color',
+      'box-shadow'
+    ]),
     // Use the system font instead of the default Roboto font.
     fontFamily: [
       '-apple-system',
@@ -57,7 +61,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
       borderColor: theme.palette.primary.main
     }
   }
-}));
+}))
 
 const RedditTextField = styled((props) => (
   <TextField InputProps={{ disableUnderline: true }} {...props} />
@@ -67,7 +71,11 @@ const RedditTextField = styled((props) => (
     overflow: 'hidden',
     borderRadius: 4,
     backgroundColor: theme.palette.mode === 'light' ? '#fcfcfb' : '#2b2b2b',
-    transition: theme.transitions.create(['border-color', 'background-color', 'box-shadow']),
+    transition: theme.transitions.create([
+      'border-color',
+      'background-color',
+      'box-shadow'
+    ]),
     '&:hover': {
       backgroundColor: 'transparent'
     },
@@ -77,7 +85,7 @@ const RedditTextField = styled((props) => (
       borderColor: theme.palette.primary.main
     }
   }
-}));
+}))
 
 const ValidationTextField = styled(TextField)({
   '& input:valid + fieldset': {
@@ -92,7 +100,7 @@ const ValidationTextField = styled(TextField)({
     borderLeftWidth: 6,
     padding: '4px !important' // override inline-style
   }
-});
+})
 
 export default function CustomizedInputs() {
   return (
@@ -127,5 +135,5 @@ export default function CustomizedInputs() {
         id="validation-outlined-input"
       />
     </Box>
-  );
+  )
 }

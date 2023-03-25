@@ -1,7 +1,7 @@
-import { useRoutes } from 'react-router-dom';
+import { useRoutes } from 'react-router-dom'
 
-import LoginRoutes from './LoginRoutes';
-import { MainRoutes, ProtectedMainRoutes } from './MainRoutes';
+import LoginRoutes from './LoginRoutes'
+import { MainRoutes, ProtectedMainRoutes } from './MainRoutes'
 
 // ==============================|| ROUTING RENDER ||============================== //
 
@@ -14,5 +14,5 @@ import { MainRoutes, ProtectedMainRoutes } from './MainRoutes';
 // }
 
 export default function ThemeRoutes() {
-  return useRoutes([LoginRoutes, ProtectedMainRoutes]);
+  return useRoutes([LoginRoutes, ProtectedMainRoutes])
 }

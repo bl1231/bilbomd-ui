@@ -1,5 +1,5 @@
-import React from 'react';
-import { DeleteOutlined } from '@mui/icons-material';
+import React from 'react'
+import { DeleteOutlined } from '@mui/icons-material'
 import {
   Avatar,
   Card,
@@ -7,9 +7,9 @@ import {
   CardHeader,
   IconButton,
   Typography
-} from '@mui/material';
-import { styled } from '@mui/system';
-import { yellow, green, pink, blue, red } from '@mui/material/colors';
+} from '@mui/material'
+import { styled } from '@mui/system'
+import { yellow, green, pink, blue, red } from '@mui/material/colors'
 
 const JobCard = ({ job, handelDelete }) => {
   return (
@@ -49,7 +49,7 @@ const JobCard = ({ job, handelDelete }) => {
         </Typography>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default JobCard;
+export default JobCard
