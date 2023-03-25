@@ -15,7 +15,11 @@ root.render(
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route path="/*" element={<App />} errorElement={<ErrorBoundary />} />
+          <Route
+            path="/bilbomd-dev/*"
+            element={<App />}
+            errorElement={<ErrorBoundary />}
+          />
         </Routes>
       </BrowserRouter>
     </Provider>

@@ -151,9 +151,9 @@ const Signup = () => {
                         sx={{ mb: 1 }}
                       >
                         {error.message} If you already have an account try{' '}
-                        <a href="/magicklink" className="alert-link">
+                        <Link to="../magicklink" className="alert-link">
                           logging in
-                        </a>
+                        </Link>
                       </Alert>
                     </Collapse>
                   ) : (
@@ -185,7 +185,7 @@ const Signup = () => {
                     color="secondary"
                     endIcon={<AutoFixHighIcon />}
                     component={Link}
-                    to="/magicklink"
+                    to="../magicklink"
                   >
                     Get a MagickLink&#8482;
                   </Button>

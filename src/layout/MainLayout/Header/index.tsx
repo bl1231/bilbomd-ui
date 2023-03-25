@@ -25,17 +25,17 @@ const Header = () => {
   const settings = [
     {
       text: 'My Jobs',
-      onclick: () => navigate('/dashboard/jobs')
+      onclick: () => navigate('dashboard/jobs')
     },
     {
       text: 'Account',
       onclick: () => {
-        navigate('/dashboard/account')
+        navigate('dashboard/account')
       }
     },
     {
       text: 'Dashboard',
-      onclick: () => navigate('/welcome')
+      onclick: () => navigate('welcome')
     },
     {
       text: 'Logout',

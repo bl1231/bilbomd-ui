@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from 'features/auth/authSlice'
 import { useLoginMutation } from 'features/auth/authApiSlice'
@@ -33,7 +33,7 @@ const MagickLinkAuth = () => {
           setPersist(true)
           // wait here for a few seconds so user can see the Alert message
           await sleep(3000)
-          navigate('/dashboard/jobs')
+          navigate('../dashboard/jobs')
         } catch (err) {
           if (!err.status) {
             setError('No Server Response')
@@ -85,9 +85,8 @@ const MagickLinkAuth = () => {
           ) : (
             <Alert severity="warning">
               <AlertTitle>Warning!</AlertTitle>Hmmmmm. Maybe your MagickLink&#8482; has
-              expired? Please try{' '}
-              <a href="http://localhost:3001/magicklink">generating another</a>. If that
-              doesn't work please contact us.
+              expired? Please try <Link to="../../magicklink">generating another</Link>.
+              If that doesn't work please contact us.
               <p>{error}</p>
             </Alert>
           )}

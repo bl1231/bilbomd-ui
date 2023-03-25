@@ -2,18 +2,16 @@ import { useGetUsersQuery } from './usersApiSlice'
 import {
   DataGrid,
   GridColDef,
-  GridCellParams,
   GridRowParams,
-  GridValueFormatterParams,
   GridActionsCellItem
 } from '@mui/x-data-grid'
 
 import EditIcon from '@mui/icons-material/Edit'
 import useTitle from '../../hooks/useTitle'
-import PulseLoader from 'react-spinners/PulseLoader'
+// import PulseLoader from 'react-spinners/PulseLoader'
 import { Box } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
-import { Button, CircularProgress, Link } from '@mui/material'
+import { Button, CircularProgress } from '@mui/material'
 
 const UsersList = () => {
   useTitle('BilboMD: Users List')
@@ -29,7 +27,7 @@ const UsersList = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
   })
-  const handleEdit = (id) => navigate(`/dashboard/users/${id}`)
+
   let content
 
   if (isLoading) content = <CircularProgress />
@@ -59,13 +57,11 @@ const UsersList = () => {
             label="Edit"
             component={Button}
             variant="contained"
-            onClick={() => navigate(`/dashboard/users/${params.id}`)}
+            onClick={() => navigate(params.id)}
           />
         ]
       }
     ]
-
-    //const handleEdit = (id) => navigate(`/dashboard/users/${id}`)
 
     content = (
       <Box sx={{ height: 600 }}>

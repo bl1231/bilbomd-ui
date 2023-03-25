@@ -74,7 +74,7 @@ const VerifyUser = () => {
                 variant="contained"
                 startIcon={<AutoFixHighIcon />}
                 component={Link}
-                to="/magicklink"
+                to="../magicklink"
               >
                 MagicLink &#8482;
               </Button>
@@ -84,7 +84,7 @@ const VerifyUser = () => {
               <AlertTitle>Nope!</AlertTitle>
               Email Verification Failed.
               <br /> You may have used an outdated token. Please visit the{' '}
-              <a href="/login">login</a> page and try again.
+              <Link to="../login">login</Link> page and try again.
             </Alert>
           )}
         </Grid>

@@ -78,7 +78,7 @@ const PersistLogin = () => {
             color="primary"
             startIcon={<AutoFixHighIcon />}
             component={Link}
-            to="/magicklink"
+            to="magicklink"
           >
             Request a new MagickLink&#8482;
           </Button>

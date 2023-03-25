@@ -35,7 +35,7 @@ const NewUserForm = () => {
       setUsername('')
       //setPassword('');
       setRoles([])
-      navigate('/dashboard/users')
+      navigate('dashboard/users')
     }
   }, [isSuccess, navigate])
 
