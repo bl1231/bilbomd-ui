@@ -2,11 +2,7 @@
   "jobs": [
     {
       "title": "Topo II domain1 flex",
-      "pdbs": [
-        { "name": "1pvg.pdb" },
-        { "name": "1pcg.pdb" },
-        { "name": "7vve.pdb" }
-      ],
+      "pdbs": [{ "name": "1pvg.pdb" }, { "name": "1pcg.pdb" }, { "name": "7vve.pdb" }],
       "constinp": "my_const.inp",
       "expdata": "topoII_data.dat",
       "num_conf": "200",
@@ -20,11 +16,7 @@
     },
     {
       "title": "Topo II domain2-3 flex",
-      "pdbs": [
-        { "name": "1pvg.pdb" },
-        { "name": "1pcg.pdb" },
-        { "name": "7vve.pdb" }
-      ],
+      "pdbs": [{ "name": "1pvg.pdb" }, { "name": "1pcg.pdb" }, { "name": "7vve.pdb" }],
       "constinp": "my_const.inp",
       "expdata": "topoII_data.dat",
       "num_conf": "300",
@@ -38,11 +30,7 @@
     },
     {
       "title": "MRE11 Doing a Science",
-      "pdbs": [
-        { "name": "1pvg.pdb" },
-        { "name": "1pcg.pdb" },
-        { "name": "7vve.pdb" }
-      ],
+      "pdbs": [{ "name": "1pvg.pdb" }, { "name": "1pcg.pdb" }, { "name": "7vve.pdb" }],
       "constinp": "my_const.inp",
       "expdata": "topoII_data.dat",
       "num_conf": "200",
@@ -56,11 +44,7 @@
     },
     {
       "title": "MRE11 Doing a Science with more options n stuff flex",
-      "pdbs": [
-        { "name": "1pvg.pdb" },
-        { "name": "1pcg.pdb" },
-        { "name": "7vve.pdb" }
-      ],
+      "pdbs": [{ "name": "1pvg.pdb" }, { "name": "1pcg.pdb" }, { "name": "7vve.pdb" }],
       "constinp": "my_const.inp",
       "expdata": "topoII_data.dat",
       "num_conf": "300",
@@ -74,11 +58,7 @@
     },
     {
       "title": "Title of my BilboMD Job",
-      "pdbs": [
-        { "name": "4jis.pdb" },
-        { "name": "5pnq.pdb" },
-        { "name": "7hgh.pdb" }
-      ],
+      "pdbs": [{ "name": "4jis.pdb" }, { "name": "5pnq.pdb" }, { "name": "7hgh.pdb" }],
       "constinp": "const.inp",
       "expdata": "saxs_data.dat",
       "num_conf": "800",

@@ -9,11 +9,7 @@ const RequireAuth = ({ allowedRoles }) => {
   const content = roles.some((role) => allowedRoles.includes(role)) ? (
     <Outlet />
   ) : (
-    <Navigate
-      to="/magicklink"
-      state={{ from: location }}
-      replace
-    />
+    <Navigate to="/magicklink" state={{ from: location }} replace />
   )
 
   return content

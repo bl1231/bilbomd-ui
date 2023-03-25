@@ -75,10 +75,7 @@ export default function ClippedDrawer() {
     buttonContent = (
       <>
         {menuItems.map((item) => (
-          <ListItem
-            key={item.text}
-            disablePadding
-          >
+          <ListItem key={item.text} disablePadding>
             <ListItemButton
               onClick={item.onclick}
               sx={{
@@ -121,10 +118,7 @@ export default function ClippedDrawer() {
           </Box>
         </Drawer>
 
-        <Box
-          component="main"
-          sx={{ flexGrow: 1, p: 3 }}
-        >
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <Outlet />
           <Toolbar />
         </Box>

@@ -140,10 +140,7 @@ const MagickLink = () => {
                         sx={{ mb: 1 }}
                       >
                         If you need an account please{' '}
-                        <a
-                          href="/register"
-                          className="alert-link"
-                        >
+                        <a href="/register" className="alert-link">
                           register
                         </a>
                       </Alert>
@@ -163,14 +160,8 @@ const MagickLink = () => {
                   >
                     Send a MagickLink&#8482;
                   </Button>
-                  <Divider
-                    variant="middle"
-                    sx={{ my: 3 }}
-                  />
-                  <Typography
-                    variant="body2"
-                    sx={{ mt: 2 }}
-                  >
+                  <Divider variant="middle" sx={{ my: 3 }} />
+                  <Typography variant="body2" sx={{ mt: 2 }}>
                     Need an account?
                   </Typography>
                   <Button

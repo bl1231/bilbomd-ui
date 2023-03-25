@@ -69,12 +69,7 @@ const UsersList = () => {
 
     content = (
       <Box sx={{ height: 600 }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[5]}
-        />
+        <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} />
       </Box>
     )
   }

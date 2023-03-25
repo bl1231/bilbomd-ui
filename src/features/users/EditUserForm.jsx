@@ -130,14 +130,8 @@ const EditUserForm = ({ user }) => {
             resetForm
           }) => (
             <Form>
-              <Grid
-                container
-                direction="column"
-              >
-                <Grid
-                  item
-                  sx={{ my: 2, width: '300px' }}
-                >
+              <Grid container direction="column">
+                <Grid item sx={{ my: 2, width: '300px' }}>
                   <Field
                     name="username"
                     id="username"
@@ -151,10 +145,7 @@ const EditUserForm = ({ user }) => {
                     value={values.username || ''}
                   />
                 </Grid>
-                <Grid
-                  item
-                  sx={{ my: 2, width: '300px' }}
-                >
+                <Grid item sx={{ my: 2, width: '300px' }}>
                   <Field
                     name="email"
                     id="email"
@@ -170,10 +161,7 @@ const EditUserForm = ({ user }) => {
                   />
                 </Grid>
 
-                <Grid
-                  item
-                  sx={{ my: 2 }}
-                >
+                <Grid item sx={{ my: 2 }}>
                   <FormLabel component="legend">Make User active or inactive</FormLabel>
                   <FormGroup>
                     <FormControlLabel
@@ -184,10 +172,7 @@ const EditUserForm = ({ user }) => {
                     />
                   </FormGroup>
                 </Grid>
-                <Grid
-                  item
-                  sx={{ mb: 2 }}
-                >
+                <Grid item sx={{ mb: 2 }}>
                   {/* https://github.com/jaredpalmer/formik/issues/2123 */}
 
                   <FormLabel component="legend">Assign Roles</FormLabel>
@@ -204,10 +189,7 @@ const EditUserForm = ({ user }) => {
                       MenuProps={MenuProps}
                     >
                       {Object.values(ROLES).map((role) => (
-                        <MenuItem
-                          key={role}
-                          value={role}
-                        >
+                        <MenuItem key={role} value={role}>
                           <Checkbox checked={values.roles.indexOf(role) > -1} />
                           <ListItemText primary={role} />
                         </MenuItem>
@@ -236,10 +218,7 @@ const EditUserForm = ({ user }) => {
                   >
                     {`Delete ${values.username}`}
                   </Button>
-                  <Dialog
-                    open={open}
-                    onClose={handleClose}
-                  >
+                  <Dialog open={open} onClose={handleClose}>
                     <DialogContent>
                       <DialogContentText>
                         {`Delete ${values.username} ?`}
@@ -247,19 +226,13 @@ const EditUserForm = ({ user }) => {
                     </DialogContent>
                     <DialogActions>
                       <Button onClick={handleClose}>Cancel</Button>
-                      <Button
-                        onClick={handleDeleteUser}
-                        autoFocus
-                      >
+                      <Button onClick={handleDeleteUser} autoFocus>
                         Delete
                       </Button>
                     </DialogActions>
                   </Dialog>
                 </Grid>
-                <Grid
-                  item
-                  sx={{ mt: 2 }}
-                >
+                <Grid item sx={{ mt: 2 }}>
                   {error || delerror ? (
                     <Alert severity="warning">{errContent}</Alert>
                   ) : (

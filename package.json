@@ -41,6 +41,7 @@
   },
   "scripts": {
     "start": "PORT=3001 BROWSER=chrome react-scripts start",
+    "pretty": "prettier --write \"./**/*.{js,jsx,ts,tsx,json}\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -65,6 +66,7 @@
   },
   "devDependencies": {
     "eslint": "^8.36.0",
-    "eslint-plugin-react": "^7.32.1"
+    "eslint-plugin-react": "^7.32.1",
+    "prettier": "^2.8.7"
   }
 }

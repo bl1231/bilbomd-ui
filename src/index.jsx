@@ -1,14 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import './index.css'
+import App from './App'
 
-import { store } from 'app/store';
-import { Provider } from 'react-redux';
+import { store } from 'app/store'
+import { Provider } from 'react-redux'
 
-import { BrowserRouter, Routes, Route, useRouteError } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useRouteError } from 'react-router-dom'
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root'))
 
 root.render(
   <React.StrictMode>
@@ -20,11 +20,11 @@ root.render(
       </BrowserRouter>
     </Provider>
   </React.StrictMode>
-);
+)
 
 function ErrorBoundary() {
-  let error = useRouteError();
-  console.error(error);
+  let error = useRouteError()
+  console.error(error)
   // Uncaught ReferenceError: path is not defined
-  return <div>Dang!</div>;
+  return <div>Dang!</div>
 }

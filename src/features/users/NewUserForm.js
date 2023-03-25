@@ -1,30 +1,30 @@
-import { useState, useEffect } from 'react';
-import { useAddNewUserMutation } from './usersApiSlice';
-import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSave } from '@fortawesome/free-solid-svg-icons';
-import { ROLES } from 'config/roles';
-import useTitle from 'hooks/useTitle';
+import { useState, useEffect } from 'react'
+import { useAddNewUserMutation } from './usersApiSlice'
+import { useNavigate } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSave } from '@fortawesome/free-solid-svg-icons'
+import { ROLES } from 'config/roles'
+import useTitle from 'hooks/useTitle'
 
-const USER_REGEX = /^[A-z]{3,20}$/;
-const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
+const USER_REGEX = /^[A-z]{3,20}$/
+const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/
 
 const NewUserForm = () => {
-  useTitle('BilboMD: New User');
+  useTitle('BilboMD: New User')
 
-  const [addNewUser, { isLoading, isSuccess, isError, error }] = useAddNewUserMutation();
+  const [addNewUser, { isLoading, isSuccess, isError, error }] = useAddNewUserMutation()
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const [username, setUsername] = useState('');
-  const [validUsername, setValidUsername] = useState(false);
+  const [username, setUsername] = useState('')
+  const [validUsername, setValidUsername] = useState(false)
   //const [password, setPassword] = useState('');
   //const [validPassword, setValidPassword] = useState(false);
-  const [roles, setRoles] = useState(['User']);
+  const [roles, setRoles] = useState(['User'])
 
   useEffect(() => {
-    setValidUsername(USER_REGEX.test(username));
-  }, [username]);
+    setValidUsername(USER_REGEX.test(username))
+  }, [username])
 
   //   useEffect(() => {
   //     setValidPassword(PWD_REGEX.test(password));
@@ -32,74 +32,61 @@ const NewUserForm = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      setUsername('');
+      setUsername('')
       //setPassword('');
-      setRoles([]);
-      navigate('/dashboard/users');
+      setRoles([])
+      navigate('/dashboard/users')
     }
-  }, [isSuccess, navigate]);
+  }, [isSuccess, navigate])
 
-  const onUsernameChanged = (e) => setUsername(e.target.value);
+  const onUsernameChanged = (e) => setUsername(e.target.value)
   //const onPasswordChanged = (e) => setPassword(e.target.value);
 
   const onRolesChanged = (e) => {
     const values = Array.from(
       e.target.selectedOptions, //HTMLCollection
       (option) => option.value
-    );
-    setRoles(values);
-  };
+    )
+    setRoles(values)
+  }
 
-  const canSave = [roles.length, validUsername].every(Boolean) && !isLoading;
+  const canSave = [roles.length, validUsername].every(Boolean) && !isLoading
 
   const onSaveUserClicked = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (canSave) {
-      await addNewUser({ username, roles });
+      await addNewUser({ username, roles })
     }
-  };
+  }
 
   const options = Object.values(ROLES).map((role) => {
     return (
-      <option
-        key={role}
-        value={role}
-      >
+      <option key={role} value={role}>
         {' '}
         {role}
       </option>
-    );
-  });
+    )
+  })
 
-  const errClass = isError ? 'errmsg' : 'offscreen';
-  const validUserClass = !validUsername ? 'form__input--incomplete' : '';
+  const errClass = isError ? 'errmsg' : 'offscreen'
+  const validUserClass = !validUsername ? 'form__input--incomplete' : ''
   //const validPwdClass = !validPassword ? 'form__input--incomplete' : '';
-  const validRolesClass = !Boolean(roles.length) ? 'form__input--incomplete' : '';
+  const validRolesClass = !Boolean(roles.length) ? 'form__input--incomplete' : ''
 
   const content = (
     <>
       <p className={errClass}>{error?.data?.message}</p>
 
-      <form
-        className="form"
-        onSubmit={onSaveUserClicked}
-      >
+      <form className="form" onSubmit={onSaveUserClicked}>
         <div className="form__title-row">
           <h2>New User</h2>
           <div className="form__action-buttons">
-            <button
-              className="icon-button"
-              title="Save"
-              disabled={!canSave}
-            >
+            <button className="icon-button" title="Save" disabled={!canSave}>
               <FontAwesomeIcon icon={faSave} />
             </button>
           </div>
         </div>
-        <label
-          className="form__label"
-          htmlFor="username"
-        >
+        <label className="form__label" htmlFor="username">
           Username: <span className="nowrap">[3-20 letters]</span>
         </label>
         <input
@@ -127,10 +114,7 @@ const NewUserForm = () => {
           onChange={onPasswordChanged}
         /> */}
 
-        <label
-          className="form__label"
-          htmlFor="roles"
-        >
+        <label className="form__label" htmlFor="roles">
           ASSIGNED ROLES:
         </label>
         <select
@@ -146,8 +130,8 @@ const NewUserForm = () => {
         </select>
       </form>
     </>
-  );
+  )
 
-  return content;
-};
-export default NewUserForm;
+  return content
+}
+export default NewUserForm
