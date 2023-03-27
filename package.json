@@ -1,6 +1,6 @@
 {
   "name": "bilbomd-ui",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "private": true,
   "homepage": "https://bl1231.als.lbl.gov/bilbomd-dev/",
   "dependencies": {
