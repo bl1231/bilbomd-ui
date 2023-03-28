@@ -5,10 +5,8 @@ import {
   GridRowParams,
   GridActionsCellItem
 } from '@mui/x-data-grid'
-
 import EditIcon from '@mui/icons-material/Edit'
 import useTitle from '../../hooks/useTitle'
-// import PulseLoader from 'react-spinners/PulseLoader'
 import { Box } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
 import { Button, CircularProgress } from '@mui/material'
@@ -40,7 +38,7 @@ const UsersList = () => {
     const { ids, entities } = users
 
     const rows = ids?.length && ids.map((userId) => entities[userId])
-    console.log(rows)
+    // console.log(rows)
 
     const columns: GridColDef[] = [
       { field: 'username', headerName: 'Username' },

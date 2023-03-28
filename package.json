@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "homepage": "https://bl1231.als.lbl.gov/bilbomd-dev/",
+  "proxy": "http://localhost:3500",
   "dependencies": {
     "@ant-design/colors": "^7.0.0",
     "@emotion/core": "^11.0.0",
@@ -41,8 +42,7 @@
     "yup": "^1.0.0"
   },
   "scripts": {
-    "start": "PORT=3001 BROWSER=chrome react-scripts start",
-    "start-prod": "HOST=hyperion.bl1231.als.lbl.gov PORT=3001 BROWSER=chrome react-scripts start",
+    "start": "PORT=3001 react-scripts start",
     "pretty": "prettier --write \"./**/*.{js,jsx,ts,tsx,json}\"",
     "build": "react-scripts build",
     "test": "react-scripts test",

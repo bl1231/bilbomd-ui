@@ -6,13 +6,11 @@ import {
   Grid,
   TextField,
   MenuItem,
-  Typography,
   Alert,
   FormControlLabel,
   FormLabel,
   FormControl,
   FormGroup,
-  useRadioGroup,
   Select,
   InputLabel,
   OutlinedInput,
@@ -22,12 +20,12 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
-import DialogTitle from '@mui/material/DialogTitle'
+// import DialogTitle from '@mui/material/DialogTitle'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import { Field, Form, Formik } from 'formik'
 import React, { useEffect } from 'react'
-import { Debug } from 'components/Debug'
+// import { Debug } from 'components/Debug'
 import { useUpdateUserMutation, useDeleteUserMutation } from './usersApiSlice'
 import { ROLES } from 'config/roles'
 import { useNavigate } from 'react-router-dom'
@@ -53,12 +51,12 @@ const EditUserForm = ({ user }) => {
 
   const handleClose = () => {
     setOpen(false)
-    console.log('cancel')
+    // console.log('cancel')
   }
 
   const handleDeleteUser = async () => {
     setOpen(false)
-    console.log('delete')
+    // console.log('delete')
     await deleteUser({ id: user.id })
   }
 
@@ -89,7 +87,7 @@ const EditUserForm = ({ user }) => {
   const errContent = (error?.data?.message || delerror?.data?.message) ?? ''
 
   useEffect(() => {
-    console.log(isSuccess)
+    // console.log(isSuccess)
     if (isSuccess || isDelSuccess) {
       // setUsername('')
       // setPassword('')
@@ -99,7 +97,7 @@ const EditUserForm = ({ user }) => {
   }, [isSuccess, isDelSuccess, navigate])
 
   const myOnSubmit = async (values, { isLoading, isSuccess, isError, error }) => {
-    console.log('clicked')
+    // console.log('clicked')
     await updateUser({
       id: user.id,
       username: values.username,
