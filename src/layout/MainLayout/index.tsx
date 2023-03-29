@@ -84,7 +84,7 @@ export default function ClippedDrawer() {
               }}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText>{item.text}</ListItemText>
+              <ListItemText sx={{ ml: 1 }}>{item.text}</ListItemText>
             </ListItemButton>
           </ListItem>
         ))}
