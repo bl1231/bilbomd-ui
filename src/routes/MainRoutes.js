@@ -24,7 +24,6 @@ const JobsList = Loadable(lazy(() => import('features/jobs/JobsList')))
 const SingleJobPage = Loadable(lazy(() => import('features/jobs/SingleJobPage')));
 const Welcome = Loadable(lazy(() => import('features/auth/Welcome')))
 const UsersList = Loadable(lazy(() => import('features/users/UsersList')))
-const NewUserForm = Loadable(lazy(() => import('features/users/NewUserForm')))
 const EditUser = Loadable(lazy(() => import('features/users/EditUser')))
 const UserAccount = Loadable(lazy(() => import('features/users/UserAccount')))
 
@@ -62,10 +61,6 @@ const ProtectedMainRoutes = {
                         {
                           path: 'users',
                           element: <UsersList />
-                        },
-                        {
-                          path: 'users/new',
-                          element: <NewUserForm />
                         },
                         {
                           path: 'users/:id',
