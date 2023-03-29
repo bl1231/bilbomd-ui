@@ -12,15 +12,16 @@ import {
 import React, { useState, useEffect } from 'react'
 import { Box } from '@mui/system'
 import useAuth from 'hooks/useAuth'
+import LogOut from 'features/auth/LogOut'
 import FortIcon from '@mui/icons-material/Fort'
 import PersonIcon from '@mui/icons-material/Person'
 import { useNavigate } from 'react-router'
-import { useSendLogoutMutation } from 'features/auth/authApiSlice'
+// import { useSendLogoutMutation } from 'features/auth/authApiSlice'
 
 //const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
 const Header = () => {
-  const [sendLogout, { isLoading, isSuccess, isError, error }] = useSendLogoutMutation()
+  // const [sendLogout, { isLoading, isSuccess, isError, error }] = useSendLogoutMutation()
   const navigate = useNavigate()
   const settings = [
     {
@@ -36,10 +37,6 @@ const Header = () => {
     {
       text: 'Dashboard',
       onclick: () => navigate('welcome')
-    },
-    {
-      text: 'Logout',
-      onclick: sendLogout
     }
   ]
 
@@ -61,9 +58,9 @@ const Header = () => {
     setAnchorElUser(null)
   }
 
-  useEffect(() => {
-    if (isSuccess) navigate('/')
-  }, [isSuccess, navigate])
+  // useEffect(() => {
+  //   if (isSuccess) navigate('/')
+  // }, [isSuccess, navigate])
 
   return (
     <React.Fragment>
@@ -140,6 +137,9 @@ const Header = () => {
                   <Typography textAlign="center">{setting.text}</Typography>
                 </MenuItem>
               ))}
+              <MenuItem>
+                <LogOut />
+              </MenuItem>
             </Menu>
           </Toolbar>
         </AppBar>
