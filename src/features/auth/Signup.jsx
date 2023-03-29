@@ -120,7 +120,7 @@ const Signup = () => {
                   />
                   <TextField
                     fullWidth
-                    sx={{ my: 2 }}
+                    sx={{ my: 1 }}
                     label="Enter an Email address"
                     name="email"
                     type="email"
