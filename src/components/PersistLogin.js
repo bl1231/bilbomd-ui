@@ -36,11 +36,13 @@ const PersistLogin = () => {
         effectRan.current = true
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     console.log(`isLoading: ${isLoading}`)
     console.log(`accessToken: ${JSON.stringify(auth?.accessToken)}`)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading])
 
   return <>{!persist ? <Outlet /> : isLoading ? <CircularProgress /> : <Outlet />}</>
