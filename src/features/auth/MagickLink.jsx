@@ -63,13 +63,13 @@ const MagickLink = () => {
       >
         <Grid
           item
-          xs={4}
           sx={{
             p: 2,
-            bgcolor: 'background.login',
+            bgcolor: 'background.paper',
             border: 1,
             borderRadius: 1,
-            borderColor: 'secondary.main'
+            borderColor: 'secondary.main',
+            width: '400px'
           }}
         >
           {success ? (
@@ -101,13 +101,7 @@ const MagickLink = () => {
                   </Typography>
                   <TextField
                     fullWidth
-                    sx={{
-                      my: 2,
-                      bgcolor: 'background.paper',
-                      border: 1,
-                      borderRadius: 1,
-                      borderColor: 'secondary.main'
-                    }}
+                    sx={{ my: 1 }}
                     label="Email address"
                     name="email"
                     type="email"

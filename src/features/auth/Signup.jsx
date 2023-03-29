@@ -64,13 +64,14 @@ const Signup = () => {
       >
         <Grid
           item
-          xs={4}
+          // xs={4}
           sx={{
             p: 2,
             bgcolor: 'background.paper',
             border: 1,
             borderRadius: 1,
-            borderColor: 'secondary.main'
+            borderColor: 'secondary.main',
+            width: '400px'
           }}
         >
           {success ? (
