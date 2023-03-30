@@ -32,12 +32,23 @@ const LogOut = () => {
 
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
-          <DialogContentText>Logout?</DialogContentText>
+          <DialogContentText sx={{ color: 'black' }}>
+            Do you want to Logout?
+          </DialogContentText>
+          <DialogContentText>
+            You will need to obtain a new MagickLink&#8482; to log back in.
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>No Thanks</Button>
-          <Button onClick={onClickLogout} autoFocus>
-            Yes Please
+          <Button
+            variant="contained"
+            // sx={{ backgroundColor: '#ff7875', color: 'black' }}
+            onClick={handleClose}
+          >
+            Actually... Nevermind
+          </Button>
+          <Button variant="outlined" onClick={onClickLogout} autoFocus>
+            Logout
           </Button>
         </DialogActions>
       </Dialog>
