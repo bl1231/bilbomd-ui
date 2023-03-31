@@ -78,7 +78,7 @@ const Header = () => {
               variant="h3"
               noWrap
               component="a"
-              href="/"
+              href="."
               sx={{
                 mr: 6,
                 display: 'flex',
