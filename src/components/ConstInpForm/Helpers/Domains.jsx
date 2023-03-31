@@ -26,7 +26,12 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
 
   return (
     <React.Fragment>
-      <Grid container direction="column" sx={{ my: 1, backgroundColor: '#f4ffb8' }}>
+      {/* This is the Chain container */}
+      <Grid
+        container
+        direction="column"
+        sx={{ my: 1, backgroundColor: '#52c41a', borderRadius: 1 }}
+      >
         <Grid item sx={{ flex: '1 1 auto', alignItems: 'center' }}>
           {values.crd_file.chains[chainIndex].domains.map((domain, index) => (
             <React.Fragment key={index}>
@@ -37,7 +42,8 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
                   flexDirection: 'row',
                   p: 1,
                   m: 1,
-                  backgroundColor: '#eaff8f'
+                  backgroundColor: '#eaff8f',
+                  borderRadius: 1
                 }}
               >
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -133,7 +139,7 @@ const Domains = ({ chainIndex, domainsArrayHelpers }) => {
             </React.Fragment>
           ))}
 
-          <Box sx={{ justifyContent: 'flex-end' }}>
+          <Box sx={{ justifyContent: 'flex-end', m: 1 }}>
             <Grid container justifyContent="flex-end">
               <Button
                 variant="contained"
