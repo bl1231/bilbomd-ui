@@ -11,7 +11,12 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 
 import PeopleIcon from '@mui/icons-material/People'
-import { AddCircleOutlineOutlined, SubjectOutlined } from '@mui/icons-material'
+import {
+  AddCircleOutlineOutlined,
+  SubjectOutlined,
+  AutoAwesome
+} from '@mui/icons-material'
+
 import { useNavigate } from 'react-router-dom'
 import { Outlet, useLocation } from 'react-router-dom'
 
@@ -41,6 +46,13 @@ export default function ClippedDrawer() {
       icon: <AddCircleOutlineOutlined color="secondary" />,
       path: 'dashboard/jobs/new',
       onclick: () => navigate('dashboard/jobs/new'),
+      roles: ['user', 'manager']
+    },
+    {
+      text: 'Inp Jiffy',
+      icon: <AutoAwesome color="secondary" />,
+      path: 'dashboard/jobs/constinp',
+      onclick: () => navigate('dashboard/jobs/constinp'),
       roles: ['user', 'manager']
     },
     {
