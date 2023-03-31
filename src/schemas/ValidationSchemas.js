@@ -64,8 +64,8 @@ export const bilbomdJobSchema = object().shape({
       if (file) return true
       return false
     })
-    .test('file-size-check', 'Max file size is 5MB', (file) => {
-      if (file && file.size <= 5000000) {
+    .test('file-size-check', 'Max file size is 30MB', (file) => {
+      if (file && file.size <= 30000000) {
         // console.log(file.size)
         return true
       }
@@ -99,8 +99,8 @@ export const bilbomdJobSchema = object().shape({
       if (file) return true
       return false
     })
-    .test('file-size-check', 'Max file size is 2MB', (file) => {
-      if (file && file.size <= 2000000) {
+    .test('file-size-check', 'Max file size is 20MB', (file) => {
+      if (file && file.size <= 20000000) {
         // console.log(file.size)
         return true
       }
