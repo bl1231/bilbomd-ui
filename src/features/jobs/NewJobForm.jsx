@@ -159,8 +159,11 @@ const NewJobForm = () => {
           <Item>
             {isSuccess ? (
               <Alert severity="success">
-                <AlertTitle>Woot!</AlertTitle>Your job has been submitted. Check out the{' '}
-                <Link to={`../${jobid}`}>details</Link>.
+                <AlertTitle>Woot!</AlertTitle>
+                <Typography>
+                  Your job has been submitted. Check out the{' '}
+                  <Link to="../jobs">details</Link>.
+                </Typography>
               </Alert>
             ) : (
               <Formik
