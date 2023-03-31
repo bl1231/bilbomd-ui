@@ -4,7 +4,7 @@ import './index.css'
 import App from './App'
 
 import { store } from 'app/store'
-import { Provider } from 'react-redux'
+import { Provider as ReduxProvider } from 'react-redux'
 
 import { BrowserRouter, Routes, Route, useRouteError } from 'react-router-dom'
 
@@ -12,7 +12,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'))
 
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
+    <ReduxProvider store={store}>
       <BrowserRouter>
         <Routes>
           <Route
@@ -22,7 +22,7 @@ root.render(
           />
         </Routes>
       </BrowserRouter>
-    </Provider>
+    </ReduxProvider>
   </React.StrictMode>
 )
 

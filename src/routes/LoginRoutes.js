@@ -23,11 +23,11 @@ const Unauthorized = Loadable(lazy(() => import('components/Unauthorized')))
 // ==============================|| AUTH ROUTING ||============================== //
 
 const LoginRoutes = {
-  path: '/',
   element: <MinimalLayout />,
+  path: '/',
   children: [
     {
-      path: '/',
+      index: true,
       element: <Home />
     },
     {

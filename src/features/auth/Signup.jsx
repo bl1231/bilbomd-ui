@@ -12,7 +12,7 @@ import { Alert, AlertTitle, Divider, Grid, TextField, Typography } from '@mui/ma
 import useTitle from 'hooks/useTitle'
 import axios from 'app/api/axios'
 const REGISTER_URL = '/register'
-
+//const SENDMAIL_USER = env.process.SENDMAIL_USER
 const Signup = () => {
   useTitle('BilboMD: Signup')
   const [success, setSuccess] = useState(null)
