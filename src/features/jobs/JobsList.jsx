@@ -60,7 +60,7 @@ const JobsList = () => {
 
     const columns: GridColDef[] = [
       { field: 'title', headerName: 'Title', width: 200 },
-      { field: 'id', headerName: 'ID', width: 100, hide: true },
+      // { field: 'id', headerName: 'ID', width: 100, hide: true },
       {
         field: 'time_submitted',
         headerName: 'Submitted',
@@ -124,7 +124,6 @@ const JobsList = () => {
         sx={{
           height: 600,
           width: '100%',
-
           '& .bilbomd.completed': {
             backgroundColor: green[400],
             color: '#1a3e72',
