@@ -16,12 +16,9 @@ import LogOut from 'features/auth/LogOut'
 import FortIcon from '@mui/icons-material/Fort'
 import PersonIcon from '@mui/icons-material/Person'
 import { useNavigate } from 'react-router'
-// import { useSendLogoutMutation } from 'features/auth/authApiSlice'
-
-//const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
 const Header = () => {
-  // const [sendLogout, { isLoading, isSuccess, isError, error }] = useSendLogoutMutation()
+  const [time, setTime] = useState<null | string>(null)
   const navigate = useNavigate()
   const settings = [
     {
@@ -43,12 +40,12 @@ const Header = () => {
   const { username, status } = useAuth()
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null)
 
-  const date = new Date()
+  // const date = new Date()
 
-  const today = new Intl.DateTimeFormat('en-US', {
-    dateStyle: 'full',
-    timeStyle: 'short'
-  }).format(date)
+  // const today = new Intl.DateTimeFormat('en-US', {
+  //   dateStyle: 'full',
+  //   timeStyle: 'short'
+  // }).format(date)
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget)
@@ -57,7 +54,21 @@ const Header = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
   }
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const date = new Date()
 
+      const today = new Intl.DateTimeFormat('en-US', {
+        dateStyle: 'full',
+        timeStyle: 'short'
+      }).format(date)
+
+      setTime(today)
+    }, 1000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [])
   // useEffect(() => {
   //   if (isSuccess) navigate('/')
   // }, [isSuccess, navigate])
@@ -93,7 +104,7 @@ const Header = () => {
             </Typography>
 
             <Typography variant="h5" sx={{ display: { xs: 'none', sm: 'flex' } }}>
-              {today}
+              {time}
             </Typography>
 
             <Typography
