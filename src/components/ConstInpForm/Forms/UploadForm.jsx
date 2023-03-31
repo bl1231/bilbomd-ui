@@ -61,19 +61,27 @@ const UploadForm = ({ setStepIsValid }) => {
     })
 
     const loi =
-      /^\s*(?:\d+\s+){2}(?:\S+\s+){2}(?:\d+\.\d+\s+){3}(?:\D+\s+){1}(?:\d+\s+){1}(?:\d+\.\d+){1}$/gm
+      /^\s*(?:\d+\s+){2}(?:\S+\s+){2}(?:[+-]?\d+\.\d+\s+){3}(?:\D+\s+){1}(?:\d+\s+){1}(?:\d+\.\d+){1}$/gm
+    // console.time('regex match')
     const data = src.result.match(loi)
+    // console.timeEnd('regex match')
     if (!data) return
     // console.log('data:', data)
     // data is now an Array so grab 8th item from every element. use map?
+    // console.time('get unique chains')
     const allChainIds = data.map((line) => {
+      //console.log(line)
       const items = line.split(/\s+/)
       return items[8]
     })
-    const uniqueChains = allChainIds.filter(
-      (value, index, array) => array.indexOf(value) === index
-    )
-    // console.log(uniqueChains)
+    // console.timeEnd('get unique chains')
+
+    // console.time('filter')
+    const uniqueChains = [...new Set(allChainIds)]
+    // console.log('uniqueChains', uniqueChains)
+    // console.timeEnd('filter')
+
+    // console.time('charmm cahins')
     let charmmChains = []
     uniqueChains.forEach((chainId, i) => {
       // console.log('chainID:', chainId)
@@ -100,21 +108,14 @@ const UploadForm = ({ setStepIsValid }) => {
       }
       charmmChains.push(charmmChain)
     })
-
+    // console.timeEnd('charmm cahins')
     // setValue with new chains objects
     // console.log(charmmChains)
     setChains(charmmChains)
-
-    // setValue({
-    //   file: file,
-    //   src: src,
-    //   name: fileName,
-    //   chains: chains
-    // })
   }
 
   const onChange = async (event) => {
-    console.log('onChange triggered')
+    // console.log('onChange triggered')
     setTouched()
     let file = event.target.files[0]
     const filePromise = new Promise((resolve, reject) => {
@@ -145,8 +146,9 @@ const UploadForm = ({ setStepIsValid }) => {
       // console.log('in useEffect')
       if (file && fileName && src && chains) {
         // console.log('useEffect:', src)
-
+        // console.time('parse')
         parseCrdFile()
+        // console.timeEnd('parse')
         // console.log('valid:', isValid)
         // setStepIsValid(isValid)
       }
@@ -234,7 +236,7 @@ const UploadForm = ({ setStepIsValid }) => {
                   error={error}
                   errorMessage={isError ? error : ''}
                 />
-                <Button
+                {/* <Button
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -248,7 +250,7 @@ const UploadForm = ({ setStepIsValid }) => {
                   }}
                 >
                   Reset
-                </Button>
+                </Button> */}
               </Grid>
               <Grid item>
                 {isError ? (
