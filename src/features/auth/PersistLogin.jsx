@@ -4,7 +4,14 @@ import { useRefreshMutation } from './authApiSlice'
 import usePersist from '../../hooks/usePersist'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from './authSlice'
-import { Alert, AlertTitle, Button, CircularProgress, Grid } from '@mui/material'
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  CircularProgress,
+  Grid,
+  Typography
+} from '@mui/material'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 
 const PersistLogin = () => {
@@ -64,10 +71,16 @@ const PersistLogin = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <Grid item xs={6} md={4}>
-          <Alert variant="filled" severity="error">
-            <AlertTitle>{error?.data?.message}</AlertTitle>
-            Please login again
+        <Grid item sx={{ width: '400px' }}>
+          <Alert
+            variant="outlined"
+            severity="error"
+            sx={{ backgroundColor: '#ffa39e', color: 'black' }}
+          >
+            <AlertTitle>
+              {error?.data?.message ? error?.data?.message : 'Login session has expired'}
+            </AlertTitle>
+            <Typography>Please login again.</Typography>
           </Alert>
           <Button
             fullWidth

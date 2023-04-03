@@ -17,7 +17,7 @@ import { CircularProgress } from '@mui/material'
 import DeleteJob from './DeleteJob'
 import InfoJob from './InfoJob'
 
-const JobsList = () => {
+const Jobs = () => {
   useTitle('BilboMD: Jobs List')
 
   const { username, isManager, isAdmin } = useAuth()
@@ -161,4 +161,4 @@ const JobsList = () => {
   return content
 }
 
-export default JobsList
+export default Jobs

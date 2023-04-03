@@ -12,20 +12,18 @@ import { ROLES } from 'config/roles'
 // render - dashboard
 //const DashBoard = Loadable(lazy(() => import('features/dashboard/DashBoard')))
 const Prefetch = Loadable(lazy(() => import('features/auth/Prefetch')))
-
-// prettier-ignore
-const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')));
+const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')))
 const ConstInpStepper = Loadable(
   lazy(() => import('components/ConstInpForm/ConstInpStepper'))
 )
-
-const JobsList = Loadable(lazy(() => import('features/jobs/JobsList')))
-// prettier-ignore
-const SingleJobPage = Loadable(lazy(() => import('features/jobs/SingleJobPage')));
+const Jobs = Loadable(lazy(() => import('features/jobs/Jobs')))
+const Job = Loadable(lazy(() => import('features/jobs/Job')))
 const Welcome = Loadable(lazy(() => import('features/auth/Welcome')))
 const UsersList = Loadable(lazy(() => import('features/users/UsersList')))
 const EditUser = Loadable(lazy(() => import('features/users/EditUser')))
 const UserAccount = Loadable(lazy(() => import('features/users/UserAccount')))
+const Missing = Loadable(lazy(() => import('components/Missing')))
+const MissingJob = Loadable(lazy(() => import('components/MissingJob')))
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -33,8 +31,8 @@ const ProtectedMainRoutes = {
   element: <PersistLogin />,
   children: [
     {
-      path: '/',
       element: <MainLayout />,
+      path: '/',
       children: [
         {
           path: 'welcome',
@@ -49,10 +47,6 @@ const ProtectedMainRoutes = {
                 {
                   path: 'dashboard',
                   children: [
-                    {
-                      path: 'default',
-                      element: <Welcome />
-                    },
                     {
                       element: (
                         <RequireAuth allowedRoles={[ROLES.Manager, ROLES.Admin]} />
@@ -69,12 +63,18 @@ const ProtectedMainRoutes = {
                       ]
                     },
                     {
-                      path: 'jobs',
-                      element: <JobsList />
+                      path: 'jobs/*',
+                      element: <Jobs />,
+                      children: [
+                        {
+                          index: true,
+                          element: <Jobs />
+                        }
+                      ]
                     },
                     {
                       path: 'jobs/:id',
-                      element: <SingleJobPage />
+                      element: <Job />
                     },
                     {
                       path: 'jobs/new',
@@ -87,8 +87,16 @@ const ProtectedMainRoutes = {
                     {
                       path: 'account',
                       element: <UserAccount />
+                    },
+                    {
+                      path: 'jobs/*',
+                      element: <MissingJob />
                     }
                   ]
+                },
+                {
+                  path: '*',
+                  element: <Missing />
                 }
               ]
             }
