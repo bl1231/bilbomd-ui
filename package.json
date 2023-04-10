@@ -18,7 +18,7 @@
     "@mui/material": "^5.11.14",
     "@mui/system": "^5.11.5",
     "@mui/x-data-grid": "^6.0.0",
-    "@reduxjs/toolkit": "^1.9.2",
+    "@reduxjs/toolkit": "^1.9.3",
     "@types/jest": "^29.5.0",
     "@types/node": "^18.15.1",
     "@types/react": "^18.0.29",
