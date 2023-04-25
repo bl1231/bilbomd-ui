@@ -2,7 +2,7 @@
   "name": "bilbomd-ui",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://bl1231.als.lbl.gov/bilbomd-dev/",
+  "homepage": "https://bilbomd.bl1231.als.lbl.gov",
   "proxy": "http://localhost:3500",
   "dependencies": {
     "@ant-design/colors": "^7.0.0",
