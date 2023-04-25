@@ -26,7 +26,8 @@ module.exports = {
       repo: 'git@github.com-bilbomd-ui:bl1231/bilbomd-ui.git',
       path: '/bilbomd',
       'pre-deploy-local': '',
-      'post-deploy': 'npm install && pm2 reload ecosystem.config.js --env production',
+      'post-setup': 'npm install && npm run build',
+      'post-deploy': 'pm2 reload ecosystem.config.js --env production',
       'pre-setup': ''
     }
   }
