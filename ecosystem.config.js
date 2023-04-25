@@ -27,7 +27,8 @@ module.exports = {
       path: '/bilbomd',
       'pre-deploy-local': '',
       'post-setup': 'npm install && npm run build',
-      'post-deploy': 'pm2 reload ecosystem.config.js --env production',
+      'post-deploy':
+        'npm install && npm run build && pm2 reload ecosystem.config.js --env production',
       'pre-setup': ''
     }
   }
