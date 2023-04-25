@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom'
 
 const Home = () => {
   const content = (
-    <Container>
-      <Box container>
+    <Container container>
+      <Box>
         <Box item sx={{ display: 'flex', justifyContent: 'center' }}>
           <Typography variant="h1" sx={{ my: 3 }}>
             Welcome to BilboMD

@@ -15,11 +15,7 @@ root.render(
     <ReduxProvider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route
-            path="/bilbomd-dev/*"
-            element={<App />}
-            errorElement={<ErrorBoundary />}
-          />
+          <Route path="/*" element={<App />} errorElement={<ErrorBoundary />} />
         </Routes>
       </BrowserRouter>
     </ReduxProvider>
