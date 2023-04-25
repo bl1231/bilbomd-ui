@@ -23,7 +23,7 @@ module.exports = {
       user: 'webadmin',
       host: 'hyperion',
       ref: 'origin/main',
-      repo: 'git@github.com:bl1231/bilbomd-ui.git',
+      repo: 'git@github.com-bilbomd-ui:bl1231/bilbomd-ui.git',
       path: '/bilbomd',
       'pre-deploy-local': '',
       'post-deploy': 'npm install && pm2 reload ecosystem.config.js --env production',
