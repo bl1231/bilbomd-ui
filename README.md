@@ -1,6 +1,6 @@
 # bilbomd-ui
 
-`bilbomd-ui` is the frontend GUI for BilboMD. It is a Singel Page Application [SPA](https://developer.mozilla.org/en-US/docs/Glossary/SPA) initilized with [Create React App](https://github.com/facebook/create-react-app). The deploy [instructions](https://github.com/bl1231/bilbomd#2-deploy-the-bilbomd-front-end-ui) give details of using PM@ to deploy a production instance to `https://bilbomd.bl1231.als.lbl.gov`, but if you want to start a development version you can just check this code out and fire it up interactively.
+`bilbomd-ui` is the frontend GUI for BilboMD. It is a Singel Page Application [SPA](https://developer.mozilla.org/en-US/docs/Glossary/SPA) initilized with [Create React App](https://github.com/facebook/create-react-app). The deploy [instructions](https://github.com/bl1231/bilbomd#2-deploy-the-bilbomd-front-end-ui) give details of using [PM2](https://pm2.keymetrics.io/docs/usage/quick-start/) to deploy a production instance to `https://bilbomd.bl1231.als.lbl.gov`, but if you want to start a development version you can just check this code out and fire it up interactively.
 
 ## Getting Started with Create React App
 
