@@ -124,6 +124,7 @@ const ConstInpStepper = () => {
               color="inherit"
               disabled={activeStep === 0}
               onClick={handleBack}
+              variant="contained"
               sx={{ mr: 1 }}
             >
               Back
@@ -137,7 +138,7 @@ const ConstInpStepper = () => {
               </Button>
             )}
 
-            <Button onClick={handleNext} disabled={!stepIsValid}>
+            <Button onClick={handleNext} disabled={!stepIsValid} variant="contained">
               {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
             </Button>
           </Box>
@@ -165,6 +166,7 @@ const ConstInpStepper = () => {
               color="inherit"
               disabled={activeStep === 0}
               onClick={handleBack}
+              variant="contained"
               sx={{ mr: 1 }}
             >
               Back
@@ -176,7 +178,7 @@ const ConstInpStepper = () => {
               </Button>
             )}
 
-            <Button onClick={handleNext} disabled={!stepIsValid}>
+            <Button onClick={handleNext} disabled={!stepIsValid} variant="contained">
               {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
             </Button>
           </Box>
