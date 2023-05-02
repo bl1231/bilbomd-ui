@@ -61,7 +61,7 @@ const PersistLogin = () => {
     content = <CircularProgress />
   } else if (isError) {
     //persist: yes, token: no
-    console.log('error')
+    // console.log('error')
     content = (
       <Grid
         container

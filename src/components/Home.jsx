@@ -47,62 +47,28 @@ const Home = () => {
   let content
 
   if (isLoading) {
+    console.log('Home - isLoading')
     content = <CircularProgress />
-  } else if (isError) {
-    // console.log('Home - error')
-    content = (
-      <Grid
-        container
-        columns={12}
-        direction="row"
-        sx={{ height: '100vh' }}
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Grid item sx={{ width: '400px' }}>
-          <Alert
-            variant="outlined"
-            severity="error"
-            sx={{ backgroundColor: '#ffa39e', color: 'black' }}
-          >
-            <AlertTitle>
-              {error?.data?.message ? error?.data?.message : 'Login session has expired'}
-            </AlertTitle>
-            <Typography>Please login again.</Typography>
-          </Alert>
-          <Button
-            fullWidth
-            sx={{ my: 2 }}
-            variant="contained"
-            type="button"
-            color="primary"
-            startIcon={<AutoFixHighIcon />}
-            component={Link}
-            to="magicklink"
-          >
-            Request a new MagickLink&#8482;
-          </Button>
-        </Grid>
-      </Grid>
-    )
   } else if (isSuccess && trueSuccess) {
-    // console.log('Home - trueSuccess')
+    console.log('Home - trueSuccess')
     navigate('welcome')
   } else if (token && isUninitialized) {
+    console.log('Home - isUninitialized')
     // As per PersistLogin.jsx I think this is the same as
     // above isSuccess && trueSuccess
     // I'm attempting to prevent the flash of unauthenticated Home page.
     content = <CircularProgress />
   } else {
+    console.log('Home - default')
     content = (
-      <Container container>
+      <Container>
         <Box>
-          <Box item sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Typography variant="h1" sx={{ my: 3 }}>
               Welcome to BilboMD
             </Typography>
           </Box>
-          <Box item>
+          <Box>
             <Typography variant="body1" sx={{ my: 1 }}>
               <b>BilboMD</b> allows you to determine the three-dimensional domain
               structure of proteins based on conformational sampling using a Molecular
@@ -127,7 +93,7 @@ const Home = () => {
               register for an account in order to use this public resource.
             </Typography>
           </Box>
-          <Box item>
+          <Box>
             <Button
               variant="contained"
               to="register"
