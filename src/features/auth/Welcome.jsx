@@ -13,6 +13,7 @@ const Welcome = () => {
       <Typography variant="h2" sx={{ my: 3 }}>
         Welcome {username}!
       </Typography>
+      <Typography>Let's run some BilboMD simulations.</Typography>
     </React.Fragment>
   )
 
