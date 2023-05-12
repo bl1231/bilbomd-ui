@@ -155,13 +155,18 @@ const NewJobForm = () => {
                 slightly longer computational times.
               </Typography>
               <Typography sx={{ m: 1 }}>
-                <b>Rg Steps</b> - Define the Radius of Gyration range (as <b>Rg Min</b>{' '}
-                and <b>Rg Max</b>) that will constrain the MD simulations. <b>BilboMD</b>{' '}
-                will calculate 5 equidistant Rg "steps" bewteen <b>Rg Min</b> and{' '}
+                <b>Rg Steps</b> - Define the Radius of Gyration range (as <b>Rg Min</b>
+                and <b>Rg Max</b>) that will constrain the MD simulations. <b>BilboMD</b>
+                will calculate 5 equidistant Rg "steps" bewteen <b>Rg Min</b> and
                 <b>Rg Max</b> to perform Molecular Dynamics. A good rule-of-thumb for your
-                initial <b>BilboMD</b> run is to select initial <b>Rg Min</b> and{' '}
-                <b>Rg Max</b> values that are &#177;10 &#8491; around your experimental
-                Rg.
+                initial <b>BilboMD</b> run is to select initial <b>Rg Min</b> and
+                <b>Rg Max</b> values from -7% to +25% around your experimental Rg
+                respectively. If your experimental Rg is 25-30 &#8491;, the MD simulations
+                can behave eradically if you specify an <b>Rg Min</b> that is too small.
+                This is why we recommend <b>Rg Min</b> to be ~ 7% less than your
+                experimental Rg. However, if your experimental Rg is larger (e.g. >50
+                &#8491;) then you can probably explore a wider range and pick{' '}
+                <b>Rg Min</b> and <b>Rg Max</b> values that are +/- 25%.
               </Typography>
             </AccordionDetails>
           </Accordion>
