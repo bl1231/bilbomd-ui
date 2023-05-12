@@ -124,22 +124,21 @@ const NewJobForm = () => {
                 Dynamics steps to run successfully it is imperative that you provide
                 compatible input files.
                 <li>
-                  <b>*.crd</b> file (A CHARMM compatible coordinate file derived from your
-                  PDB file)
+                  <b>*.crd</b> file (A CHARMM coordinate file)
                 </li>
                 <li>
-                  <b>*.psf</b> file (the central{' '}
+                  <b>*.psf</b> file (A CHARMM{' '}
                   <a href="https://academiccharmm.org/documentation/version/c47b2/struct">
                     data structure
                   </a>{' '}
-                  in CHARMM)
+                  file)
                 </li>
                 <li>
                   <b>*.inp</b> file (defining the rigid domains of your protein. Typically
                   named <b>const.inp</b> )
                 </li>
                 <li>
-                  <b>*.dat</b> file (SAXS data containing 3 columns)
+                  <b>*.dat</b> file (A 3-column SAXS data file)
                 </li>
               </Typography>
               <Typography sx={{ m: 1 }}>
@@ -159,9 +158,10 @@ const NewJobForm = () => {
                 <b>Rg Steps</b> - Define the Radius of Gyration range (as <b>Rg Min</b>{' '}
                 and <b>Rg Max</b>) that will constrain the MD simulations. <b>BilboMD</b>{' '}
                 will calculate 5 equidistant Rg "steps" bewteen <b>Rg Min</b> and{' '}
-                <b>Rg Max</b> to perform Molecular Dynamics. A good rule-of-thumb for
-                initial <b>Rg Min</b> and <b>Rg Max</b> values is to bracket &#177;5-10
-                &#8491; around your experimental Rg.
+                <b>Rg Max</b> to perform Molecular Dynamics. A good rule-of-thumb for your
+                initial <b>BilboMD</b> run is to select initial <b>Rg Min</b> and{' '}
+                <b>Rg Max</b> values that are &#177;10 &#8491; around your experimental
+                Rg.
               </Typography>
             </AccordionDetails>
           </Accordion>
