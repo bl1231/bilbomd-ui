@@ -121,10 +121,10 @@ const NewJobForm = () => {
               <Typography sx={{ m: 1 }}>
                 <b>BilboMD</b> uses <a href="https://academiccharmm.org/">CHARMM</a> to
                 generate an ensemble of molecular models. In order for the Molecular
-                Dynamics steps to run successfully it is imperative that you provide input
-                files that are fully compatible.
+                Dynamics steps to run successfully it is imperative that you provide
+                compatible input files.
                 <li>
-                  <b>*.crd</b> file (CHARMM compatible coordinate file derived from your
+                  <b>*.crd</b> file (A CHARMM compatible coordinate file derived from your
                   PDB file)
                 </li>
                 <li>
@@ -143,11 +143,25 @@ const NewJobForm = () => {
                 </li>
               </Typography>
               <Typography sx={{ m: 1 }}>
-                You will need to use the <b>PDB Reader</b> tool available from{' '}
-                <a href="https://www.charmm-gui.org/">CHARMM-GUI</a> to convert your PDB
-                file to a CRD file. If you need help generating a valid <b>const.inp</b>{' '}
-                file you can use out little Jiffy (green button below) to help get you
-                started.
+                Use the <b>PDB Reader</b> tool available from{' '}
+                <a href="https://www.charmm-gui.org/">CHARMM-GUI</a> to convert your
+                standard PDB file to a CRD file. If you need help generating a valid{' '}
+                <b>const.inp</b> file you can use our little Jiffy (green button below) to
+                help get you started.
+              </Typography>
+              <Typography sx={{ m: 1 }}>
+                <b>Conformations per Rg</b> - Specify the number of atomic models to be
+                calculated for each Rg Step (Radius of Gyration - explanation below). More
+                models will increase the conformational space sampled at the expense of
+                slightly longer computational times.
+              </Typography>
+              <Typography sx={{ m: 1 }}>
+                <b>Rg Steps</b> - Define the Radius of Gyration range (as <b>Rg Min</b>{' '}
+                and <b>Rg Max</b>) that will constrain the MD simulations. <b>BilboMD</b>{' '}
+                will calculate 5 equidistant Rg "steps" bewteen <b>Rg Min</b> and{' '}
+                <b>Rg Max</b> to perform Molecular Dynamics. A good rule-of-thumb for
+                initial <b>Rg Min</b> and <b>Rg Max</b> values is to bracket &#177;5-10
+                &#8491; around your experimental Rg.
               </Typography>
             </AccordionDetails>
           </Accordion>
