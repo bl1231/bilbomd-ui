@@ -233,18 +233,18 @@ const NewJobForm = () => {
                       >
                         <Grid item sx={{ my: 1, display: 'flex' }}>
                           <Field
-                            name="psf_file"
-                            id="psf-file-upload"
+                            name="crd_file"
+                            id="crd-file-upload"
                             as={FileInput}
                             title="Select File"
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
-                            error={errors.psf_file && touched.psf_file}
-                            errorMessage={errors.psf_file ? errors.psf_file : ''}
-                            helperText="Select a PSF file to upload"
-                            fileType="*.PSF"
-                            fileExt=".psf"
+                            error={errors.crd_file && touched.crd_file}
+                            errorMessage={errors.crd_file ? errors.crd_file : ''}
+                            helperText="Select a CRD file to upload"
+                            fileType="*.CRD"
+                            fileExt=".crd"
                           />
                         </Grid>
                       </Grid>
@@ -260,18 +260,18 @@ const NewJobForm = () => {
                       >
                         <Grid item sx={{ my: 1, display: 'flex' }}>
                           <Field
-                            name="crd_file"
-                            id="crd-file-upload"
+                            name="psf_file"
+                            id="psf-file-upload"
                             as={FileInput}
                             title="Select File"
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
-                            error={errors.crd_file && touched.crd_file}
-                            errorMessage={errors.crd_file ? errors.crd_file : ''}
-                            helperText="Select a CRD file to upload"
-                            fileType="*.CRD"
-                            fileExt=".crd"
+                            error={errors.psf_file && touched.psf_file}
+                            errorMessage={errors.psf_file ? errors.psf_file : ''}
+                            helperText="Select a PSF file to upload"
+                            fileType="*.PSF"
+                            fileExt=".psf"
                           />
                         </Grid>
                       </Grid>
@@ -357,39 +357,6 @@ const NewJobForm = () => {
                       </Grid>
 
                       <Grid item sx={{ my: 2, display: 'flex', width: '520px' }}>
-                        <TextField
-                          label="Conformations per Rg"
-                          variant="outlined"
-                          id="num_conf"
-                          name="num_conf"
-                          select
-                          defaultValue=""
-                          sx={{ width: '520px' }}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          error={errors.num_conf && touched.num_conf}
-                          helperText={
-                            errors.num_conf && touched.num_conf
-                              ? errors.num_conf
-                              : 'Number of conformations to sample per Rg'
-                          }
-                        >
-                          <MenuItem key={1} value={1}>
-                            200
-                          </MenuItem>
-                          <MenuItem key={2} value={2}>
-                            400
-                          </MenuItem>
-                          <MenuItem key={3} value={3}>
-                            600
-                          </MenuItem>
-                          <MenuItem key={4} value={4}>
-                            800
-                          </MenuItem>
-                        </TextField>
-                      </Grid>
-
-                      <Grid item sx={{ my: 2, display: 'flex', width: '520px' }}>
                         <Field
                           label="Rg Min"
                           fullWidth
@@ -427,6 +394,39 @@ const NewJobForm = () => {
                           onChange={handleChange}
                           onBlur={handleBlur}
                         />
+                      </Grid>
+
+                      <Grid item sx={{ my: 2, display: 'flex', width: '520px' }}>
+                        <TextField
+                          label="Conformations per Rg"
+                          variant="outlined"
+                          id="num_conf"
+                          name="num_conf"
+                          select
+                          defaultValue=""
+                          sx={{ width: '520px' }}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.num_conf && touched.num_conf}
+                          helperText={
+                            errors.num_conf && touched.num_conf
+                              ? errors.num_conf
+                              : 'Number of conformations to sample per Rg'
+                          }
+                        >
+                          <MenuItem key={1} value={1}>
+                            200
+                          </MenuItem>
+                          <MenuItem key={2} value={2}>
+                            400
+                          </MenuItem>
+                          <MenuItem key={3} value={3}>
+                            600
+                          </MenuItem>
+                          <MenuItem key={4} value={4}>
+                            800
+                          </MenuItem>
+                        </TextField>
                       </Grid>
 
                       <Grid item xs={6} sx={{ my: 2 }}>
