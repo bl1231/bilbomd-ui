@@ -32,33 +32,33 @@ export default function ClippedDrawer() {
   const { isManager, isAdmin } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
-  // const [sendLogout, { isLoading, isSuccess, isError, error }] = useSendLogoutMutation()
+
   const menuItems = [
     {
       text: 'My Jobs',
       icon: <SubjectOutlined color="secondary" />,
-      path: 'dashboard/jobs',
+      path: '/dashboard/jobs',
       onclick: () => navigate('dashboard/jobs'),
       roles: ['user', 'manager']
     },
     {
       text: 'New Job',
       icon: <AddCircleOutlineOutlined color="secondary" />,
-      path: 'dashboard/jobs/new',
+      path: '/dashboard/jobs/new',
       onclick: () => navigate('dashboard/jobs/new'),
       roles: ['user', 'manager']
     },
     {
       text: 'Inp Jiffy',
       icon: <AutoAwesome color="secondary" />,
-      path: 'dashboard/jobs/constinp',
+      path: '/dashboard/jobs/constinp',
       onclick: () => navigate('dashboard/jobs/constinp'),
       roles: ['user', 'manager']
     },
     {
       text: 'Users',
       icon: <PeopleIcon color="secondary" />,
-      path: 'dashboard/users',
+      path: '/dashboard/users',
       onclick: () => navigate('dashboard/users'),
       roles: ['admin']
     }
