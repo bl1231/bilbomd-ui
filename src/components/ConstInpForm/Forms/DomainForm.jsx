@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { useFormikContext, useField, FieldArray } from 'formik'
-import { Typography, Grid, Button } from '@mui/material'
+import { useFormikContext, useField, FieldArray, Field } from 'formik'
+import { Typography, Grid, TextField, Button } from '@mui/material'
 import { Box } from '@mui/system'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
@@ -50,7 +50,7 @@ const handleAddNewRigidBody = (name) => {
 
 const DomainForm = ({ setStepIsValid }) => {
   useTitle('BilboMD: define domains')
-  const { values, isValid } = useFormikContext()
+  const { values, handleChange, handleBlur, errors, isValid } = useFormikContext()
   const [field, meta, helper] = useField('crd_file')
   const { value } = field
   const { touched, error } = meta
@@ -109,39 +109,57 @@ const DomainForm = ({ setStepIsValid }) => {
         <Grid item xs={12}>
           <Typography sx={HeaderThingee}>Define Rigid Bodies</Typography>
           <Item>
-            <Typography variant="h5" sx={{ mx: 1, my: 2 }}>
+            {/* <Typography variant="h5" sx={{ mx: 1, my: 2 }}>
               {values.crd_file.name} has {values.crd_file.chains.length} Chains
-            </Typography>
+            </Typography> */}
 
-            <Grid item sx={{ my: 3, backgroundColor: '#f4ffb8' }}>
+            <Grid item sx={{ my: 3 }}>
               <FieldArray name="crd_file.rigid_bodies">
                 {({ arrayHelpers, insert, remove, push }) => (
                   <React.Fragment>
                     {values.crd_file.rigid_bodies.length > 0 &&
                       values.crd_file.rigid_bodies.map((rigid_body, index) => (
                         <React.Fragment key={index}>
-                          <Typography variant="h6" sx={{ ml: 1, mb: 1 }}>
-                            Rigid Body ID: <b>{rigid_body.id}</b>
-                          </Typography>
-                          <RigidBody
-                            rigidBodyIndex={index}
-                            rigidBodiesArrayHelpers={arrayHelpers}
-                          />
-                          <Button
-                            variant="contained"
-                            color="error"
-                            onClick={() => remove(index)}
-                          >
-                            {' '}
-                            Delete Rigid Body{' '}
-                          </Button>
+                          <Grid item sx={{ mb: 4, backgroundColor: '#f4ffb8' }}>
+                            <Field
+                              // fullWidth
+                              label="Rigid Body Name"
+                              name={`crd_file.rigid_bodies[${index}].id`}
+                              id="id"
+                              type="text"
+                              // disabled={isSubmitting}
+                              as={TextField}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              error={errors.title && touched.title}
+                              helperText={
+                                errors.title && touched.title ? errors.title : ''
+                              }
+                              // value={rigid_body.id || ''}
+                            />
+                            {/* <Typography variant="h6" sx={{ ml: 1, mb: 1 }}>
+                            Rigid Body Name: <b>{rigid_body.id}</b>
+                          </Typography> */}
+                            <RigidBody
+                              rigidBodyIndex={index}
+                              rigidBodiesArrayHelpers={arrayHelpers}
+                            />
+                            <Button
+                              variant="contained"
+                              color="error"
+                              onClick={() => remove(index)}
+                            >
+                              {' '}
+                              Delete Rigid Body{' '}
+                            </Button>
+                          </Grid>
                         </React.Fragment>
                       ))}
                     <Button
                       variant="contained"
                       onClick={() => {
                         const new_rigid_body = {
-                          id: '',
+                          id: 'NEW',
                           domains: [
                             {
                               chainid: '',

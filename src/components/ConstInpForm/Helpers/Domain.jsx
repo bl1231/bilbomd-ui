@@ -35,7 +35,9 @@ const Domain = ({ rigidBodyIndex, domain, domainIndex, domainArrayHelpers }) => 
         sx={{
           display: 'flex',
           flexDirection: 'row',
-          p: 1,
+          flex: '0 3 auto',
+          // justifyContent: 'space-between',
+          p: 2,
           m: 1,
           backgroundColor: '#eaff8f',
           borderRadius: 1
@@ -47,9 +49,7 @@ const Domain = ({ rigidBodyIndex, domain, domainIndex, domainArrayHelpers }) => 
               //   label="Chain"
               variant="outlined"
               id="chainid"
-              //   name="chainid"
               name={`crd_file.rigid_bodies[${rigidBodyIndex}].domains[${domainIndex}].chainid`}
-              //   value={`crd_file.rigid_bodies[${rigidBodyIndex}].domains[${domainIndex}].chainid`}
               select
               defaultValue={
                 values.crd_file.rigid_bodies[rigidBodyIndex].domains[domainIndex].chainid
@@ -63,8 +63,7 @@ const Domain = ({ rigidBodyIndex, domain, domainIndex, domainArrayHelpers }) => 
                       .chainid
                   : ''
               }
-              //   checked={value}
-              //   sx={{ flex: '0 1 auto' }}
+              sx={{ flex: '0 0 auto' }}
               onChange={handleChange}
               onBlur={handleBlur}
               error={errors.chainid && touched.chainid}
@@ -74,30 +73,16 @@ const Domain = ({ rigidBodyIndex, domain, domainIndex, domainArrayHelpers }) => 
                 <MenuItem key={index} value={item.id}>
                   {item.id}
                 </MenuItem>
-                // <React.Fragment key={index}>
-                // <div key={index}>
-                //   {values.crd_file.rigid_bodies[rigidBodyIndex].domains[domainIndex]
-                //     .chainid === item.id ? (
-                //     <MenuItem key={index} value={item.id} selected={true}>
-                //       {item.id}
-                //     </MenuItem>
-                //   ) : (
-                //     <MenuItem key={index} value={item.id}>
-                //       {item.id}
-                //     </MenuItem>
-                //   )}
-                // </div>
-                // </React.Fragment>
               ))}
             </TextField>
 
             <Typography
               variant="h5"
               sx={{
-                display: 'flex',
-                flex: '0 1 auto',
-                alignItems: 'center',
-                mr: 2
+                // display: 'flex',
+                // flex: '0 1 auto',
+                // alignItems: 'center',
+                mx: 2
               }}
             >
               {domain.chainid} Rigid Domain {rigidBodyIndex + 1}-{domainIndex + 1}:
@@ -110,7 +95,8 @@ const Domain = ({ rigidBodyIndex, domain, domainIndex, domainArrayHelpers }) => 
           </React.Fragment>
         </Box>
         {/* <Box sx={{ flex: '0 1 auto' }} /> */}
-        <Grid item sx={{ flex: '0 1 auto', alignItems: 'center' }}>
+        {/* <Grid item sx={{ flex: '0 0 auto', alignItems: 'center' }}> */}
+        <Box>
           <Field
             label="Start"
             id="start"
@@ -140,7 +126,7 @@ const Domain = ({ rigidBodyIndex, domain, domainIndex, domainArrayHelpers }) => 
             )}
             sx={{ mx: 1 }}
           />
-        </Grid>
+        </Box>
       </Grid>
       {/* ERROR GRID CODE HERE */}
     </React.Fragment>

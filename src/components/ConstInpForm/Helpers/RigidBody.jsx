@@ -31,7 +31,8 @@ const RigidBody = ({ rigidBodyIndex, rigidBodiesArrayHelpers }) => {
       <Grid
         container
         // direction="row"
-        sx={{ my: 1, backgroundColor: '#ffbb96', borderRadius: 1 }}
+        // red bg
+        sx={{ my: 1, backgroundColor: '#ffbb96', borderRadius: 2 }}
       >
         <Box
           sx={{
@@ -65,12 +66,13 @@ const RigidBody = ({ rigidBodyIndex, rigidBodiesArrayHelpers }) => {
                           sx={{
                             display: 'flex',
                             flexDirection: 'row',
-                            p: 1,
-                            m: 1,
+                            px: 1,
+                            mx: 1,
                             backgroundColor: '#ffe58f', //gold3
                             borderRadius: 1,
                             alignItems: 'center',
-                            flex: '0 0 auto'
+                            flex: '1 1 100%',
+                            justifyContent: 'space-between'
                           }}
                         >
                           <Domain
@@ -84,9 +86,9 @@ const RigidBody = ({ rigidBodyIndex, rigidBodiesArrayHelpers }) => {
                             variant="contained"
                             color="error"
                             onClick={() => remove(index)}
+                            // sx={{ alignItems: 'flex-end' }}
                           >
-                            {' '}
-                            Delete Rigid Domain{' '}
+                            Delete
                           </Button>
                         </Grid>
                       </React.Fragment>
