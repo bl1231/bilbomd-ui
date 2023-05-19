@@ -25,7 +25,7 @@ const HeaderThingee = {
   letterSpacing: '1px'
 }
 
-const DownloadForm = (props) => {
+const Preview = (props) => {
   useTitle('BilboMD: Preview const.inp file')
   const [constFilePreview, setConstFilePreview] = useState('init const.inp file')
   const { values } = useFormikContext()
@@ -174,14 +174,93 @@ const DownloadForm = (props) => {
             </Grid>
           </Item>
         </Grid>
-        <Grid item>
-          {/* <Button variant="contained" type="button" onClick={handleDownload}>
-            Download
-          </Button> */}
-        </Grid>
       </Grid>
     </React.Fragment>
   )
 }
 
-export default DownloadForm
+const PrepareConstInputFile = (rigid_bodies) => {
+  const contentArray = []
+  // const rigid_bodies = values.crd_file.rigid_bodies
+  let rigidDomainTotal = 0
+  for (const idx in rigid_bodies) {
+    let rigidBodyId = rigid_bodies[idx].id
+
+    if (rigidBodyId === 'PRIMARY') {
+      let domainTotal = 0
+      for (const domain in rigid_bodies[idx].domains) {
+        domainTotal++
+        let domainName = 'fixed' + domainTotal
+        let chainId = rigid_bodies[idx].domains[domain].chainid
+        let start = rigid_bodies[idx].domains[domain].start
+        let end = rigid_bodies[idx].domains[domain].end
+
+        const line =
+          'define ' +
+          domainName +
+          ' sele ( resid ' +
+          start +
+          ':' +
+          end +
+          ' .and. segid ' +
+          chainId +
+          ' ) end'
+
+        contentArray.push(line)
+      }
+      // There has to be a better way to construct this last line
+      let ll = 'cons fix sele '
+      for (let d = 1; d <= domainTotal; d++) {
+        ll += 'fixed' + d + ' .or. '
+      }
+      // Trim off the last " .or " and add the "end" keyword.
+      const lastLine = ll.slice(0, ll.length - 6) + ' end'
+      contentArray.push(lastLine)
+      contentArray.push('')
+    } else {
+      let totalDomains = 0
+      for (const domain in rigid_bodies[idx].domains) {
+        rigidDomainTotal++
+        totalDomains++
+        let domainName = 'rigid' + rigidDomainTotal
+        let chainId = rigid_bodies[idx].domains[domain].chainid
+        let start = rigid_bodies[idx].domains[domain].start
+        let end = rigid_bodies[idx].domains[domain].end
+
+        const line =
+          'define ' +
+          domainName +
+          ' sele ( resid ' +
+          start +
+          ':' +
+          end +
+          ' .and. segid ' +
+          chainId +
+          ' ) end'
+
+        contentArray.push(line)
+      }
+      // There has to be a better way to construct this last line
+
+      let ll = 'shape desc dock' + idx + ' rigid sele '
+      for (let d = 1; d <= totalDomains; d++) {
+        ll += 'rigid' + d + ' .or. '
+      }
+      // Trim off the last " .or " and add the "end" keyword.
+      const lastLine = ll.slice(0, ll.length - 6) + ' end'
+      contentArray.push(lastLine)
+      contentArray.push('')
+    }
+  }
+
+  // and the last line needs to be "return"
+  const returnLine = 'return'
+  contentArray.push(returnLine)
+  const content = contentArray.join('\n')
+  console.log(content)
+  // setConstFilePreview(content)
+  // Can't seem to store a Blob is useState so return a Blob for file download
+  const file = new Blob([content], { type: 'text/plain' })
+  return file
+}
+export { Preview, PrepareConstInputFile }

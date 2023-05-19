@@ -7,14 +7,20 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import UploadForm from './Forms/UploadForm'
 import DomainForm from './Forms/DomainForm'
-import DownloadForm from './Forms/DownloadForm'
+import { Preview } from './Forms/Preview'
+import Download from './Helpers/Download'
 import formModel from './FormModel/formModel'
 import initialValues from './FormModel/formInitialValues'
 import validationSchemas from './FormModel/validationSchemas'
 import { Form, Formik } from 'formik'
 import { Debug } from 'components/Debug'
 
-const steps = ['Upload CRD File', 'Select Rigid domains', 'Create const.inp file']
+const steps = [
+  'Upload CRD File',
+  'Select Rigid domains',
+  'Preview const.inp file',
+  'Download'
+]
 
 // interesting idea see Niiima Bastani on codesandbox
 const { formId, formField } = formModel
@@ -34,7 +40,9 @@ const ConstInpStepper = () => {
       case 1:
         return <DomainForm setStepIsValid={setStepIsValid} />
       case 2:
-        return <DownloadForm />
+        return <Preview />
+      case 3:
+        return <Download />
       default:
         return <div>Not Found</div>
     }
@@ -110,8 +118,10 @@ const ConstInpStepper = () => {
       {activeStep === steps.length ? (
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
+            All steps completed - you&apos;re finished. If you forgot to download your{' '}
+            <b>const.inp</b> file please reset the form and try again.
           </Typography>
+
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
             <Button onClick={handleReset}>Reset</Button>
