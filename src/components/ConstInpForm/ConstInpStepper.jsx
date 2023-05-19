@@ -154,7 +154,7 @@ const ConstInpStepper = () => {
                 {({ values, errors, touched, resetForm, isValid }) => (
                   <Form id={formId}>
                     {renderStepContent(activeStep)}
-                    {/* <Debug /> */}
+                    {process.env.NODE_ENV === 'development' ? <Debug /> : ''}
                   </Form>
                 )}
               </Formik>
