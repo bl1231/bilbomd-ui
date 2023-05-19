@@ -23,6 +23,18 @@ const initialValues = {
           }
         ]
       }
+    ],
+    rigid_bodies: [
+      {
+        id: '',
+        domains: [
+          {
+            chainid: '',
+            start: '',
+            end: ''
+          }
+        ]
+      }
     ]
   }
 }
