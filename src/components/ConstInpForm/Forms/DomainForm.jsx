@@ -120,38 +120,62 @@ const DomainForm = ({ setStepIsValid }) => {
                     {values.crd_file.rigid_bodies.length > 0 &&
                       values.crd_file.rigid_bodies.map((rigid_body, index) => (
                         <React.Fragment key={index}>
-                          <Grid item sx={{ mb: 4, backgroundColor: '#f4ffb8' }}>
-                            <Field
-                              // fullWidth
-                              label="Rigid Body Name"
-                              name={`crd_file.rigid_bodies[${index}].id`}
-                              id="id"
-                              type="text"
-                              // disabled={isSubmitting}
-                              as={TextField}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              error={errors.title && touched.title}
-                              helperText={
-                                errors.title && touched.title ? errors.title : ''
-                              }
-                              // value={rigid_body.id || ''}
-                            />
-                            {/* <Typography variant="h6" sx={{ ml: 1, mb: 1 }}>
-                            Rigid Body Name: <b>{rigid_body.id}</b>
-                          </Typography> */}
+                          <Grid item sx={{ mb: 4, py: 1 }}>
+                            <Grid
+                              item
+                              sx={{
+                                display: 'flex',
+                                flexDirection: 'row'
+                                // flex: '0 3 auto',
+                                // justifyContent: 'space-between',
+                                // p: 2,
+                                // m: 1,
+
+                                // borderRadius: 1
+                              }}
+                            >
+                              <Field
+                                label="Rigid Body Name"
+                                name={`crd_file.rigid_bodies[${index}].id`}
+                                id="id"
+                                type="text"
+                                as={TextField}
+                                // InputProps={{
+                                //   readOnly: true
+                                // }}
+                                disabled={
+                                  values.crd_file.rigid_bodies[index].id === 'PRIMARY'
+                                    ? true
+                                    : false
+                                }
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errors.title && touched.title}
+                                helperText={
+                                  errors.title && touched.title ? errors.title : ''
+                                }
+                              />
+                              <Typography variant="h5" sx={{ ml: 1, mb: 1 }}>
+                                {rigid_body.id}
+                              </Typography>
+                            </Grid>
                             <RigidBody
                               rigidBodyIndex={index}
                               rigidBodiesArrayHelpers={arrayHelpers}
                             />
-                            <Button
-                              variant="contained"
-                              color="error"
-                              onClick={() => remove(index)}
-                            >
-                              {' '}
-                              Delete Rigid Body{' '}
-                            </Button>
+                            {/* DO NOT SHOW DELETE BUTTON FOR PRIMARY */}
+                            {values.crd_file.rigid_bodies[index].id !== 'PRIMARY' ? (
+                              <Button
+                                variant="contained"
+                                color="error"
+                                onClick={() => remove(index)}
+                              >
+                                {' '}
+                                Delete Rigid Body {values.crd_file.rigid_bodies[index].id}
+                              </Button>
+                            ) : (
+                              ''
+                            )}
                           </Grid>
                         </React.Fragment>
                       ))}
