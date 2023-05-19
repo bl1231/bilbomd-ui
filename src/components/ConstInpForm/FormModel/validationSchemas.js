@@ -25,7 +25,7 @@ const fromCharmmGui = (file) => {
   })
 }
 
-// Array of validationSchema
+// This is an Array of validationSchema
 // Therefore the order must match the order of the multistep forms
 const validationSchemas = [
   // File upload
