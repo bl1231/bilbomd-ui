@@ -122,31 +122,6 @@ const RigidBody = ({ rigidBodyIndex, rigidBodiesArrayHelpers }) => {
             </FieldArray>
           </React.Fragment>
         </Box>
-
-        {/* <Grid item sx={{ flex: '1 1 auto', alignItems: 'center' }}>
-          <Box sx={{ justifyContent: 'flex-end', m: 1 }}>
-            <Grid container justifyContent="flex-end">
-              <Button
-                variant="contained"
-                // onClick={handleAddNewRigidDomain}
-                onClick={() => {
-                  console.log('Add Rigid Domain')
-
-                    const domain = {
-                      chainid: '',
-                      start: '',
-                      end: ''
-                    }
-                    push(domain)
-                  
-                }}
-                startIcon={<AddIcon />}
-              >
-                Add Rigid Domain
-              </Button>
-            </Grid>
-          </Box>
-        </Grid> */}
       </Grid>
     </React.Fragment>
   )
