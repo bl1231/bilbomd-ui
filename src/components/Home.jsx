@@ -106,6 +106,9 @@ const Home = () => {
               Login
             </Button>
           </Box>
+          <Box>
+            <Typography>{process.env.NODE_ENV}</Typography>
+          </Box>
         </Box>
       </Container>
     )
