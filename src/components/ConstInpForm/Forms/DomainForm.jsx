@@ -126,12 +126,6 @@ const DomainForm = ({ setStepIsValid }) => {
                               sx={{
                                 display: 'flex',
                                 flexDirection: 'row'
-                                // flex: '0 3 auto',
-                                // justifyContent: 'space-between',
-                                // p: 2,
-                                // m: 1,
-
-                                // borderRadius: 1
                               }}
                             >
                               <Field
