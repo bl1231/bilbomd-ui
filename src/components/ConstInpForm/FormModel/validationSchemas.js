@@ -78,15 +78,12 @@ const validationSchemas = [
       file: Yup.string().required(),
       src: Yup.string().required(),
       name: Yup.string().required(),
-      chains: Yup.array(
+      rigid_bodies: Yup.array(
         Yup.object().shape({
           id: Yup.string(),
-          atoms: Yup.number(),
-          first_res: Yup.number(),
-          last_res: Yup.number(),
-          num_res: Yup.number(),
           domains: Yup.array(
             Yup.object().shape({
+              chainid: Yup.string().required(),
               start: Yup.number('')
                 .typeError('Must be a number')
                 .integer('Integer values only')
@@ -97,9 +94,17 @@ const validationSchemas = [
                   'Please choose number between chain start and end residue',
                   (value, ctx) => {
                     // Tricky stuff to find where parent values stored.
-                    const chainStart = ctx.from[1].value.first_res
-                    const chainEnd = ctx.from[1].value.last_res
-                    //console.log(ctx)
+                    // const chainStart = ctx.from[2].value.chains[0].first_res
+                    const chainStart = ctx.from[2].value.chains.find(
+                      (x) => x.id === ctx.parent.chainid
+                    ).first_res
+                    // const chainEnd = ctx.from[2].value.chains[0].last_res
+                    const chainEnd = ctx.from[2].value.chains.find(
+                      (x) => x.id === ctx.parent.chainid
+                    ).last_res
+                    console.log('chainStart', chainStart)
+                    console.log('chainEnd', chainEnd)
+                    console.log(ctx)
                     if (value >= chainStart && value <= chainEnd) {
                       return true
                     }
@@ -118,7 +123,12 @@ const validationSchemas = [
                       if (ctx.options.index === idx) {
                         continue
                       }
-                      if (domains[idx].start <= value && value <= domains[idx].end) {
+                      // check for overlap within same chainid
+                      if (
+                        domains[idx].start <= value &&
+                        value <= domains[idx].end &&
+                        domains[idx].chainid === ctx.parent.chainid
+                      ) {
                         return false
                       }
                     }
@@ -135,9 +145,18 @@ const validationSchemas = [
                   'check-valid-start-end-res',
                   'Please choose number between chain start and end residue',
                   (value, ctx) => {
-                    const chainStart = ctx.from[1].value.first_res
-                    const chainEnd = ctx.from[1].value.last_res
-                    //console.log(JSON.stringify(chainStart, null, 2))
+                    // Tricky stuff to find where parent values stored.
+                    // const chainStart = ctx.from[2].value.chains[0].first_res
+                    const chainStart = ctx.from[2].value.chains.find(
+                      (x) => x.id === ctx.parent.chainid
+                    ).first_res
+                    // const chainEnd = ctx.from[2].value.chains[0].last_res
+                    const chainEnd = ctx.from[2].value.chains.find(
+                      (x) => x.id === ctx.parent.chainid
+                    ).last_res
+                    // console.log('chainStart', chainStart)
+                    // console.log('chainEnd', chainEnd)
+                    // console.log(ctx)
                     if (value >= chainStart && value <= chainEnd) {
                       return true
                     }
@@ -156,7 +175,11 @@ const validationSchemas = [
                       if (ctx.options.index === idx) {
                         continue
                       }
-                      if (domains[idx].start <= value && value <= domains[idx].end) {
+                      if (
+                        domains[idx].start <= value &&
+                        value <= domains[idx].end &&
+                        domains[idx].chainid === ctx.parent.chainid
+                      ) {
                         return false
                       }
                     }
