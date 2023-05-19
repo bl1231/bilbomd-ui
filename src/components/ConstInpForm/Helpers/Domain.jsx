@@ -129,6 +129,26 @@ const Domain = ({ rigidBodyIndex, domain, domainIndex, domainArrayHelpers }) => 
         </Box>
       </Grid>
       {/* ERROR GRID CODE HERE */}
+      <Grid item sx={{ flex: '0 1 auto' }}>
+        {errors.crd_file?.rigid_bodies[rigidBodyIndex]?.domains[domainIndex]?.start ? (
+          <ErrorMessage
+            component={Alert}
+            severity="error"
+            name={`crd_file.rigid_bodies[${rigidBodyIndex}].domains[${domainIndex}].start`}
+          ></ErrorMessage>
+        ) : (
+          ''
+        )}
+        {errors.crd_file?.rigid_bodies[rigidBodyIndex]?.domains[domainIndex]?.end ? (
+          <ErrorMessage
+            component={Alert}
+            severity="error"
+            name={`crd_file.rigid_bodies[${rigidBodyIndex}].domains[${domainIndex}].end`}
+          ></ErrorMessage>
+        ) : (
+          ''
+        )}
+      </Grid>
     </React.Fragment>
   )
   return content
