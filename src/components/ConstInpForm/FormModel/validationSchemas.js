@@ -102,9 +102,9 @@ const validationSchemas = [
                     const chainEnd = ctx.from[2].value.chains.find(
                       (x) => x.id === ctx.parent.chainid
                     ).last_res
-                    console.log('chainStart', chainStart)
-                    console.log('chainEnd', chainEnd)
-                    console.log(ctx)
+                    // console.log('chainStart', chainStart)
+                    // console.log('chainEnd', chainEnd)
+                    // console.log(ctx)
                     if (value >= chainStart && value <= chainEnd) {
                       return true
                     }
@@ -113,7 +113,7 @@ const validationSchemas = [
                 )
                 .test(
                   'check-for-overlap',
-                  'Please select residue not already in another domain',
+                  'Please select start residue not already in another domain',
                   (value, ctx) => {
                     const numDomains = ctx.from[1].value.domains.length
                     const domains = ctx.from[1].value.domains
@@ -132,6 +132,52 @@ const validationSchemas = [
                         return false
                       }
                     }
+                    return true
+                  }
+                )
+                .test(
+                  'check-for-overlap-in-other-rigid-bodies',
+                  'Please ensure no overlap with other Rigid Domains',
+                  (value, ctx) => {
+                    const rigidBodies = ctx.from[2].value.rigid_bodies
+                    const numRigidBodies = ctx.from[2].value.rigid_bodies.length
+                    // console.log('rigidBodies', rigidBodies)
+                    // console.log('numRigidBodies', numRigidBodies)
+                    // console.log(ctx)
+                    for (let idx = 0; idx < numRigidBodies; idx++) {
+                      // loop through domains in rigid body
+                      const domains = rigidBodies[idx].domains
+                      const numDomains = rigidBodies[idx].domains.length
+                      for (let didx = 0; didx < numDomains; didx++) {
+                        //skip validating against itself
+                        // && same rigid body
+                        if (ctx.from[1].value.id === rigidBodies[idx].id) {
+                          // console.log('skip')
+                          continue
+                        }
+                        //https://stackoverflow.com/questions/36035074/how-can-i-find-an-overlap-between-two-given-ranges
+                        const eee = Math.max(domains[didx].start, ctx.parent.start)
+                        const fff = Math.min(domains[didx].end, ctx.parent.end)
+                        if (eee <= fff && domains[didx].chainid === ctx.parent.chainid) {
+                          // console.log(
+                          //   'overlap of ',
+                          //   ctx.parent.chainid,
+                          //   ctx.parent.start,
+                          //   ctx.parent.end,
+                          //   ctx.from[1].value.id
+                          // )
+                          // console.log(
+                          //   'with ----> ',
+                          //   domains[didx].chainid,
+                          //   domains[didx].start,
+                          //   domains[didx].end,
+                          //   rigidBodies[idx].id
+                          // )
+                          return false
+                        }
+                      }
+                    }
+                    // console.log('no overlap')
                     return true
                   }
                 ),
@@ -183,6 +229,52 @@ const validationSchemas = [
                         return false
                       }
                     }
+                    return true
+                  }
+                )
+                .test(
+                  'check-for-overlap-in-other-rigid-bodies',
+                  'Please ensure no overlap with other Rigid Domains',
+                  (value, ctx) => {
+                    const rigidBodies = ctx.from[2].value.rigid_bodies
+                    const numRigidBodies = ctx.from[2].value.rigid_bodies.length
+                    // console.log('rigidBodies', rigidBodies)
+                    // console.log('numRigidBodies', numRigidBodies)
+                    // console.log(ctx)
+                    for (let idx = 0; idx < numRigidBodies; idx++) {
+                      // loop through domains in rigid body
+                      const domains = rigidBodies[idx].domains
+                      const numDomains = rigidBodies[idx].domains.length
+                      for (let didx = 0; didx < numDomains; didx++) {
+                        //skip validating against itself
+                        // && same rigid body
+                        if (ctx.from[1].value.id === rigidBodies[idx].id) {
+                          // console.log('skip')
+                          continue
+                        }
+                        //https://stackoverflow.com/questions/36035074/how-can-i-find-an-overlap-between-two-given-ranges
+                        const eee = Math.max(domains[didx].start, ctx.parent.start)
+                        const fff = Math.min(domains[didx].end, ctx.parent.end)
+                        if (eee <= fff && domains[didx].chainid === ctx.parent.chainid) {
+                          // console.log(
+                          //   'overlap of ',
+                          //   ctx.parent.chainid,
+                          //   ctx.parent.start,
+                          //   ctx.parent.end,
+                          //   ctx.from[1].value.id
+                          // )
+                          // console.log(
+                          //   'with ----> ',
+                          //   domains[didx].chainid,
+                          //   domains[didx].start,
+                          //   domains[didx].end,
+                          //   rigidBodies[idx].id
+                          // )
+                          return false
+                        }
+                      }
+                    }
+                    // console.log('no overlap')
                     return true
                   }
                 )
