@@ -31,8 +31,8 @@ const RigidBody = ({ rigidBodyIndex, rigidBodiesArrayHelpers }) => {
       <Grid
         container
         // direction="row"
-        // red bg
-        sx={{ my: 1, backgroundColor: '#ffbb96', borderRadius: 2 }}
+        // blue-2
+        sx={{ my: 1, backgroundColor: '#bae0ff', borderRadius: 2 }}
       >
         <Box
           sx={{
@@ -67,8 +67,8 @@ const RigidBody = ({ rigidBodyIndex, rigidBodiesArrayHelpers }) => {
                             display: 'flex',
                             flexDirection: 'row',
                             px: 1,
-                            mx: 1,
-                            backgroundColor: '#ffe58f', //gold3
+                            m: 1,
+                            backgroundColor: '#e6f4ff', //blue-1
                             borderRadius: 1,
                             alignItems: 'center',
                             flex: '1 1 100%',

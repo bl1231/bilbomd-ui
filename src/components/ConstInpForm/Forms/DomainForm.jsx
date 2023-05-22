@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useFormikContext, useField, FieldArray, Field } from 'formik'
-import { Typography, Grid, TextField, Button } from '@mui/material'
-import { Box } from '@mui/system'
+import { Typography, Grid, TextField, Button, Chip } from '@mui/material'
+// import { Box } from '@mui/system'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import AddIcon from '@mui/icons-material/Add'
@@ -9,6 +9,7 @@ import useTitle from 'hooks/useTitle'
 // import DomainCard from '../Helpers/DomainCard'
 // import Domains from '../Helpers/Domains'
 import RigidBody from '../Helpers/RigidBody'
+// import ChainCard from '../Helpers/ChainCard'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.primary,
@@ -63,7 +64,16 @@ const DomainForm = ({ setStepIsValid }) => {
   const [chains, setChains] = useState(value.chains)
   const [rigidBodies, setRigidBodies] = useState(value.rigid_bodies)
 
+  const [rigidBodyIndex, setRigidBodyIndex] = useState(1)
+
   const effectRan = useRef(false)
+
+  const incrementRigidBodyIndex = () => {
+    setRigidBodyIndex(rigidBodyIndex + 1)
+  }
+  const decrementRigidBodyIndex = () => {
+    setRigidBodyIndex(rigidBodyIndex - 1)
+  }
 
   useEffect(() => {
     if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
@@ -109,9 +119,15 @@ const DomainForm = ({ setStepIsValid }) => {
         <Grid item xs={12}>
           <Typography sx={HeaderThingee}>Define Rigid Bodies</Typography>
           <Item>
-            {/* <Typography variant="h5" sx={{ mx: 1, my: 2 }}>
-              {values.crd_file.name} has {values.crd_file.chains.length} Chains
-            </Typography> */}
+            <Typography>Available Chains: </Typography>
+            {values.crd_file.chains.map((chain, index) => (
+              <Chip
+                key={index}
+                label={`${chain.id} : ${chain.first_res}-${chain.last_res}`}
+                variant="outlined"
+                sx={{ backgroundColor: '#d9d9d9', m: 2 }}
+              />
+            ))}
 
             <Grid item sx={{ my: 3 }}>
               <FieldArray name="crd_file.rigid_bodies">
@@ -125,10 +141,13 @@ const DomainForm = ({ setStepIsValid }) => {
                               item
                               sx={{
                                 display: 'flex',
-                                flexDirection: 'row'
+                                flexDirection: 'row',
+                                ml: 1,
+                                mb: 1,
+                                alignContent: 'baseline'
                               }}
                             >
-                              <Field
+                              {/* <Field
                                 label="Rigid Body Name"
                                 name={`crd_file.rigid_bodies[${index}].id`}
                                 id="id"
@@ -138,34 +157,46 @@ const DomainForm = ({ setStepIsValid }) => {
                                 //   readOnly: true
                                 // }}
                                 disabled={
-                                  values.crd_file.rigid_bodies[index].id === 'PRIMARY'
+                                  values.crd_file.rigid_bodies[index]?.id === 'PRIMARY'
                                     ? true
                                     : false
                                 }
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                error={errors.title && touched.title}
-                                helperText={
-                                  errors.title && touched.title ? errors.title : ''
-                                }
-                              />
-                              <Typography variant="h5" sx={{ ml: 1, mb: 1 }}>
-                                {rigid_body.id}
+                                error={errors.id && touched.id}
+                                helperText={errors.id && touched.id ? errors.id : ''}
+                              /> */}
+                              <Typography variant="h4">
+                                Rigid Body: <Chip label={rigid_body.id} />
                               </Typography>
+                              {values.crd_file.rigid_bodies[index]?.id === 'PRIMARY' ? (
+                                <Typography sx={{ ml: 3 }}>
+                                  <b>note:</b> Residues in <b>PRIMARY</b> will remain
+                                  absolutely fixed during the Molecular Dynamics steps.
+                                </Typography>
+                              ) : (
+                                <Typography sx={{ ml: 1 }}>
+                                  <b>note:</b> Residues in this Rigid Body will move
+                                  relative to the <b>PRIMARY</b> Rigid Body.
+                                </Typography>
+                              )}
                             </Grid>
                             <RigidBody
                               rigidBodyIndex={index}
                               rigidBodiesArrayHelpers={arrayHelpers}
                             />
                             {/* DO NOT SHOW DELETE BUTTON FOR PRIMARY */}
-                            {values.crd_file.rigid_bodies[index].id !== 'PRIMARY' ? (
+                            {values.crd_file.rigid_bodies[index]?.id !== 'PRIMARY' ? (
                               <Button
                                 variant="contained"
                                 color="error"
-                                onClick={() => remove(index)}
+                                onClick={() => {
+                                  decrementRigidBodyIndex()
+                                  remove(index)
+                                }}
                               >
                                 {' '}
-                                Delete Rigid Body {values.crd_file.rigid_bodies[index].id}
+                                Delete {values.crd_file.rigid_bodies[index]?.id}
                               </Button>
                             ) : (
                               ''
@@ -176,11 +207,12 @@ const DomainForm = ({ setStepIsValid }) => {
                     <Button
                       variant="contained"
                       onClick={() => {
+                        incrementRigidBodyIndex()
                         const new_rigid_body = {
-                          id: 'NEW',
+                          id: 'RIGID ' + rigidBodyIndex,
                           domains: [
                             {
-                              chainid: '',
+                              chainid: values.crd_file.chains[0].id,
                               start: '',
                               end: ''
                             }

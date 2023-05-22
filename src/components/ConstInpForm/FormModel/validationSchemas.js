@@ -80,7 +80,7 @@ const validationSchemas = [
       name: Yup.string().required(),
       rigid_bodies: Yup.array(
         Yup.object().shape({
-          id: Yup.string(),
+          id: Yup.string().required('need RB name'),
           domains: Yup.array(
             Yup.object().shape({
               chainid: Yup.string().required('Select a ChainID'),
@@ -94,6 +94,7 @@ const validationSchemas = [
                   'Please choose number between chain start and end residue',
                   (value, ctx) => {
                     // Tricky stuff to find where parent values stored.
+                    // console.log(ctx)
                     // const chainStart = ctx.from[2].value.chains[0].first_res
                     const chainStart = ctx.from[2].value.chains.find(
                       (x) => x.id === ctx.parent.chainid
@@ -113,7 +114,7 @@ const validationSchemas = [
                 )
                 .test(
                   'check-for-overlap',
-                  'Please select start residue not already in another domain',
+                  'Please select residue not already in another domain',
                   (value, ctx) => {
                     const numDomains = ctx.from[1].value.domains.length
                     const domains = ctx.from[1].value.domains
@@ -123,7 +124,6 @@ const validationSchemas = [
                       if (ctx.options.index === idx) {
                         continue
                       }
-                      // check for overlap within same chainid
                       if (
                         domains[idx].start <= value &&
                         value <= domains[idx].end &&
