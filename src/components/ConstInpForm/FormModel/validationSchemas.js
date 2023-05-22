@@ -83,7 +83,7 @@ const validationSchemas = [
           id: Yup.string(),
           domains: Yup.array(
             Yup.object().shape({
-              chainid: Yup.string().required(),
+              chainid: Yup.string().required('Select a ChainID'),
               start: Yup.number('')
                 .typeError('Must be a number')
                 .integer('Integer values only')
