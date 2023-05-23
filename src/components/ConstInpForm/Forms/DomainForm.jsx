@@ -50,7 +50,7 @@ const handleAddNewRigidBody = (name) => {
 }
 
 const DomainForm = ({ setStepIsValid }) => {
-  useTitle('BilboMD: define domains')
+  useTitle('BilboMD: Define domains')
   const { values, handleChange, handleBlur, errors, isValid } = useFormikContext()
   const [field, meta, helper] = useField('crd_file')
   const { value } = field

@@ -1,16 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useFormikContext } from 'formik'
-import { Button, Grid, Typography } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import useTitle from 'hooks/useTitle'
+import { Box } from '@mui/system'
+import CopyToClipboardButton from 'components/Common/CopyToClipboardButton'
+import Download from '../Helpers/Download'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.primary,
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'left',
-  color: theme.palette.text.primary
+  color: theme.palette.text.primary,
+  display: 'flex',
+  flex: '1 1 100%',
+  flexDirection: 'column'
 }))
 
 const HeaderThingee = {
@@ -110,26 +116,9 @@ const Preview = (props) => {
     const content = contentArray.join('\n')
     console.log(content)
     setConstFilePreview(content)
-    // Can't seem to store a Blob is useState so return a Blob for file download
+    // Can't seem to store a Blob in useState so return a Blob for file download
     const file = new Blob([content], { type: 'text/plain' })
     return file
-  }
-
-  const handleDownload = () => {
-    // 1. Get the Blob object (aka our file)
-    const file = prepareConstInpFile()
-    // 2. Create HTML <a> element
-    const link = document.createElement('a')
-    // 3. In the href attribute of the <a> tag, add the Blob object URL.
-    link.href = window.URL.createObjectURL(file)
-    // 4. Set attributes of the <a> element
-    link.setAttribute('download', 'const.inp')
-    // 5. Append the link to html page
-    document.body.appendChild(link)
-    // 6. Force download
-    link.click()
-    // 7. Clean up and remove the link
-    link.parentNode.removeChild(link)
   }
 
   const effectRan = useRef(false)
@@ -147,31 +136,40 @@ const Preview = (props) => {
   return (
     <React.Fragment>
       <Grid container>
-        <Grid item xs={12} sx={{ width: '100%' }}>
+        <Grid item>
           <Typography sx={HeaderThingee}>Preview</Typography>
           <Item>
-            <Grid
-              sx={{ m: 1, backgroundColor: '#87e8de', display: 'flex', flex: '1 1 100%' }}
-            >
+            <Typography sx={{ my: 3 }}>
+              This is the <code>const.inp</code> definition file with your Rigid Bodies
+              and defined in a format that CHARMM will understand. You can either copy and
+              paste the file shown below or, if you prefer, you can use the Download
+              button.
+            </Typography>
+            <Box sx={{ display: 'flex' }}>
               <Grid
                 item
                 sx={{
                   display: 'flex',
-                  flexDirection: 'row',
-                  px: 1,
-                  mx: 1,
-                  backgroundColor: '#ffe58f', //gold3
+                  flexDirection: 'column',
+                  p: 2,
+                  m: 1,
+                  backgroundColor: '#bae0ff', //blue-2
                   borderRadius: 1,
-                  alignItems: 'center',
-                  flex: '0 1 100%',
-                  justifyContent: 'space-between'
+                  // alignItems: 'center',
+                  flex: '0 1 100%'
+                  // justifyContent: 'space-between'
                 }}
               >
-                <pre sx={{ fontFamily: 'Sans' }}>
+                <Box sx={{ alignSelf: 'end' }}>
+                  <CopyToClipboardButton text={constFilePreview} />
+                </Box>
+
+                <pre>
                   <code>{constFilePreview}</code>
                 </pre>
               </Grid>
-            </Grid>
+            </Box>
+            <Download />
           </Item>
         </Grid>
       </Grid>

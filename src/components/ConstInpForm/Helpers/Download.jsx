@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Grid } from '@mui/material'
 import { PrepareConstInputFile } from '../Forms/Preview'
 import { useFormikContext } from 'formik'
+import { Box } from '@mui/system'
 
 const Download = (props) => {
   const { values } = useFormikContext()
@@ -23,11 +24,27 @@ const Download = (props) => {
     link.parentNode.removeChild(link)
   }
   let content = (
-    <Grid item>
-      <Button variant="contained" type="button" onClick={handleDownload}>
-        Download
-      </Button>
-    </Grid>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        // backgroundColor: 'cyan',
+        flex: '1 1 50%',
+        mx: 1
+      }}
+    >
+      <Grid
+        item
+        sx={{
+          display: 'flex',
+          alignSelf: 'end'
+        }}
+      >
+        <Button variant="contained" type="button" onClick={handleDownload}>
+          Download
+        </Button>
+      </Grid>
+    </Box>
   )
   return content
 }

@@ -7,20 +7,17 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import UploadForm from './Forms/UploadForm'
 import DomainForm from './Forms/DomainForm'
+
 import { Preview } from './Forms/Preview'
-import Download from './Helpers/Download'
+
 import formModel from './FormModel/formModel'
 import initialValues from './FormModel/formInitialValues'
 import validationSchemas from './FormModel/validationSchemas'
 import { Form, Formik } from 'formik'
 import { Debug } from 'components/Debug'
+import { Alert } from '@mui/material'
 
-const steps = [
-  'Upload CRD File',
-  'Select Rigid domains',
-  'Preview const.inp file',
-  'Download'
-]
+const steps = ['Upload CRD File', 'Select Rigid domains', 'Preview & Download']
 
 // interesting idea see Niiima Bastani on codesandbox
 const { formId, formField } = formModel
@@ -41,8 +38,7 @@ const ConstInpStepper = () => {
         return <DomainForm setStepIsValid={setStepIsValid} />
       case 2:
         return <Preview />
-      case 3:
-        return <Download />
+
       default:
         return <div>Not Found</div>
     }
@@ -117,14 +113,16 @@ const ConstInpStepper = () => {
       </Stepper>
       {activeStep === steps.length ? (
         <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished. If you forgot to download your{' '}
-            <b>const.inp</b> file please reset the form and try again.
-          </Typography>
+          <Alert variant="outlined" sx={{ mt: 4 }}>
+            Woot! That's it. Reset the form if you want to create a new{' '}
+            <b>const.inp file.</b>
+          </Alert>
 
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleReset}>Reset</Button>
+          <Box sx={{ display: 'flex', flexDirection: 'column', pt: 2 }}>
+            <Box sx={{ flex: '0 1 50%', alignItems: 'center' }} />
+            <Button variant="contained" onClick={handleReset}>
+              Reset
+            </Button>
           </Box>
         </React.Fragment>
       ) : (
@@ -153,7 +151,7 @@ const ConstInpStepper = () => {
             </Button>
           </Box>
 
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2, flex: '0 1 100%' }}>
             <React.Fragment>
               <Formik
                 initialValues={initialValues}
