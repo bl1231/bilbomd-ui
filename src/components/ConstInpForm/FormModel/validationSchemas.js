@@ -25,7 +25,7 @@ const fromCharmmGui = (file) => {
   })
 }
 
-// Array of validationSchema
+// This is an Array of validationSchema
 // Therefore the order must match the order of the multistep forms
 const validationSchemas = [
   // File upload
@@ -78,15 +78,12 @@ const validationSchemas = [
       file: Yup.string().required(),
       src: Yup.string().required(),
       name: Yup.string().required(),
-      chains: Yup.array(
+      rigid_bodies: Yup.array(
         Yup.object().shape({
-          id: Yup.string(),
-          atoms: Yup.number(),
-          first_res: Yup.number(),
-          last_res: Yup.number(),
-          num_res: Yup.number(),
+          id: Yup.string().required('need RB name'),
           domains: Yup.array(
             Yup.object().shape({
+              chainid: Yup.string().required('Select a ChainID'),
               start: Yup.number('')
                 .typeError('Must be a number')
                 .integer('Integer values only')
@@ -97,9 +94,18 @@ const validationSchemas = [
                   'Please choose number between chain start and end residue',
                   (value, ctx) => {
                     // Tricky stuff to find where parent values stored.
-                    const chainStart = ctx.from[1].value.first_res
-                    const chainEnd = ctx.from[1].value.last_res
-                    //console.log(ctx)
+                    // console.log(ctx)
+                    // const chainStart = ctx.from[2].value.chains[0].first_res
+                    const chainStart = ctx.from[2].value.chains.find(
+                      (x) => x.id === ctx.parent.chainid
+                    ).first_res
+                    // const chainEnd = ctx.from[2].value.chains[0].last_res
+                    const chainEnd = ctx.from[2].value.chains.find(
+                      (x) => x.id === ctx.parent.chainid
+                    ).last_res
+                    // console.log('chainStart', chainStart)
+                    // console.log('chainEnd', chainEnd)
+                    // console.log(ctx)
                     if (value >= chainStart && value <= chainEnd) {
                       return true
                     }
@@ -118,10 +124,60 @@ const validationSchemas = [
                       if (ctx.options.index === idx) {
                         continue
                       }
-                      if (domains[idx].start <= value && value <= domains[idx].end) {
+                      if (
+                        domains[idx].start <= value &&
+                        value <= domains[idx].end &&
+                        domains[idx].chainid === ctx.parent.chainid
+                      ) {
                         return false
                       }
                     }
+                    return true
+                  }
+                )
+                .test(
+                  'check-for-overlap-in-other-rigid-bodies',
+                  'Please ensure no overlap with other Rigid Domains',
+                  (value, ctx) => {
+                    const rigidBodies = ctx.from[2].value.rigid_bodies
+                    const numRigidBodies = ctx.from[2].value.rigid_bodies.length
+                    // console.log('rigidBodies', rigidBodies)
+                    // console.log('numRigidBodies', numRigidBodies)
+                    // console.log(ctx)
+                    for (let idx = 0; idx < numRigidBodies; idx++) {
+                      // loop through domains in rigid body
+                      const domains = rigidBodies[idx].domains
+                      const numDomains = rigidBodies[idx].domains.length
+                      for (let didx = 0; didx < numDomains; didx++) {
+                        //skip validating against itself
+                        // && same rigid body
+                        if (ctx.from[1].value.id === rigidBodies[idx].id) {
+                          // console.log('skip')
+                          continue
+                        }
+                        //https://stackoverflow.com/questions/36035074/how-can-i-find-an-overlap-between-two-given-ranges
+                        const eee = Math.max(domains[didx].start, ctx.parent.start)
+                        const fff = Math.min(domains[didx].end, ctx.parent.end)
+                        if (eee <= fff && domains[didx].chainid === ctx.parent.chainid) {
+                          // console.log(
+                          //   'overlap of ',
+                          //   ctx.parent.chainid,
+                          //   ctx.parent.start,
+                          //   ctx.parent.end,
+                          //   ctx.from[1].value.id
+                          // )
+                          // console.log(
+                          //   'with ----> ',
+                          //   domains[didx].chainid,
+                          //   domains[didx].start,
+                          //   domains[didx].end,
+                          //   rigidBodies[idx].id
+                          // )
+                          return false
+                        }
+                      }
+                    }
+                    // console.log('no overlap')
                     return true
                   }
                 ),
@@ -135,9 +191,18 @@ const validationSchemas = [
                   'check-valid-start-end-res',
                   'Please choose number between chain start and end residue',
                   (value, ctx) => {
-                    const chainStart = ctx.from[1].value.first_res
-                    const chainEnd = ctx.from[1].value.last_res
-                    //console.log(JSON.stringify(chainStart, null, 2))
+                    // Tricky stuff to find where parent values stored.
+                    // const chainStart = ctx.from[2].value.chains[0].first_res
+                    const chainStart = ctx.from[2].value.chains.find(
+                      (x) => x.id === ctx.parent.chainid
+                    ).first_res
+                    // const chainEnd = ctx.from[2].value.chains[0].last_res
+                    const chainEnd = ctx.from[2].value.chains.find(
+                      (x) => x.id === ctx.parent.chainid
+                    ).last_res
+                    // console.log('chainStart', chainStart)
+                    // console.log('chainEnd', chainEnd)
+                    // console.log(ctx)
                     if (value >= chainStart && value <= chainEnd) {
                       return true
                     }
@@ -156,10 +221,60 @@ const validationSchemas = [
                       if (ctx.options.index === idx) {
                         continue
                       }
-                      if (domains[idx].start <= value && value <= domains[idx].end) {
+                      if (
+                        domains[idx].start <= value &&
+                        value <= domains[idx].end &&
+                        domains[idx].chainid === ctx.parent.chainid
+                      ) {
                         return false
                       }
                     }
+                    return true
+                  }
+                )
+                .test(
+                  'check-for-overlap-in-other-rigid-bodies',
+                  'Please ensure no overlap with other Rigid Domains',
+                  (value, ctx) => {
+                    const rigidBodies = ctx.from[2].value.rigid_bodies
+                    const numRigidBodies = ctx.from[2].value.rigid_bodies.length
+                    // console.log('rigidBodies', rigidBodies)
+                    // console.log('numRigidBodies', numRigidBodies)
+                    // console.log(ctx)
+                    for (let idx = 0; idx < numRigidBodies; idx++) {
+                      // loop through domains in rigid body
+                      const domains = rigidBodies[idx].domains
+                      const numDomains = rigidBodies[idx].domains.length
+                      for (let didx = 0; didx < numDomains; didx++) {
+                        //skip validating against itself
+                        // && same rigid body
+                        if (ctx.from[1].value.id === rigidBodies[idx].id) {
+                          // console.log('skip')
+                          continue
+                        }
+                        //https://stackoverflow.com/questions/36035074/how-can-i-find-an-overlap-between-two-given-ranges
+                        const eee = Math.max(domains[didx].start, ctx.parent.start)
+                        const fff = Math.min(domains[didx].end, ctx.parent.end)
+                        if (eee <= fff && domains[didx].chainid === ctx.parent.chainid) {
+                          // console.log(
+                          //   'overlap of ',
+                          //   ctx.parent.chainid,
+                          //   ctx.parent.start,
+                          //   ctx.parent.end,
+                          //   ctx.from[1].value.id
+                          // )
+                          // console.log(
+                          //   'with ----> ',
+                          //   domains[didx].chainid,
+                          //   domains[didx].start,
+                          //   domains[didx].end,
+                          //   rigidBodies[idx].id
+                          // )
+                          return false
+                        }
+                      }
+                    }
+                    // console.log('no overlap')
                     return true
                   }
                 )

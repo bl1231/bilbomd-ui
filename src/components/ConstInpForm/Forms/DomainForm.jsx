@@ -1,11 +1,15 @@
-import React, { useEffect, useRef } from 'react'
-import { useFormikContext, FieldArray } from 'formik'
-import { Typography, Grid } from '@mui/material'
+import React, { useEffect, useState, useRef } from 'react'
+import { useFormikContext, useField, FieldArray, Field } from 'formik'
+import { Typography, Grid, TextField, Button, Chip } from '@mui/material'
+// import { Box } from '@mui/system'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
+import AddIcon from '@mui/icons-material/Add'
 import useTitle from 'hooks/useTitle'
-import DomainCard from '../Helpers/DomainCard'
-import Domains from '../Helpers/Domains'
+// import DomainCard from '../Helpers/DomainCard'
+// import Domains from '../Helpers/Domains'
+import RigidBody from '../Helpers/RigidBody'
+// import ChainCard from '../Helpers/ChainCard'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.primary,
@@ -27,14 +31,55 @@ const HeaderThingee = {
   letterSpacing: '1px'
 }
 
+const handleAddNewRigidBody = (name) => {
+  console.log('here')
+  const new_rigid_body = {
+    id: name,
+    domains: [
+      {
+        chainid: '',
+        start: '',
+        end: ''
+      }
+    ]
+  }
+  console.log('add new rigid body named', name)
+  // values.crd_file.rigid_bodies.push(new_rigid_body)
+  //console.log(values.crd_file.rigid_bodies)
+  //rigidBodiesArrayHelpers.push(new_rigid_body)
+}
+
 const DomainForm = ({ setStepIsValid }) => {
-  useTitle('BilboMD: define domains')
-  const { values, isValid } = useFormikContext()
+  useTitle('BilboMD: Define domains')
+  const { values, handleChange, handleBlur, errors, isValid } = useFormikContext()
+  const [field, meta, helper] = useField('crd_file')
+  const { value } = field
+  const { touched, error } = meta
+  const { setValue, setTouched } = helper
+  const isError = touched && error
+
+  const [fileName, setFileName] = useState(value.name)
+  const [file, setFile] = useState(value.file)
+  const [src, setSrc] = useState(value.src)
+  const [chains, setChains] = useState(value.chains)
+  const [rigidBodies, setRigidBodies] = useState(value.rigid_bodies)
+
+  const [rigidBodyIndex, setRigidBodyIndex] = useState(1)
 
   const effectRan = useRef(false)
 
+  const incrementRigidBodyIndex = () => {
+    setRigidBodyIndex(rigidBodyIndex + 1)
+  }
+  const decrementRigidBodyIndex = () => {
+    setRigidBodyIndex(rigidBodyIndex - 1)
+  }
+
   useEffect(() => {
     if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
+      // not exactly sure of best place for this.
+      // Need to update parent of isValid so we can enable/disable the "NEXT" button
+      // console.log('valid:', isValid)
       setStepIsValid(isValid)
       // console.log(JSON.stringify(values, null, 2))
     }
@@ -51,40 +96,137 @@ const DomainForm = ({ setStepIsValid }) => {
           <Typography sx={HeaderThingee}>Instructions</Typography>
           <Item>
             <Typography variant="h4" sx={{ m: 1 }}>
-              Define regions to remain rigid
+              Define your Rigid Bodies
             </Typography>
             <Typography sx={{ m: 1 }}>
               This is pretty straight forward. You need to define which ranges of residues
               are to remain rigid during the Molecular Dynamics steps of a <b>BilboMD</b>{' '}
-              run. Please be aware of teh following.
-              <li>No overlapping regions</li>
-              <li>No Minimum or Maximum numbers of rigid body domains</li>
+              run. Please be aware of the following.
+              <li>
+                You need at least one Rigid Body (we'll call this your Primary RB). The
+                Rigid Domains defined inside your Primary RB will remain absolutley fixed.
+              </li>
+              <li>
+                No overlapping regions either within <b>or</b> between Rigid Bodies.
+              </li>
+              <li>
+                You must leave at least <b>one residue</b> between Rigid Domains to allow
+                for efficient conformational sampling.
+              </li>
             </Typography>
           </Item>
         </Grid>
         <Grid item xs={12}>
-          <Typography sx={HeaderThingee}>Define Rigid Domains</Typography>
+          <Typography sx={HeaderThingee}>Define Rigid Bodies</Typography>
           <Item>
-            <Typography variant="h5" sx={{ mx: 1, my: 2 }}>
-              {values.crd_file.name} has {values.crd_file.chains.length} Chains
-            </Typography>
-            <Grid item sx={{ my: 1, backgroundColor: '#fcffe6' }}>
-              {values.crd_file.chains.map((chain, index) => (
-                <React.Fragment key={index}>
-                  <Typography variant="h6" sx={{ ml: 1, mb: 1 }}>
-                    ChainID: <b>{chain.id}</b> Number of Residues: <b>{chain.num_res}</b>{' '}
-                    Start: <b>{chain.first_res}</b> End: <b>{chain.last_res}</b>
-                  </Typography>
+            <Typography>Available Chains: </Typography>
+            {values.crd_file.chains.map((chain, index) => (
+              <Chip
+                key={index}
+                label={`${chain.id} : ${chain.first_res}-${chain.last_res}`}
+                variant="outlined"
+                sx={{ backgroundColor: '#d9d9d9', m: 2 }}
+              />
+            ))}
 
-                  <FieldArray name={`crd_file.chains[${index}].domains`}>
-                    {(arrayHelpers) => (
-                      <React.Fragment>
-                        <Domains chainIndex={index} domainsArrayHelpers={arrayHelpers} />
-                      </React.Fragment>
-                    )}
-                  </FieldArray>
-                </React.Fragment>
-              ))}
+            <Grid item sx={{ my: 3 }}>
+              <FieldArray name="crd_file.rigid_bodies">
+                {({ arrayHelpers, insert, remove, push }) => (
+                  <React.Fragment>
+                    {values.crd_file.rigid_bodies.length > 0 &&
+                      values.crd_file.rigid_bodies.map((rigid_body, index) => (
+                        <React.Fragment key={index}>
+                          <Grid item sx={{ mb: 4, py: 1 }}>
+                            <Grid
+                              item
+                              sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                ml: 1,
+                                mb: 1,
+                                alignContent: 'baseline'
+                              }}
+                            >
+                              {/* <Field
+                                label="Rigid Body Name"
+                                name={`crd_file.rigid_bodies[${index}].id`}
+                                id="id"
+                                type="text"
+                                as={TextField}
+                                // InputProps={{
+                                //   readOnly: true
+                                // }}
+                                disabled={
+                                  values.crd_file.rigid_bodies[index]?.id === 'PRIMARY'
+                                    ? true
+                                    : false
+                                }
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errors.id && touched.id}
+                                helperText={errors.id && touched.id ? errors.id : ''}
+                              /> */}
+                              <Typography variant="h4">
+                                Rigid Body: <Chip label={rigid_body.id} />
+                              </Typography>
+                              {values.crd_file.rigid_bodies[index]?.id === 'PRIMARY' ? (
+                                <Typography sx={{ ml: 3 }}>
+                                  <b>note:</b> Residues in <b>PRIMARY</b> will remain
+                                  absolutely fixed during the Molecular Dynamics steps.
+                                </Typography>
+                              ) : (
+                                <Typography sx={{ ml: 1 }}>
+                                  <b>note:</b> Residues in this Rigid Body will move
+                                  relative to the <b>PRIMARY</b> Rigid Body.
+                                </Typography>
+                              )}
+                            </Grid>
+                            <RigidBody
+                              rigidBodyIndex={index}
+                              rigidBodiesArrayHelpers={arrayHelpers}
+                            />
+                            {/* DO NOT SHOW DELETE BUTTON FOR PRIMARY */}
+                            {values.crd_file.rigid_bodies[index]?.id !== 'PRIMARY' ? (
+                              <Button
+                                variant="contained"
+                                color="error"
+                                onClick={() => {
+                                  decrementRigidBodyIndex()
+                                  remove(index)
+                                }}
+                              >
+                                {' '}
+                                Delete {values.crd_file.rigid_bodies[index]?.id}
+                              </Button>
+                            ) : (
+                              ''
+                            )}
+                          </Grid>
+                        </React.Fragment>
+                      ))}
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        incrementRigidBodyIndex()
+                        const new_rigid_body = {
+                          id: 'RIGID ' + rigidBodyIndex,
+                          domains: [
+                            {
+                              chainid: values.crd_file.chains[0].id,
+                              start: '',
+                              end: ''
+                            }
+                          ]
+                        }
+                        push(new_rigid_body)
+                      }}
+                      startIcon={<AddIcon />}
+                    >
+                      Add Rigid Body
+                    </Button>
+                  </React.Fragment>
+                )}
+              </FieldArray>
             </Grid>
           </Item>
         </Grid>

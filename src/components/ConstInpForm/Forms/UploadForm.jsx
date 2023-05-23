@@ -32,7 +32,7 @@ const HeaderThingee = {
 }
 
 const UploadForm = ({ setStepIsValid }) => {
-  useTitle('BilboMD: Create const.inp file')
+  useTitle('BilboMD: Upload CRD file')
 
   const { resetForm, isValid } = useFormikContext()
 
@@ -46,6 +46,7 @@ const UploadForm = ({ setStepIsValid }) => {
   const [file, setFile] = useState(value.file)
   const [src, setSrc] = useState(value.src)
   const [chains, setChains] = useState(value.chains)
+  const [rigidBodies, setRigidBodies] = useState(value.rigid_bodies)
 
   const parseCrdFile = () => {
     // setFileName('')
@@ -57,7 +58,8 @@ const UploadForm = ({ setStepIsValid }) => {
       file: file,
       src: src,
       name: fileName,
-      chains: chains
+      chains: chains,
+      rigid_bodies: rigidBodies
     })
 
     const loi =
@@ -83,6 +85,8 @@ const UploadForm = ({ setStepIsValid }) => {
 
     // console.time('charmm cahins')
     let charmmChains = []
+    let demRigidBodies = [{ id: 'PRIMARY', domains: [] }]
+    // console.log(demRigidBodies)
     uniqueChains.forEach((chainId, i) => {
       // console.log('chainID:', chainId)
       const chainArray = data.filter((value) => value.includes(chainId))
@@ -107,11 +111,21 @@ const UploadForm = ({ setStepIsValid }) => {
         domains: [{ start: firstRes, end: lastRes }]
       }
       charmmChains.push(charmmChain)
+      demRigidBodies[0].domains.push({
+        chainid: chainId,
+        start: firstRes,
+        end: lastRes
+      })
+      // let rigidBody = {
+
+      //   domains: [{ chainid: chainId, start: firstRes, end: lastRes }]
+      // }
     })
     // console.timeEnd('charmm cahins')
     // setValue with new chains objects
     // console.log(charmmChains)
     setChains(charmmChains)
+    setRigidBodies(demRigidBodies)
   }
 
   const onChange = async (event) => {
@@ -158,10 +172,16 @@ const UploadForm = ({ setStepIsValid }) => {
   }, [src, fileName, file, chains[0]?.id])
 
   useEffect(() => {
-    // not exactly sure of best place for this.
-    // Need to update parent of isValid so we can enable/disable the "NEXT" button
-    // console.log('valid:', isValid)
-    setStepIsValid(isValid)
+    if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
+      // not exactly sure of best place for this.
+      // Need to update parent of isValid so we can enable/disable the "NEXT" button
+      // console.log('valid:', isValid)
+      setStepIsValid(isValid)
+      // console.log(JSON.stringify(values, null, 2))
+    }
+    return () => {
+      effectRan.current = true
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid])
 
