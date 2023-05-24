@@ -1,7 +1,7 @@
 import { useRoutes } from 'react-router-dom'
 
 import LoginRoutes from './LoginRoutes'
-import { MainRoutes, ProtectedMainRoutes } from './MainRoutes'
+import { ProtectedMainRoutes } from './MainRoutes'
 
 // ==============================|| ROUTING RENDER ||============================== //
 

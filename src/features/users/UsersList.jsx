@@ -1,10 +1,5 @@
 import { useGetUsersQuery } from './usersApiSlice'
-import {
-  DataGrid,
-  GridColDef,
-  GridRowParams,
-  GridActionsCellItem
-} from '@mui/x-data-grid'
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid'
 import EditIcon from '@mui/icons-material/Edit'
 import useTitle from '../../hooks/useTitle'
 import { Box } from '@mui/system'
@@ -40,7 +35,7 @@ const UsersList = () => {
     const rows = ids?.length && ids.map((userId) => entities[userId])
     // console.log(rows)
 
-    const columns: GridColDef[] = [
+    const columns = [
       { field: 'username', headerName: 'Username' },
       { field: 'email', headerName: 'Email', width: 180 },
       { field: 'roles', headerName: 'Roles', width: 140 },
@@ -49,7 +44,7 @@ const UsersList = () => {
         field: 'actions',
         headerName: 'edit',
         type: 'actions',
-        getActions: (params: GridRowParams) => [
+        getActions: (params) => [
           <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"

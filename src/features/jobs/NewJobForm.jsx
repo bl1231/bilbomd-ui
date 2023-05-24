@@ -164,7 +164,7 @@ const NewJobForm = () => {
                 respectively. If your experimental Rg is 25-30 &#8491;, the MD simulations
                 can behave eradically if you specify an <b>Rg Min</b> that is too small.
                 This is why we recommend <b>Rg Min</b> to be ~ 7% less than your
-                experimental Rg. However, if your experimental Rg is larger (e.g. >50
+                experimental Rg. However, if your experimental Rg is larger (e.g. &gt50
                 &#8491;) then you can probably explore a wider range and pick{' '}
                 <b>Rg Min</b> and <b>Rg Max</b> values that are +/- 25%.
               </Typography>

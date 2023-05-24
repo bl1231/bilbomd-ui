@@ -18,7 +18,7 @@ import PersonIcon from '@mui/icons-material/Person'
 import { useNavigate } from 'react-router'
 
 const Header = () => {
-  const [time, setTime] = useState<null | string>(null)
+  const [time, setTime] = useState(null)
   const navigate = useNavigate()
   const settings = [
     {
@@ -38,7 +38,7 @@ const Header = () => {
   ]
 
   const { username, status } = useAuth()
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null)
+  const [anchorElUser, setAnchorElUser] = useState(null)
 
   // const date = new Date()
 
@@ -47,7 +47,7 @@ const Header = () => {
   //   timeStyle: 'short'
   // }).format(date)
 
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget)
   }
 

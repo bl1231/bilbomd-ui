@@ -41,7 +41,7 @@ const Home = () => {
       if (!token && persist) verifyRefreshToken()
     }
     return () => (effectRan.current = true)
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   let content

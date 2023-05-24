@@ -50,12 +50,14 @@ export default function ThemeCustomization({ children }) {
   themes.components = componentsOverride(themes)
 
   return (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={themes}>
-        <CssBaseline />
-        {children}
-      </ThemeProvider>
-    </StyledEngineProvider>
+    <>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={themes}>
+          <CssBaseline />
+          {children}
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </>
   )
 }
 
