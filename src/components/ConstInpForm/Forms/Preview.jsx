@@ -33,92 +33,165 @@ const HeaderThingee = {
 
 const Preview = (props) => {
   useTitle('BilboMD: Preview const.inp file')
-  const [constFilePreview, setConstFilePreview] = useState('init const.inp file')
+  const [constFilePreview, setConstFilePreview] = useState('')
   const { values } = useFormikContext()
+  const rigid_bodies = values.crd_file.rigid_bodies
 
-  const prepareConstInpFile = () => {
+  // const prepareConstInputFile = () => {
+  //   const contentArray = []
+
+  //   let rigidDomainTotal = 0
+  //   for (const rbidx in rigid_bodies) {
+  //     let rigidBodyId = rigid_bodies[rbidx].id
+
+  //     if (rigidBodyId === 'PRIMARY') {
+  //       let domainTotal = 0
+  //       for (const didx in rigid_bodies[rbidx].domains) {
+  //         domainTotal++
+  //         let domainName = 'fixed' + domainTotal
+  //         let chainId = rigid_bodies[rbidx].domains[didx].chainid
+  //         let start = rigid_bodies[rbidx].domains[didx].start
+  //         let end = rigid_bodies[rbidx].domains[didx].end
+
+  //         const line =
+  //           'define ' +
+  //           domainName +
+  //           ' sele ( resid ' +
+  //           start +
+  //           ':' +
+  //           end +
+  //           ' .and. segid ' +
+  //           chainId +
+  //           ' ) end'
+
+  //         contentArray.push(line)
+  //       }
+  //       // There has to be a better way to construct this last line
+  //       let ll = 'cons fix sele '
+  //       for (let d = 1; d <= domainTotal; d++) {
+  //         ll += 'fixed' + d + ' .or. '
+  //       }
+  //       // Trim off the last " .or " and add the "end" keyword.
+  //       const lastLine = ll.slice(0, ll.length - 6) + ' end'
+  //       contentArray.push(lastLine)
+  //       contentArray.push('')
+  //     } else {
+  //       let totalDomains = 0
+  //       for (const didx in rigid_bodies[rbidx].domains) {
+  //         // LOOP WRITES THE define LINES
+  //         rigidDomainTotal++
+  //         totalDomains++
+  //         let domainName = 'rigid' + rigidDomainTotal
+  //         let chainId = rigid_bodies[rbidx].domains[didx].chainid
+  //         let start = rigid_bodies[rbidx].domains[didx].start
+  //         let end = rigid_bodies[rbidx].domains[didx].end
+
+  //         const line =
+  //           'define ' +
+  //           domainName +
+  //           ' sele ( resid ' +
+  //           start +
+  //           ':' +
+  //           end +
+  //           ' .and. segid ' +
+  //           chainId +
+  //           ' ) end'
+
+  //         contentArray.push(line)
+  //       }
+  //       let numRigidDomains = rigid_bodies[rbidx].domains.length
+  //       console.log(
+  //         'numRigidDomains: ',
+  //         numRigidDomains,
+  //         'rigidDomainTotal: ',
+  //         rigidDomainTotal
+  //       )
+  //       let ll = 'shape desc dock' + rbidx + ' rigid sele '
+  //       for (let d = rigidDomainTotal; d <= numRigidDomains; d++) {
+  //         ll += 'rigid' + d + ' .or. '
+  //       }
+  //       // Trim off the last " .or " and add the "end" keyword.
+  //       const lastLine = ll.slice(0, ll.length - 6) + ' end'
+  //       contentArray.push(lastLine)
+  //       contentArray.push('')
+  //     }
+  //   }
+
+  //   // and the last line needs to be "return"
+  //   const returnLine = 'return'
+  //   contentArray.push(returnLine)
+  //   const content = contentArray.join('\n')
+  //   // console.log(content)
+  //   setConstFilePreview(content)
+  //   // Can't seem to store a Blob in useState so return a Blob for file download
+  //   const file = new Blob([content], { type: 'text/plain' })
+  //   return file
+  // }
+
+  const prepareConstInputFile = (rigidBodies) => {
     const contentArray = []
-    const rigid_bodies = values.crd_file.rigid_bodies
-    let rigidDomainTotal = 0
-    for (const idx in rigid_bodies) {
-      let rigidBodyId = rigid_bodies[idx].id
-
-      if (rigidBodyId === 'PRIMARY') {
-        let domainTotal = 0
-        for (const domain in rigid_bodies[idx].domains) {
-          domainTotal++
-          let domainName = 'fixed' + domainTotal
-          let chainId = rigid_bodies[idx].domains[domain].chainid
-          let start = rigid_bodies[idx].domains[domain].start
-          let end = rigid_bodies[idx].domains[domain].end
+    let dockCount = 1
+    let rigidCount = 1
+    const output = rigidBodies.map((rb, rb_index) => {
+      if (rb.id === 'PRIMARY') {
+        let rigid_domains = []
+        const output2 = rb.domains.map(({ chainid, start, end }, d_index) => {
+          let rd_index = d_index + 1
 
           const line =
-            'define ' +
-            domainName +
+            'define fixed' +
+            rd_index +
             ' sele ( resid ' +
             start +
             ':' +
             end +
             ' .and. segid ' +
-            chainId +
-            ' ) end'
-
+            chainid +
+            ' ) ' +
+            'end'
           contentArray.push(line)
-        }
-        // There has to be a better way to construct this last line
-        let ll = 'cons fix sele '
-        for (let d = 1; d <= domainTotal; d++) {
-          ll += 'fixed' + d + ' .or. '
-        }
-        // Trim off the last " .or " and add the "end" keyword.
-        const lastLine = ll.slice(0, ll.length - 6) + ' end'
-        contentArray.push(lastLine)
-        contentArray.push('')
+          rigid_domains.push('fixed' + rd_index, '.or.')
+        })
+
+        rigid_domains.pop()
+        rigid_domains.push('end')
+        contentArray.push('cons fix sele ' + rigid_domains.join(' '))
+        contentArray.push(' ')
       } else {
-        let totalDomains = 0
-        for (const domain in rigid_bodies[idx].domains) {
-          rigidDomainTotal++
-          totalDomains++
-          let domainName = 'rigid' + rigidDomainTotal
-          let chainId = rigid_bodies[idx].domains[domain].chainid
-          let start = rigid_bodies[idx].domains[domain].start
-          let end = rigid_bodies[idx].domains[domain].end
+        let rigid_domains = []
+        const output2 = rb.domains.map(({ chainid, start, end }, d_index) => {
+          let rd_index = d_index + rigidCount
 
           const line =
-            'define ' +
-            domainName +
+            'define rigid' +
+            rigidCount +
             ' sele ( resid ' +
             start +
             ':' +
             end +
             ' .and. segid ' +
-            chainId +
-            ' ) end'
-
+            chainid +
+            ' ) ' +
+            'end'
           contentArray.push(line)
-        }
-        // There has to be a better way to construct this last line
-
-        let ll = 'shape desc dock' + idx + ' rigid sele '
-        for (let d = 1; d <= totalDomains; d++) {
-          ll += 'rigid' + d + ' .or. '
-        }
-        // Trim off the last " .or " and add the "end" keyword.
-        const lastLine = ll.slice(0, ll.length - 6) + ' end'
-        contentArray.push(lastLine)
-        contentArray.push('')
+          rigid_domains.push('rigid' + rigidCount, '.or.')
+          rigidCount++
+        })
+        rigid_domains.pop()
+        rigid_domains.push('end')
+        contentArray.push(
+          'shape desc dock' + dockCount + ' rigid sele ' + rigid_domains.join(' ')
+        )
+        contentArray.push(' ')
+        dockCount++
       }
-    }
-
-    // and the last line needs to be "return"
-    const returnLine = 'return'
-    contentArray.push(returnLine)
+    })
+    contentArray.push('return')
     const content = contentArray.join('\n')
-    console.log(content)
+    //console.log(content)
     setConstFilePreview(content)
-    // Can't seem to store a Blob in useState so return a Blob for file download
-    const file = new Blob([content], { type: 'text/plain' })
-    return file
+    // const file = new Blob([content], { type: 'text/plain' })
+    // return file
   }
 
   const effectRan = useRef(false)
@@ -126,7 +199,8 @@ const Preview = (props) => {
   useEffect(() => {
     if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
       if (values) {
-        prepareConstInpFile()
+        prepareConstInputFile(rigid_bodies)
+        //doAThing()
       }
     }
     return () => (effectRan.current = true)
@@ -177,88 +251,70 @@ const Preview = (props) => {
   )
 }
 
-const PrepareConstInputFile = (rigid_bodies) => {
+const PrepareConstInputFile = (rigidBodies) => {
   const contentArray = []
-  // const rigid_bodies = values.crd_file.rigid_bodies
-  let rigidDomainTotal = 0
-  for (const idx in rigid_bodies) {
-    let rigidBodyId = rigid_bodies[idx].id
-
-    if (rigidBodyId === 'PRIMARY') {
-      let domainTotal = 0
-      for (const domain in rigid_bodies[idx].domains) {
-        domainTotal++
-        let domainName = 'fixed' + domainTotal
-        let chainId = rigid_bodies[idx].domains[domain].chainid
-        let start = rigid_bodies[idx].domains[domain].start
-        let end = rigid_bodies[idx].domains[domain].end
+  let dockCount = 1
+  let rigidCount = 1
+  const output = rigidBodies.map((rb, rb_index) => {
+    if (rb.id === 'PRIMARY') {
+      let rigid_domains = []
+      const output2 = rb.domains.map(({ chainid, start, end }, d_index) => {
+        let rd_index = d_index + 1
 
         const line =
-          'define ' +
-          domainName +
+          'define fixed' +
+          rd_index +
           ' sele ( resid ' +
           start +
           ':' +
           end +
           ' .and. segid ' +
-          chainId +
-          ' ) end'
-
+          chainid +
+          ' ) ' +
+          'end'
         contentArray.push(line)
-      }
-      // There has to be a better way to construct this last line
-      let ll = 'cons fix sele '
-      for (let d = 1; d <= domainTotal; d++) {
-        ll += 'fixed' + d + ' .or. '
-      }
-      // Trim off the last " .or " and add the "end" keyword.
-      const lastLine = ll.slice(0, ll.length - 6) + ' end'
-      contentArray.push(lastLine)
-      contentArray.push('')
+        rigid_domains.push('fixed' + rd_index, '.or.')
+      })
+
+      rigid_domains.pop()
+      rigid_domains.push('end')
+      contentArray.push('cons fix sele ' + rigid_domains.join(' '))
+      contentArray.push(' ')
     } else {
-      let totalDomains = 0
-      for (const domain in rigid_bodies[idx].domains) {
-        rigidDomainTotal++
-        totalDomains++
-        let domainName = 'rigid' + rigidDomainTotal
-        let chainId = rigid_bodies[idx].domains[domain].chainid
-        let start = rigid_bodies[idx].domains[domain].start
-        let end = rigid_bodies[idx].domains[domain].end
+      let rigid_domains = []
+      const output2 = rb.domains.map(({ chainid, start, end }, d_index) => {
+        let rd_index = d_index + rigidCount
 
         const line =
-          'define ' +
-          domainName +
+          'define rigid' +
+          rigidCount +
           ' sele ( resid ' +
           start +
           ':' +
           end +
           ' .and. segid ' +
-          chainId +
-          ' ) end'
-
+          chainid +
+          ' ) ' +
+          'end'
         contentArray.push(line)
-      }
-      // There has to be a better way to construct this last line
-
-      let ll = 'shape desc dock' + idx + ' rigid sele '
-      for (let d = 1; d <= totalDomains; d++) {
-        ll += 'rigid' + d + ' .or. '
-      }
-      // Trim off the last " .or " and add the "end" keyword.
-      const lastLine = ll.slice(0, ll.length - 6) + ' end'
-      contentArray.push(lastLine)
-      contentArray.push('')
+        rigid_domains.push('rigid' + rigidCount, '.or.')
+        rigidCount++
+      })
+      rigid_domains.pop()
+      rigid_domains.push('end')
+      contentArray.push(
+        'shape desc dock' + dockCount + ' rigid sele ' + rigid_domains.join(' ')
+      )
+      contentArray.push(' ')
+      dockCount++
     }
-  }
-
-  // and the last line needs to be "return"
-  const returnLine = 'return'
-  contentArray.push(returnLine)
+  })
+  contentArray.push('return')
   const content = contentArray.join('\n')
-  console.log(content)
+  // console.log(content)
   // setConstFilePreview(content)
-  // Can't seem to store a Blob is useState so return a Blob for file download
   const file = new Blob([content], { type: 'text/plain' })
   return file
 }
+
 export { Preview, PrepareConstInputFile }
