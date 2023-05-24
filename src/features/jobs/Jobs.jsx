@@ -108,8 +108,8 @@ const Jobs = () => {
         sortable: false,
         headerName: 'manage',
         getActions: (params) => [
-          <DeleteJob job={params.row} />,
-          <InfoJob job={params.row} />
+          <DeleteJob key={params.id} job={params.row} />,
+          <InfoJob key={params.id} job={params.row} />
         ]
       }
     ]

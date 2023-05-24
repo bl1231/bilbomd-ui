@@ -111,7 +111,7 @@ const Header = () => {
               variant="h5"
               sx={{ display: 'flex', flexGrow: '8', justifyContent: 'flex-end', mx: 2 }}
             >
-              {username}
+              {status}: {username}
             </Typography>
 
             <Tooltip
