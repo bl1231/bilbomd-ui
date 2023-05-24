@@ -6,10 +6,11 @@ import { Box } from '@mui/system'
 
 const Download = (props) => {
   const { values } = useFormikContext()
+  const rigidBodies = values.crd_file.rigid_bodies
 
   const handleDownload = () => {
     // 1. Get the Blob object (aka our file)
-    const file = PrepareConstInputFile(values.crd_file.rigid_bodies)
+    const file = PrepareConstInputFile(rigidBodies)
     // 2. Create HTML <a> element
     const link = document.createElement('a')
     // 3. In the href attribute of the <a> tag, add the Blob object URL.
