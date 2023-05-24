@@ -2,7 +2,7 @@
   "name": "bilbomd-ui",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
+  "type": "commonjs",
   "homepage": "https://bilbomd.bl1231.als.lbl.gov",
   "proxy": "http://localhost:3500",
   "dependencies": {
