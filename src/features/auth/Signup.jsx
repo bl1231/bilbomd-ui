@@ -144,10 +144,15 @@ const Signup = () => {
                         }
                         sx={{ mb: 1 }}
                       >
-                        {error.message} If you already have an account try{' '}
+                        {error.message}
+                        <br /> If you have an account{' '}
                         <Link to="../magicklink" className="alert-link">
-                          logging in
+                          get a MagickLink&#8482;
                         </Link>
+                        {/* <br /> ...or maybe you still need to{' '}
+                        <Link to="../magicklink" className="alert-link">
+                          verify your email
+                        </Link> */}
                       </Alert>
                     </Collapse>
                   ) : (
