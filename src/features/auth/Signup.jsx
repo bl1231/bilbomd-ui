@@ -11,8 +11,9 @@ import CloseIcon from '@mui/icons-material/Close'
 import { Alert, AlertTitle, Divider, Grid, TextField, Typography } from '@mui/material'
 import useTitle from 'hooks/useTitle'
 import axios from 'app/api/axios'
+
 const REGISTER_URL = '/register'
-//const SENDMAIL_USER = env.process.SENDMAIL_USER
+
 const Signup = () => {
   useTitle('BilboMD: Signup')
   const [success, setSuccess] = useState(null)
@@ -35,9 +36,9 @@ const Signup = () => {
           setError({ message: 'User Name or Email Already Registered.' })
           setSuccess(null)
           setStatus({ error: err, css: 'error' })
-          console.log(err.response.data)
-          console.log(err.response.status)
-          console.log(err.response.headers)
+          // console.log(err.response.data)
+          // console.log(err.response.status)
+          // console.log(err.response.headers)
         } else {
           setError({ message: 'Registration Failed!' })
         }
@@ -46,6 +47,7 @@ const Signup = () => {
     // all good. We got a response from server
     if (response?.data) {
       setError(null)
+      setErrors(null)
       setSuccess(response.data.success)
       setSubmitting(false)
       resetForm()
@@ -80,7 +82,7 @@ const Signup = () => {
               Before you can log in we need you to verify your email. Please check your
               inbox for a verification email from
               <br />
-              <strong>bilbomd-noreply@bl1231.als.lbl.gov</strong>
+              <strong>{import.meta.env.VITE_SENDMAIL_USER}</strong>
             </Alert>
           ) : (
             <Formik
@@ -88,16 +90,7 @@ const Signup = () => {
               validationSchema={userRegisterSchema}
               onSubmit={onSubmit}
             >
-              {({
-                values,
-                errors,
-                touched,
-                isValid,
-                isSubmitting,
-                handleChange,
-                handleBlur,
-                resetForm
-              }) => (
+              {({ errors, touched, isSubmitting, handleChange, handleBlur }) => (
                 <Form>
                   <Typography sx={{ my: 2 }}>
                     Select a user name and enter your email address to create a{' '}
@@ -136,7 +129,7 @@ const Signup = () => {
                     }
                   />
                   {error ? (
-                    <Collapse in={error}>
+                    <Collapse in={Boolean(error)}>
                       <Alert
                         severity="error"
                         action={
