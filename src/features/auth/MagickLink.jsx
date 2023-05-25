@@ -33,14 +33,15 @@ const MagickLink = () => {
         } else if (err?.response?.status) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
+          // error message from backend available in data.message
           setError({
-            message: 'You must register and verify your email first.'
+            message: err.response.data.message
           })
           setSuccess(null)
           setStatus({ error: err, css: 'error' })
-          console.log(err.response.data)
-          console.log(err.response.status)
-          console.log(err.response.headers)
+          // console.log(err.response.data.message)
+          // console.log(err.response.status)
+          // console.log(err.response.headers)
         }
       })
     if (response?.data) {
@@ -74,8 +75,7 @@ const MagickLink = () => {
         >
           {success ? (
             <Alert severity="success">
-              <AlertTitle>Woot!</AlertTitle>A MagickLink&#8482; has been generated and
-              sent to your email address.
+              <AlertTitle>Woot!</AlertTitle>A MagickLink&#8482; has been generated.
               <br />
               <strong>Please check your inbox.</strong>
             </Alert>
