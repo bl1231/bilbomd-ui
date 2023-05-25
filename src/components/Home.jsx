@@ -39,19 +39,19 @@ const Home = () => {
   let content
 
   if (isLoading) {
-    console.log('Home - isLoading')
+    // console.log('Home - isLoading')
     content = <CircularProgress />
   } else if (isSuccess && trueSuccess) {
-    console.log('Home - trueSuccess')
+    // console.log('Home - trueSuccess')
     navigate('welcome')
   } else if (token && isUninitialized) {
-    console.log('Home - isUninitialized')
+    // console.log('Home - isUninitialized')
     // As per PersistLogin.jsx I think this is the same as
     // above isSuccess && trueSuccess
     // I'm attempting to prevent the flash of unauthenticated Home page.
     content = <CircularProgress />
   } else {
-    console.log('Home - default')
+    // console.log('Home - default')
     content = (
       <Container>
         <Box>
