@@ -15,7 +15,7 @@ const Home = Loadable(lazy(() => import('components/Home')))
 const MagickLink = Loadable(lazy(() => import('features/auth/MagickLink')));
 const Signup = Loadable(lazy(() => import('features/auth/Signup')))
 // prettier-ignore
-const VerifyUser = Loadable(lazy(() => import('features/auth/VerifyUser')));
+const VerifyEmail = Loadable(lazy(() => import('features/auth/VerifyEmail')));
 // prettier-ignore
 const MagickLinkAuth = Loadable(lazy(() => import('features/auth/MagickLinkAuth')));
 const Unauthorized = Loadable(lazy(() => import('components/Unauthorized')))
@@ -36,7 +36,7 @@ const LoginRoutes = {
     },
     {
       path: 'verify/:code',
-      element: <VerifyUser />
+      element: <VerifyEmail />
     },
     {
       path: 'magicklink',

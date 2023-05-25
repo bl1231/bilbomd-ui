@@ -7,7 +7,7 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import useTitle from 'hooks/useTitle'
 const VERIFY_URL = '/verify'
 
-const VerifyUser = () => {
+const VerifyEmail = () => {
   useTitle('BilboMD: Verify Email')
   let { code } = useParams()
   const data = JSON.stringify({ code })
@@ -15,31 +15,29 @@ const VerifyUser = () => {
 
   const [verified, setVerified] = useState('')
 
-  const verify = async (code) => {
-    const response = await axios
-      .post(VERIFY_URL, data, {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true
-      })
-      .catch((err) => {
-        if (err?.response) {
-          console.error(err.response)
-        }
-      })
-    console.log(response)
-    if (response?.data.status === 204) {
-    }
-    if (response?.data) {
-      setVerified(true)
-    }
-  }
-
-  // this should trigger once when page loads.
-  //console.log('before useEffect');
   useEffect(() => {
+    const verify = async () => {
+      const response = await axios
+        .post(VERIFY_URL, data, {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true
+        })
+        .catch((err) => {
+          if (err?.response) {
+            console.error(err.response)
+          }
+        })
+      console.log(response)
+      if (response?.data.status === 204) {
+        console.log(response.data.message)
+      }
+      if (response?.data) {
+        setVerified(true)
+        console.log(response)
+      }
+    }
     verify()
   }, [])
-  //console.log('after useEffect');
 
   const content = (
     <React.Fragment>
@@ -95,4 +93,4 @@ const VerifyUser = () => {
   return content
 }
 
-export default VerifyUser
+export default VerifyEmail
