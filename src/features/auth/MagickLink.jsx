@@ -85,16 +85,7 @@ const MagickLink = () => {
               validationSchema={userSignInSchema}
               onSubmit={onSubmit}
             >
-              {({
-                values,
-                errors,
-                touched,
-                isValid,
-                isSubmitting,
-                handleChange,
-                handleBlur,
-                resetForm
-              }) => (
+              {({ errors, touched, isSubmitting, handleChange, handleBlur }) => (
                 <Form>
                   <Typography sx={{ my: 2 }}>
                     Enter your email address to sign in to <b>BilboMD</b>
@@ -118,7 +109,7 @@ const MagickLink = () => {
                   />
 
                   {error ? (
-                    <Collapse in={error}>
+                    <Collapse in={Boolean(error)}>
                       <Alert
                         severity="error"
                         action={
@@ -133,10 +124,7 @@ const MagickLink = () => {
                         }
                         sx={{ mb: 1 }}
                       >
-                        If you need an account please{' '}
-                        <Link to="../register" className="alert-link">
-                          register
-                        </Link>
+                        {error.message}
                       </Alert>
                     </Collapse>
                   ) : (
