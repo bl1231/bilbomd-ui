@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-  DataGrid,
-  GridColDef,
-  GridCellParams,
-  GridValueFormatterParams
-} from '@mui/x-data-grid'
+import { DataGrid } from '@mui/x-data-grid'
 import { format, parseISO } from 'date-fns'
 import { useGetJobsQuery } from './jobsApiSlice'
 // import { useNavigate } from 'react-router-dom'
@@ -58,7 +53,7 @@ const Jobs = () => {
 
     const rows = ids?.length && filteredIds.map((jobId) => entities[jobId])
 
-    const columns: GridColDef[] = [
+    const columns = [
       { field: 'title', headerName: 'Title', width: 200 },
       // { field: 'id', headerName: 'ID', width: 100, hide: true },
       {
@@ -66,7 +61,7 @@ const Jobs = () => {
         headerName: 'Submitted',
         type: 'dateTime',
         width: 160,
-        valueFormatter: (params: GridValueFormatterParams<string>) => {
+        valueFormatter: (params) => {
           if (params?.value) {
             //console.log(params);
             return format(parseISO(params?.value), 'MM/dd/yyyy HH:mm:ss')
@@ -80,7 +75,7 @@ const Jobs = () => {
         headerName: 'Completed',
         type: 'dateTime',
         width: 160,
-        valueFormatter: (params: GridValueFormatterParams<string>) => {
+        valueFormatter: (params) => {
           if (params?.value) {
             return format(parseISO(params?.value), 'MM/dd/yyyy HH:mm:ss')
           } else {
@@ -94,7 +89,7 @@ const Jobs = () => {
         field: 'status',
         headerName: 'Status',
         width: 100,
-        cellClassName: (params: GridCellParams<string>) => {
+        cellClassName: (params) => {
           if (params.value == null) {
             return ''
           }
@@ -112,9 +107,9 @@ const Jobs = () => {
         type: 'actions',
         sortable: false,
         headerName: 'manage',
-        getActions: (params: GridRowParams) => [
-          <DeleteJob job={params.row} />,
-          <InfoJob job={params.row} />
+        getActions: (params) => [
+          <DeleteJob key={params.id} job={params.row} />,
+          <InfoJob key={params.id} job={params.row} />
         ]
       }
     ]
