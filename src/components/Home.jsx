@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Button, Typography, CircularProgress, Alert } from '@mui/material'
+import { Button, Typography, CircularProgress } from '@mui/material'
 // import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import { Box, Container } from '@mui/system'
 import { Link, useNavigate } from 'react-router-dom'
@@ -14,8 +14,7 @@ const Home = () => {
   const token = useSelector(selectCurrentToken)
   const effectRan = useRef(false)
   const [trueSuccess, setTrueSuccess] = useState(false)
-  const [refresh, { isUninitialized, isLoading, isSuccess, isError, error }] =
-    useRefreshMutation()
+  const [refresh, { isUninitialized, isLoading, isSuccess }] = useRefreshMutation()
 
   useEffect(() => {
     if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
@@ -51,8 +50,6 @@ const Home = () => {
     // above isSuccess && trueSuccess
     // I'm attempting to prevent the flash of unauthenticated Home page.
     content = <CircularProgress />
-  } else if (isError || error) {
-    content = <Alert>ack</Alert>
   } else {
     console.log('Home - default')
     content = (
