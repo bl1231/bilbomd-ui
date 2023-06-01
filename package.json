@@ -1,10 +1,14 @@
 {
   "name": "bilbomd-ui",
-  "version": "1.0.0",
+  "version": "0.0.3",
+  "description": "Frontend Single Page Web Application for BilboMD",
   "private": true,
   "type": "commonjs",
   "homepage": "https://bilbomd.bl1231.als.lbl.gov",
-  "proxy": "http://localhost:3500",
+  "author": {
+    "name": "Scott Classen",
+    "email": "sclassen@lbl.gov"
+  },
   "dependencies": {
     "@ant-design/colors": "^7.0.0",
     "@emotion/core": "^11.0.0",
@@ -36,10 +40,11 @@
     "yup": "^1.0.2"
   },
   "scripts": {
-    "start": "vite --host",
+    "dev": "vite --host localhost",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "serve": "vite preview"
+    "preview": "vite preview",
+    "optimize": "vite optimize"
   },
   "eslintConfig": {
     "extends": [
