@@ -5,7 +5,7 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
-  server: { port: 3002 },
+  server: { port: 3003 },
   build: {
     rollupOptions: {
       output: {
