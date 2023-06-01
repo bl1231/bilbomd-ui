@@ -13,7 +13,11 @@ const Welcome = () => {
       <Typography variant="h2" sx={{ my: 3 }}>
         Welcome {username}!
       </Typography>
-      <Typography>Let's run some BilboMD simulations.</Typography>
+      <Typography>Let&apos;s run some BilboMD simulations.</Typography>
+      <Typography>{process.env.NODE_ENV}</Typography>
+      <Typography>{import.meta.env.BASE_URL}</Typography>
+      <Typography>{import.meta.env.VITE_BILBOMD_BACKEND_PORT}</Typography>
+      <Typography>{import.meta.env.VITE_BILBOMD_BACKEND_PORT_NOPE}</Typography>
     </React.Fragment>
   )
 
