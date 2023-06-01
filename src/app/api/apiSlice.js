@@ -1,17 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { setCredentials, logOut } from '../../features/auth/authSlice'
+import { setCredentials } from '../../features/auth/authSlice'
 
-const baseUrl = () => {
-  //console.log('baseUrl', process.env.NODE_ENV)
-  if (process.env.NODE_ENV === 'production') {
-    return 'https://bl1231.als.lbl.gov/bilbomd-dev-backend'
-  } else {
-    return 'http://localhost:3500'
-  }
-}
+console.log('apiSlice', import.meta.env.MODE)
+const baseURL = import.meta.env.DEV
+  ? 'http://localhost:3502'
+  : 'https://bl1231.als.lbl.gov/bilbomd-dev-backend'
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: baseUrl(),
+  baseUrl: baseURL,
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token
@@ -23,10 +19,6 @@ const baseQuery = fetchBaseQuery({
 })
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
-  //console.log('args:', args) // request url, method, body
-  //console.log('api:', api) // signal, dispatch, getState()
-  //console.log('extra:', extraOptions) //custom like {shout: true}
-
   let result = await baseQuery(args, api, extraOptions)
 
   if (result?.error?.status === 403) {
