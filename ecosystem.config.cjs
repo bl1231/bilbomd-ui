@@ -35,7 +35,7 @@ module.exports = {
     development: {
       user: 'webadmin',
       host: 'hyperion',
-      ref: 'origin/126-migrate-to-vite',
+      ref: 'origin/149-convert-from-javascript-to-typescript',
       repo: 'git@github.com-bilbomd-ui:bl1231/bilbomd-ui.git',
       path: '/bilbomd',
       'pre-deploy-local': '',
