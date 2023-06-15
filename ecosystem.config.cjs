@@ -2,6 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'BilboMD',
+      append_env_to_name: true,
       script: 'serve',
       env: {
         PM2_SERVE_PATH: 'dist',
