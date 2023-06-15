@@ -29,7 +29,7 @@ module.exports = {
       'pre-deploy-local': '',
       'post-setup': 'npm install && npm run build',
       'post-deploy':
-        'npm install && npm run build && pm2 reload ecosystem.config.js --env production',
+        'npm install && npm run build && pm2 reload ecosystem.config.cjs --env production',
       'pre-setup': ''
     },
     development: {
@@ -41,7 +41,7 @@ module.exports = {
       'pre-deploy-local': '',
       'post-setup': 'npm install && npm run build',
       'post-deploy':
-        'npm install && npm run build && pm2 reload ecosystem.config.js --env development',
+        'npm install && npm run build && pm2 reload ecosystem.config.cjs --env development',
       'pre-setup': ''
     }
   }
