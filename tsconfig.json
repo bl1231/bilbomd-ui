@@ -6,6 +6,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "allowJs": true,
+    "noImplicitAny": false,
 
     /* Bundler mode */
     "moduleResolution": "node",
@@ -17,6 +18,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "removeComments": true,
     "jsx": "react-jsx",
 
     /* Linting */
