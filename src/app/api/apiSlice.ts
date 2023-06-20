@@ -1,5 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { setCredentials } from '../../features/auth/authSlice'
+// import { createApi, BaseQueryFn } from '@reduxjs/toolkit/query/react'
+import { setCredentials, logOut } from '../../features/auth/authSlice'
+import type { RootState } from '../store'
 
 console.log('apiSlice', import.meta.env.MODE)
 const baseURL = import.meta.env.DEV
@@ -10,7 +12,7 @@ const baseQuery = fetchBaseQuery({
   baseUrl: baseURL,
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
-    const token = getState().auth.token
+    const token = (getState() as RootState).auth.token
     if (token) {
       headers.set('authorization', `Bearer ${token}`)
     }
@@ -18,6 +20,10 @@ const baseQuery = fetchBaseQuery({
   }
 })
 
+interface RefreshErrorData {
+  message: string
+  // Add other properties if necessary
+}
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions)
 
@@ -26,7 +32,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 
     // send refreshToken to get new accessToken
     const refreshResult = await baseQuery('/auth/refresh', api, extraOptions)
-
+    console.log('refreshResult:', refreshResult)
     if (refreshResult?.data) {
       // store the new accessToken
       api.dispatch(setCredentials({ ...refreshResult.data }))
@@ -34,7 +40,8 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       result = await baseQuery(args, api, extraOptions)
     } else {
       if (refreshResult?.error?.status === 403) {
-        refreshResult.error.data.message = 'Your login has expired. '
+        const errorData = refreshResult.error.data as RefreshErrorData
+        errorData.message = 'Your login has expired.'
       }
       return refreshResult
     }
