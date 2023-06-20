@@ -1,15 +1,16 @@
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from 'features/auth/authSlice'
 import jwtDecode from 'jwt-decode'
+import { useAppSelector } from 'app/hooks'
 
 const useAuth = () => {
-  const token = useSelector(selectCurrentToken)
+  const token = useAppSelector(selectCurrentToken)
   let isManager = false
   let isAdmin = false
   let status = 'User'
 
   if (token) {
-    const decoded = jwtDecode(token)
+    const decoded: any = jwtDecode(token)
     const { username, roles, email } = decoded.UserInfo
     //console.log('useAuth1:', username, roles, email)
 
@@ -25,4 +26,5 @@ const useAuth = () => {
   // Returned if we do not have a token
   return { username: '', roles: [], email: '', isManager, isAdmin, status }
 }
+
 export default useAuth
