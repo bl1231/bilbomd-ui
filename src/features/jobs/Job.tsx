@@ -9,7 +9,8 @@ import axios, { AxiosResponse } from 'app/api/axios'
 import { format } from 'date-fns'
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.primary.main,
+  backgroundColor:
+    theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'left',
