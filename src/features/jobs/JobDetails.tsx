@@ -1,13 +1,23 @@
-import React from 'react'
+// import React from 'react'
 import InfoIcon from '@mui/icons-material/Info'
 import { IconButton, Tooltip } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 
-const InfoJob = ({ job }) => {
+interface Job {
+  id: string
+  title: string
+  // Add other properties if needed
+}
+
+interface JobDetailsProps {
+  job: Job
+}
+
+const JobDetails = ({ job }: JobDetailsProps) => {
   const { id, title } = job
   const navigate = useNavigate()
   return (
-    <React.Fragment>
+    <>
       <Tooltip title={`Details for ${title}`} arrow>
         <IconButton
           color="secondary"
@@ -18,8 +28,8 @@ const InfoJob = ({ job }) => {
           <InfoIcon />
         </IconButton>
       </Tooltip>
-    </React.Fragment>
+    </>
   )
 }
 
-export default InfoJob
+export default JobDetails

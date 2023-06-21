@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button, Typography, CircularProgress } from '@mui/material'
-// import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import { Box, Container } from '@mui/system'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
@@ -8,33 +7,58 @@ import { selectCurrentToken } from 'features/auth/authSlice'
 import { useRefreshMutation } from 'features/auth/authApiSlice'
 import usePersist from 'hooks/usePersist'
 
-const Home = () => {
+type HomeProps = {
+  title?: string
+}
+
+const Home = ({ title = 'BilboMD' }: HomeProps) => {
   const navigate = useNavigate()
   const [persist] = usePersist()
   const token = useSelector(selectCurrentToken)
-  const effectRan = useRef(false)
-  const [trueSuccess, setTrueSuccess] = useState(false)
+  // const effectRan = useRef(false)
+  const [trueSuccess, setTrueSuccess] = useState<boolean>(false)
   const [refresh, { isUninitialized, isLoading, isSuccess }] = useRefreshMutation()
 
   useEffect(() => {
-    if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
-      const verifyRefreshToken = async () => {
-        // console.log('verifying refresh token')
-        try {
-          //const response =
-          await refresh()
-          //const { accessToken } = response.data
-          // needed to differentiate the isSuccess from refresh
-          setTrueSuccess(true)
-        } catch (err) {
-          console.error(err)
-        }
+    const verifyRefreshToken = async () => {
+      // console.log('verifying refresh token')
+      try {
+        //const response =
+        await refresh()
+        //const { accessToken } = response.data
+        // needed to differentiate the isSuccess from refresh
+        setTrueSuccess(true)
+      } catch (err) {
+        console.error(err)
       }
-      if (!token && persist) verifyRefreshToken()
     }
-    return () => (effectRan.current = true)
+    if (!token && persist) verifyRefreshToken()
+
+    return () => {
+      console.log('hi')
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // useEffect(() => {
+  //   if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
+  //     const verifyRefreshToken = async () => {
+  //       // console.log('verifying refresh token')
+  //       try {
+  //         //const response =
+  //         await refresh()
+  //         //const { accessToken } = response.data
+  //         // needed to differentiate the isSuccess from refresh
+  //         setTrueSuccess(true)
+  //       } catch (err) {
+  //         console.error(err)
+  //       }
+  //     }
+  //     if (!token && persist) verifyRefreshToken()
+  //   }
+  //   return () => (effectRan.current = true)
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
 
   let content
 

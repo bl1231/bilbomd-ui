@@ -1,22 +1,15 @@
-import React from 'react'
 import { useParams } from 'react-router-dom'
-//import EditNoteForm from './EditNoteForm'
 import { useGetJobsQuery } from './jobsApiSlice'
-import { useGetUsersQuery } from '../users/usersApiSlice'
-//import useAuth from 'hooks/useAuth'
 import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
-//import { Box, Container, Stack } from '@mui/system'
-// import { green } from '@ant-design/colors'
-import { Button, Chip, Divider, Grid, Typography } from '@mui/material'
+import { Button, Divider, Grid, Typography } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
-import axios from 'app/api/axios'
-//import { LoadingButton } from '@mui/lab'
-import { format, parseISO } from 'date-fns'
+import axios, { AxiosResponse } from 'app/api/axios'
+import { format } from 'date-fns'
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.primary,
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.primary.main,
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'left',
@@ -39,60 +32,38 @@ const SingleJobPage = () => {
   useTitle('BilboMD: Job Details')
 
   const { id } = useParams()
-  //console.log('id', id)
 
-  //const { username, isManager, isAdmin } = useAuth()
-
+  // Will select the job with the given id, and will only rerender if the given jobs data changes
   const { job } = useGetJobsQuery('jobsList', {
-    selectFromResult: ({ data }) => ({
-      job: data?.entities[id]
-    })
-  })
-  //console.log('job', job)
-
-  const { users } = useGetUsersQuery('usersList', {
-    selectFromResult: ({ data }) => ({
-      users: data?.ids.map((id) => data?.entities[id])
-    })
+    selectFromResult: ({ data }) => ({ job: data?.find((job) => job.id === id) })
   })
 
-  if (!job || !users?.length) return <PulseLoader color={'#FFF'} />
+  if (!job) return <PulseLoader color={'#FFF'} />
 
-  // if (!isManager && !isAdmin) {
-  //   if (job.username !== username) {
-  //     return <p className="errmsg">No access</p>
-  //   }
-  // }
-
-  const handleDownload = async (id) => {
-    // console.log('download id:', id)
-    await axios
-      .get(`jobs/${id}/results`, { responseType: 'blob' })
-      .catch((error) => {
-        console.error('download results.tar.gz error:', error)
+  const handleDownload = async (id: string) => {
+    try {
+      const response: AxiosResponse<Blob> = await axios.get(`jobs/${id}/results`, {
+        responseType: 'blob'
       })
-      .then((response) => {
-        console.log(response)
-        // if (!response.data) {
-        //   console.error('no data')
-        //   return
-        // }
-        const url = window.URL.createObjectURL(new Blob([response.data]))
-        //console.log('url:', url)
+
+      if (response.data) {
+        const url = window.URL.createObjectURL(response.data)
         const link = document.createElement('a')
         link.href = url
         link.setAttribute('download', 'results.tar.gz')
-        // 3. Append to html page
         document.body.appendChild(link)
-        // 4. Force download
         link.click()
-        // 5. Clean up and remove the link
-        link.parentNode.removeChild(link)
-      })
+        link.parentNode?.removeChild(link)
+      } else {
+        console.error('No data')
+      }
+    } catch (error) {
+      console.error('Download results.tar.gz error:', error)
+    }
   }
 
   const content = (
-    <React.Fragment>
+    <>
       <Grid container spacing={2} rowSpacing={2}>
         <Grid item xs={9}>
           <Typography sx={HeaderThingee}>JOB TITLE</Typography>
@@ -201,7 +172,7 @@ const SingleJobPage = () => {
           </Item>
         </Grid>
       </Grid>
-    </React.Fragment>
+    </>
   )
 
   return content

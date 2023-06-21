@@ -1,8 +1,6 @@
-import React from 'react'
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { format, parseISO } from 'date-fns'
 import { useGetJobsQuery } from './jobsApiSlice'
-// import { useNavigate } from 'react-router-dom'
 import useTitle from 'hooks/useTitle'
 import clsx from 'clsx'
 import { Box } from '@mui/system'
@@ -10,7 +8,7 @@ import { green, red, amber } from '@mui/material/colors'
 import useAuth from '../../hooks/useAuth'
 import { CircularProgress } from '@mui/material'
 import DeleteJob from './DeleteJob'
-import InfoJob from './InfoJob'
+import JobDetails from './JobDetails'
 
 const Jobs = () => {
   useTitle('BilboMD: Jobs List')
@@ -34,26 +32,21 @@ const Jobs = () => {
   if (isLoading) content = <CircularProgress />
 
   if (isError) {
-    content = <p className="errmsg">{error?.data?.message}</p>
+    console.log('err:', error)
+    // content = <p className="errmsg">{error?.data?.message}</p>
   }
   if (isSuccess) {
-    const { ids, entities } = jobs
-
-    // This is some magic shit. Why do I find map so difficult to understand?
-    // This is where we will need to filter the jobs so that Users only see
-    // their jobs NOT all jobs.
-    // apparently ids is iterable and entities is NOT --- ned ref for this.
-
     let filteredIds
+
     if (isManager || isAdmin) {
-      filteredIds = [...ids]
+      filteredIds = [...jobs]
     } else {
-      filteredIds = ids.filter((jobId) => entities[jobId].username === username)
+      filteredIds = jobs.filter((job) => job.username === username)
     }
 
-    const rows = ids?.length && filteredIds.map((jobId) => entities[jobId])
+    const rows = filteredIds
 
-    const columns = [
+    const columns: GridColDef[] = [
       { field: 'title', headerName: 'Title', width: 200 },
       // { field: 'id', headerName: 'ID', width: 100, hide: true },
       {
@@ -109,7 +102,7 @@ const Jobs = () => {
         headerName: 'manage',
         getActions: (params) => [
           <DeleteJob key={params.id} job={params.row} />,
-          <InfoJob key={params.id} job={params.row} />
+          <JobDetails key={params.id} job={params.row} />
         ]
       }
     ]
@@ -144,10 +137,14 @@ const Jobs = () => {
         <DataGrid
           rows={rows}
           columns={columns}
-          pageSize={8}
-          rowsPerPageOptions={[8]}
-          //checkboxSelection
-          //getRowId={(row) => row._id}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5
+              }
+            }
+          }}
+          pageSizeOptions={[5]}
         />
       </Box>
     )
