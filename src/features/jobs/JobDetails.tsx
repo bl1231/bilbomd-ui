@@ -2,12 +2,7 @@
 import InfoIcon from '@mui/icons-material/Info'
 import { IconButton, Tooltip } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-
-interface Job {
-  id: string
-  title: string
-  // Add other properties if needed
-}
+import { Job } from './jobsApiSlice'
 
 interface JobDetailsProps {
   job: Job

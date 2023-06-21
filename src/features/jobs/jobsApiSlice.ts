@@ -2,7 +2,7 @@ import { createEntityAdapter } from '@reduxjs/toolkit'
 import { apiSlice } from 'app/api/apiSlice'
 // import { RootState } from 'app/store'
 
-interface Job {
+export interface Job {
   id: string
   _id: string
   conformational_sampling: number

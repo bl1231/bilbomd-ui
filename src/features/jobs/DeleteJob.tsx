@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useDeleteJobMutation } from './jobsApiSlice'
+import { useState } from 'react'
+import { useDeleteJobMutation, Job } from './jobsApiSlice'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
@@ -7,16 +7,25 @@ import DialogContentText from '@mui/material/DialogContentText'
 import { Button, IconButton, Tooltip } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 
-const DeleteJob = ({ job }) => {
+interface DeleteJobProps {
+  job: Job
+}
+
+const DeleteJob = ({ job }: DeleteJobProps) => {
   const { title, id } = job
   const [open, setOpen] = useState(false)
-
-  const [deleteJob, { isSuccess, isError, error }] = useDeleteJobMutation()
+  const [isDeleted, setDeleted] = useState(false)
+  // const [deleteJob, { isSuccess, isError, error }] = useDeleteJobMutation()
+  const [deleteJob] = useDeleteJobMutation()
 
   const onClickDelete = async () => {
     setOpen(false)
     //console.log(JSON.stringify(params.row, null, 4))
-    await deleteJob({ id: id })
+    await deleteJob({ id })
+    setDeleted(true) // Set success state to true after deletion
+    setTimeout(() => {
+      setDeleted(false) // Reset success state after a delay
+    }, 3000) // Change the delay as per your requirement
   }
 
   const handleClickOpen = () => {
@@ -28,7 +37,8 @@ const DeleteJob = ({ job }) => {
   }
 
   return (
-    <React.Fragment>
+    <>
+      {isDeleted && <p>Job deleted successfully!</p>}
       <Tooltip title={`Delete ${title}`} arrow>
         <IconButton color="secondary" onClick={handleClickOpen}>
           <DeleteIcon />
@@ -36,7 +46,7 @@ const DeleteJob = ({ job }) => {
       </Tooltip>
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
-          <DialogContentText>{`Delete ${title}?`}</DialogContentText>
+          <DialogContentText>{`Delete ${title} ?`}</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
@@ -45,7 +55,7 @@ const DeleteJob = ({ job }) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </React.Fragment>
+    </>
   )
 }
 

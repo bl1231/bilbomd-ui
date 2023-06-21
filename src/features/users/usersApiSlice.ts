@@ -1,12 +1,19 @@
 // import { createEntityAdapter } from '@reduxjs/toolkit'
-import { UseQueryState } from '@reduxjs/toolkit/dist/query/react/buildHooks'
-import { createSelector, createEntityAdapter } from '@reduxjs/toolkit'
+// import { UseQueryState } from '@reduxjs/toolkit/dist/query/react/buildHooks'
+import { createEntityAdapter } from '@reduxjs/toolkit'
 import { apiSlice } from 'app/api/apiSlice'
-import type { RootState } from '../../app/store'
+// import type { RootState } from '../../app/store'
 
 type User = {
   id: string
   _id: string
+  UUID: string
+  active: boolean
+  createdAt: string
+  email: string
+  status: string
+  updatedAt: string
+  username: string
 }
 
 // type UsersResponseType = User[]
@@ -25,7 +32,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         }
       }),
       transformResponse: (responseData: User[]) => {
-        // console.log('data', responseData)
+        console.log('users:', responseData)
         const loadedUsers = responseData.map((user) => {
           user.id = user._id
           // console.log('DEBUG user.id', user.id)
@@ -98,10 +105,10 @@ export const {
 export const selectUsersResult = usersApiSlice.endpoints.getUsers.select({})
 
 // creates memoized selector
-const selectUsersData = createSelector(
-  selectUsersResult,
-  (usersResult) => usersResult.data // normalized state object with ids & entities
-)
+// const selectUsersData = createSelector(
+//   selectUsersResult,
+//   (usersResult) => usersResult.data // normalized state object with ids & entities
+// )
 
 // //getSelectors creates these selectors and we rename them with aliases using destructuring
 // export const {

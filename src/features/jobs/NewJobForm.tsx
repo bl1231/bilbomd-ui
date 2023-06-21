@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+// import { useState } from 'react'
 import {
   Grid,
   TextField,
@@ -23,10 +23,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { bilbomdJobSchema } from 'schemas/ValidationSchemas'
 import useAuth from 'hooks/useAuth'
 import { styled } from '@mui/material/styles'
-// import { Debug } from 'components/Debug'
+import { Debug } from 'components/Debug'
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.primary,
+  backgroundColor:
+    theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'left',
@@ -62,9 +63,9 @@ const NewJobForm = () => {
   // const [addNewJob, { isLoading, isSuccess, isError, error }] = useAddNewJobMutation()
   const [addNewJob, { isSuccess }] = useAddNewJobMutation()
   const { email } = useAuth()
-  const [jobid, setJobid] = useState('')
+  // const [jobid, setJobid] = useState('')
 
-  const onSubmit = async (values, { setSubmitting, setErrors, setStatus, resetForm }) => {
+  const onSubmit = async (values, { setStatus }) => {
     const form = new FormData()
     form.append('title', values.title)
     form.append('psf_file', values.psf_file)
@@ -82,7 +83,7 @@ const NewJobForm = () => {
 
     try {
       const newJob = await addNewJob(form).unwrap()
-      setJobid(newJob.jobid)
+      // setJobid(newJob.jobid)
       setStatus(newJob)
     } catch (error) {
       console.error('rejected', error)
@@ -90,7 +91,7 @@ const NewJobForm = () => {
   }
 
   const content = (
-    <React.Fragment>
+    <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Accordion>
@@ -157,7 +158,7 @@ const NewJobForm = () => {
               <Typography sx={{ m: 1 }}>
                 <b>Rg Steps</b> - Define the Radius of Gyration range (as <b>Rg Min</b>
                 and <b>Rg Max</b>) that will constrain the MD simulations. <b>BilboMD</b>
-                will calculate 5 equidistant Rg "steps" bewteen <b>Rg Min</b> and
+                will calculate 5 equidistant steps bewteen <b>Rg Min</b> and
                 <b>Rg Max</b> to perform Molecular Dynamics. A good rule-of-thumb for your
                 initial <b>BilboMD</b> run is to select initial <b>Rg Min</b> and
                 <b>Rg Max</b> values from -7% to +25% around your experimental Rg
@@ -198,7 +199,6 @@ const NewJobForm = () => {
                   isSubmitting,
                   handleChange,
                   handleBlur,
-                  resetForm,
                   status,
                   setFieldValue,
                   setFieldTouched
@@ -412,7 +412,7 @@ const NewJobForm = () => {
                           sx={{ width: '520px' }}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          error={errors.num_conf && touched.num_conf}
+                          error={Boolean(errors.num_conf && touched.num_conf)}
                           helperText={
                             errors.num_conf && touched.num_conf
                               ? errors.num_conf
@@ -449,7 +449,7 @@ const NewJobForm = () => {
                         {isSuccess ? <Alert severity="success">{status}</Alert> : ''}
                       </Grid>
                     </Grid>
-                    {/* <Debug /> */}
+                    {process.env.NODE_ENV === 'development' ? <Debug /> : ''}
                   </Form>
                 )}
               </Formik>
@@ -457,7 +457,7 @@ const NewJobForm = () => {
           </Item>
         </Grid>
       </Grid>
-    </React.Fragment>
+    </>
   )
 
   return content

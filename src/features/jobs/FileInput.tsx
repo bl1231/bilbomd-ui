@@ -1,15 +1,33 @@
-import React, { useState } from 'react'
-import { Button, FormControl, FormHelperText, FormLabel, Input } from '@mui/material'
+import { useState, ChangeEvent } from 'react'
+import {
+  Button,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  Input,
+  FormControlProps
+} from '@mui/material'
 
-const FileInput = (props) => {
+interface FileInputProps extends FormControlProps {
+  fileType: string
+  fileExt: string
+  id: string
+  name: string
+  title: string
+  errorMessage?: string
+  // error?: boolean
+  // setFieldTouched: (field: string, touched?: boolean, shouldValidate?: boolean) => void
+  setFieldValue: (field: string, value: File, shouldValidate?: boolean) => void
+}
+
+const FileInput = (props: FileInputProps) => {
   const [fileName, setFileName] = useState('')
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
-    props.setFieldTouched(props.name, true, true)
-    let reader = new FileReader()
-    let file = event.target.files[0]
-    console.log(file)
+    // props.setFieldTouched(props.name, true, true)
+    const reader = new FileReader()
+    const file = event.target.files?.[0]
     if (file) {
       reader.onloadend = () => setFileName(file.name)
       reader.readAsDataURL(file)
@@ -27,12 +45,7 @@ const FileInput = (props) => {
         id={props.id}
         name={props.name}
         type="file"
-        accept={props.fileExt}
         onChange={handleFileChange}
-        // onBlur={(e) => {
-        //   console.log('onBlur triggered', e)
-        // }}
-        // {...props}
       />
       <label htmlFor={props.id}>
         <Button variant="contained" component="span" sx={{ mr: 2, width: '100px' }}>
