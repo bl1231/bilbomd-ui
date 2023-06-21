@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-// import { createApi, BaseQueryFn } from '@reduxjs/toolkit/query/react'
-import { setCredentials, logOut } from '../../features/auth/authSlice'
+import { setCredentials } from '../../features/auth/authSlice'
 import type { RootState } from '../store'
 
 console.log('apiSlice', import.meta.env.MODE)
@@ -50,8 +49,9 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
   return result
 }
 
+// initialize an empty api service that we'll inject endpoints into later as needed
 export const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ['Job', 'User'],
-  endpoints: (builder) => ({})
+  endpoints: () => ({})
 })

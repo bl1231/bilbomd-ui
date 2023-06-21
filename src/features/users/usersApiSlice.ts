@@ -1,15 +1,17 @@
-import { createEntityAdapter } from '@reduxjs/toolkit'
+// import { createEntityAdapter } from '@reduxjs/toolkit'
 import { UseQueryState } from '@reduxjs/toolkit/dist/query/react/buildHooks'
-// import { createSelector, createEntityAdapter } from '@reduxjs/toolkit'
+import { createSelector, createEntityAdapter } from '@reduxjs/toolkit'
 import { apiSlice } from 'app/api/apiSlice'
-// import type { RootState } from '../../app/store'
+import type { RootState } from '../../app/store'
 
-type User = 
-  [key: 'string' | number]: string | number | string[] | boolean
+type User = {
+  id: string
+  _id: string
+}
 
-// type UsersResponse = User[]
+// type UsersResponseType = User[]
 
-const usersAdapter = createEntityAdapter({})
+const usersAdapter = createEntityAdapter<User>({})
 
 const initialState = usersAdapter.getInitialState()
 
@@ -22,27 +24,37 @@ export const usersApiSlice = apiSlice.injectEndpoints({
           return response.status === 200 && !result.isError
         }
       }),
-      transformResponse: (response: User[]) => {
-        const loadedUsers = response.map((user) => {
+      transformResponse: (responseData: User[]) => {
+        // console.log('data', responseData)
+        const loadedUsers = responseData.map((user) => {
           user.id = user._id
-          console.log(user)
+          // console.log('DEBUG user.id', user.id)
+          // console.log('DEBUG user._id', user._id)
+          // console.log('transformResponse user: ', user)
           return user
         })
         usersAdapter.setAll(initialState, loadedUsers)
         return loadedUsers
       },
-      transformErrorResponse: (response: { status: string | number }) => {
-        return response.status
-      },
-      providesTags: (result, error, arg) => {
-        console.log('result: ', result)
-        if (result) {
-          return [
-            { type: 'User', id: 'LIST' },
-            ...result.ids<number>.map((id) => ({ type: 'User', id }))
-          ]
-        } else return [{ type: 'User', id: 'LIST' }]
-      }
+      // transformErrorResponse: (response: { status: string | number }) => {
+      //   return response.status
+      // },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'User' as const, id })),
+              { type: 'User', id: 'LIST' }
+            ]
+          : [{ type: 'User', id: 'LIST' }]
+      // providesTags: (result, error, arg) => {
+      //   console.log('result: ', result)
+      //   if (result) {
+      //     return [
+      //       { type: 'User', id: 'LIST' },
+      //       ...result.ids.map((id) => ({ type: 'User' as const, id }))
+      //     ]
+      //   } else return [{ type: 'User', id: 'LIST' }]
+      // }
     }),
     addNewUser: builder.mutation({
       query: (initialUserData) => ({
@@ -83,13 +95,13 @@ export const {
 } = usersApiSlice
 
 // returns the query result object
-export const selectUsersResult = usersApiSlice.endpoints.getUsers.select(0)
+export const selectUsersResult = usersApiSlice.endpoints.getUsers.select({})
 
 // creates memoized selector
-// const selectUsersData = createSelector(
-//   selectUsersResult,
-//   (usersResult) => usersResult.data // normalized state object with ids & entities
-// )
+const selectUsersData = createSelector(
+  selectUsersResult,
+  (usersResult) => usersResult.data // normalized state object with ids & entities
+)
 
 // //getSelectors creates these selectors and we rename them with aliases using destructuring
 // export const {

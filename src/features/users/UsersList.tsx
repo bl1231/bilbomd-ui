@@ -1,11 +1,11 @@
-import React from 'react'
+// import React from 'react'
 import { useGetUsersQuery } from './usersApiSlice'
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
 import EditIcon from '@mui/icons-material/Edit'
 import useTitle from 'hooks/useTitle'
 import { Box } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
-import { Button, CircularProgress } from '@mui/material'
+import { CircularProgress } from '@mui/material'
 
 const UsersList = () => {
   useTitle('BilboMD: Users List')
@@ -27,16 +27,13 @@ const UsersList = () => {
   if (isLoading) content = <CircularProgress />
 
   if (isError) {
-    content = <p className="errmsg">{error?.data?.message}</p>
+    console.error('error in UsersList', error)
+    // content = <p>{error}</p>
+    // content = <p className="errmsg">{error?.data?.message}</p>
   }
 
   if (isSuccess) {
-    const { ids, entities } = users
-
-    const rows = ids?.length && ids.map((userId) => entities[userId])
-    // console.log(rows)
-
-    const columns = [
+    const columns: GridColDef[] = [
       { field: 'username', headerName: 'Username' },
       { field: 'email', headerName: 'Email', width: 180 },
       { field: 'roles', headerName: 'Roles', width: 140 },
@@ -50,9 +47,7 @@ const UsersList = () => {
             key={params.id}
             icon={<EditIcon />}
             label="Edit"
-            component={Button}
-            variant="contained"
-            onClick={() => navigate(params.id)}
+            onClick={() => navigate(params.id as string)}
           />
         ]
       }
@@ -60,7 +55,18 @@ const UsersList = () => {
 
     content = (
       <Box sx={{ height: 600 }}>
-        <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} />
+        <DataGrid
+          rows={users}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5
+              }
+            }
+          }}
+          pageSizeOptions={[5]}
+        />
       </Box>
     )
   }
