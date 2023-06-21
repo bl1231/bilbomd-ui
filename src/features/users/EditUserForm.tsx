@@ -1,3 +1,4 @@
+import { useEffect, useState, ChangeEvent } from 'react'
 import {
   Button,
   Card,
@@ -12,6 +13,7 @@ import {
   FormControl,
   FormGroup,
   Select,
+  SelectChangeEvent,
   InputLabel,
   OutlinedInput,
   ListItemText
@@ -20,16 +22,18 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
-// import DialogTitle from '@mui/material/DialogTitle'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import { Field, Form, Formik } from 'formik'
-import React, { useEffect } from 'react'
-// import { Debug } from 'components/Debug'
-import { useUpdateUserMutation, useDeleteUserMutation } from './usersApiSlice'
+import { Debug } from 'components/Debug'
+import { User, useUpdateUserMutation, useDeleteUserMutation } from './usersApiSlice'
 import { ROLES } from 'config/roles'
 import { useNavigate } from 'react-router-dom'
 import { editUserSchema } from 'schemas/ValidationSchemas'
+
+interface EditUserFormProps {
+  user: User
+}
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -42,8 +46,8 @@ const MenuProps = {
   }
 }
 
-const EditUserForm = ({ user }) => {
-  const [open, setOpen] = React.useState(false)
+const EditUserForm = ({ user }: EditUserFormProps) => {
+  const [open, setOpen] = useState(false)
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -51,12 +55,10 @@ const EditUserForm = ({ user }) => {
 
   const handleClose = () => {
     setOpen(false)
-    // console.log('cancel')
   }
 
   const handleDeleteUser = async () => {
     setOpen(false)
-    // console.log('delete')
     await deleteUser({ id: user.id })
   }
 
@@ -67,37 +69,25 @@ const EditUserForm = ({ user }) => {
     roles: user.roles
   }
 
-  // prettier-ignore
-  const [updateUser, {
-    isLoading,
-    isSuccess,
-    isError,
-    error,
-  }] = useUpdateUserMutation();
+  const [updateUser, updateResult] = useUpdateUserMutation()
 
-  // prettier-ignore
-  const [deleteUser, {
-    isSuccess: isDelSuccess,
-    isError: isDelError,
-    error: delerror,
-  }] = useDeleteUserMutation();
+  const [deleteUser, deleteResult] = useDeleteUserMutation()
 
   const navigate = useNavigate()
 
-  const errContent = (error?.data?.message || delerror?.data?.message) ?? ''
+  let errContent = ''
+  if (updateResult.error || deleteResult.error) {
+    errContent = ((updateResult.error as string) || (deleteResult.error as string)) ?? ''
+  }
 
   useEffect(() => {
-    // console.log(isSuccess)
-    if (isSuccess || isDelSuccess) {
-      // setUsername('')
-      // setPassword('')
-      // setRoles([])
+    if (updateResult.isSuccess || deleteResult.isSuccess) {
       navigate('../users')
     }
-  }, [isSuccess, isDelSuccess, navigate])
+  }, [updateResult.isSuccess, deleteResult.isSuccess, navigate])
 
-  const myOnSubmit = async (values, { isLoading, isSuccess, isError, error }) => {
-    // console.log('clicked')
+  const myOnSubmit = async (values) => {
+    // console.log(values)
     await updateUser({
       id: user.id,
       username: values.username,
@@ -116,17 +106,7 @@ const EditUserForm = ({ user }) => {
           onSubmit={myOnSubmit}
           enableReinitialize={true}
         >
-          {({
-            values,
-            errors,
-            touched,
-            isValid,
-            isSubmitting,
-            handleChange,
-            setFieldValue,
-            handleBlur,
-            resetForm
-          }) => (
+          {({ values, isSubmitting, handleChange, handleBlur, setFieldValue }) => (
             <Form>
               <Grid container direction="column">
                 <Grid item sx={{ my: 2, width: '300px' }}>
@@ -181,7 +161,7 @@ const EditUserForm = ({ user }) => {
                       id="roles"
                       multiple={true}
                       value={values.roles}
-                      onChange={handleChange('roles')}
+                      onChange={(e) => setFieldValue('roles', e.target.value as string)}
                       input={<OutlinedInput label="Roles" />}
                       renderValue={(selected) => selected.join(', ')}
                       MenuProps={MenuProps}
@@ -212,7 +192,6 @@ const EditUserForm = ({ user }) => {
                     type="button"
                     disabled={isSubmitting}
                     onClick={handleClickOpen}
-                    // onClick={onDeleteUserClicked}
                   >
                     {`Delete ${values.username}`}
                   </Button>
@@ -231,14 +210,14 @@ const EditUserForm = ({ user }) => {
                   </Dialog>
                 </Grid>
                 <Grid item sx={{ mt: 2 }}>
-                  {error || delerror ? (
+                  {updateResult.error || deleteResult.error ? (
                     <Alert severity="warning">{errContent}</Alert>
                   ) : (
                     ''
                   )}
                 </Grid>
               </Grid>
-              {/* <Debug /> */}
+              {process.env.NODE_ENV === 'development' ? <Debug /> : ''}
             </Form>
           )}
         </Formik>
