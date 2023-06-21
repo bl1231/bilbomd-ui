@@ -4,7 +4,7 @@ import { createEntityAdapter } from '@reduxjs/toolkit'
 import { apiSlice } from 'app/api/apiSlice'
 // import type { RootState } from '../../app/store'
 
-type User = {
+export type User = {
   id: string
   _id: string
   UUID: string
@@ -14,9 +14,8 @@ type User = {
   status: string
   updatedAt: string
   username: string
+  roles: string[]
 }
-
-// type UsersResponseType = User[]
 
 const usersAdapter = createEntityAdapter<User>({})
 
@@ -32,20 +31,17 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         }
       }),
       transformResponse: (responseData: User[]) => {
-        console.log('users:', responseData)
+        // console.log('users:', responseData)
         const loadedUsers = responseData.map((user) => {
           user.id = user._id
-          // console.log('DEBUG user.id', user.id)
-          // console.log('DEBUG user._id', user._id)
-          // console.log('transformResponse user: ', user)
           return user
         })
         usersAdapter.setAll(initialState, loadedUsers)
         return loadedUsers
       },
-      // transformErrorResponse: (response: { status: string | number }) => {
-      //   return response.status
-      // },
+      transformErrorResponse: (response: { status: string | number }) => {
+        return response.status
+      },
       providesTags: (result) =>
         result
           ? [
@@ -53,15 +49,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
               { type: 'User', id: 'LIST' }
             ]
           : [{ type: 'User', id: 'LIST' }]
-      // providesTags: (result, error, arg) => {
-      //   console.log('result: ', result)
-      //   if (result) {
-      //     return [
-      //       { type: 'User', id: 'LIST' },
-      //       ...result.ids.map((id) => ({ type: 'User' as const, id }))
-      //     ]
-      //   } else return [{ type: 'User', id: 'LIST' }]
-      // }
     }),
     addNewUser: builder.mutation({
       query: (initialUserData) => ({
