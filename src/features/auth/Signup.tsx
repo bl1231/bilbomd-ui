@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Formik, Form } from 'formik'
 import { userRegisterSchema } from 'schemas/ValidationSchemas'
 import { Link } from 'react-router-dom'
@@ -10,9 +10,9 @@ import Button from '@mui/material/Button'
 import CloseIcon from '@mui/icons-material/Close'
 import { Alert, AlertTitle, Divider, Grid, TextField, Typography } from '@mui/material'
 import useTitle from 'hooks/useTitle'
-import axios from 'app/api/axios'
+import axiosInstance, { AxiosResponse, AxiosError, isAxiosError } from 'app/api/axios'
 
-const REGISTER_URL = '/register'
+import { Debug } from 'components/Debug'
 
 const Signup = () => {
   useTitle('BilboMD: Signup')
@@ -20,42 +20,38 @@ const Signup = () => {
   const [error, setError] = useState('')
 
   const onSubmit = async (values, { setStatus, resetForm, setSubmitting, setErrors }) => {
-    setStatus({ success: 'Splinching the data...', css: 'sending' })
-
-    const response = await axios
-      .post(REGISTER_URL, values, {
+    try {
+      const response = await axiosInstance.post('/register', values, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true
       })
-      .catch((err) => {
-        if (!err?.response) {
-          setError({ message: 'No Server Response' })
-        } else if (err?.response?.status === 409) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          setError({ message: 'User Name or Email Already Registered.' })
-          setSuccess(null)
-          setStatus({ error: err, css: 'error' })
-          // console.log(err.response.data)
-          // console.log(err.response.status)
-          // console.log(err.response.headers)
-        } else {
-          setError({ message: 'Registration Failed!' })
+      console.log('response: ', response)
+      if (response.status === 201) {
+        // successfully created a new user
+        setError('')
+        setErrors(null)
+        setSuccess(response.data.success)
+        setSubmitting(false)
+        resetForm()
+      }
+    } catch (error) {
+      if (isAxiosError(error)) {
+        // Access to config, request, and response
+        console.error('Axios Error: ', error)
+        if (!error.response) {
+          setError('No Server Response')
+        } else if (error.response.status === 409) {
+          setError(error.response.data.message)
         }
-      })
-
-    // all good. We got a response from server
-    if (response?.data) {
-      setError(null)
-      setErrors(null)
-      setSuccess(response.data.success)
-      setSubmitting(false)
-      resetForm()
+        setSubmitting(false)
+      } else {
+        console.error('error2:', error)
+      }
     }
   }
 
   const content = (
-    <React.Fragment>
+    <>
       <Grid
         container
         columns={12}
@@ -144,7 +140,7 @@ const Signup = () => {
                         }
                         sx={{ mb: 1 }}
                       >
-                        {error.message}
+                        {error}
                         <br /> If you have an account{' '}
                         <Link to="../magicklink" className="alert-link">
                           get a MagickLink&#8482;
@@ -188,13 +184,14 @@ const Signup = () => {
                   >
                     Get a MagickLink&#8482;
                   </Button>
+                  {process.env.NODE_ENV === 'development' ? <Debug /> : ''}
                 </Form>
               )}
             </Formik>
           )}
         </Grid>
       </Grid>
-    </React.Fragment>
+    </>
   )
 
   return content

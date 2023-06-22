@@ -5,7 +5,7 @@ import useTitle from 'hooks/useTitle'
 import { Button, Divider, Grid, Typography } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
-import axios, { AxiosResponse } from 'app/api/axios'
+import axiosInstance, { AxiosResponse } from 'app/api/axios'
 import { format } from 'date-fns'
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -43,9 +43,12 @@ const SingleJobPage = () => {
 
   const handleDownload = async (id: string) => {
     try {
-      const response: AxiosResponse<Blob> = await axios.get(`jobs/${id}/results`, {
-        responseType: 'blob'
-      })
+      const response: AxiosResponse<Blob> = await axiosInstance.get(
+        `jobs/${id}/results`,
+        {
+          responseType: 'blob'
+        }
+      )
 
       if (response.data) {
         const url = window.URL.createObjectURL(response.data)

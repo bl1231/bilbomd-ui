@@ -1,5 +1,5 @@
 import { Alert, AlertTitle, Grid } from '@mui/material'
-import axios from 'app/api/axios'
+import axiosInstance from 'app/api/axios'
 import { useState, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import Button from '@mui/material/Button'
@@ -20,7 +20,7 @@ const VerifyEmail = () => {
   useEffect(() => {
     const verify = async () => {
       try {
-        const response = await axios.post('/verify', data, {
+        const response = await axiosInstance.post('/verify', data, {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true
         })

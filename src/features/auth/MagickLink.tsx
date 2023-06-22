@@ -11,7 +11,7 @@ import { Alert, AlertTitle, TextField, Typography, Grid } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { Link } from 'react-router-dom'
 import useTitle from 'hooks/useTitle'
-import axios from 'app/api/axios'
+import axiosInstance from 'app/api/axios'
 
 const MAGICKLINK_URL = '/magicklink'
 const VERIFICATION_CODE_URL = '/verify/resend'
@@ -25,7 +25,7 @@ const MagickLink = () => {
 
   const onSubmit = async (values, { setStatus, resetForm, setSubmitting }) => {
     setStatus({ success: 'Splinching the data...', css: 'sending' })
-    const response = await axios
+    const response = await axiosInstance
       .post(MAGICKLINK_URL, values, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true
@@ -56,7 +56,7 @@ const MagickLink = () => {
 
   const resendVerificationCode = async (email) => {
     // console.log('resend code for:', email)
-    await axios
+    await axiosInstance
       .post(
         VERIFICATION_CODE_URL,
         { email: email },
