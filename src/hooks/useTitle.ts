@@ -1,11 +1,13 @@
 import { useEffect } from 'react'
 
-const useTitle = (title) => {
+const useTitle = (title: string) => {
   useEffect(() => {
     const prevTitle = document.title
     document.title = title
 
-    return () => (document.title = prevTitle)
+    return () => {
+      document.title = prevTitle
+    }
   }, [title])
 }
 
