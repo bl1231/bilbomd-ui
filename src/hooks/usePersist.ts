@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 
-const usePersist = () => {
-  const [persist, setPersist] = useState(
-    JSON.parse(localStorage.getItem('persist')) || false
+const usePersist = (): [boolean, React.Dispatch<React.SetStateAction<boolean>>] => {
+  const [persist, setPersist] = useState<boolean>(
+    JSON.parse(localStorage.getItem('persist') as string) || false
   )
 
   useEffect(() => {
@@ -11,4 +11,5 @@ const usePersist = () => {
 
   return [persist, setPersist]
 }
+
 export default usePersist

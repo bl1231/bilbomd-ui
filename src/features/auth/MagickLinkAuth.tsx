@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from 'features/auth/authSlice'
@@ -7,55 +7,49 @@ import { Alert, AlertTitle, CircularProgress, Grid } from '@mui/material'
 import usePersist from 'hooks/usePersist'
 import useTitle from 'hooks/useTitle'
 
+interface AuthError {
+  data: { message: string }
+}
+
 const MagickLinkAuth = () => {
   useTitle('BilboMD: Check OTP')
-  let { otp } = useParams()
-  const [success, setSuccess] = useState(null)
-  const [error, setError] = useState('')
+  const { otp } = useParams()
+  const [success, setSuccess] = useState(false)
+  const [authErrorMsg, setAuthErrorMsg] = useState('')
   const [persist, setPersist] = usePersist()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
   const [login, { isLoading }] = useLoginMutation()
 
-  const effectRan = useRef(false)
-
   useEffect(() => {
-    if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
-      const authenticateOTP = async () => {
-        try {
-          const { accessToken } = await login({ otp }).unwrap()
-          //console.log('MagickLinkAuth accessToken:', accessToken)
-          dispatch(setCredentials({ accessToken }))
-          setSuccess('y')
-          // because we don't have a user interface for logging in we manually set persist
+    const authenticateOTP = async () => {
+      try {
+        const { accessToken } = await login({ otp }).unwrap()
+        dispatch(setCredentials({ accessToken }))
+        setSuccess(true)
+        if (!persist) {
           setPersist(true)
-          // wait here for a few seconds so user can see the Alert message
-          await sleep(3000)
-          navigate('../dashboard/jobs')
-        } catch (err) {
-          if (!err.status) {
-            setError('No Server Response')
-          } else if (err.status === 400) {
-            setError('Missing OTP')
-          } else if (err.status === 401) {
-            setError('Unauthorized')
-          } else {
-            setError(err.data?.message)
-          }
+        }
+        await sleep(3000)
+        navigate('../dashboard/jobs')
+      } catch (err: unknown) {
+        const authError = err as AuthError
+        if (!err) {
+          setAuthErrorMsg('No Server Response')
+        } else {
+          setAuthErrorMsg(authError.data.message)
         }
       }
-      authenticateOTP()
     }
 
-    return () => (effectRan.current = true)
-
-    // eslint-disable-next-line
+    authenticateOTP()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const content = (
-    <React.Fragment>
+    <>
       <Grid
         container
         columns={12}
@@ -86,13 +80,14 @@ const MagickLinkAuth = () => {
             <Alert severity="warning">
               <AlertTitle>Warning!</AlertTitle>Hmmmmm. Maybe your MagickLink&#8482; has
               expired? Please try <Link to="../../magicklink">generating another</Link>.
-              If that doesn't work please contact us.
-              <p>{error}</p>
+              If that doesn&apos;t work please contact us.
+              <br />
+              <p>{authErrorMsg}</p>
             </Alert>
           )}
         </Grid>
       </Grid>
-    </React.Fragment>
+    </>
   )
 
   return content

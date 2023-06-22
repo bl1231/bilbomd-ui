@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useSendLogoutMutation } from 'features/auth/authApiSlice'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -10,11 +10,11 @@ import { useNavigate } from 'react-router'
 const LogOut = () => {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
-  const [sendLogout, { isLoading, isSuccess, isError, error }] = useSendLogoutMutation()
+  const [sendLogout] = useSendLogoutMutation()
 
   const onClickLogout = async () => {
     setOpen(false)
-    await sendLogout()
+    await sendLogout({})
     navigate('.')
   }
 
@@ -27,7 +27,7 @@ const LogOut = () => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Typography onClick={handleClickOpen}>Logout</Typography>
 
       <Dialog open={open} onClose={handleClose}>
@@ -52,7 +52,7 @@ const LogOut = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </React.Fragment>
+    </>
   )
 }
 

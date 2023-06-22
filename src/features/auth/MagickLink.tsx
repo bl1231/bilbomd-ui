@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Formik, Form } from 'formik'
 import { userSignInSchema } from 'schemas/ValidationSchemas'
 import IconButton from '@mui/material/IconButton'
@@ -32,15 +32,13 @@ const MagickLink = () => {
       })
       .catch((err) => {
         if (!err?.response) {
-          setError({ message: 'No Server Response' })
+          setError('No Server Response')
         } else if (err?.response?.status) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
           // error message from backend available in data.message
           //console.log(err.response)
-          setError({
-            message: err.response.data.message
-          })
+          setError(err.response.data.message)
           setSuccess(null)
           setStatus({ error: err, css: 'error' })
           // console.log(err.response.data.message)
@@ -49,7 +47,7 @@ const MagickLink = () => {
         }
       })
     if (response?.data) {
-      setError(null)
+      // setError({}})
       setSuccess(response.data.success)
       setSubmitting(false)
       resetForm()
@@ -88,19 +86,19 @@ const MagickLink = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <React.Fragment>
+        <>
           <Alert severity="success" variant="outlined">
             <AlertTitle>Woot!</AlertTitle>A new email verification code has been sent to{' '}
             <strong>{verifyEmail}</strong>.<br /> Please check your inbox and perhaps your
             Spam folder for an email from{' '}
             <strong>{import.meta.env.VITE_SENDMAIL_USER}</strong>
           </Alert>
-        </React.Fragment>
+        </>
       </Grid>
     )
   } else {
     content = (
-      <React.Fragment>
+      <>
         <Grid
           container
           columns={12}
@@ -165,7 +163,7 @@ const MagickLink = () => {
                     {error ? (
                       <Collapse in={Boolean(error)}>
                         <Alert
-                          severity={error.message == 'Pending' ? 'warning' : 'error'}
+                          severity={error == 'Pending' ? 'warning' : 'error'}
                           action={
                             <IconButton
                               aria-label="close"
@@ -178,8 +176,8 @@ const MagickLink = () => {
                           }
                           sx={{ mb: 1 }}
                         >
-                          {error.message == 'Pending' ? (
-                            <React.Fragment>
+                          {error == 'Pending' ? (
+                            <>
                               <Typography>Please verify your email first</Typography>
                               <Button
                                 variant="outlined"
@@ -192,9 +190,9 @@ const MagickLink = () => {
                               >
                                 Resend Verification Code
                               </Button>
-                            </React.Fragment>
+                            </>
                           ) : (
-                            error.message
+                            error
                           )}
                         </Alert>
                       </Collapse>
@@ -235,7 +233,7 @@ const MagickLink = () => {
             )}
           </Grid>
         </Grid>
-      </React.Fragment>
+      </>
     )
   }
 
