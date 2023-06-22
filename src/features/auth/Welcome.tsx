@@ -1,4 +1,3 @@
-import { Fragment } from 'react'
 import useAuth from 'hooks/useAuth'
 import useTitle from 'hooks/useTitle'
 import { Typography } from '@mui/material'
@@ -9,16 +8,20 @@ const Welcome = () => {
   useTitle(`BilboMD: ${username}`)
 
   const content = (
-    <Fragment>
+    <>
       <Typography variant="h2" sx={{ my: 3 }}>
         Welcome {username}!
       </Typography>
       <Typography>Let&apos;s run some BilboMD simulations.</Typography>
-      <Typography>{process.env.NODE_ENV}</Typography>
-      <Typography>{import.meta.env.BASE_URL}</Typography>
-      <Typography>{import.meta.env.VITE_BILBOMD_BACKEND_PORT}</Typography>
-      <Typography>{import.meta.env.VITE_BILBOMD_BACKEND_PORT_NOPE}</Typography>
-    </Fragment>
+      <Typography>System is running in {process.env.NODE_ENV} mode</Typography>
+      {/* <Typography>{import.meta.env.BASE_URL}</Typography> */}
+      <Typography>
+        {' '}
+        and accessing bilbomd-backedn API via PORT:{' '}
+        {import.meta.env.VITE_BILBOMD_BACKEND_PORT}
+      </Typography>
+      {/* <Typography>{import.meta.env.VITE_BILBOMD_BACKEND_PORT_NOPE}</Typography> */}
+    </>
   )
 
   return content
