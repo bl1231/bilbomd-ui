@@ -17,37 +17,34 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 const PersistLogin = () => {
   const [persist] = usePersist()
   const token = useSelector(selectCurrentToken)
-  const effectRan = useRef(false)
+  const isMountedRef = useRef(false) // Create a ref to track the initial mount
 
-  //
   const [trueSuccess, setTrueSuccess] = useState(false)
 
   const [refresh, { isUninitialized, isLoading, isSuccess, isError, error }] =
     useRefreshMutation()
 
   useEffect(() => {
-    if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
-      // React 18 Strict Mode
-
-      const verifyRefreshToken = async () => {
-        // console.log('verifying refresh token')
-        try {
-          //const response =
-          await refresh()
-          //const { accessToken } = response.data
-          // needed to differentiate the isSuccess from refresh
-          setTrueSuccess(true)
-        } catch (err) {
-          console.error(err)
-        }
+    const verifyRefreshToken = async () => {
+      // console.log('verifying refresh token')
+      try {
+        //const response =
+        await refresh()
+        //const { accessToken } = response.data
+        // needed to differentiate the isSuccess from refresh
+        setTrueSuccess(true)
+      } catch (error) {
+        console.error(error)
       }
-
+    }
+    if (!isMountedRef.current) {
+      // Only execute verifyRefreshToken on initial mount
+      isMountedRef.current = true
+      // and only if there is not existing token AND persist is true
       if (!token && persist) verifyRefreshToken()
     }
 
-    return () => (effectRan.current = true)
-
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   let content
@@ -77,9 +74,7 @@ const PersistLogin = () => {
             severity="error"
             sx={{ backgroundColor: '#ffa39e', color: 'black' }}
           >
-            <AlertTitle>
-              {error?.data?.message ? error?.data?.message : 'Login session has expired'}
-            </AlertTitle>
+            <AlertTitle>{error ? String(error) : 'Login session has expired'}</AlertTitle>
             <Typography>Please login again.</Typography>
           </Alert>
           <Button
@@ -110,4 +105,5 @@ const PersistLogin = () => {
 
   return content
 }
+
 export default PersistLogin
