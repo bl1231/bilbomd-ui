@@ -89,7 +89,7 @@ export const bilbomdJobSchema = object().shape({
       async (file) => {
         if (file) {
           const fromCharmm = await fromCharmmGui(file)
-          console.log('fromCharmm:', fromCharmm)
+          // console.log('fromCharmm:', fromCharmm)
           return fromCharmm
         }
       }
@@ -112,7 +112,7 @@ export const bilbomdJobSchema = object().shape({
       'Only accepts a CRD file obtained from CHARMM-GUI',
       (file) => {
         if (file && file.name.split('.').pop().toUpperCase() === 'CRD') {
-          console.log(file.name.split('.').pop())
+          // console.log(file.name.split('.').pop())
           return true
         }
         return false
@@ -124,7 +124,7 @@ export const bilbomdJobSchema = object().shape({
       async (file) => {
         if (file) {
           const fromCharmm = await fromCharmmGui(file)
-          console.log('fromCharmm:', fromCharmm)
+          // console.log('fromCharmm:', fromCharmm)
           return fromCharmm
         }
       }
@@ -164,7 +164,7 @@ export const bilbomdJobSchema = object().shape({
     })
     .test('file-type-check', 'Only accepts a *.dat file.', (file) => {
       if (file && file.name.split('.').pop().toUpperCase() === 'DAT') {
-        console.log(file.name.split('.').pop())
+        // console.log(file.name.split('.').pop())
         return true
       }
       return false
@@ -172,7 +172,7 @@ export const bilbomdJobSchema = object().shape({
     .test('saxs-data-check', 'File does not appear to be SAXS data', async (file) => {
       if (file) {
         const saxsData = await isSaxsData(file)
-        console.log('saxsData:', saxsData)
+        // console.log('saxsData:', saxsData)
         return saxsData
       }
     }),
