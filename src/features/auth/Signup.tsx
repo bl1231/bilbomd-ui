@@ -10,7 +10,7 @@ import Button from '@mui/material/Button'
 import CloseIcon from '@mui/icons-material/Close'
 import { Alert, AlertTitle, Divider, Grid, TextField, Typography } from '@mui/material'
 import useTitle from 'hooks/useTitle'
-import axiosInstance, { AxiosResponse, AxiosError, isAxiosError } from 'app/api/axios'
+import axiosInstance, { isAxiosError } from 'app/api/axios'
 
 import { Debug } from 'components/Debug'
 
@@ -19,7 +19,7 @@ const Signup = () => {
   const [success, setSuccess] = useState(null)
   const [error, setError] = useState('')
 
-  const onSubmit = async (values, { setStatus, resetForm, setSubmitting, setErrors }) => {
+  const onSubmit = async (values, { resetForm, setSubmitting, setErrors }) => {
     try {
       const response = await axiosInstance.post('/register', values, {
         headers: { 'Content-Type': 'application/json' },
