@@ -24,7 +24,7 @@ const VerifyEmail = () => {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true
         })
-        console.log('res1:', response.data.message)
+        // console.log('res1:', response.data.message)
         if (response.data.message === 'Verified') {
           // console.log('seems we should be verified')
           setVerificationStatus('success')

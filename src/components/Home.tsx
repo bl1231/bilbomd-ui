@@ -21,44 +21,16 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
 
   useEffect(() => {
     const verifyRefreshToken = async () => {
-      // console.log('verifying refresh token')
       try {
-        //const response =
         await refresh()
-        //const { accessToken } = response.data
-        // needed to differentiate the isSuccess from refresh
         setTrueSuccess(true)
-      } catch (err) {
-        console.error(err)
+      } catch (error) {
+        console.error('verifyRefreshToken error:', error)
       }
     }
     if (!token && persist) verifyRefreshToken()
-
-    return () => {
-      console.log('hi')
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  // useEffect(() => {
-  //   if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
-  //     const verifyRefreshToken = async () => {
-  //       // console.log('verifying refresh token')
-  //       try {
-  //         //const response =
-  //         await refresh()
-  //         //const { accessToken } = response.data
-  //         // needed to differentiate the isSuccess from refresh
-  //         setTrueSuccess(true)
-  //       } catch (err) {
-  //         console.error(err)
-  //       }
-  //     }
-  //     if (!token && persist) verifyRefreshToken()
-  //   }
-  //   return () => (effectRan.current = true)
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [])
 
   let content
 
@@ -123,7 +95,11 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
             </Button>
           </Box>
           <Box>
-            <Typography>{process.env.NODE_ENV}</Typography>
+            {process.env.NODE_ENV === 'development' ? (
+              <Typography>development</Typography>
+            ) : (
+              ''
+            )}
           </Box>
         </Box>
       </Container>
