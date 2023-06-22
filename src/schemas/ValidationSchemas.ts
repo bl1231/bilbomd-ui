@@ -2,13 +2,13 @@
 
 import { mixed, boolean, number, object, string } from 'yup'
 
-const fromCharmmGui = (file) => {
+const fromCharmmGui = (file: File): Promise<boolean> => {
   const charmmGui = /CHARMM-GUI/
   return new Promise((resolve) => {
     const reader = new FileReader()
     reader.readAsText(file)
     reader.onloadend = () => {
-      let lines = reader.result.split(/[\r\n]+/g)
+      const lines = (reader.result as string).split(/[\r\n]+/g)
       for (let line = 0; line < 5; line++) {
         // console.log(charmmGui.test(lines[line]), 'line', line, lines[line])
         if (charmmGui.test(lines[line])) {
@@ -21,21 +21,23 @@ const fromCharmmGui = (file) => {
   })
 }
 
-const isSaxsData = (file) => {
+const isSaxsData = (file: File): Promise<boolean> => {
   const sciNotation = /-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?/g
   return new Promise((resolve) => {
     const reader = new FileReader()
     reader.readAsText(file)
     reader.onloadend = () => {
-      let lines = reader.result.split(/[\r\n]+/g)
+      const lines = (reader.result as string).split(/[\r\n]+/g)
       for (let line = 0; line < 5; line++) {
         // console.log(charmmGui.test(lines[line]), 'line', line, lines[line])
         if (sciNotation.test(lines[line])) {
           // console.log('LINE: ', lines[line])
-          let arr = lines[line].match(sciNotation)
+          const arr = lines[line].match(sciNotation)
           // console.log(arr)
           // console.log(arr.length)
-          if (arr.length === 3) resolve(true)
+          if (arr && arr.length === 3) {
+            resolve(true)
+          }
         }
       }
       resolve(false)
@@ -65,7 +67,7 @@ export const bilbomdJobSchema = object().shape({
       return false
     })
     .test('file-size-check', 'Max file size is 30MB', (file) => {
-      if (file && file.size <= 30000000) {
+      if (file && (file as File).size <= 30000000) {
         // console.log(file.size)
         return true
       }
@@ -76,7 +78,7 @@ export const bilbomdJobSchema = object().shape({
       'file-type-check',
       'Only accepts a PSF file obtained from CHARMM-GUI',
       (file) => {
-        if (file && file.name.split('.').pop().toUpperCase() === 'PSF') {
+        if (file && (file as File).name.split('.').pop()?.toUpperCase() === 'PSF') {
           // console.log(file.name.split('.').pop())
           return true
         }
@@ -88,10 +90,12 @@ export const bilbomdJobSchema = object().shape({
       'File does not appear to be a PSF file output from CHARMM-GUI',
       async (file) => {
         if (file) {
-          const fromCharmm = await fromCharmmGui(file)
+          const fromCharmm = await fromCharmmGui(file as File)
           // console.log('fromCharmm:', fromCharmm)
           return fromCharmm
         }
+        // additional return if test fails for reasons other than NOT being a CHARMM file
+        return false
       }
     ),
   crd_file: mixed()
@@ -100,7 +104,7 @@ export const bilbomdJobSchema = object().shape({
       return false
     })
     .test('file-size-check', 'Max file size is 20MB', (file) => {
-      if (file && file.size <= 20000000) {
+      if (file && (file as File).size <= 20000000) {
         // console.log(file.size)
         return true
       }
@@ -111,7 +115,7 @@ export const bilbomdJobSchema = object().shape({
       'file-type-check',
       'Only accepts a CRD file obtained from CHARMM-GUI',
       (file) => {
-        if (file && file.name.split('.').pop().toUpperCase() === 'CRD') {
+        if (file && (file as File).name.split('.').pop()?.toUpperCase() === 'CRD') {
           // console.log(file.name.split('.').pop())
           return true
         }
@@ -123,10 +127,12 @@ export const bilbomdJobSchema = object().shape({
       'File does not appear to be a CRD file output from CHARMM-GUI',
       async (file) => {
         if (file) {
-          const fromCharmm = await fromCharmmGui(file)
+          const fromCharmm = await fromCharmmGui(file as File)
           // console.log('fromCharmm:', fromCharmm)
           return fromCharmm
         }
+        // additional return if test fails for reasons other than NOT being a CHARMM file
+        return false
       }
     ),
   constinp: mixed()
@@ -135,7 +141,7 @@ export const bilbomdJobSchema = object().shape({
       return false
     })
     .test('file-size-check', 'Max file size is 2MB', (file) => {
-      if (file && file.size <= 2000000) {
+      if (file && (file as File).size <= 2000000) {
         // console.log(file.size)
         return true
       }
@@ -143,7 +149,7 @@ export const bilbomdJobSchema = object().shape({
       return false
     })
     .test('file-type-check', 'Only accepts a const.inp file.', (file) => {
-      if (file && file.name.split('.').pop().toUpperCase() === 'INP') {
+      if (file && (file as File).name.split('.').pop()?.toUpperCase() === 'INP') {
         // console.log(file.name.split('.').pop())
         return true
       }
@@ -155,7 +161,7 @@ export const bilbomdJobSchema = object().shape({
       return false
     })
     .test('file-size-check', 'Max file size is 2MB', (file) => {
-      if (file && file.size <= 2000000) {
+      if (file && (file as File).size <= 2000000) {
         // console.log(file.size)
         return true
       }
@@ -163,7 +169,7 @@ export const bilbomdJobSchema = object().shape({
       return false
     })
     .test('file-type-check', 'Only accepts a *.dat file.', (file) => {
-      if (file && file.name.split('.').pop().toUpperCase() === 'DAT') {
+      if (file && (file as File).name.split('.').pop()?.toUpperCase() === 'DAT') {
         // console.log(file.name.split('.').pop())
         return true
       }
@@ -171,10 +177,12 @@ export const bilbomdJobSchema = object().shape({
     })
     .test('saxs-data-check', 'File does not appear to be SAXS data', async (file) => {
       if (file) {
-        const saxsData = await isSaxsData(file)
+        const saxsData = await isSaxsData(file as File)
         // console.log('saxsData:', saxsData)
         return saxsData
       }
+      // additional return if test fails for reasons other than NOT being SAXS data
+      return false
     }),
 
   num_conf: number()
@@ -183,13 +191,13 @@ export const bilbomdJobSchema = object().shape({
     .required(
       'Please select a number of Conformations to sample during CHARMM dynamics step'
     ),
-  rg_min: number('Please specify a number')
+  rg_min: number()
     .integer()
     .positive()
     .min(10)
     .max(100)
     .required('Please provide a Minimum Rg value'),
-  rg_max: number('Please specify a number')
+  rg_max: number()
     .integer()
     .positive()
     .min(10)
