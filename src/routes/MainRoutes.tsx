@@ -47,6 +47,7 @@ const ProtectedMainRoutes = {
                 {
                   path: 'dashboard',
                   children: [
+                    { path: '', element: <Welcome /> },
                     {
                       element: (
                         <RequireAuth allowedRoles={[ROLES.Manager, ROLES.Admin]} />
