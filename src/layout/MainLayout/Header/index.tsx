@@ -9,7 +9,7 @@ import {
   IconButton,
   CssBaseline
 } from '@mui/material'
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Box } from '@mui/system'
 import useAuth from 'hooks/useAuth'
 import LogOut from 'features/auth/LogOut'
@@ -18,7 +18,7 @@ import PersonIcon from '@mui/icons-material/Person'
 import { useNavigate } from 'react-router'
 
 const Header = () => {
-  const [time, setTime] = useState(null)
+  const [time, setTime] = useState('')
   const navigate = useNavigate()
   const settings = [
     {
@@ -69,12 +69,9 @@ const Header = () => {
       clearInterval(interval)
     }
   }, [])
-  // useEffect(() => {
-  //   if (isSuccess) navigate('/')
-  // }, [isSuccess, navigate])
 
   return (
-    <React.Fragment>
+    <>
       <CssBaseline />
       <Box sx={{ flexGrow: 1 }}>
         <AppBar
@@ -155,7 +152,7 @@ const Header = () => {
           </Toolbar>
         </AppBar>
       </Box>
-    </React.Fragment>
+    </>
   )
 }
 

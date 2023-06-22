@@ -1,9 +1,6 @@
-import React, { lazy } from 'react'
-
-// project import
 import Loadable from 'components/Loadable'
 import MinimalLayout from 'layout/MinimalLayout'
-
+import { lazy } from 'react'
 // render - Home
 const Home = Loadable(lazy(() => import('components/Home')))
 

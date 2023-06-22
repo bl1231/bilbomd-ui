@@ -1,4 +1,3 @@
-import React from 'react'
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import Drawer from '@mui/material/Drawer'
@@ -64,14 +63,8 @@ export default function ClippedDrawer() {
     }
   ]
 
-  // useEffect(() => {
-  //   if (isSuccess) navigate('/')
-  // }, [isSuccess, navigate])
-
-  let buttonContent
-
-  buttonContent = (
-    <React.Fragment>
+  const buttonContent = (
+    <>
       {menuItems.map((item) => (
         <ListItem key={item.text} disablePadding>
           <ListItemButton
@@ -86,7 +79,7 @@ export default function ClippedDrawer() {
           </ListItemButton>
         </ListItem>
       ))}
-    </React.Fragment>
+    </>
   )
 
   const content = (
