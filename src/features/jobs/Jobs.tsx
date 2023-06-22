@@ -111,7 +111,6 @@ const Jobs = () => {
       rows.length !== 0 ? (
         <Box
           sx={{
-            height: 600,
             width: '100%',
             '& .bilbomd.completed': {
               backgroundColor: green[400],
@@ -141,11 +140,11 @@ const Jobs = () => {
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 10
+                  pageSize: 5
                 }
               }
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={[5, 10, 15, 25]}
           />
         </Box>
       ) : (
