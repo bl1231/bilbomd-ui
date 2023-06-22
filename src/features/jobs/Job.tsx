@@ -2,11 +2,13 @@ import { useParams } from 'react-router-dom'
 import { useGetJobsQuery } from './jobsApiSlice'
 import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
-import { Button, Divider, Grid, Typography } from '@mui/material'
+import { Button, Divider, Grid, Typography, Alert } from '@mui/material'
+import { Box } from '@mui/system'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import axiosInstance, { AxiosResponse } from 'app/api/axios'
 import { format } from 'date-fns'
+import MissingJob from 'components/MissingJob'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -39,7 +41,10 @@ const SingleJobPage = () => {
     selectFromResult: ({ data }) => ({ job: data?.find((job) => job.id === id) })
   })
 
-  if (!job) return <PulseLoader color={'#FFF'} />
+  if (!job) {
+    console.log('no job with id: ', id)
+    // return <PulseLoader color={'#FFF'} />
+  }
 
   const handleDownload = async (id: string) => {
     try {
@@ -66,7 +71,7 @@ const SingleJobPage = () => {
     }
   }
 
-  const content = (
+  const content = job ? (
     <>
       <Grid container spacing={2} rowSpacing={2}>
         <Grid item xs={9}>
@@ -177,6 +182,8 @@ const SingleJobPage = () => {
         </Grid>
       </Grid>
     </>
+  ) : (
+    <MissingJob id={id} />
   )
 
   return content

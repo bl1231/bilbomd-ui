@@ -87,10 +87,6 @@ const ProtectedMainRoutes = {
                     {
                       path: 'account',
                       element: <UserAccount />
-                    },
-                    {
-                      path: 'jobs/*',
-                      element: <MissingJob />
                     }
                   ]
                 },
