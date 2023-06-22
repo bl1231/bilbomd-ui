@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { setCredentials } from '../../features/auth/authSlice'
 import type { RootState } from '../store'
 
-console.log('apiSlice', import.meta.env.MODE)
+// console.log('apiSlice', import.meta.env.MODE)
 const baseURL = import.meta.env.DEV
   ? `http://localhost:${import.meta.env.VITE_BILBOMD_BACKEND_PORT}`
   : 'https://bl1231.als.lbl.gov/bilbomd-dev-backend'
