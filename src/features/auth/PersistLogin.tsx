@@ -4,14 +4,7 @@ import { useRefreshMutation } from './authApiSlice'
 import usePersist from '../../hooks/usePersist'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from './authSlice'
-import {
-  Alert,
-  AlertTitle,
-  Button,
-  CircularProgress,
-  Grid,
-  Typography
-} from '@mui/material'
+import { Alert, Button, CircularProgress, Grid } from '@mui/material'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 
 const PersistLogin = () => {
@@ -48,6 +41,7 @@ const PersistLogin = () => {
   }, [])
 
   let content
+
   if (!persist) {
     // persist: no
     // console.log('no persist')
@@ -68,14 +62,13 @@ const PersistLogin = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <Grid item sx={{ width: '400px' }}>
+        <Grid item sx={{ width: '300px' }}>
           <Alert
-            variant="outlined"
+            variant="filled"
             severity="error"
-            sx={{ backgroundColor: '#ffa39e', color: 'black' }}
+            // sx={{ backgroundColor: '#ffa39e', color: 'black' }}
           >
-            <AlertTitle>{error ? String(error) : 'Login session has expired'}</AlertTitle>
-            <Typography>Please login again.</Typography>
+            {error ? 'Session has expired' : ''}
           </Alert>
           <Button
             fullWidth
@@ -87,7 +80,7 @@ const PersistLogin = () => {
             component={Link}
             to="magicklink"
           >
-            Request a new MagickLink&#8482;
+            Request A New MagickLink&#8482;
           </Button>
         </Grid>
       </Grid>

@@ -23,7 +23,6 @@ const UsersList = Loadable(lazy(() => import('features/users/UsersList')))
 const EditUser = Loadable(lazy(() => import('features/users/EditUser')))
 const UserAccount = Loadable(lazy(() => import('features/users/UserAccount')))
 const Missing = Loadable(lazy(() => import('components/Missing')))
-const MissingJob = Loadable(lazy(() => import('components/MissingJob')))
 
 // ==============================|| MAIN ROUTING ||============================== //
 
