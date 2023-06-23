@@ -1,49 +1,48 @@
 # bilbomd-ui
 
-`bilbomd-ui` is the frontend GUI for BilboMD. It is a Single Page Application [SPA](https://developer.mozilla.org/en-US/docs/Glossary/SPA) initilized with [Create React App](https://github.com/facebook/create-react-app). The deploy [instructions](https://github.com/bl1231/bilbomd#2-deploy-the-bilbomd-front-end-ui) are outlined in more detail the [BilboMD repo](https://github.com/bl1231/bilbomd), and give instructions for using [PM2](https://pm2.keymetrics.io/docs/usage/quick-start/) to deploy a production instance to `https://bilbomd.bl1231.als.lbl.gov`, but if you want to start a development version you can just check this code out and fire it up interactively.
+`bilbomd-ui` is the frontend GUI for BilboMD. It is a Single Page Application [SPA](https://developer.mozilla.org/en-US/docs/Glossary/SPA). The deploy [instructions](https://github.com/bl1231/bilbomd#2-deploy-the-bilbomd-front-end-ui) are outlined in more detail the [bilbomd](https://github.com/bl1231/bilbomd) repo, and give instructions for using [PM2](https://pm2.keymetrics.io/docs/usage/quick-start/) to deploy a production instance to `https://bilbomd.bl1231.als.lbl.gov`, but if you want to start a development version you can just check this code out and fire it up interactively.
 
 ## Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was initially bootstrapped with [Create React App](https://github.com/facebook/create-react-app), but since CRA seems is no longer maintained I switched to using [Vite](https://vitejs.dev/)
 
 ## Available Scripts
 
-In the project directory, you can run:
+There are a number of scripts defined in the `package.json` file:
 
-### `npm start`
+```json
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc && vite build",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "optimize": "vite optimize"
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3001](http://localhost:3001) to view it in the browser.
+### `npm run dev`
 
-The page will reload if you make edits.\
+Runs the app in the development mode, and will serve on port 3003.\
+Open [http://localhost:3003](http://localhost:3003) to view it in the browser.
+
+The page will automagically refresh if you make edits.\
 You will also see any lint errors in the console.
-
-### `npm run start:dev`
-
-Also runs the app in the development mode.\
-Open [http://localhost:3002](http://localhost:3002) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.\
-We don't have any tests yet...
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Will transpile the Typescript code using `tsc` then optimize for production. Output goes into `dist` directory.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### `npm run lint`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+I haven't played with this much. I do most linting in VSCode
+
+### `npm run preview`
+
+Locally preview the production build. Do not use this as a production server as it's not designed for it.
+
+### `npm run optimize`
+
+Pre-bundle dependencies.
 
 ## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
