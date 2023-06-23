@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import { selectCurrentToken } from 'features/auth/authSlice'
 import { useRefreshMutation } from 'features/auth/authApiSlice'
 import usePersist from 'hooks/usePersist'
-
+import { version } from '../../package.json'
 type HomeProps = {
   title?: string
 }
@@ -56,7 +56,7 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
               Welcome to BilboMD
             </Typography>
           </Box>
-          <Box>
+          <Box sx={{ m: 2, p: 0 }}>
             <Typography variant="body1" sx={{ my: 1 }}>
               <b>BilboMD</b> allows you to determine the three-dimensional domain
               structure of proteins based on conformational sampling using a Molecular
@@ -64,9 +64,12 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
               <Link to="https://academiccharmm.org/documentation">CHARMM</Link> is
               followed by structure validation using{' '}
               <Link to="https://modbase.compbio.ucsf.edu/foxs/about">FoXS</Link> and
-              ensemble analysis using Minimal Ensemble Search (MES).
+              ensemble analysis using Minimal Ensemble Search (MES) via{' '}
+              <Link to="https://modbase.compbio.ucsf.edu/multifoxs/">MultiFoXS</Link>.
+              Details of the implementation and integration of these tools into{' '}
+              <b>BilboMD</b> are described in the following manuscript:
             </Typography>
-            <Typography variant="body2">
+            <Typography variant="body2" sx={{ mx: 5, my: 2 }}>
               Pelikan M, Hura GL, Hammel M.{' '}
               <b>
                 Structure and flexibility within proteins as identified through small
@@ -80,8 +83,31 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
               <b>BilboMD</b> runs on dedicated servers at the SIBYLS beamline. Please
               register for an account in order to use this public resource.
             </Typography>
+            <Typography variant="body1" sx={{ my: 3 }}>
+              The new <b>BilboMD</b> webapp is still in development. We would appreciate
+              you testing it and reporting your experience.
+            </Typography>
+            <Typography>
+              Current Features:
+              <ul>
+                <li>
+                  Allows registered userst submit <b>BilboMD</b> jobs to our cluster.
+                </li>
+                <li>Sends email notifications to users when their job completes.</li>
+                <li>
+                  Provides an interactive tool to help users create CHARMM-compatible{' '}
+                  <code>const.inp</code> files.
+                </li>
+                <li>
+                  Users can see status and history of their <b>BilboMD</b> jobs.
+                </li>
+                <li>
+                  Provides a download link to retrieve <code>results.tar.gz</code> file
+                </li>
+              </ul>
+            </Typography>
           </Box>
-          <Box>
+          <Box sx={{ my: 2, p: 1 }}>
             <Button
               variant="contained"
               to="register"
@@ -94,12 +120,15 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
               Login
             </Button>
           </Box>
-          <Box>
+          <Box sx={{ my: 2, p: 1 }}>
             {process.env.NODE_ENV === 'development' ? (
-              <Typography>development</Typography>
+              <Typography variant="caption">
+                mode: development BilboMD v{version}
+              </Typography>
             ) : (
               ''
             )}
+            {/* <Typography>{import.meta.env}</Typography> */}
           </Box>
         </Box>
       </Container>

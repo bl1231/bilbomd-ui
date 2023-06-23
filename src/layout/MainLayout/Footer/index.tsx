@@ -1,5 +1,6 @@
 import { Paper, Typography } from '@mui/material'
 import { Box, Container } from '@mui/system'
+import { version } from '../../../../package.json'
 
 const Footer = () => {
   return (
@@ -37,7 +38,7 @@ const Footer = () => {
           }}
         >
           <Typography variant="caption" color="initial">
-            Copyright ©2023. SIBYLS Beamline
+            Copyright ©2023. SIBYLS Beamline - BilboMD v{version}
           </Typography>
         </Box>
       </Container>
