@@ -6,16 +6,19 @@ import { useSelector } from 'react-redux'
 import { selectCurrentToken } from 'features/auth/authSlice'
 import { useRefreshMutation } from 'features/auth/authApiSlice'
 import usePersist from 'hooks/usePersist'
+import useTitle from 'hooks/useTitle'
 import { version } from '../../package.json'
+
 type HomeProps = {
   title?: string
 }
 
 const Home = ({ title = 'BilboMD' }: HomeProps) => {
+  useTitle(title)
   const navigate = useNavigate()
   const [persist] = usePersist()
   const token = useSelector(selectCurrentToken)
-  // const effectRan = useRef(false)
+
   const [trueSuccess, setTrueSuccess] = useState<boolean>(false)
   const [refresh, { isUninitialized, isLoading, isSuccess }] = useRefreshMutation()
 
@@ -128,7 +131,6 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
             ) : (
               ''
             )}
-            {/* <Typography>{import.meta.env}</Typography> */}
           </Box>
         </Box>
       </Container>
