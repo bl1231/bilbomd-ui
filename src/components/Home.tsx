@@ -87,28 +87,28 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
               register for an account in order to use this public resource.
             </Typography>
             <Typography variant="body1" sx={{ my: 3 }}>
-              The new <b>BilboMD</b> webapp is still in development. We would appreciate
-              you testing it and reporting your experience.
+              The new <b>BilboMD</b> webapp is still in development. However, we would
+              appreciate you testing and reporting your experience.
             </Typography>
-            <Typography>
+            <>
               Current Features:
               <ul>
                 <li>
-                  Allows registered userst submit <b>BilboMD</b> jobs to our cluster.
+                  Registered users can submit <b>BilboMD</b> jobs to our cluster.
                 </li>
-                <li>Sends email notifications to users when their job completes.</li>
+                <li>Sends an email notification when your job is complete.</li>
                 <li>
-                  Provides an interactive tool to help users create CHARMM-compatible{' '}
+                  Provides an interactive tool to help you create CHARMM-compatible{' '}
                   <code>const.inp</code> files.
                 </li>
                 <li>
-                  Users can see status and history of their <b>BilboMD</b> jobs.
+                  You can see the status and history of your <b>BilboMD</b> jobs.
                 </li>
                 <li>
                   Provides a download link to retrieve <code>results.tar.gz</code> file
                 </li>
               </ul>
-            </Typography>
+            </>
           </Box>
           <Box sx={{ my: 2, p: 1 }}>
             <Button
