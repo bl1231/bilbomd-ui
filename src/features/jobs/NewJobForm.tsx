@@ -12,7 +12,7 @@ import {
   AccordionSummary,
   AccordionDetails
 } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Form, Formik, Field } from 'formik'
 import FileInput from './FileInput'
 import { useAddNewJobMutation } from './jobsApiSlice'
@@ -24,6 +24,7 @@ import { bilbomdJobSchema } from 'schemas/ValidationSchemas'
 import useAuth from 'hooks/useAuth'
 import { styled } from '@mui/material/styles'
 import { Debug } from 'components/Debug'
+import * as PropTypes from 'prop-types'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -47,19 +48,11 @@ const HeaderThingee = {
   py: 2
 }
 
-const initialValues = {
-  title: '',
-  psf_file: '',
-  crd_file: '',
-  constinp: '',
-  expdata: '',
-  num_conf: '',
-  rg_min: '',
-  rg_max: '',
-  email: ''
-}
+const NewJobForm = ({ initialValues: initialValuesProp }) => {
+  const location = useLocation()
+  const initialValues = location.state?.initialValues || initialValuesProp
+  console.log('using these initialValues', initialValues)
 
-const NewJobForm = () => {
   // const [addNewJob, { isLoading, isSuccess, isError, error }] = useAddNewJobMutation()
   const [addNewJob, { isSuccess }] = useAddNewJobMutation()
   const { email } = useAuth()
@@ -413,11 +406,7 @@ const NewJobForm = () => {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           error={Boolean(errors.num_conf && touched.num_conf)}
-                          helperText={
-                            errors.num_conf && touched.num_conf
-                              ? errors.num_conf
-                              : 'Number of conformations to sample per Rg'
-                          }
+                          helperText={'Number of conformations to sample per Rg'}
                         >
                           <MenuItem key={1} value={1}>
                             200
@@ -461,6 +450,34 @@ const NewJobForm = () => {
   )
 
   return content
+}
+
+NewJobForm.propTypes = {
+  initialValues: PropTypes.shape({
+    title: PropTypes.string,
+    psf_file: PropTypes.string,
+    crd_file: PropTypes.string,
+    constinp: PropTypes.string,
+    expdata: PropTypes.string,
+    num_conf: PropTypes.oneOfType([PropTypes.number, PropTypes.oneOf([null])]),
+    rg_min: PropTypes.string,
+    rg_max: PropTypes.string,
+    email: PropTypes.string
+  })
+}
+
+NewJobForm.defaultProps = {
+  initialValues: {
+    title: '',
+    psf_file: '',
+    crd_file: '',
+    constinp: '',
+    expdata: '',
+    num_conf: null,
+    rg_min: '',
+    rg_max: '',
+    email: ''
+  }
 }
 
 export default NewJobForm

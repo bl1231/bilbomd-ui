@@ -9,6 +9,7 @@ import { styled } from '@mui/material/styles'
 import axiosInstance, { AxiosResponse } from 'app/api/axios'
 import { format } from 'date-fns'
 import MissingJob from 'components/MissingJob'
+import { useNavigate } from 'react-router-dom'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -32,15 +33,14 @@ const HeaderThingee = {
 }
 
 const SingleJobPage = () => {
-  useTitle('BilboMD: Job Details')
-
   const { id } = useParams()
-
+  useTitle(`BilboMD:Job Details `)
+  const navigate = useNavigate()
   // Will select the job with the given id, and will only rerender if the given jobs data changes
   const { job } = useGetJobsQuery('jobsList', {
     selectFromResult: ({ data }) => ({ job: data?.find((job) => job.id === id) })
   })
-
+  console.log(job)
   if (!job) {
     console.log('no job with id: ', id)
     // return <PulseLoader color={'#FFF'} />
@@ -70,6 +70,11 @@ const SingleJobPage = () => {
       console.error('Download results.tar.gz error:', error)
     }
   }
+
+  // const handleResubmitJob = async () => {
+  //   const navigate = useNavigate()
+  //   console.log('resubmit job', job)
+  // }
 
   const content = job ? (
     <>
@@ -129,6 +134,7 @@ const SingleJobPage = () => {
                 </Typography>
               </Grid>
             </Grid>
+
             <Divider sx={{ my: 2 }} />
 
             <Typography sx={{ ml: 1 }}>
@@ -160,19 +166,47 @@ const SingleJobPage = () => {
             </Typography>
           </Item>
         </Grid>
+
         <Grid item xs={12}>
           <Typography sx={HeaderThingee}>RESULTS</Typography>
           <Item>
             {job.status === 'Completed' ? (
-              <Button
-                variant="contained"
-                onClick={() => {
-                  handleDownload(job.id)
-                }}
-                sx={{ my: 2 }}
-              >
-                Download Results
-              </Button>
+              <>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    handleDownload(job.id)
+                  }}
+                  sx={{ my: 2 }}
+                >
+                  Download Results
+                </Button>
+
+                <Button
+                  variant="contained"
+                  sx={{ ml: 3 }}
+                  onClick={() => {
+                    const initialValues = {
+                      title: job.title,
+                      psf_file: job.psf_file,
+                      crd_file: job.crd_file,
+                      constinp: job.const_inp_file,
+                      expdata: job.data_file,
+                      num_conf: job.conformational_sampling,
+                      rg_min: job.rg_min,
+                      rg_max: job.rg_max,
+                      email: ''
+                    }
+                    navigate('/dashboard/jobs/new', {
+                      state: {
+                        initialValues
+                      }
+                    })
+                  }}
+                >
+                  Resubmit
+                </Button>
+              </>
             ) : (
               <Typography variant="h5" sx={{ m: 1 }}>
                 Pending...
