@@ -260,6 +260,7 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
           </Formik>
         </Item>
       </Box>
+
       <Box sx={{ my: 1 }}>
         <Typography sx={HeaderThingee}>User Details</Typography>
         <Item>
@@ -275,20 +276,18 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
           </Typography>
         </Item>
       </Box>
+
       <Box sx={{ my: 1 }}>
         <Typography sx={HeaderThingee}>
           <Chip label={`Jobs ${filteredJobs.length}`} color="success" />
         </Typography>
-        {filteredJobs.length >= 1 ? (
-          <Item>
-            {' '}
-            {filteredJobs.map((job, index) => (
-              <JobSummary key={index} job={job} />
-            ))}
-          </Item>
-        ) : (
-          <Item>no jobs for this user</Item>
-        )}
+        <Item>
+          {filteredJobs.length >= 1 ? (
+            filteredJobs.map((job, index) => <JobSummary key={index} job={job} />)
+          ) : (
+            <Typography>No jobs for this user</Typography>
+          )}
+        </Item>
       </Box>
       {/* {process.env.NODE_ENV === 'development' ? <Debug /> : ''} */}
     </>
