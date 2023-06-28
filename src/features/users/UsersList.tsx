@@ -40,7 +40,7 @@ const UsersList = () => {
       { field: 'active', headerName: 'Active' },
       {
         field: 'actions',
-        headerName: 'edit',
+        headerName: 'Edit',
         type: 'actions',
         getActions: (params) => [
           <GridActionsCellItem
