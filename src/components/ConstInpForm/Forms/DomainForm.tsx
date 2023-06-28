@@ -141,7 +141,6 @@ const DomainForm = ({ setStepIsValid }) => {
                                   arrayHelpers.remove(index)
                                 }}
                               >
-                                {' '}
                                 Delete {values.crd_file.rigid_bodies[index]?.id}
                               </Button>
                             ) : (

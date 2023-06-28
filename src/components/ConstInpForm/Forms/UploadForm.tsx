@@ -1,18 +1,31 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Field, useField, useFormikContext } from 'formik'
-import { Alert, Button, Grid, Typography } from '@mui/material'
-// import { UploadField } from '../FormFields/UploadField'
+import { Alert, Grid, Typography } from '@mui/material'
+import * as PropTypes from 'prop-types'
 import CrdFileField from '../FormFields/CrdFileField'
-// import FileInput from 'features/jobs/FileInput'
-// import Thumb from '../common/Thumb'
 import CrdSummary from '../Helpers/CrdSummary'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import useTitle from 'hooks/useTitle'
 import { Box } from '@mui/system'
 
+interface Chain {
+  id: string
+  atoms: number
+  first_res: number
+  last_res: number
+  num_res: number
+  domains: { start: number; end: number }[]
+}
+
+interface RigidBody {
+  id: string
+  domains: { chainid: string; start: number; end: number }[]
+}
+
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.primary,
+  backgroundColor:
+    theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'left',
@@ -34,26 +47,19 @@ const HeaderThingee = {
 const UploadForm = ({ setStepIsValid }) => {
   useTitle('BilboMD: Upload CRD file')
 
-  const { resetForm, isValid } = useFormikContext()
-
+  const { isValid } = useFormikContext()
   const [field, meta, helper] = useField('crd_file')
   const { value } = field
   const { touched, error } = meta
   const { setValue, setTouched } = helper
   const isError = touched && error
-
-  const [fileName, setFileName] = useState(value.name)
-  const [file, setFile] = useState(value.file)
-  const [src, setSrc] = useState(value.src)
-  const [chains, setChains] = useState(value.chains)
-  const [rigidBodies, setRigidBodies] = useState(value.rigid_bodies)
+  const [fileName, setFileName] = useState<string>(value.name)
+  const [file, setFile] = useState<File | undefined>(value.file)
+  const [src, setSrc] = useState<FileReader | null>(value.src)
+  const [chains, setChains] = useState<Chain[]>(value.chains)
+  const [rigidBodies, setRigidBodies] = useState<RigidBody[]>(value.rigid_bodies)
 
   const parseCrdFile = () => {
-    // setFileName('')
-    // setFile('')
-    // setSrc('')
-    // setChains('')
-    // setError('')
     setValue({
       file: file,
       src: src,
@@ -64,45 +70,38 @@ const UploadForm = ({ setStepIsValid }) => {
 
     const loi =
       /^\s*(?:\d+\s+){2}(?:\S+\s+){2}(?:[+-]?\d+\.\d+\s+){3}(?:\D+\s+){1}(?:\d+\s+){1}(?:\d+\.\d+){1}$/gm
-    // console.time('regex match')
-    const data = src.result.match(loi)
-    // console.timeEnd('regex match')
+
+    let data: RegExpMatchArray | null = null
+    // let data: RegExpMatchArray
+    if (src !== null && typeof src.result === 'string') {
+      data = src.result.match(loi)
+    }
     if (!data) return
     // console.log('data:', data)
     // data is now an Array so grab 8th item from every element. use map?
     // console.time('get unique chains')
-    const allChainIds = data.map((line) => {
+    const allChainIds: string[] = data.map((line: string) => {
       //console.log(line)
       const items = line.split(/\s+/)
       return items[8]
     })
-    // console.timeEnd('get unique chains')
 
-    // console.time('filter')
-    const uniqueChains = [...new Set(allChainIds)]
+    const uniqueChains: string[] = [...new Set(allChainIds)]
     // console.log('uniqueChains', uniqueChains)
-    // console.timeEnd('filter')
+    const charmmChains: Chain[] = []
+    const demRigidBodies: RigidBody[] = [{ id: 'PRIMARY', domains: [] }]
 
-    // console.time('charmm cahins')
-    let charmmChains = []
-    let demRigidBodies = [{ id: 'PRIMARY', domains: [] }]
-    // console.log(demRigidBodies)
-    uniqueChains.forEach((chainId, i) => {
-      // console.log('chainID:', chainId)
-      const chainArray = data.filter((value) => value.includes(chainId))
-      let length = chainArray.length
-      let firstLine = chainArray[0]
-      let lastLine = chainArray[length - 1]
-      // console.log('num atoms:', length)
-      // console.log('firstLine:', firstLine)
-      // console.log('lastLine:', lastLine)
-      let firstRes = firstLine.split(/\s+/)[9]
-      let lastRes = lastLine.split(/\s+/)[9]
-      let numResidues = lastRes - firstRes
-      // console.log('first res:', firstRes)
-      // console.log('last res:', lastRes)
-      // console.log('num res:', numResidues)
-      let charmmChain = {
+    uniqueChains.forEach((chainId) => {
+      // const chainArray = data.filter((value) => value.includes(chainId))
+      const filteredData = data!.filter((line) => line.includes(chainId))
+
+      const length = filteredData.length
+      const firstLine = filteredData[0]
+      const lastLine = filteredData[length - 1]
+      const firstRes = Number(firstLine.split(/\s+/)[9])
+      const lastRes = Number(lastLine.split(/\s+/)[9])
+      const numResidues = lastRes - firstRes
+      const charmmChain: Chain = {
         id: chainId,
         atoms: length,
         first_res: firstRes,
@@ -116,22 +115,14 @@ const UploadForm = ({ setStepIsValid }) => {
         start: firstRes,
         end: lastRes
       })
-      // let rigidBody = {
-
-      //   domains: [{ chainid: chainId, start: firstRes, end: lastRes }]
-      // }
     })
-    // console.timeEnd('charmm cahins')
-    // setValue with new chains objects
-    // console.log(charmmChains)
     setChains(charmmChains)
     setRigidBodies(demRigidBodies)
   }
 
   const onChange = async (event) => {
-    // console.log('onChange triggered')
-    setTouched()
-    let file = event.target.files[0]
+    // setTouched()
+    const file = event.target.files[0]
     const filePromise = new Promise((resolve, reject) => {
       const reader = new FileReader()
       reader.onload = async () => {
@@ -153,41 +144,21 @@ const UploadForm = ({ setStepIsValid }) => {
     await filePromise
   }
 
-  const effectRan = useRef(false)
-
   useEffect(() => {
-    if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
-      // console.log('in useEffect')
-      if (file && fileName && src && chains) {
-        // console.log('useEffect:', src)
-        // console.time('parse')
-        parseCrdFile()
-        // console.timeEnd('parse')
-        // console.log('valid:', isValid)
-        // setStepIsValid(isValid)
-      }
+    if (file && fileName && src && chains) {
+      parseCrdFile()
     }
-    return () => (effectRan.current = true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src, fileName, file, chains[0]?.id])
 
   useEffect(() => {
-    if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
-      // not exactly sure of best place for this.
-      // Need to update parent of isValid so we can enable/disable the "NEXT" button
-      // console.log('valid:', isValid)
-      setStepIsValid(isValid)
-      // console.log(JSON.stringify(values, null, 2))
-    }
-    return () => {
-      effectRan.current = true
-    }
+    setStepIsValid(isValid)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid])
 
   return (
-    <React.Fragment>
-      <Grid container spacing={3} justify="center" alignItems="center">
+    <>
+      <Grid container spacing={3}>
         <Grid item xs={12}>
           <Typography sx={HeaderThingee}>Instructions</Typography>
           <Item>
@@ -256,26 +227,11 @@ const UploadForm = ({ setStepIsValid }) => {
                   error={error}
                   errorMessage={isError ? error : ''}
                 />
-                {/* <Button
-                  type="button"
-                  variant="contained"
-                  onClick={() => {
-                    console.log('reset Form')
-                    setFileName('')
-                    setFile('')
-                    setSrc('')
-                    setChains('')
-                    resetForm()
-                    setStepIsValid(false)
-                  }}
-                >
-                  Reset
-                </Button> */}
               </Grid>
               <Grid item>
                 {isError ? (
                   <Alert severity="error" sx={{ my: 1 }}>
-                    <Typography>{error.file}</Typography>
+                    <Typography>ERROR</Typography>
                   </Alert>
                 ) : (
                   ''
@@ -299,8 +255,12 @@ const UploadForm = ({ setStepIsValid }) => {
           ''
         )}
       </Grid>
-    </React.Fragment>
+    </>
   )
+}
+
+UploadForm.propTypes = {
+  setStepIsValid: PropTypes.func.isRequired
 }
 
 export default UploadForm
