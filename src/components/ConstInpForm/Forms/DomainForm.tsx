@@ -1,18 +1,17 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { useFormikContext, useField, FieldArray, Field } from 'formik'
-import { Typography, Grid, TextField, Button, Chip } from '@mui/material'
-// import { Box } from '@mui/system'
+import { useEffect, useState, useRef, Fragment } from 'react'
+import { useFormikContext, FieldArray, FormikValues } from 'formik'
+import { Typography, Grid, Button, Chip } from '@mui/material'
+import * as PropTypes from 'prop-types'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import AddIcon from '@mui/icons-material/Add'
 import useTitle from 'hooks/useTitle'
-// import DomainCard from '../Helpers/DomainCard'
-// import Domains from '../Helpers/Domains'
+
 import RigidBody from '../Helpers/RigidBody'
-// import ChainCard from '../Helpers/ChainCard'
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.primary,
+  backgroundColor:
+    theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'left',
@@ -31,41 +30,10 @@ const HeaderThingee = {
   letterSpacing: '1px'
 }
 
-const handleAddNewRigidBody = (name) => {
-  console.log('here')
-  const new_rigid_body = {
-    id: name,
-    domains: [
-      {
-        chainid: '',
-        start: '',
-        end: ''
-      }
-    ]
-  }
-  console.log('add new rigid body named', name)
-  // values.crd_file.rigid_bodies.push(new_rigid_body)
-  //console.log(values.crd_file.rigid_bodies)
-  //rigidBodiesArrayHelpers.push(new_rigid_body)
-}
-
 const DomainForm = ({ setStepIsValid }) => {
   useTitle('BilboMD: Define domains')
-  const { values, handleChange, handleBlur, errors, isValid } = useFormikContext()
-  const [field, meta, helper] = useField('crd_file')
-  const { value } = field
-  const { touched, error } = meta
-  const { setValue, setTouched } = helper
-  const isError = touched && error
-
-  const [fileName, setFileName] = useState(value.name)
-  const [file, setFile] = useState(value.file)
-  const [src, setSrc] = useState(value.src)
-  const [chains, setChains] = useState(value.chains)
-  const [rigidBodies, setRigidBodies] = useState(value.rigid_bodies)
-
+  const { values, isValid } = useFormikContext<FormikValues>()
   const [rigidBodyIndex, setRigidBodyIndex] = useState(1)
-
   const effectRan = useRef(false)
 
   const incrementRigidBodyIndex = () => {
@@ -77,11 +45,7 @@ const DomainForm = ({ setStepIsValid }) => {
 
   useEffect(() => {
     if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
-      // not exactly sure of best place for this.
-      // Need to update parent of isValid so we can enable/disable the "NEXT" button
-      // console.log('valid:', isValid)
       setStepIsValid(isValid)
-      // console.log(JSON.stringify(values, null, 2))
     }
     return () => {
       effectRan.current = true
@@ -90,7 +54,7 @@ const DomainForm = ({ setStepIsValid }) => {
   }, [isValid])
 
   return (
-    <React.Fragment>
+    <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography sx={HeaderThingee}>Instructions</Typography>
@@ -103,15 +67,16 @@ const DomainForm = ({ setStepIsValid }) => {
               are to remain rigid during the Molecular Dynamics steps of a <b>BilboMD</b>{' '}
               run. Please be aware of the following.
               <li>
-                You need at least one Rigid Body (we'll call this your Primary RB). The
-                Rigid Domains defined inside your Primary RB will remain absolutley fixed.
+                You need at least one Rigid Body (we&apos;ll call this your Primary RB).
+                The Rigid Domains defined inside your Primary RB will remain absolutley
+                fixed.
               </li>
               <li>
                 No overlapping regions either within <b>or</b> between Rigid Bodies.
               </li>
               <li>
-                You must leave at least <b>one residue</b> between Rigid Domains to allow
-                for efficient conformational sampling.
+                Leave at least <b>one residue</b> between Rigid Domains to allow for
+                efficient conformational sampling.
               </li>
             </Typography>
           </Item>
@@ -131,11 +96,11 @@ const DomainForm = ({ setStepIsValid }) => {
 
             <Grid item sx={{ my: 3 }}>
               <FieldArray name="crd_file.rigid_bodies">
-                {({ arrayHelpers, insert, remove, push }) => (
-                  <React.Fragment>
+                {(arrayHelpers) => (
+                  <>
                     {values.crd_file.rigid_bodies.length > 0 &&
                       values.crd_file.rigid_bodies.map((rigid_body, index) => (
-                        <React.Fragment key={index}>
+                        <Fragment key={index}>
                           <Grid item sx={{ mb: 4, py: 1 }}>
                             <Grid
                               item
@@ -147,25 +112,6 @@ const DomainForm = ({ setStepIsValid }) => {
                                 alignContent: 'baseline'
                               }}
                             >
-                              {/* <Field
-                                label="Rigid Body Name"
-                                name={`crd_file.rigid_bodies[${index}].id`}
-                                id="id"
-                                type="text"
-                                as={TextField}
-                                // InputProps={{
-                                //   readOnly: true
-                                // }}
-                                disabled={
-                                  values.crd_file.rigid_bodies[index]?.id === 'PRIMARY'
-                                    ? true
-                                    : false
-                                }
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={errors.id && touched.id}
-                                helperText={errors.id && touched.id ? errors.id : ''}
-                              /> */}
                               <Typography variant="h4">
                                 Rigid Body: <Chip label={rigid_body.id} />
                               </Typography>
@@ -192,7 +138,7 @@ const DomainForm = ({ setStepIsValid }) => {
                                 color="error"
                                 onClick={() => {
                                   decrementRigidBodyIndex()
-                                  remove(index)
+                                  arrayHelpers.remove(index)
                                 }}
                               >
                                 {' '}
@@ -202,7 +148,7 @@ const DomainForm = ({ setStepIsValid }) => {
                               ''
                             )}
                           </Grid>
-                        </React.Fragment>
+                        </Fragment>
                       ))}
                     <Button
                       variant="contained"
@@ -218,21 +164,25 @@ const DomainForm = ({ setStepIsValid }) => {
                             }
                           ]
                         }
-                        push(new_rigid_body)
+                        arrayHelpers.push(new_rigid_body)
                       }}
                       startIcon={<AddIcon />}
                     >
                       Add Rigid Body
                     </Button>
-                  </React.Fragment>
+                  </>
                 )}
               </FieldArray>
             </Grid>
           </Item>
         </Grid>
       </Grid>
-    </React.Fragment>
+    </>
   )
+}
+
+DomainForm.propTypes = {
+  setStepIsValid: PropTypes.func.isRequired
 }
 
 export default DomainForm
