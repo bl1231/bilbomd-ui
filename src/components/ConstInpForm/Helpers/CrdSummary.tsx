@@ -1,11 +1,12 @@
-import React from 'react'
 import { Grid } from '@mui/material'
-
+import { Chain } from 'types/interfaces'
 import ChainCard from './ChainCard'
 
-const CrdSummary = (props) => {
-  const { chains } = props
+interface CrdSummaryProps {
+  chains: Chain[]
+}
 
+const CrdSummary = ({ chains }: CrdSummaryProps) => {
   const chainCard = (
     <Grid container spacing={3}>
       {chains.map((chain) => (

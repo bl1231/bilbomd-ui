@@ -7,17 +7,7 @@ import useTitle from 'hooks/useTitle'
 import { Box } from '@mui/system'
 import CopyToClipboardButton from 'components/Common/CopyToClipboardButton'
 import Download from '../Helpers/Download'
-
-interface Domain {
-  chainid: string
-  start: number
-  end: number
-}
-
-interface RigidBody {
-  id: string
-  domains: Domain[]
-}
+import { RigidBody } from 'types/interfaces'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:

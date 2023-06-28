@@ -8,20 +8,7 @@ import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import useTitle from 'hooks/useTitle'
 import { Box } from '@mui/system'
-
-interface Chain {
-  id: string
-  atoms: number
-  first_res: number
-  last_res: number
-  num_res: number
-  domains: { start: number; end: number }[]
-}
-
-interface RigidBody {
-  id: string
-  domains: { chainid: string; start: number; end: number }[]
-}
+import { Chain, RigidBody } from 'types/interfaces'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -51,7 +38,7 @@ const UploadForm = ({ setStepIsValid }) => {
   const [field, meta, helper] = useField('crd_file')
   const { value } = field
   const { touched, error } = meta
-  const { setValue, setTouched } = helper
+  const { setValue } = helper
   const isError = touched && error
   const [fileName, setFileName] = useState<string>(value.name)
   const [file, setFile] = useState<File | undefined>(value.file)
@@ -92,7 +79,7 @@ const UploadForm = ({ setStepIsValid }) => {
     const demRigidBodies: RigidBody[] = [{ id: 'PRIMARY', domains: [] }]
 
     uniqueChains.forEach((chainId) => {
-      // const chainArray = data.filter((value) => value.includes(chainId))
+      // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
       const filteredData = data!.filter((line) => line.includes(chainId))
 
       const length = filteredData.length
@@ -218,8 +205,8 @@ const UploadForm = ({ setStepIsValid }) => {
                 <Field
                   name="crd_file"
                   id="crd_file"
-                  title="Select File"
-                  variant="outlined"
+                  title="Select CRD File"
+                  // variant="outlined"
                   // field={field}
                   as={CrdFileField}
                   onChange={onChange}
@@ -246,7 +233,7 @@ const UploadForm = ({ setStepIsValid }) => {
 
             <Item>
               <Typography variant="h4" sx={{ my: 2 }}>
-                {fileName}
+                CRD Filename: {fileName}
               </Typography>
               {file && src && chains && <CrdSummary chains={chains}></CrdSummary>}
             </Item>

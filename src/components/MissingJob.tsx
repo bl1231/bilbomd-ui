@@ -2,8 +2,9 @@
 import useTitle from 'hooks/useTitle'
 import { Box } from '@mui/system'
 import { Alert } from '@mui/material'
+import { Job } from 'features/jobs/jobsApiSlice'
 
-const MissingJob = ({ id }) => {
+const MissingJob = ({ id }: Job) => {
   useTitle('BilboMD: Missing Job')
   return (
     <Box>
