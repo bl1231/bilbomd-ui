@@ -129,7 +129,7 @@ const DomainForm = ({ setStepIsValid }) => {
                             </Grid>
                             <RigidBody
                               rigidBodyIndex={index}
-                              rigidBodiesArrayHelpers={arrayHelpers}
+                              // rigidBodiesArrayHelpers={arrayHelpers}
                             />
                             {/* DO NOT SHOW DELETE BUTTON FOR PRIMARY */}
                             {values.crd_file.rigid_bodies[index]?.id !== 'PRIMARY' ? (

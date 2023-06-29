@@ -7,7 +7,7 @@ export interface Chain {
   domains: { start: number; end: number }[]
 }
 
-interface Domain {
+interface RigidDomain {
   chainid: string
   start: number
   end: number
@@ -15,5 +15,27 @@ interface Domain {
 
 export interface RigidBody {
   id: string
-  domains: Domain[]
+  domains: RigidDomain[]
+}
+
+export interface Job {
+  id: string
+  _id: string
+  conformational_sampling: number
+  const_inp_file: string
+  crd_file: string
+  createdAt: string
+  data_file: string
+  psf_file: string
+  rg_max: number
+  rg_min: number
+  status: string
+  time_completed: string
+  time_started: string
+  time_submitted: string
+  title: string
+  updatedAt: string
+  user: string
+  username: string
+  uuid: string
 }

@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import JobDetails from './JobDetails'
 import DeleteJob from './DeleteJob'
-import { Job } from './jobsApiSlice'
+import { Job } from 'types/interfaces'
 
 interface JobSummaryProps {
   job: Job

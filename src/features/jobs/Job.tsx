@@ -2,13 +2,14 @@ import { useParams } from 'react-router-dom'
 import { useGetJobsQuery } from './jobsApiSlice'
 import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
-import { Button, Divider, Grid, Typography, Alert } from '@mui/material'
-import { Box } from '@mui/system'
+import { Button, Divider, Grid, Typography } from '@mui/material'
+// import { Box } from '@mui/system'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import axiosInstance, { AxiosResponse } from 'app/api/axios'
 import { format } from 'date-fns'
 import MissingJob from 'components/MissingJob'
+import { Job } from 'types/interfaces'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -38,12 +39,13 @@ const SingleJobPage = () => {
 
   // Will select the job with the given id, and will only rerender if the given jobs data changes
   const { job } = useGetJobsQuery('jobsList', {
-    selectFromResult: ({ data }) => ({ job: data?.find((job) => job.id === id) })
+    selectFromResult: ({ data }) =>
+      ({ job: data?.find((job) => job.id === id) } as { job: Job })
   })
-
+  console.log(job)
   if (!job) {
     console.log('no job with id: ', id)
-    // return <PulseLoader color={'#FFF'} />
+    return <PulseLoader color={'#FFF'} />
   }
 
   const handleDownload = async (id: string) => {

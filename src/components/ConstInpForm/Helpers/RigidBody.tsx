@@ -1,39 +1,17 @@
-import React, { useState } from 'react'
-import { useField, Field, useFormikContext, FieldArray, ErrorMessage } from 'formik'
-import { Grid, TextField, Typography, Button, Chip, Alert } from '@mui/material'
+import { Fragment } from 'react'
+import { useFormikContext, FieldArray, FormikValues } from 'formik'
+import { Grid, Button } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { Box } from '@mui/system'
 import Domain from './Domain'
+import * as PropTypes from 'prop-types'
 
-const RigidBody = ({ rigidBodyIndex, rigidBodiesArrayHelpers }) => {
-  const [field, meta, helper] = useField('crd_file')
-  const { touched, error } = meta
-  const { setValue, setError } = helper
-  const isError = Boolean(touched && error)
-  const { value } = field
-  const [id, setId] = useState('')
-  const [start, setStart] = useState('')
-  const [end, setEnd] = useState('')
-  // const { nextDomainIndex, setNextDomainIndex } = useState(rigidBodyIndex + 1)
-  const { values, handleChange, handleBlur, errors } = useFormikContext()
-
-  // const handleAddNewRigidDomain = () => {
-  //   const domain = {
-  //     chainid: '',
-  //     start: '',
-  //     end: ''
-  //   }
-  //   rigidBodiesArrayHelpers.push(domain)
-  // }
+const RigidBody = ({ rigidBodyIndex }) => {
+  const { values } = useFormikContext<FormikValues>()
 
   return (
-    <React.Fragment>
-      <Grid
-        container
-        // direction="row"
-        // blue-2
-        sx={{ my: 1, backgroundColor: '#bae0ff', borderRadius: 2 }}
-      >
+    <>
+      <Grid container sx={{ my: 1, backgroundColor: '#bae0ff', borderRadius: 2 }}>
         <Box
           sx={{
             display: 'flex',
@@ -42,25 +20,13 @@ const RigidBody = ({ rigidBodyIndex, rigidBodiesArrayHelpers }) => {
             flexWrap: 'wrap'
           }}
         >
-          <React.Fragment>
-            {/* <Typography
-              variant="h5"
-              sx={{
-                display: 'flex',
-                flex: '0 1 auto',
-                alignItems: 'center',
-                m: 2
-              }}
-            >
-              Rigid Body Index {rigidBodyIndex + 1}:
-            </Typography> */}
-
+          <>
             <FieldArray name={`crd_file.rigid_bodies[${rigidBodyIndex}].domains`}>
-              {({ arrayHelpers, insert, remove, push }) => (
-                <React.Fragment>
+              {(arrayHelpers) => (
+                <>
                   {values.crd_file.rigid_bodies[rigidBodyIndex].domains.map(
                     (domain, index) => (
-                      <React.Fragment key={index}>
+                      <Fragment key={index}>
                         <Grid
                           item
                           sx={{
@@ -79,19 +45,18 @@ const RigidBody = ({ rigidBodyIndex, rigidBodiesArrayHelpers }) => {
                             rigidBodyIndex={rigidBodyIndex}
                             domain={domain}
                             domainIndex={index}
-                            domainArrayHelpers={arrayHelpers}
                           />
 
                           <Button
                             variant="contained"
                             color="error"
-                            onClick={() => remove(index)}
+                            onClick={() => arrayHelpers.remove(index)}
                             // sx={{ alignItems: 'flex-end' }}
                           >
                             Delete
                           </Button>
                         </Grid>
-                      </React.Fragment>
+                      </Fragment>
                     )
                   )}
                   <Grid item sx={{ flex: '1 1 auto', alignItems: 'center' }}>
@@ -108,7 +73,7 @@ const RigidBody = ({ rigidBodyIndex, rigidBodiesArrayHelpers }) => {
                               start: '',
                               end: ''
                             }
-                            push(new_domain)
+                            arrayHelpers.push(new_domain)
                           }}
                           startIcon={<AddIcon />}
                         >
@@ -117,14 +82,18 @@ const RigidBody = ({ rigidBodyIndex, rigidBodiesArrayHelpers }) => {
                       </Grid>
                     </Box>
                   </Grid>
-                </React.Fragment>
+                </>
               )}
             </FieldArray>
-          </React.Fragment>
+          </>
         </Box>
       </Grid>
-    </React.Fragment>
+    </>
   )
+}
+
+RigidBody.propTypes = {
+  rigidBodyIndex: PropTypes.number.isRequired
 }
 
 export default RigidBody

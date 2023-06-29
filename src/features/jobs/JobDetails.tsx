@@ -1,8 +1,7 @@
 // import React from 'react'
 import InfoIcon from '@mui/icons-material/Info'
 import { IconButton, Tooltip } from '@mui/material'
-
-import { Job } from './jobsApiSlice'
+import { Job } from 'types/interfaces'
 import { Link } from 'react-router-dom'
 
 interface JobDetailsProps {

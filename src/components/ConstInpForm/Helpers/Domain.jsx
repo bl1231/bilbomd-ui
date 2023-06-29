@@ -1,40 +1,36 @@
-import React, { useEffect, useRef } from 'react'
-import { useField, Field, useFormikContext, ErrorMessage } from 'formik'
+import { Fragment } from 'react'
+import { Field, useFormikContext, ErrorMessage, FormikValues } from 'formik'
 import { Grid, TextField, Typography, Chip, Alert, MenuItem } from '@mui/material'
-
 import { Box } from '@mui/system'
+import * as PropTypes from 'prop-types'
 
-const Domain = ({
-  rigidBodyIndex: rbidx,
-  domain,
-  domainIndex: didx,
-  domainArrayHelpers
-}) => {
-  const [field, meta, helper] = useField('crd_file')
-  const { touched, error } = meta
-  const { value } = field
-  const { values, handleChange, handleBlur, errors, isValid } = useFormikContext()
+// interface FormErrors {
+//   crd_file?: {
+//     rigid_bodies?: {
+//       [index: number]: {
+//         domains?: {
+//           [index: number]: {
+//             start?: string
+//             end?: string
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
+
+const Domain = ({ rigidBodyIndex: rbidx, domain, domainIndex: didx }) => {
+  // const [field, meta, helper] = useField('crd_file')
+  // const { touched, error } = meta
+  // const { value } = field
+  // const { values, handleChange, handleBlur, errors } = useFormikContext<FormikValues>()
+  const { values, handleChange, handleBlur, errors } = useFormikContext()
+  const typedErrors = errors
   // console.log(rigidBodyIndex, domain, domainIndex, domainArrayHelpers)
   // console.log(rigidBodyIndex)
 
-  const effectRan = useRef(false)
-
-  // useEffect(() => {
-  //   if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
-  //     // not exactly sure of best place for this.
-  //     // Need to update parent of isValid so we can enable/disable the "NEXT" button
-  //     console.log('valid:', isValid)
-  //     // setStepIsValid(isValid)
-  //     //   console.log(JSON.stringify(values, null, 2))
-  //   }
-  //   return () => {
-  //     effectRan.current = true
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [isValid])
-
-  let content = (
-    <React.Fragment key={didx}>
+  const content = (
+    <Fragment key={didx}>
       <Grid item>
         <Grid
           item
@@ -81,11 +77,7 @@ const Domain = ({
               // color="warning"
               onChange={handleChange}
               onBlur={handleBlur}
-              // error={errors.chainid}
-              error={Boolean(
-                errors.crd_file?.rigid_bodies[rbidx]?.domains[didx]?.chainid
-              )}
-              // helperText={errors.chainid && touched.chainid ? errors.chainid : 'Chain ID'}
+              error={typedErrors?.crd_file?.rigid_bodies[rbidx]?.domains[didx]?.chainid}
               helperText="Chain ID"
             >
               {values.crd_file.chains.map((item, index) => (
@@ -103,7 +95,7 @@ const Domain = ({
               as={TextField}
               helperText="Starting residue"
               FormHelperTextProps={
-                errors.crd_file?.rigid_bodies[rbidx]?.domains[didx]?.start
+                typedErrors?.crd_file?.rigid_bodies[rbidx]?.domains[didx]?.start
                   ? {
                       style: { backgroundColor: 'transparent' }
                     }
@@ -116,7 +108,9 @@ const Domain = ({
               }}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={Boolean(errors.crd_file?.rigid_bodies[rbidx]?.domains[didx]?.start)}
+              error={Boolean(
+                typedErrors?.crd_file?.rigid_bodies[rbidx]?.domains[didx]?.start
+              )}
               sx={{ mx: 1 }}
             />
 
@@ -141,7 +135,7 @@ const Domain = ({
               }}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={Boolean(errors.crd_file?.rigid_bodies[rbidx]?.domains[didx]?.end)}
+              error={errors.crd_file?.rigid_bodies[rbidx]?.domains[didx]?.end}
               sx={{ mx: 1 }}
             />
             <Box
@@ -207,9 +201,19 @@ const Domain = ({
           )}
         </Grid>
       </Grid>
-    </React.Fragment>
+    </Fragment>
   )
   return content
+}
+
+Domain.propTypes = {
+  rigidBodyIndex: PropTypes.number.isRequired,
+  domain: PropTypes.shape({
+    chainid: PropTypes.string.isRequired,
+    start: PropTypes.number.isRequired,
+    end: PropTypes.number.isRequired
+  }).isRequired,
+  domainIndex: PropTypes.number.isRequired
 }
 
 export default Domain
