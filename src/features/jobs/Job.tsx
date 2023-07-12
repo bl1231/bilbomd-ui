@@ -10,6 +10,8 @@ import axiosInstance, { AxiosResponse } from 'app/api/axios'
 import { format } from 'date-fns'
 import MissingJob from 'components/MissingJob'
 import { Job } from 'types/interfaces'
+import { useSelector } from 'react-redux'
+import { selectCurrentToken } from '../auth/authSlice'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -34,7 +36,7 @@ const HeaderThingee = {
 
 const SingleJobPage = () => {
   useTitle('BilboMD: Job Details')
-
+  const token = useSelector(selectCurrentToken)
   const { id } = useParams()
 
   // Will select the job with the given id, and will only rerender if the given jobs data changes
@@ -53,7 +55,10 @@ const SingleJobPage = () => {
       const response: AxiosResponse<Blob> = await axiosInstance.get(
         `jobs/${id}/results`,
         {
-          responseType: 'blob'
+          responseType: 'blob',
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
       )
 
