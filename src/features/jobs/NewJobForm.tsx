@@ -175,7 +175,7 @@ const NewJobForm = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Typography sx={HeaderThingee}>New BilboMD Job Form</Typography>
+          <Typography sx={HeaderThingee}>BilboMD Job Form</Typography>
           <Item>
             {isSuccess ? (
               <Alert severity="success">
@@ -245,7 +245,7 @@ const NewJobForm = () => {
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
-                            error={errors.crd_file && touched.crd_file}
+                            error={errors.crd_file && values.crd_file}
                             errorMessage={errors.crd_file ? errors.crd_file : ''}
                             helperText="Select a CRD file to upload"
                             fileType="*.CRD"
@@ -272,7 +272,7 @@ const NewJobForm = () => {
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
-                            error={errors.psf_file && touched.psf_file}
+                            error={errors.psf_file && values.psf_file}
                             errorMessage={errors.psf_file ? errors.psf_file : ''}
                             helperText="Select a PSF file to upload"
                             fileType="*.PSF"
@@ -299,7 +299,7 @@ const NewJobForm = () => {
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
-                            error={errors.constinp && touched.constinp}
+                            error={errors.constinp && values.constinp}
                             errorMessage={errors.constinp ? errors.constinp : ''}
                             helperText="Select a const.inp file to upload"
                             fileType="const.inp"
@@ -352,7 +352,7 @@ const NewJobForm = () => {
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
-                            error={errors.expdata && touched.expdata}
+                            error={errors.expdata && values.expdata}
                             errorMessage={errors.expdata ? errors.expdata : ''}
                             helperText="Select a const.inp file to upload"
                             fileType="experimental SAXS data"
