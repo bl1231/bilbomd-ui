@@ -45,6 +45,17 @@ const isSaxsData = (file: File): Promise<boolean> => {
   })
 }
 
+const noSpaces = (file: File): Promise<boolean> => {
+  const spaces = /\s/
+  return new Promise((resolve) => {
+    if (spaces.test(file.name)) {
+      // console.log('false', file.name)
+      resolve(false)
+    }
+    resolve(true)
+  })
+}
+
 export const userRegisterSchema = object().shape({
   email: string().email('Please enter a valid email').required('Required'),
   user: string()
@@ -97,6 +108,18 @@ export const bilbomdJobSchema = object().shape({
         // additional return if test fails for reasons other than NOT being a CHARMM file
         return false
       }
+    )
+    .test(
+      'check-for-spaces',
+      'Only accept file with no spaces in the name.',
+      async (file) => {
+        if (file) {
+          const spaceCheck = await noSpaces(file as File)
+          // console.log(spaceCheck)
+          return spaceCheck
+        }
+        return false
+      }
     ),
   crd_file: mixed()
     .test('required', 'CRD file obtained from CHARMM-GUI is required', (file) => {
@@ -134,6 +157,18 @@ export const bilbomdJobSchema = object().shape({
         // additional return if test fails for reasons other than NOT being a CHARMM file
         return false
       }
+    )
+    .test(
+      'check-for-spaces',
+      'Only accept file with no spaces in the name.',
+      async (file) => {
+        if (file) {
+          const spaceCheck = await noSpaces(file as File)
+          // console.log(spaceCheck)
+          return spaceCheck
+        }
+        return false
+      }
     ),
   constinp: mixed()
     .test('required', 'A const.inp file is required', (file) => {
@@ -154,7 +189,19 @@ export const bilbomdJobSchema = object().shape({
         return true
       }
       return false
-    }),
+    })
+    .test(
+      'check-for-spaces',
+      'Only accept file with no spaces in the name.',
+      async (file) => {
+        if (file) {
+          const spaceCheck = await noSpaces(file as File)
+          // console.log(spaceCheck)
+          return spaceCheck
+        }
+        return false
+      }
+    ),
   expdata: mixed()
     .test('required', 'Experimental SAXS data is required', (file) => {
       if (file) return true
@@ -183,7 +230,19 @@ export const bilbomdJobSchema = object().shape({
       }
       // additional return if test fails for reasons other than NOT being SAXS data
       return false
-    }),
+    })
+    .test(
+      'check-for-spaces',
+      'Only accept file with no spaces in the name.',
+      async (file) => {
+        if (file) {
+          const spaceCheck = await noSpaces(file as File)
+          // console.log(spaceCheck)
+          return spaceCheck
+        }
+        return false
+      }
+    ),
 
   num_conf: number()
     .integer()
