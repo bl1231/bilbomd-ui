@@ -16,6 +16,7 @@ const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')))
 const ConstInpStepper = Loadable(
   lazy(() => import('components/ConstInpForm/ConstInpStepper'))
 )
+const AF2PAEJiffy = Loadable(lazy(() => import('features/af2pae/Alphafold2PAEJiffy')))
 const Jobs = Loadable(lazy(() => import('features/jobs/Jobs')))
 const Job = Loadable(lazy(() => import('features/jobs/Job')))
 const Welcome = Loadable(lazy(() => import('features/auth/Welcome')))
@@ -83,6 +84,10 @@ const ProtectedMainRoutes = {
                     {
                       path: 'jobs/constinp',
                       element: <ConstInpStepper />
+                    },
+                    {
+                      path: 'af2pae',
+                      element: <AF2PAEJiffy />
                     },
                     {
                       path: 'account',
