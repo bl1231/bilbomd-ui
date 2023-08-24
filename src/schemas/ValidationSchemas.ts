@@ -266,3 +266,90 @@ export const bilbomdJobSchema = object().shape({
 export const editUserSchema = object().shape({
   active: boolean()
 })
+export const af2paeJiffySchema = object().shape({
+  crd_file: mixed()
+    .test('required', 'CRD file obtained from CHARMM-GUI is required', (file) => {
+      if (file) return true
+      return false
+    })
+    .test('file-size-check', 'Max file size is 20MB', (file) => {
+      if (file && (file as File).size <= 20000000) {
+        // console.log(file.size)
+        return true
+      }
+      // console.log(file.size)
+      return false
+    })
+    .test(
+      'file-type-check',
+      'Only accepts a CRD file obtained from CHARMM-GUI',
+      (file) => {
+        if (file && (file as File).name.split('.').pop()?.toUpperCase() === 'CRD') {
+          // console.log(file.name.split('.').pop())
+          return true
+        }
+        return false
+      }
+    )
+    .test(
+      'charmm-gui-check',
+      'File does not appear to be a CRD file output from CHARMM-GUI',
+      async (file) => {
+        if (file) {
+          const fromCharmm = await fromCharmmGui(file as File)
+          // console.log('fromCharmm:', fromCharmm)
+          return fromCharmm
+        }
+        // additional return if test fails for reasons other than NOT being a CHARMM file
+        return false
+      }
+    )
+    .test(
+      'check-for-spaces',
+      'Only accept file with no spaces in the name.',
+      async (file) => {
+        if (file) {
+          const spaceCheck = await noSpaces(file as File)
+          // console.log(spaceCheck)
+          return spaceCheck
+        }
+        return false
+      }
+    ),
+  pae_file: mixed()
+    .test(
+      'required',
+      'Please upload a JSON file containing PAE values from Alphafold2',
+      (file) => {
+        if (file) return true
+        return false
+      }
+    )
+    .test('file-size-check', 'Max file size is 20MB', (file) => {
+      if (file && (file as File).size <= 20000000) {
+        // console.log(file.size)
+        return true
+      }
+      // console.log(file.size)
+      return false
+    })
+    .test('file-type-check', 'Only accepts a JSON file', (file) => {
+      if (file && (file as File).name.split('.').pop()?.toUpperCase() === 'JSON') {
+        // console.log(file.name.split('.').pop())
+        return true
+      }
+      return false
+    })
+    .test(
+      'check-for-spaces',
+      'Only accept file with no spaces in the name.',
+      async (file) => {
+        if (file) {
+          const spaceCheck = await noSpaces(file as File)
+          // console.log(spaceCheck)
+          return spaceCheck
+        }
+        return false
+      }
+    )
+})
