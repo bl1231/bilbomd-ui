@@ -18,7 +18,7 @@
     "@mui/icons-material": "^5.14.3",
     "@mui/joy": "^5.0.0-beta.2",
     "@mui/lab": "^5.0.0-alpha.140",
-    "@mui/material": "^5.14.5",
+    "@mui/material": "^5.14.6",
     "@mui/system": "^5.14.5",
     "@mui/x-data-grid": "^6.11.2",
     "@reduxjs/toolkit": "^1.9.5",
