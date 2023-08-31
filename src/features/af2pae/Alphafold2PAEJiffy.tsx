@@ -8,6 +8,8 @@ import FileInput from 'features/jobs/FileInput'
 import { Debug } from 'components/Debug'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
+import axiosInstance from 'app/api/axios'
+import Download from './DownladAF2PAEfile'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -39,6 +41,8 @@ const initialValues = {
 const Alphafold2PAEJiffy = () => {
   const { email } = useAuth()
   const [success, setSuccess] = useState(false)
+  const [uuid, setUuid] = useState('')
+  const [constfile, setConstfile] = useState('')
 
   const onSubmit = async (values) => {
     console.log('submit form')
@@ -47,8 +51,15 @@ const Alphafold2PAEJiffy = () => {
     form.append('pae_file', values.pae_file)
     form.append('email', email)
     try {
-      setSuccess(true)
-      console.log('worked')
+      const response = await axiosInstance.post('/af2pae', form)
+      if (response.status === 200) {
+        const data = response.data
+        setUuid(data.uuid)
+        setConstfile(data.const_file)
+        setSuccess(true)
+      } else {
+        console.log('API request failed')
+      }
     } catch (error) {
       console.log('failed')
     }
@@ -60,7 +71,10 @@ const Alphafold2PAEJiffy = () => {
         <Typography sx={HeaderThingee}>Create const.inp file with CRD/PAE</Typography>
         <Item>
           {success ? (
-            <div>sucess</div>
+            <>
+              <Typography>{uuid}</Typography>
+              <Download constfile={constfile} uuid={uuid} />
+            </>
           ) : (
             <Formik
               initialValues={initialValues}
