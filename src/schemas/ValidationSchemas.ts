@@ -1,5 +1,3 @@
-//import * as yup from 'yup';
-
 import { mixed, boolean, number, object, string } from 'yup'
 
 const fromCharmmGui = (file: File): Promise<boolean> => {
