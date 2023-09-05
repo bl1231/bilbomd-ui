@@ -47,7 +47,7 @@ const Alphafold2PAEJiffy = () => {
   const onSubmit = async (values) => {
     console.log('submit form')
     const form = new FormData()
-    form.append('psf_file', values.psf_file)
+    form.append('crd_file', values.crd_file)
     form.append('pae_file', values.pae_file)
     form.append('email', email)
     try {
