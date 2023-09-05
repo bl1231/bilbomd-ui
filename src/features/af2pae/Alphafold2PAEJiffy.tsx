@@ -73,19 +73,22 @@ const Alphafold2PAEJiffy = () => {
         <Grid item xs={12}>
           <Typography sx={HeaderThingee}>Instructions</Typography>
           <Item>
+            <Alert severity="warning" sx={{ m: 2 }}>
+              This is an experimental tool. If you run into any issues please let us know.
+            </Alert>
             <Typography>
-              The <b>PAE Jiffy</b> will use the PAE file from AlphaFold to automagically
-              define the rigid bodies and rigid domains of your CRD file, for input into
-              BilboMD.
+              The <b>PAE Jiffy</b> will use the Predicted Alignment Error (PAE) file in
+              JSON format from AlphaFold to automagically define the rigid bodies and
+              rigid domains of your CRD file, for input into BilboMD.
             </Typography>
             <Typography component={'span'} variant={'body1'}>
               <ol>
                 <li>
-                  Obtain the Predicted Alignment Error (PAE) file in JSON format from
-                  Alphafold2. This can either be from running Alphfold2 on your own in a
-                  colabfold notebook or downloaded from pre-predicted structures available
-                  from the <Link href="https://alphafold.ebi.ac.uk/">AlphaFold</Link>{' '}
-                  database hosted at EMBL-EBI.
+                  Obtain the PAE file from AlphaFold. This can either be from running
+                  AlphaFold on your own in a colabfold notebook or downloaded from
+                  pre-predicted structures available from the{' '}
+                  <Link href="https://alphafold.ebi.ac.uk/">AlphaFold</Link> database
+                  hosted at EMBL-EBI.
                 </li>
                 <li>
                   Use the <b>PDB Reader</b> tool available from{' '}
@@ -94,9 +97,9 @@ const Alphafold2PAEJiffy = () => {
                 </li>
                 <li>
                   Upload the files here and our server will create a{' '}
-                  <code>const.inp</code> file for you. After you download the file please
-                  check that it makes sense to you before using it in a <b>BilboMD</b>{' '}
-                  run.
+                  <code>const.inp</code> file for you. After you download your{' '}
+                  <code>const.inp</code> file please check that it makes sense to you
+                  before using it in a <b>BilboMD</b> run.
                 </li>
               </ol>
             </Typography>
