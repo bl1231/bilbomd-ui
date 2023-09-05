@@ -1,25 +1,41 @@
 import { Button, Grid } from '@mui/material'
 import { Box } from '@mui/system'
+import axiosInstance, { AxiosResponse } from 'app/api/axios'
+import { useSelector } from 'react-redux'
+import { selectCurrentToken } from '../auth/authSlice'
 
 interface DownloadProps {
   uuid: string | null
-  constfile: string | null
 }
 
-const Download = ({ constfile, uuid }: DownloadProps) => {
-  const handleDownload = () => {
-    if (constfile) {
-      const link = document.createElement('a')
-      link.href = `af2pae/${uuid}`
-      link.setAttribute('download', 'const.inp')
-      document.body.appendChild(link)
-      link.click()
-      if (link.parentNode) {
-        link.parentNode.removeChild(link)
+const Download = ({ uuid }: DownloadProps) => {
+  const token = useSelector(selectCurrentToken)
+  const handleDownload = async () => {
+    try {
+      const response: AxiosResponse<Blob> = await axiosInstance.get(
+        `af2pae?uuid=${uuid}`,
+        {
+          responseType: 'blob',
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      if (response.data) {
+        const url = window.URL.createObjectURL(response.data)
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', 'const.inp')
+        document.body.appendChild(link)
+        link.click()
+        if (link.parentNode) {
+          link.parentNode.removeChild(link)
+        }
+        console.log('uuid: ', uuid)
+        console.log('link ', link)
       }
-      console.log('uuid: ', uuid)
-      console.log('constfile: ', constfile)
-      console.log('link ', link)
+    } catch (error) {
+      console.error('Download results.tar.gz error:', error)
     }
   }
 
