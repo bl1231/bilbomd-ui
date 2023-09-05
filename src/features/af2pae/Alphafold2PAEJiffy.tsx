@@ -1,4 +1,4 @@
-import { Grid, Typography, Paper } from '@mui/material'
+import { Grid, Typography, Paper, Alert, Button, AlertTitle } from '@mui/material'
 import { Form, Formik, Field } from 'formik'
 import useAuth from 'hooks/useAuth'
 import { styled } from '@mui/material/styles'
@@ -10,6 +10,7 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import axiosInstance from 'app/api/axios'
 import Download from './DownladAF2PAEfile'
+import { Box } from '@mui/system'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -32,30 +33,31 @@ const HeaderThingee = {
   letterSpacing: '1px',
   py: 2
 }
-const initialValues = {
-  crd_file: '',
-  pae_file: '',
-  email: ''
-}
 
 const Alphafold2PAEJiffy = () => {
   const { email } = useAuth()
   const [success, setSuccess] = useState(false)
   const [uuid, setUuid] = useState('')
-  const [constfile, setConstfile] = useState('')
+  // const [constfile, setConstfile] = useState('')
+
+  const initialValues = {
+    crd_file: '',
+    pae_file: '',
+    email: email
+  }
 
   const onSubmit = async (values) => {
     console.log('submit form')
     const form = new FormData()
     form.append('crd_file', values.crd_file)
     form.append('pae_file', values.pae_file)
-    form.append('email', email)
+    form.append('email', values.email)
     try {
       const response = await axiosInstance.post('/af2pae', form)
       if (response.status === 200) {
         const data = response.data
         setUuid(data.uuid)
-        setConstfile(data.const_file)
+        // setConstfile(data.const_file)
         setSuccess(true)
       } else {
         console.log('API request failed')
@@ -68,12 +70,26 @@ const Alphafold2PAEJiffy = () => {
   const content = (
     <>
       <Grid>
-        <Typography sx={HeaderThingee}>Create const.inp file with CRD/PAE</Typography>
+        <Typography sx={HeaderThingee}>Create const.inp file from CRD/PAE</Typography>
         <Item>
           {success ? (
             <>
-              <Typography>{uuid}</Typography>
-              <Download constfile={constfile} uuid={uuid} />
+              <Alert severity="success">
+                <AlertTitle>Success</AlertTitle>
+                Your <code>const.inp</code> file was successfully created!
+                <br />
+                UUID: {uuid}
+              </Alert>
+              <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                <Download uuid={uuid} />
+                <Button
+                  variant="outlined"
+                  type="button"
+                  onClick={() => window.location.reload()}
+                >
+                  Reset
+                </Button>
+              </Box>
             </>
           ) : (
             <Formik
