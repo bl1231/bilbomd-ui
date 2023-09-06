@@ -46,3 +46,9 @@ Pre-bundle dependencies.
 ## Learn More
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Version History
+
+- 0.0.11
+  - Add PAE jiffy (creates const.inp from AlphaFold PAE JSON input file).
+
