@@ -74,9 +74,10 @@ const Alphafold2PAEJiffy = () => {
           <Typography sx={HeaderThingee}>Instructions</Typography>
           <Item>
             <Alert severity="warning" sx={{ m: 2 }}>
-              This is an experimental tool. If you run into any issues please let us know.
+              This tool is very new and still under active development. If you run into
+              any issues please let us know.
             </Alert>
-            <Typography>
+            <Typography sx={{ mx: 1 }}>
               The <b>PAE Jiffy</b> will use the Predicted Alignment Error (PAE) file in
               JSON format from AlphaFold to automagically define the rigid bodies and
               rigid domains of your CRD file, for input into BilboMD.
@@ -106,7 +107,7 @@ const Alphafold2PAEJiffy = () => {
           </Item>
         </Grid>
         <Grid item xs={12}>
-          <Typography sx={HeaderThingee}>Create const.inp file from CRD/PAE</Typography>
+          <Typography sx={HeaderThingee}>Upload your CRD and PAE files</Typography>
           <Item>
             {success ? (
               <>
@@ -114,7 +115,7 @@ const Alphafold2PAEJiffy = () => {
                   <AlertTitle>Success</AlertTitle>
                   Your <code>const.inp</code> file was successfully created!
                   <br />
-                  UUID: {uuid}
+                  <b>UUID:</b> {uuid}
                 </Alert>
                 <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                   <Download uuid={uuid} />
@@ -170,7 +171,7 @@ const Alphafold2PAEJiffy = () => {
                         disabled={isSubmitting}
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}
-                        error={errors.pae_file}
+                        error={errors.pae_file && values.pae_file}
                         errorMessage={errors.pae_file ? errors.pae_file : ''}
                         helperText="Select a PAE JSON file to upload"
                         fileType="*.json"
