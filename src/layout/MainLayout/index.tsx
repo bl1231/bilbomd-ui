@@ -55,6 +55,13 @@ export default function ClippedDrawer() {
       roles: ['user', 'manager']
     },
     {
+      text: 'PAE Jiffy',
+      icon: <AutoAwesome color="secondary" />,
+      path: '/dashboard/af2pae',
+      onclick: () => navigate('dashboard/af2pae'),
+      roles: ['user']
+    },
+    {
       text: 'Users',
       icon: <PeopleIcon color="secondary" />,
       path: '/dashboard/users',
