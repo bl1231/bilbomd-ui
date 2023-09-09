@@ -40,6 +40,7 @@ const Welcome = () => {
 
       <Typography>
         <b>BilboMD</b> makes use of <Link to="https://academiccharmm.org/">CHARMM</Link>,{' '}
+        <Link to="https://www.charmm-gui.org/">CHARMM-GUI</Link>,{' '}
         <Link to="https://modbase.compbio.ucsf.edu/foxs/about">FoXS</Link>, and{' '}
         <Link to="https://modbase.compbio.ucsf.edu/multifoxs/about">MultiFoXS</Link>.
         Please also consider citing them:
@@ -74,6 +75,34 @@ const Welcome = () => {
         Nucleic Acids Res. 2016 Jul 8;44(W1):W424-9. doi: 10.1093/nar/gkw389. Epub 2016
         May 5. PMID: <Link to="https://pubmed.ncbi.nlm.nih.gov/27151198/">27151198</Link>;
         PMCID: PMC4987932.
+      </Typography>
+      <Typography variant="body2" sx={{ mx: 2, my: 2 }}>
+        Jo S, Kim T, Iyer VG, Im W.{' '}
+        <b>CHARMM-GUI: a web-based graphical user interface for CHARMM.</b> J Comput Chem.
+        2008 Aug;29(11):1859-65. doi: 10.1002/jcc.20945. PMID:{' '}
+        <Link to="https://pubmed.ncbi.nlm.nih.gov/18351591/">18351591</Link>.
+      </Typography>
+      <Typography variant="body2" sx={{ mx: 2, my: 2 }}>
+        Jo S, Cheng X, Islam SM, Huang L, Rui H, Zhu A, Lee HS, Qi Y, Han W,
+        Vanommeslaeghe K, MacKerell AD Jr, Roux B, Im W.{' '}
+        <b>
+          CHARMM-GUI PDB manipulator for advanced modeling and simulations of proteins
+          containing nonstandard residues.
+        </b>{' '}
+        Adv Protein Chem Struct Biol. 2014;96:235-65. doi: 10.1016/bs.apcsb.2014.06.002.
+        Epub 2014 Aug 24. PMID:{' '}
+        <Link to="https://pubmed.ncbi.nlm.nih.gov/25443960/">25443960</Link>; PMCID:
+        PMC4739825.
+      </Typography>
+      <Typography variant="body2" sx={{ mx: 2, my: 2 }}>
+        Park SJ, Kern N, Brown T, Lee J, Im W.{' '}
+        <b>
+          CHARMM-GUI PDB Manipulator: Various PDB Structural Modifications for
+          Biomolecular Modeling and Simulation.
+        </b>{' '}
+        J Mol Biol. 2023 Jul 15;435(14):167995. doi: 10.1016/j.jmb.2023.167995. Epub 2023
+        Feb 2. PMID: <Link to="https://pubmed.ncbi.nlm.nih.gov/37356910/">37356910</Link>;
+        PMCID: PMC10291205.
       </Typography>
       <Typography>
         Other projects and code that powers the AlphaFold PAE Jiffy to automatically
