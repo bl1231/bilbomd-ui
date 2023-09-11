@@ -49,6 +49,11 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## Version History
 
+- 0.0.12
+
+  - update the Welcome component
+  - add better references to Welcome page
+  - update nodejs dependencies
+
 - 0.0.11
   - Add PAE jiffy (creates const.inp from AlphaFold PAE JSON input file).
-
