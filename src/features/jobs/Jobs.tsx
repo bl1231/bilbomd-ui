@@ -47,7 +47,7 @@ const Jobs = () => {
     const rows = filteredIds
 
     const columns: GridColDef[] = [
-      { field: 'title', headerName: 'Title', width: 200 },
+      { field: 'title', headerName: 'Title', width: 180 },
       // { field: 'id', headerName: 'ID', width: 100, hide: true },
       {
         field: 'time_submitted',
@@ -94,6 +94,7 @@ const Jobs = () => {
           })
         }
       },
+      { field: 'position', headerName: 'Position' },
 
       {
         field: 'actions',

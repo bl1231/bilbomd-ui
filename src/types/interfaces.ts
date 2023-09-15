@@ -13,6 +13,11 @@ interface RigidDomain {
   end: number
 }
 
+interface BullMQJob {
+  id: number
+  progress: number
+}
+
 export interface RigidBody {
   id: string
   domains: RigidDomain[]
@@ -38,4 +43,5 @@ export interface Job {
   user: string
   username: string
   uuid: string
+  bullmq: BullMQJob
 }

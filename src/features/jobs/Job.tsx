@@ -41,8 +41,11 @@ const SingleJobPage = () => {
 
   // Will select the job with the given id, and will only rerender if the given jobs data changes
   const { job } = useGetJobsQuery('jobsList', {
+    pollingInterval: 30000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
     selectFromResult: ({ data }) =>
-      ({ job: data?.find((job) => job.id === id) } as { job: Job })
+      ({ job: data?.find((job) => job.id === id) }) as { job: Job }
   })
   console.log(job)
   if (!job) {
@@ -81,7 +84,7 @@ const SingleJobPage = () => {
   const content = job ? (
     <>
       <Grid container spacing={2} rowSpacing={2}>
-        <Grid item xs={9}>
+        <Grid item xs={6}>
           <Typography sx={HeaderThingee}>JOB TITLE</Typography>
           <Item>
             <Typography variant="h3" sx={{ ml: 1 }}>
@@ -94,6 +97,14 @@ const SingleJobPage = () => {
           <Item>
             <Typography variant="h3" sx={{ ml: 1 }}>
               {job.status}
+            </Typography>
+          </Item>
+        </Grid>
+        <Grid item xs={3}>
+          <Typography sx={HeaderThingee}>PROGRESS</Typography>
+          <Item>
+            <Typography variant="h3" sx={{ ml: 1 }}>
+              {job.bullmq.progress}
             </Typography>
           </Item>
         </Grid>
