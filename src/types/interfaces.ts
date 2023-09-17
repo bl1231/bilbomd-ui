@@ -28,6 +28,7 @@ export interface BullMQJob {
   progress: number
   name: string
   bilbomdStep: BilboMDSteps
+  bilbomdLastStep: string
 }
 
 export interface RigidBody {

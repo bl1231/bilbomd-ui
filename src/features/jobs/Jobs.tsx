@@ -48,7 +48,6 @@ const Jobs = () => {
 
     const columns: GridColDef[] = [
       { field: 'title', headerName: 'Title', width: 180 },
-      // { field: 'id', headerName: 'ID', width: 100, hide: true },
       {
         field: 'time_submitted',
         headerName: 'Submitted',

@@ -2,7 +2,7 @@ import { BullMQJob } from 'types/interfaces'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import BilboMDStep from './BilboMDStep'
-import { Grid } from '@mui/material'
+import { Chip, Grid, Typography } from '@mui/material'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -10,7 +10,9 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'left',
-  color: theme.palette.text.primary
+  color: theme.palette.text.primary,
+  borderTopLeftRadius: 0,
+  borderTopRightRadius: 0
 }))
 
 interface BilboMDStepsProps {
@@ -27,6 +29,12 @@ const BilboMDSteps = ({ job }: BilboMDStepsProps) => {
           {Object.entries(bilbomdStep).map(([stepName, stepValue]) => (
             <BilboMDStep key={stepName} stepName={stepName} stepStatus={stepValue} />
           ))}
+          <Grid sx={{ m: 1, display: 'flex', alignItems: 'center' }}>
+            <Typography sx={{ mr: 1 }}>
+              <b>INFO: </b>
+            </Typography>
+            <Chip label={job.bilbomdLastStep} size="small" />
+          </Grid>
         </Grid>
       </Item>
     )

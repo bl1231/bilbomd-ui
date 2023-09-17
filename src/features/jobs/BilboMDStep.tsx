@@ -1,6 +1,8 @@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
-import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined'
+// import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined'
+// import DirectionsRunIcon from '@mui/icons-material/DirectionsRun'
+import DirectionsRunRoundedIcon from '@mui/icons-material/DirectionsRunRounded'
 import { Chip, Grid } from '@mui/material'
 
 interface BilboMDStepProps {
@@ -14,7 +16,7 @@ const BilboMDStep = ({ stepName, stepStatus }: BilboMDStepProps) => {
         <Chip icon={<RadioButtonUncheckedIcon />} size="small" label={stepName} />
       ) : stepStatus === 'start' ? (
         <Chip
-          icon={<CachedOutlinedIcon />}
+          icon={<DirectionsRunRoundedIcon />}
           size="small"
           label={stepName}
           style={{ backgroundColor: '#fff566' }}
