@@ -147,7 +147,7 @@ const NewJobForm = () => {
                 <a href="https://www.charmm-gui.org/">CHARMM-GUI</a> to convert your
                 standard PDB file to a CRD file. If you need help generating a valid{' '}
                 <b>const.inp</b> file you can use our little Jiffy (green button below or
-                "Jiffy" links to the left) to help get you started.
+                &ldquo;Jiffy&rdquo; links to the left) to help get you started.
               </Typography>
               <Typography sx={{ m: 1 }}>
                 <b>Conformations per Rg</b> - Specify the number of atomic models to be
