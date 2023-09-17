@@ -12,6 +12,7 @@ import MissingJob from 'components/MissingJob'
 import { Job } from 'types/interfaces'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
+import BilboMDSteps from './BilboMDSteps'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -81,6 +82,20 @@ const SingleJobPage = () => {
     }
   }
 
+  const getStatusBackgroundColor = (status) => {
+    // Define the background colors based on status values
+    const statusColors = {
+      Submitted: '#d6e4ff',
+      Pending: '#d6e4ff',
+      Running: '#fff566',
+      Completed: '#73d13d',
+      Error: 'red'
+    }
+    return statusColors[status]
+  }
+
+  const statusBGColor = getStatusBackgroundColor(job.status)
+
   const content = job ? (
     <>
       <Grid container spacing={2} rowSpacing={2}>
@@ -94,7 +109,7 @@ const SingleJobPage = () => {
         </Grid>
         <Grid item xs={3}>
           <Typography sx={HeaderThingee}>STATUS</Typography>
-          <Item>
+          <Item sx={{ backgroundColor: statusBGColor }}>
             <Typography variant="h3" sx={{ ml: 1 }}>
               {job.status}
             </Typography>
@@ -104,9 +119,13 @@ const SingleJobPage = () => {
           <Typography sx={HeaderThingee}>PROGRESS</Typography>
           <Item>
             <Typography variant="h3" sx={{ ml: 1 }}>
-              {job.bullmq.progress}
+              {job.bullmq.progress} %
             </Typography>
           </Item>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography sx={HeaderThingee}>BILBOMD STEPS</Typography>
+          <BilboMDSteps job={job.bullmq} />
         </Grid>
         <Grid item xs={12}>
           <Typography sx={HeaderThingee}>DETAILS</Typography>
@@ -114,7 +133,7 @@ const SingleJobPage = () => {
             <Grid container>
               <Grid item xs={1}>
                 <Typography>
-                  <b>Time Submitted:</b>
+                  <b>Submitted:</b>
                 </Typography>
               </Grid>
               <Grid item xs={3}>
@@ -124,7 +143,7 @@ const SingleJobPage = () => {
               </Grid>
               <Grid item xs={1}>
                 <Typography>
-                  <b>Time Started:</b>
+                  <b>Started:</b>
                 </Typography>
               </Grid>
               <Grid item xs={3}>
@@ -136,7 +155,7 @@ const SingleJobPage = () => {
               </Grid>
               <Grid item xs={1}>
                 <Typography>
-                  <b>Time Completed:</b>{' '}
+                  <b>Completed:</b>{' '}
                 </Typography>
               </Grid>
               <Grid item xs={3}>

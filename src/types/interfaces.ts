@@ -13,9 +13,21 @@ interface RigidDomain {
   end: number
 }
 
-interface BullMQJob {
+interface BilboMDSteps {
+  minimize: string
+  heat: string
+  md: string
+  foxs: string
+  multifoxs: string
+  results: string
+  email: string
+}
+
+export interface BullMQJob {
   id: number
   progress: number
+  name: string
+  bilbomdStep: BilboMDSteps
 }
 
 export interface RigidBody {
