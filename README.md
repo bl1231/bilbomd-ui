@@ -49,11 +49,18 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## Version History
 
+- 0.0.13
+
+  - Improve Job Detail page
+  - Add step indicators for BilboMD
+  - Display information about queue position in the Job List page
+
 - 0.0.12
 
-  - update the Welcome component
-  - add better references to Welcome page
-  - update nodejs dependencies
+  - Update the Welcome component
+  - Add better references to Welcome page
+  - Update nodejs dependencies
 
 - 0.0.11
+
   - Add PAE jiffy (creates const.inp from AlphaFold PAE JSON input file).
