@@ -11,6 +11,7 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
     getJobs: builder.query({
       query: () => ({
         url: '/jobs',
+        method: 'GET',
         validateStatus: (response, result) => {
           return response.status === 200 && !result.isError
         }
