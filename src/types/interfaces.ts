@@ -58,3 +58,10 @@ export interface Job {
   uuid: string
   bullmq: BullMQJob
 }
+
+export interface Queue {
+  name: string
+  queue_name: string
+  active_count: number
+  waiting_count: number
+}
