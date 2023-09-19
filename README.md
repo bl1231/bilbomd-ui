@@ -49,6 +49,10 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## Version History
 
+- 0.0.14
+
+  - Add BullMQ Summary component
+
 - 0.0.13
 
   - Improve Job Detail page
