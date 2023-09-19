@@ -59,7 +59,7 @@ const SingleJobPage = () => {
     selectFromResult: ({ data }) =>
       ({ job: data?.find((job) => job.id === id) }) as { job: Job }
   })
-  console.log(job)
+  // console.log(job)
   if (!job) {
     console.log('no job with id: ', id)
     return <PulseLoader color={'#FFF'} />
