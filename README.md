@@ -43,11 +43,17 @@ Locally preview the production build. Do not use this as a production server as 
 
 Pre-bundle dependencies.
 
-## Learn More
+## Deploy production
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+pm2 deploy ecosystem.config.cjs production update
+```
 
 ## Version History
+
+- 0.0.15
+
+  - Add Number of Workers to BullMQ Summary component
 
 - 0.0.14
 
