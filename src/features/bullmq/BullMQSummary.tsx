@@ -75,6 +75,17 @@ const BullMQSummary = () => {
                 fontWeight: 'bold'
               }}
             />
+            <Typography sx={{ ml: 4 }}>Number of workers:</Typography>
+            <Chip
+              label={queueStatus.worker_count}
+              sx={{
+                mx: 1,
+                backgroundColor: '#262626',
+                color: '#bae637',
+                fontSize: '1.6em',
+                fontWeight: 'bold'
+              }}
+            />
           </Grid>
         </Item>
       </>

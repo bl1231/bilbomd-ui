@@ -17,7 +17,7 @@ import {
 import { styled } from '@mui/material/styles'
 import DeleteJob from './DeleteJob'
 import JobDetails from './JobDetails'
-import BullMQSummary from './BullMQSummary'
+import BullMQSummary from '../bullmq/BullMQSummary'
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
