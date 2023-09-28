@@ -51,6 +51,11 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 0.0.16
+
+  - Update NPM dependencies
+  - Bump NodeJS to 18.18.0
+
 - 0.0.15
 
   - Add Number of Workers to BullMQ Summary component
