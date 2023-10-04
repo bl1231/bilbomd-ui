@@ -25,6 +25,8 @@ import useAuth from 'hooks/useAuth'
 import { styled } from '@mui/material/styles'
 import { Debug } from 'components/Debug'
 import axiosInstance from 'app/api/axios'
+import { useSelector } from 'react-redux'
+import { selectCurrentToken } from '../auth/authSlice'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -49,6 +51,7 @@ const HeaderThingee = {
 }
 
 const NewJobForm = () => {
+  const token = useSelector(selectCurrentToken)
   // const [addNewJob, { isLoading, isSuccess, isError, error }] = useAddNewJobMutation()
   const [addNewJob, { isSuccess }] = useAddNewJobMutation()
   const { email } = useAuth()
@@ -90,7 +93,11 @@ const NewJobForm = () => {
     form.append('email', email)
     form.append('expdata', selectedFile)
     axiosInstance
-      .post('/autorg', form)
+      .post('/autorg', form, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .then((response) => {
         const { rg_min, rg_max } = response.data
         setFieldValue('rg_min', rg_min)
