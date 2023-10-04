@@ -48,24 +48,22 @@ const HeaderThingee = {
   py: 2
 }
 
-const initialValues = {
-  title: '',
-  psf_file: '',
-  crd_file: '',
-  constinp: '',
-  expdata: '',
-  num_conf: '',
-  rg_min: '',
-  rg_max: '',
-  email: ''
-}
-
 const NewJobForm = () => {
   // const [addNewJob, { isLoading, isSuccess, isError, error }] = useAddNewJobMutation()
   const [addNewJob, { isSuccess }] = useAddNewJobMutation()
   const { email } = useAuth()
   // const [jobid, setJobid] = useState('')
-
+  const initialValues = {
+    title: '',
+    psf_file: '',
+    crd_file: '',
+    constinp: '',
+    expdata: '',
+    num_conf: '',
+    rg_min: '',
+    rg_max: '',
+    email: email
+  }
   const onSubmit = async (values, { setStatus }) => {
     const form = new FormData()
     form.append('title', values.title)
@@ -76,7 +74,7 @@ const NewJobForm = () => {
     form.append('rg_max', values.rg_max)
     form.append('expdata', values.expdata)
     form.append('constinp', values.constinp)
-    form.append('email', email)
+    form.append('email', values.email)
 
     try {
       const newJob = await addNewJob(form).unwrap()
