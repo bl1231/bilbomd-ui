@@ -28,13 +28,13 @@ import Footer from './Footer'
 const drawerWidth = 160
 
 export default function ClippedDrawer() {
-  const { isManager, isAdmin } = useAuth()
+  const { isAdmin } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
 
   const menuItems = [
     {
-      text: 'My Jobs',
+      text: 'Jobs',
       icon: <SubjectOutlined color="secondary" />,
       path: '/dashboard/jobs',
       onclick: () => navigate('dashboard/jobs'),
