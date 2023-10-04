@@ -24,6 +24,7 @@ import { bilbomdJobSchema } from 'schemas/ValidationSchemas'
 import useAuth from 'hooks/useAuth'
 import { styled } from '@mui/material/styles'
 import { Debug } from 'components/Debug'
+import axiosInstance from 'app/api/axios'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -76,10 +77,6 @@ const NewJobForm = () => {
     form.append('expdata', values.expdata)
     form.append('constinp', values.constinp)
     form.append('email', email)
-    // Display the values
-    // for (const value of form.values()) {
-    //   console.log(value)
-    // }
 
     try {
       const newJob = await addNewJob(form).unwrap()
@@ -88,6 +85,22 @@ const NewJobForm = () => {
     } catch (error) {
       console.error('rejected', error)
     }
+  }
+
+  const calculateAutoRg = (selectedFile, setFieldValue) => {
+    const form = new FormData()
+    form.append('email', email)
+    form.append('expdata', selectedFile)
+    axiosInstance
+      .post('/autorg', form)
+      .then((response) => {
+        const { rg_min, rg_max } = response.data
+        setFieldValue('rg_min', rg_min)
+        setFieldValue('rg_max', rg_max)
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+      })
   }
 
   const content = (
@@ -357,10 +370,16 @@ const NewJobForm = () => {
                             helperText="Select a const.inp file to upload"
                             fileType="experimental SAXS data"
                             fileExt=".dat"
+                            onFileChange={(selectedFile) =>
+                              calculateAutoRg(selectedFile, setFieldValue)
+                            }
                           />
                         </Grid>
                       </Grid>
-
+                      <Grid>
+                        <b>Rg Min</b> and <b>Rg Max</b> will be calculated automatically
+                        from the selected SAXS data file.
+                      </Grid>
                       <Grid item sx={{ my: 2, display: 'flex', width: '520px' }}>
                         <Field
                           label="Rg Min"
