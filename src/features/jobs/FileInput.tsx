@@ -18,6 +18,7 @@ interface FileInputProps extends FormControlProps {
   // error?: boolean
   // setFieldTouched: (field: string, touched?: boolean, shouldValidate?: boolean) => void
   setFieldValue: (field: string, value: File, shouldValidate?: boolean) => void
+  onFileChange: (file: File) => void
 }
 
 const FileInput = (props: FileInputProps) => {
@@ -32,6 +33,11 @@ const FileInput = (props: FileInputProps) => {
       reader.onloadend = () => setFileName(file.name)
       reader.readAsDataURL(file)
       props.setFieldValue(props.name, file)
+      // Call the callback function provided by the calling component
+      // This allows us to trigger a callback function to analyze SAXS data with AutoRG
+      if (props.onFileChange) {
+        props.onFileChange(file)
+      }
     }
   }
 
