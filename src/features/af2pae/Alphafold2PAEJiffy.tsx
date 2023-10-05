@@ -11,6 +11,8 @@ import SendIcon from '@mui/icons-material/Send'
 import axiosInstance from 'app/api/axios'
 import Download from './DownladAF2PAEfile'
 import { Box } from '@mui/system'
+import { useSelector } from 'react-redux'
+import { selectCurrentToken } from '../auth/authSlice'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -35,6 +37,7 @@ const HeaderThingee = {
 }
 
 const Alphafold2PAEJiffy = () => {
+  const token = useSelector(selectCurrentToken)
   const { email } = useAuth()
   const [success, setSuccess] = useState(false)
   const [uuid, setUuid] = useState('')
@@ -53,7 +56,11 @@ const Alphafold2PAEJiffy = () => {
     form.append('pae_file', values.pae_file)
     form.append('email', values.email)
     try {
-      const response = await axiosInstance.post('/af2pae', form)
+      const response = await axiosInstance.post('/af2pae', form, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       if (response.status === 200) {
         const data = response.data
         setUuid(data.uuid)
