@@ -21,7 +21,7 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { bilbomdJobSchema } from 'schemas/ValidationSchemas'
+import { bilbomdJobSchema, expdataSchema } from 'schemas/ValidationSchemas'
 import useAuth from 'hooks/useAuth'
 import { styled } from '@mui/material/styles'
 import { Debug } from 'components/Debug'
@@ -380,9 +380,16 @@ const NewJobForm = () => {
                             helperText="Select a const.inp file to upload"
                             fileType="experimental SAXS data"
                             fileExt=".dat"
-                            onFileChange={(selectedFile) =>
-                              calculateAutoRg(selectedFile, setFieldValue)
-                            }
+                            onFileChange={async (selectedFile) => {
+                              const isExpdataValid =
+                                await expdataSchema.isValid(selectedFile)
+                              if (isExpdataValid) {
+                                calculateAutoRg(selectedFile, setFieldValue)
+                              } else {
+                                setFieldValue('rg_min', '')
+                                setFieldValue('rg_max', '')
+                              }
+                            }}
                           />
                         </Grid>
                       </Grid>
