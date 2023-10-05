@@ -10,7 +10,8 @@ import {
   Button,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
+  Box
 } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { Form, Formik, Field } from 'formik'
@@ -27,6 +28,8 @@ import { Debug } from 'components/Debug'
 import axiosInstance from 'app/api/axios'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
+import { useState } from 'react'
+import LinearProgress from '@mui/material/LinearProgress'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -56,6 +59,7 @@ const NewJobForm = () => {
   const [addNewJob, { isSuccess }] = useAddNewJobMutation()
   const { email } = useAuth()
   // const [jobid, setJobid] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const initialValues = {
     title: '',
     psf_file: '',
@@ -67,6 +71,7 @@ const NewJobForm = () => {
     rg_max: '',
     email: email
   }
+
   const onSubmit = async (values, { setStatus }) => {
     const form = new FormData()
     form.append('title', values.title)
@@ -89,6 +94,7 @@ const NewJobForm = () => {
   }
 
   const calculateAutoRg = (selectedFile, setFieldValue) => {
+    setIsLoading(true)
     const form = new FormData()
     form.append('email', email)
     form.append('expdata', selectedFile)
@@ -105,6 +111,9 @@ const NewJobForm = () => {
       })
       .catch((error) => {
         console.error('Error:', error)
+      })
+      .finally(() => {
+        setIsLoading(false)
       })
   }
 
@@ -244,7 +253,6 @@ const NewJobForm = () => {
                           value={values.title || ''}
                         />
                       </Grid>
-
                       <Grid
                         container
                         direction="row"
@@ -271,7 +279,6 @@ const NewJobForm = () => {
                           />
                         </Grid>
                       </Grid>
-
                       <Grid
                         container
                         direction="row"
@@ -298,7 +305,6 @@ const NewJobForm = () => {
                           />
                         </Grid>
                       </Grid>
-
                       <Grid
                         container
                         direction="row"
@@ -351,7 +357,6 @@ const NewJobForm = () => {
                           </Paper>
                         </Grid>
                       </Grid>
-
                       <Grid
                         container
                         direction="row"
@@ -381,10 +386,18 @@ const NewJobForm = () => {
                           />
                         </Grid>
                       </Grid>
-                      <Grid>
-                        <b>Rg Min</b> and <b>Rg Max</b> will be calculated automatically
-                        from the selected SAXS data file.
+                      <Grid item sx={{ display: 'flex', width: '520px' }}>
+                        <Typography>
+                          <b>Rg Min</b> and <b>Rg Max</b> will be calculated automatically
+                          from the selected SAXS data file. Feel free to change the
+                          suggested values.
+                        </Typography>
                       </Grid>
+                      {isLoading && (
+                        <Box sx={{ width: '520px' }}>
+                          <LinearProgress />
+                        </Box>
+                      )}
                       <Grid item sx={{ my: 2, display: 'flex', width: '520px' }}>
                         <Field
                           label="Rg Min"
@@ -392,7 +405,7 @@ const NewJobForm = () => {
                           id="rg_min"
                           name="rg_min"
                           type="text"
-                          disabled={isSubmitting}
+                          disabled={isSubmitting || isLoading}
                           as={TextField}
                           onChange={handleChange}
                           onBlur={handleBlur}
@@ -404,7 +417,6 @@ const NewJobForm = () => {
                           }
                         />
                       </Grid>
-
                       <Grid item sx={{ my: 2, display: 'flex', width: '520px' }}>
                         <Field
                           label="Rg Max"
@@ -412,7 +424,7 @@ const NewJobForm = () => {
                           id="rg_max"
                           name="rg_max"
                           type="text"
-                          disabled={isSubmitting}
+                          disabled={isSubmitting || isLoading}
                           as={TextField}
                           error={errors.rg_max && touched.rg_max}
                           helperText={
@@ -424,7 +436,6 @@ const NewJobForm = () => {
                           onBlur={handleBlur}
                         />
                       </Grid>
-
                       <Grid item sx={{ my: 2, display: 'flex', width: '520px' }}>
                         <TextField
                           label="Conformations per Rg"
@@ -457,7 +468,11 @@ const NewJobForm = () => {
                           </MenuItem>
                         </TextField>
                       </Grid>
-
+                      {isSubmitting && (
+                        <Box sx={{ width: '520px' }}>
+                          <LinearProgress />
+                        </Box>
+                      )}
                       <Grid item xs={6} sx={{ my: 2 }}>
                         <LoadingButton
                           type="submit"
@@ -470,6 +485,7 @@ const NewJobForm = () => {
                         >
                           <span>Submit</span>
                         </LoadingButton>
+
                         {isSuccess ? <Alert severity="success">{status}</Alert> : ''}
                       </Grid>
                     </Grid>
