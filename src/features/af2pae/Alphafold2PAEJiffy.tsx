@@ -2,14 +2,15 @@ import { Grid, Typography, Paper, Alert, Button, AlertTitle, Link } from '@mui/m
 import { Form, Formik, Field } from 'formik'
 import useAuth from 'hooks/useAuth'
 import { styled } from '@mui/material/styles'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { af2paeJiffySchema } from 'schemas/ValidationSchemas'
 import FileInput from 'features/jobs/FileInput'
 import { Debug } from 'components/Debug'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
-import axiosInstance from 'app/api/axios'
+import axiosInstance, { AxiosResponse } from 'app/api/axios'
 import Download from './DownladAF2PAEfile'
+import CopyToClipboardButton from 'components/Common/CopyToClipboardButton'
 import { Box } from '@mui/system'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
@@ -41,7 +42,7 @@ const Alphafold2PAEJiffy = () => {
   const { email } = useAuth()
   const [success, setSuccess] = useState(false)
   const [uuid, setUuid] = useState('')
-  // const [constfile, setConstfile] = useState('')
+  const [constfile, setConstfile] = useState('')
 
   const initialValues = {
     crd_file: '',
@@ -73,6 +74,35 @@ const Alphafold2PAEJiffy = () => {
       console.log('failed')
     }
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response: AxiosResponse<Blob> = await axiosInstance.get(
+          `af2pae?uuid=${uuid}`,
+          {
+            responseType: 'blob',
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        )
+
+        if (!response.data) {
+          throw new Error('Failed to fetch file content')
+        }
+
+        const blob = response.data
+        const text = await new Response(blob).text()
+
+        setConstfile(text)
+      } catch (error) {
+        console.error('Error fetching file content:', error)
+      }
+    }
+
+    fetchData()
+  }, [uuid, token])
 
   const content = (
     <>
@@ -122,8 +152,24 @@ const Alphafold2PAEJiffy = () => {
                   <AlertTitle>Success</AlertTitle>
                   Your <code>const.inp</code> file was successfully created!
                   <br />
-                  <b>UUID:</b> {uuid}
                 </Alert>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'start',
+                    borderRadius: '4px',
+                    p: 2,
+                    my: 1,
+                    backgroundColor: '#bae0ff'
+                  }}
+                >
+                  <Typography style={{ whiteSpace: 'pre-line' }}>{constfile}</Typography>
+                  <Box>
+                    <CopyToClipboardButton text={constfile} />
+                  </Box>
+                </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                   <Download uuid={uuid} />
                   <Button
