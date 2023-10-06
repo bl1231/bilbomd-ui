@@ -122,13 +122,13 @@ const Jobs = () => {
           })
         }
       },
-      { field: 'position', headerName: 'Position' },
+      { field: 'position', headerName: 'Queue Position' },
 
       {
         field: 'actions',
         type: 'actions',
         sortable: false,
-        headerName: 'manage',
+        headerName: 'Manage',
         getActions: (params) => [
           <DeleteJob key={params.id} job={params.row} />,
           <JobDetails key={params.id} job={params.row} />
