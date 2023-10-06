@@ -1,18 +1,32 @@
-import { Grid, Typography, Paper, Alert, Button, AlertTitle, Link } from '@mui/material'
+import {
+  Grid,
+  Typography,
+  Paper,
+  Alert,
+  Button,
+  AlertTitle,
+  Link,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails
+} from '@mui/material'
 import { Form, Formik, Field } from 'formik'
 import useAuth from 'hooks/useAuth'
 import { styled } from '@mui/material/styles'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { af2paeJiffySchema } from 'schemas/ValidationSchemas'
 import FileInput from 'features/jobs/FileInput'
 import { Debug } from 'components/Debug'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
-import axiosInstance from 'app/api/axios'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import axiosInstance, { AxiosResponse } from 'app/api/axios'
 import Download from './DownladAF2PAEfile'
+import CopyToClipboardButton from 'components/Common/CopyToClipboardButton'
 import { Box } from '@mui/system'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
+import LinearProgress from '@mui/material/LinearProgress'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -41,7 +55,7 @@ const Alphafold2PAEJiffy = () => {
   const { email } = useAuth()
   const [success, setSuccess] = useState(false)
   const [uuid, setUuid] = useState('')
-  // const [constfile, setConstfile] = useState('')
+  const [constfile, setConstfile] = useState('')
 
   const initialValues = {
     crd_file: '',
@@ -74,44 +88,97 @@ const Alphafold2PAEJiffy = () => {
     }
   }
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response: AxiosResponse<Blob> = await axiosInstance.get(
+          `af2pae?uuid=${uuid}`,
+          {
+            responseType: 'blob',
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        )
+
+        if (!response.data) {
+          throw new Error('Failed to fetch file content')
+        }
+
+        const blob = response.data
+        const text = await new Response(blob).text()
+
+        setConstfile(text)
+      } catch (error) {
+        console.error('Error fetching file content:', error)
+      }
+    }
+
+    fetchData()
+  }, [uuid, token])
+
   const content = (
     <>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Typography sx={HeaderThingee}>Instructions</Typography>
-          <Item>
-            <Alert severity="warning" sx={{ m: 2 }}>
-              This tool is very new and still under active development. If you run into
-              any issues please let us know.
-            </Alert>
-            <Typography sx={{ mx: 1 }}>
-              The <b>PAE Jiffy</b> will use the Predicted Alignment Error (PAE) file in
-              JSON format from AlphaFold to automagically define the rigid bodies and
-              rigid domains of your CRD file, for input into BilboMD.
-            </Typography>
-            <Typography component={'span'} variant={'body1'}>
-              <ol>
-                <li>
-                  Obtain the PAE file from AlphaFold. This can either be from running
-                  AlphaFold on your own in a colabfold notebook or downloaded from
-                  pre-predicted structures available from the{' '}
-                  <Link href="https://alphafold.ebi.ac.uk/">AlphaFold</Link> database
-                  hosted at EMBL-EBI.
-                </li>
-                <li>
-                  Use the <b>PDB Reader</b> tool available from{' '}
-                  <a href="https://www.charmm-gui.org/">CHARMM-GUI</a> to convert a
-                  standard PDB file to a CRD file.
-                </li>
-                <li>
-                  Upload the files here and our server will create a{' '}
-                  <code>const.inp</code> file for you. After you download your{' '}
-                  <code>const.inp</code> file please check that it makes sense to you
-                  before using it in a <b>BilboMD</b> run.
-                </li>
-              </ol>
-            </Typography>
-          </Item>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+              sx={{
+                backgroundColor: '#888',
+                borderTopLeftRadius: 4,
+                borderTopRightRadius: 4,
+                pl: 1
+              }}
+            >
+              <Typography
+                sx={{
+                  textTransform: 'uppercase',
+                  fontSize: 12,
+                  fontWeight: 500,
+                  color: '#fff',
+                  letterSpacing: '1px'
+                }}
+              >
+                Instructions
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Alert severity="warning" sx={{ m: 2 }}>
+                This tool is very new and still under active development. If you run into
+                any issues please let us know.
+              </Alert>
+              <Typography sx={{ mx: 1 }}>
+                The <b>PAE Jiffy</b> will use the Predicted Alignment Error (PAE) file in
+                JSON format from AlphaFold to automagically define the rigid bodies and
+                rigid domains of your CRD file, for input into BilboMD.
+              </Typography>
+              <Typography component={'span'} variant={'body1'}>
+                <ol>
+                  <li>
+                    Obtain the PAE file from AlphaFold. This can either be from running
+                    AlphaFold on your own in a colabfold notebook or downloaded from
+                    pre-predicted structures available from the{' '}
+                    <Link href="https://alphafold.ebi.ac.uk/">AlphaFold</Link> database
+                    hosted at EMBL-EBI.
+                  </li>
+                  <li>
+                    Use the <b>PDB Reader</b> tool available from{' '}
+                    <a href="https://www.charmm-gui.org/">CHARMM-GUI</a> to convert a
+                    standard PDB file to a CRD file.
+                  </li>
+                  <li>
+                    Upload the files here and our server will create a{' '}
+                    <code>const.inp</code> file for you. After you download your{' '}
+                    <code>const.inp</code> file please check that it makes sense to you
+                    before using it in a <b>BilboMD</b> run.
+                  </li>
+                </ol>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
         </Grid>
         <Grid item xs={12}>
           <Typography sx={HeaderThingee}>Upload your CRD and PAE files</Typography>
@@ -122,8 +189,24 @@ const Alphafold2PAEJiffy = () => {
                   <AlertTitle>Success</AlertTitle>
                   Your <code>const.inp</code> file was successfully created!
                   <br />
-                  <b>UUID:</b> {uuid}
                 </Alert>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'start',
+                    borderRadius: '4px',
+                    p: 2,
+                    my: 1,
+                    backgroundColor: '#bae0ff'
+                  }}
+                >
+                  <Typography style={{ whiteSpace: 'pre-line' }}>{constfile}</Typography>
+                  <Box>
+                    <CopyToClipboardButton text={constfile} />
+                  </Box>
+                </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                   <Download uuid={uuid} />
                   <Button
@@ -184,10 +267,17 @@ const Alphafold2PAEJiffy = () => {
                         fileType="*.json"
                         fileExt=".json"
                       />
+                      {isSubmitting && (
+                        <Box sx={{ width: '520px' }}>
+                          <LinearProgress />
+                        </Box>
+                      )}
                       <Grid item xs={6} sx={{ my: 2 }}>
                         <LoadingButton
                           type="submit"
-                          disabled={!isValid}
+                          disabled={
+                            !isValid || values.crd_file === '' || values.pae_file === ''
+                          }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}
                           loadingPosition="end"
