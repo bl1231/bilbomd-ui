@@ -2,36 +2,12 @@ import { useState, useEffect } from 'react'
 import { useFormikContext, FormikValues } from 'formik'
 import { Grid, Typography } from '@mui/material'
 import Paper from '@mui/material/Paper'
-import { styled } from '@mui/material/styles'
 import useTitle from 'hooks/useTitle'
 import { Box } from '@mui/system'
 import CopyToClipboardButton from 'components/Common/CopyToClipboardButton'
 import Download from '../Helpers/Download'
 import { RigidBody } from 'types/interfaces'
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'left',
-  color: theme.palette.text.primary,
-  display: 'flex',
-  flex: '1 1 100%',
-  flexDirection: 'column'
-}))
-
-const HeaderThingee = {
-  textTransform: 'uppercase',
-  fontSize: 12,
-  borderTopLeftRadius: 4,
-  borderTopRightRadius: 4,
-  fontWeight: 500,
-  padding: '0.5rem',
-  background: '#888',
-  color: '#fff',
-  letterSpacing: '1px'
-}
+import HeaderBox from 'components/HeaderBox'
 
 const Preview = () => {
   useTitle('BilboMD: Preview const.inp file')
@@ -115,8 +91,10 @@ const Preview = () => {
     <>
       <Grid container>
         <Grid item>
-          <Typography sx={HeaderThingee}>Preview</Typography>
-          <Item>
+          <HeaderBox>
+            <Typography>Preview</Typography>
+          </HeaderBox>
+          <Paper sx={{ p: 1 }}>
             <Typography sx={{ my: 3 }}>
               This is the <code>const.inp</code> definition file with your Rigid Bodies
               and defined in a format that CHARMM will understand. You can either copy and
@@ -148,7 +126,7 @@ const Preview = () => {
               </Grid>
             </Box>
             <Download file={constFileBlob} />
-          </Item>
+          </Paper>
         </Grid>
       </Grid>
     </>

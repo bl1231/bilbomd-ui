@@ -1,5 +1,6 @@
 // import { useState } from 'react'
 import {
+  Box,
   Grid,
   TextField,
   MenuItem,
@@ -10,8 +11,7 @@ import {
   Button,
   Accordion,
   AccordionSummary,
-  AccordionDetails,
-  Box
+  AccordionDetails
 } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { Form, Formik, Field } from 'formik'
@@ -23,35 +23,13 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { bilbomdJobSchema, expdataSchema } from 'schemas/ValidationSchemas'
 import useAuth from 'hooks/useAuth'
-import { styled } from '@mui/material/styles'
 import { Debug } from 'components/Debug'
 import axiosInstance from 'app/api/axios'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
 import { useState } from 'react'
 import LinearProgress from '@mui/material/LinearProgress'
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'left',
-  color: theme.palette.text.primary
-}))
-
-const HeaderThingee = {
-  textTransform: 'uppercase',
-  fontSize: 12,
-  borderTopLeftRadius: 4,
-  borderTopRightRadius: 4,
-  fontWeight: 500,
-  padding: '0.5rem',
-  background: '#888',
-  color: '#fff',
-  letterSpacing: '1px',
-  py: 2
-}
+import HeaderBox from 'components/HeaderBox'
 
 const NewJobForm = () => {
   const token = useSelector(selectCurrentToken)
@@ -124,8 +102,6 @@ const NewJobForm = () => {
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
               sx={{
                 backgroundColor: '#888',
                 borderTopLeftRadius: 4,
@@ -188,9 +164,9 @@ const NewJobForm = () => {
                 will calculate 5 equidistant steps bewteen <b>Rg Min</b> and <b>Rg Max</b>{' '}
                 to perform Molecular Dynamics. A good rule-of-thumb for your initial{' '}
                 <b>BilboMD</b> run is to select initial <b>Rg Min</b> and <b>Rg Max</b>{' '}
-                values from -7% to +25% around your experimental Rg respectively. If your{' '}
-                experimental Rg is 25-30 &#8491;, the MD simulations can behave eradically{' '}
-                if you specify an <b>Rg Min</b> that is too small. This is why we{' '}
+                values from -7% to +25% around your experimental Rg respectively. If your
+                experimental Rg is 25-30 &#8491;, the MD simulations can behave eradically
+                if you specify an <b>Rg Min</b> that is too small. This is why we
                 recommend <b>Rg Min</b> to be ~ 7% less than your experimental Rg.
                 However, if your experimental Rg is larger (e.g. &gt;50 &#8491;) then you
                 can probably explore a wider range and pick <b>Rg Min</b> and{' '}
@@ -198,12 +174,14 @@ const NewJobForm = () => {
               </Typography>
             </AccordionDetails>
           </Accordion>
-          {/* </Item> */}
         </Grid>
 
         <Grid item xs={12}>
-          <Typography sx={HeaderThingee}>BilboMD Job Form</Typography>
-          <Item>
+          <HeaderBox>
+            <Typography>BilboMD Job Form</Typography>
+          </HeaderBox>
+
+          <Paper sx={{ p: 2 }}>
             {isSuccess ? (
               <Alert severity="success">
                 <AlertTitle>Woot!</AlertTitle>
@@ -501,7 +479,7 @@ const NewJobForm = () => {
                 )}
               </Formik>
             )}
-          </Item>
+          </Paper>
         </Grid>
       </Grid>
     </>

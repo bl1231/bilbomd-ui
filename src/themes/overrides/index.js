@@ -2,8 +2,9 @@
 import { merge } from 'lodash'
 
 // project import
+import Accordion from './Accordion'
 import Badge from './Badge'
-import BackGround from './BackGround'
+// import BackGround from './BackGround'
 import Button from './Button'
 import CardContent from './CardContent'
 import Checkbox from './Checkbox'
@@ -14,6 +15,7 @@ import LinearProgress from './LinearProgress'
 import Link from './Link'
 import ListItemIcon from './ListItemIcon'
 import OutlinedInput from './OutlinedInput'
+import Paper from './Paper'
 import Tab from './Tab'
 import TableCell from './TableCell'
 import Tabs from './Tabs'
@@ -23,14 +25,16 @@ import Typography from './Typography'
 
 export default function ComponentsOverrides(theme) {
   return merge(
+    Accordion(theme),
     Button(theme),
     Badge(theme),
-    //BackGround(theme),
+    // BackGround(theme),
     CardContent(),
     Checkbox(theme),
     Chip(theme),
     IconButton(theme),
     InputLabel(theme),
+    Paper(theme),
     LinearProgress(),
     Link(),
     ListItemIcon(),

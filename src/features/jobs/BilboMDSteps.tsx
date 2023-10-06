@@ -5,12 +5,12 @@ import BilboMDStep from './BilboMDStep'
 import { Chip, Grid, Typography } from '@mui/material'
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
-  ...theme.typography.body2,
+  // backgroundColor:
+  // theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
+  // ...theme.typography.body2,
   padding: theme.spacing(1),
-  textAlign: 'left',
-  color: theme.palette.text.primary,
+  // textAlign: 'left',
+  // color: theme.palette.text.primary,
   borderTopLeftRadius: 0,
   borderTopRightRadius: 0
 }))

@@ -11,7 +11,6 @@ import {
   AccordionSummary,
   AccordionDetails
 } from '@mui/material'
-// import { Box } from '@mui/system'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import axiosInstance, { AxiosResponse } from 'app/api/axios'
@@ -22,29 +21,13 @@ import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
 import BilboMDSteps from './BilboMDSteps'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import HeaderBox from 'components/HeaderBox'
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
-  ...theme.typography.body2,
   padding: theme.spacing(1),
-  textAlign: 'left',
-  color: theme.palette.text.primary,
   borderTopLeftRadius: 0,
   borderTopRightRadius: 0
 }))
-
-const HeaderThingee = {
-  textTransform: 'uppercase',
-  fontSize: 12,
-  borderTopLeftRadius: 4,
-  borderTopRightRadius: 4,
-  fontWeight: 500,
-  padding: '0.5rem',
-  background: '#888',
-  color: '#fff',
-  letterSpacing: '1px'
-}
 
 const SingleJobPage = () => {
   useTitle('BilboMD: Job Details')
@@ -111,7 +94,10 @@ const SingleJobPage = () => {
     <>
       <Grid container spacing={2} rowSpacing={2}>
         <Grid item xs={6}>
-          <Typography sx={HeaderThingee}>JOB TITLE</Typography>
+          <HeaderBox sx={{ py: '6px' }}>
+            <Typography>Job Title</Typography>
+          </HeaderBox>
+
           <Item>
             <Typography variant="h3" sx={{ ml: 1 }}>
               {job.title}
@@ -119,7 +105,9 @@ const SingleJobPage = () => {
           </Item>
         </Grid>
         <Grid item xs={3}>
-          <Typography sx={HeaderThingee}>STATUS</Typography>
+          <HeaderBox sx={{ py: '6px' }}>
+            <Typography>Status</Typography>
+          </HeaderBox>
           <Item sx={{ backgroundColor: statusBGColor }}>
             <Typography variant="h3" sx={{ ml: 1 }}>
               {job.status}
@@ -127,7 +115,9 @@ const SingleJobPage = () => {
           </Item>
         </Grid>
         <Grid item xs={3}>
-          <Typography sx={HeaderThingee}>PROGRESS</Typography>
+          <HeaderBox sx={{ py: '6px' }}>
+            <Typography>Progress</Typography>
+          </HeaderBox>
           <Item>
             <Typography variant="h3" sx={{ ml: 1 }}>
               {job.bullmq.progress} %
@@ -135,7 +125,9 @@ const SingleJobPage = () => {
           </Item>
         </Grid>
         <Grid item xs={12}>
-          <Typography sx={HeaderThingee}>BILBOMD STEPS</Typography>
+          <HeaderBox sx={{ py: '6px' }}>
+            <Typography>BilboMD Steps</Typography>
+          </HeaderBox>
           <BilboMDSteps job={job.bullmq} />
         </Grid>
 
@@ -143,27 +135,16 @@ const SingleJobPage = () => {
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
-              // aria-controls="panel1a-content"
-              // id="panel1a-header"
               sx={{
                 backgroundColor: '#888',
                 borderTopLeftRadius: 4,
                 borderTopRightRadius: 4,
-                pl: 1,
-                m: 0
+                pl: 0
               }}
             >
-              <Typography
-                sx={{
-                  textTransform: 'uppercase',
-                  fontSize: 12,
-                  fontWeight: 500,
-                  color: '#fff',
-                  letterSpacing: '1px'
-                }}
-              >
-                Job Details
-              </Typography>
+              <HeaderBox sx={{ py: 0 }}>
+                <Typography>Job Details</Typography>
+              </HeaderBox>
             </AccordionSummary>
             <AccordionDetails>
               <Item>
@@ -239,7 +220,9 @@ const SingleJobPage = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Typography sx={HeaderThingee}>RESULTS</Typography>
+          <HeaderBox sx={{ py: '6px' }}>
+            <Typography>Results</Typography>
+          </HeaderBox>
           <Item>
             {job.status === 'Completed' ? (
               <Button

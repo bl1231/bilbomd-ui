@@ -3,32 +3,10 @@ import { useFormikContext, FieldArray, FormikValues } from 'formik'
 import { Typography, Grid, Button, Chip } from '@mui/material'
 import * as PropTypes from 'prop-types'
 import Paper from '@mui/material/Paper'
-import { styled } from '@mui/material/styles'
 import AddIcon from '@mui/icons-material/Add'
 import useTitle from 'hooks/useTitle'
-
+import HeaderBox from 'components/HeaderBox'
 import RigidBody from '../Helpers/RigidBody'
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'left',
-  color: theme.palette.text.primary
-}))
-
-const HeaderThingee = {
-  textTransform: 'uppercase',
-  fontSize: 12,
-  borderTopLeftRadius: 4,
-  borderTopRightRadius: 4,
-  fontWeight: 500,
-  padding: '0.5rem',
-  background: '#888',
-  color: '#fff',
-  letterSpacing: '1px'
-}
 
 const DomainForm = ({ setStepIsValid }) => {
   useTitle('BilboMD: Define domains')
@@ -57,8 +35,10 @@ const DomainForm = ({ setStepIsValid }) => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Typography sx={HeaderThingee}>Instructions</Typography>
-          <Item>
+          <HeaderBox>
+            <Typography>Instructions</Typography>
+          </HeaderBox>
+          <Paper sx={{ p: 1 }}>
             <Typography variant="h4" sx={{ m: 1 }}>
               Define your Rigid Bodies
             </Typography>
@@ -79,11 +59,13 @@ const DomainForm = ({ setStepIsValid }) => {
                 efficient conformational sampling.
               </li>
             </Typography>
-          </Item>
+          </Paper>
         </Grid>
         <Grid item xs={12}>
-          <Typography sx={HeaderThingee}>Define Rigid Bodies</Typography>
-          <Item>
+          <HeaderBox>
+            <Typography>Define Rigid Bodies</Typography>
+          </HeaderBox>
+          <Paper sx={{ p: 1 }}>
             <Typography>Available Chains: </Typography>
             {values.crd_file.chains.map((chain, index) => (
               <Chip
@@ -173,7 +155,7 @@ const DomainForm = ({ setStepIsValid }) => {
                 )}
               </FieldArray>
             </Grid>
-          </Item>
+          </Paper>
         </Grid>
       </Grid>
     </>

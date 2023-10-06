@@ -13,6 +13,7 @@ import { ROLES } from 'config/roles'
 //const DashBoard = Loadable(lazy(() => import('features/dashboard/DashBoard')))
 const Prefetch = Loadable(lazy(() => import('features/auth/Prefetch')))
 const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')))
+const NewAutoJob = Loadable(lazy(() => import('features/autojob/NewAutoJobForm')))
 const ConstInpStepper = Loadable(
   lazy(() => import('components/ConstInpForm/ConstInpStepper'))
 )
@@ -80,6 +81,10 @@ const ProtectedMainRoutes = {
                     {
                       path: 'jobs/new',
                       element: <NewJob />
+                    },
+                    {
+                      path: 'jobs/simple',
+                      element: <NewAutoJob />
                     },
                     {
                       path: 'jobs/constinp',

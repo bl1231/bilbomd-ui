@@ -12,7 +12,6 @@ import {
 } from '@mui/material'
 import { Form, Formik, Field } from 'formik'
 import useAuth from 'hooks/useAuth'
-import { styled } from '@mui/material/styles'
 import { useState, useEffect } from 'react'
 import { af2paeJiffySchema } from 'schemas/ValidationSchemas'
 import FileInput from 'features/jobs/FileInput'
@@ -27,28 +26,7 @@ import { Box } from '@mui/system'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
 import LinearProgress from '@mui/material/LinearProgress'
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'left',
-  color: theme.palette.text.primary
-}))
-
-const HeaderThingee = {
-  textTransform: 'uppercase',
-  fontSize: 12,
-  borderTopLeftRadius: 4,
-  borderTopRightRadius: 4,
-  fontWeight: 500,
-  padding: '0.5rem',
-  background: '#888',
-  color: '#fff',
-  letterSpacing: '1px',
-  py: 2
-}
+import HeaderBox from 'components/HeaderBox'
 
 const Alphafold2PAEJiffy = () => {
   const token = useSelector(selectCurrentToken)
@@ -124,26 +102,16 @@ const Alphafold2PAEJiffy = () => {
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
               sx={{
                 backgroundColor: '#888',
                 borderTopLeftRadius: 4,
                 borderTopRightRadius: 4,
-                pl: 1
+                pl: 0
               }}
             >
-              <Typography
-                sx={{
-                  textTransform: 'uppercase',
-                  fontSize: 12,
-                  fontWeight: 500,
-                  color: '#fff',
-                  letterSpacing: '1px'
-                }}
-              >
-                Instructions
-              </Typography>
+              <HeaderBox sx={{ py: 0 }}>
+                <Typography>Instructions</Typography>
+              </HeaderBox>
             </AccordionSummary>
             <AccordionDetails>
               <Alert severity="warning" sx={{ m: 2 }}>
@@ -181,8 +149,10 @@ const Alphafold2PAEJiffy = () => {
           </Accordion>
         </Grid>
         <Grid item xs={12}>
-          <Typography sx={HeaderThingee}>Upload your CRD and PAE files</Typography>
-          <Item>
+          <HeaderBox>
+            <Typography>Upload your CRD and PAE files</Typography>
+          </HeaderBox>
+          <Paper sx={{ p: 1 }}>
             {success ? (
               <>
                 <Alert severity="success">
@@ -292,7 +262,7 @@ const Alphafold2PAEJiffy = () => {
                 )}
               </Formik>
             )}
-          </Item>
+          </Paper>
         </Grid>
       </Grid>
     </>
