@@ -490,7 +490,7 @@ export const bilbomdAutoJobSchema = object().shape({
     ),
   pae_file: mixed()
     .required('PAE file in JSON format is required')
-    .test('is-json', 'Invalid JSON format', (file) => {
+    .test('is-json', 'Please select a PAE file in JSON format', (file) => {
       if (file && file instanceof File && file.type === 'application/json') {
         const reader = new FileReader()
         return new Promise((resolve) => {
@@ -548,7 +548,7 @@ export const bilbomdAutoJobSchema = object().shape({
       // console.log(file.size)
       return false
     })
-    .test('file-type-check', 'Only accepts a *.dat file.', (file) => {
+    .test('file-type-check', 'Please select a SAXS *.dat data file.', (file) => {
       if (file && (file as File).name.split('.').pop()?.toUpperCase() === 'DAT') {
         // console.log(file.name.split('.').pop())
         return true
