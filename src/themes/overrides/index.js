@@ -2,6 +2,7 @@
 import { merge } from 'lodash'
 
 // project import
+import Alert from './Alert'
 import Accordion from './Accordion'
 import Badge from './Badge'
 // import BackGround from './BackGround'
@@ -25,6 +26,7 @@ import Typography from './Typography'
 
 export default function ComponentsOverrides(theme) {
   return merge(
+    Alert(),
     Accordion(theme),
     Button(theme),
     Badge(theme),
