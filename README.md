@@ -51,6 +51,8 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 0.0.18
+  - Bug fixes fro AutoRg
 - 0.0.17
 
   - Add AutoRG functionality to the New Job Form
