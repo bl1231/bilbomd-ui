@@ -13,7 +13,7 @@ import {
 import { Link } from 'react-router-dom'
 import { Form, Formik, Field } from 'formik'
 import FileSelect from './FileSelect'
-import { useAddNewJobMutation } from '../jobs/jobsApiSlice'
+import { useAddNewAutoJobMutation } from '../jobs/jobsApiSlice'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -22,9 +22,9 @@ import useAuth from 'hooks/useAuth'
 import { Debug } from 'components/Debug'
 import LinearProgress from '@mui/material/LinearProgress'
 import HeaderBox from 'components/HeaderBox'
+
 const NewAutoJobForm = () => {
-  // const [addNewJob, { isLoading, isSuccess, isError, error }] = useAddNewJobMutation()
-  const [addNewJob, { isSuccess }] = useAddNewJobMutation()
+  const [addNewAutoJob, { isSuccess }] = useAddNewAutoJobMutation()
   const { email } = useAuth()
 
   const initialValues = {
@@ -46,7 +46,7 @@ const NewAutoJobForm = () => {
     form.append('email', values.email)
 
     try {
-      const newJob = await addNewJob(form).unwrap()
+      const newJob = await addNewAutoJob(form).unwrap()
       // setJobid(newJob.jobid)
       setStatus(newJob)
     } catch (error) {
