@@ -69,6 +69,10 @@ const Alphafold2PAEJiffy = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        if (!uuid) {
+          return // Don't make the request if uuid is undefined
+        }
+
         const response: AxiosResponse<Blob> = await axiosInstance.get(
           `af2pae?uuid=${uuid}`,
           {

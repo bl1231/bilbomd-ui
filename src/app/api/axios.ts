@@ -5,8 +5,8 @@ import axios, {
 } from 'axios'
 
 const baseURL = import.meta.env.DEV
-  ? `http://localhost:${import.meta.env.VITE_BILBOMD_BACKEND_PORT}`
-  : 'https://bl1231.als.lbl.gov/bilbomd-dev-backend'
+  ? `http://localhost:${import.meta.env.VITE_BILBOMD_BACKEND_PORT}/v1`
+  : 'https://bl1231.als.lbl.gov/bilbomd-dev-backend/v1'
 
 const axiosInstance = axios.create({
   baseURL: baseURL
