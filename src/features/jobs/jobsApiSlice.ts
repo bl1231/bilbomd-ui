@@ -57,6 +57,14 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
         method: 'DELETE'
       }),
       invalidatesTags: (result, error, arg) => [{ type: 'Job', id: arg.id }]
+    }),
+    addNewAutoJob: builder.mutation({
+      query: (newJob) => ({
+        url: '/jobs/biblomd-auto',
+        method: 'POST',
+        body: newJob
+      }),
+      invalidatesTags: [{ type: 'Job', id: 'LIST' }]
     })
   })
 })
@@ -65,7 +73,8 @@ export const {
   useGetJobsQuery,
   useAddNewJobMutation,
   useUpdateJobMutation,
-  useDeleteJobMutation
+  useDeleteJobMutation,
+  useAddNewAutoJobMutation
 } = jobsApiSlice
 
 // returns the query result object
