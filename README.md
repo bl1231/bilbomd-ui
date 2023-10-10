@@ -51,37 +51,26 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 0.0.19
+  - Add necessary changes to make compatible with the new `v1` API
 - 0.0.18
   - Bug fixes fro AutoRg
 - 0.0.17
-
   - Add AutoRG functionality to the New Job Form
-
 - 0.0.16
-
   - Update NPM dependencies
   - Bump NodeJS to 18.18.0
-
 - 0.0.15
-
   - Add Number of Workers to BullMQ Summary component
-
 - 0.0.14
-
   - Add BullMQ Summary component
-
 - 0.0.13
-
   - Improve Job Detail page
   - Add step indicators for BilboMD
   - Display information about queue position in the Job List page
-
 - 0.0.12
-
   - Update the Welcome component
   - Add better references to Welcome page
   - Update nodejs dependencies
-
 - 0.0.11
-
   - Add PAE jiffy (creates const.inp from AlphaFold PAE JSON input file).
