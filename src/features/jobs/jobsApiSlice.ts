@@ -60,7 +60,7 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
     }),
     addNewAutoJob: builder.mutation({
       query: (newJob) => ({
-        url: '/jobs/biblomd-auto',
+        url: '/jobs/bilbomd-auto',
         method: 'POST',
         body: newJob
       }),
