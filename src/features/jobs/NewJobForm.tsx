@@ -308,32 +308,6 @@ const NewJobForm = () => {
                             fileExt=".inp"
                           />
                         </Grid>
-                        <Grid
-                          item
-                          sx={{ my: 1, display: 'flex', alignItems: 'flex-end' }}
-                        >
-                          <Paper variant="outlined">
-                            <Typography sx={{ m: 1 }}>
-                              <b>*.inp</b> Jiffy:
-                              <Button
-                                href="constinp"
-                                variant="contained"
-                                sx={{
-                                  color: '#003eb3',
-                                  backgroundColor: '#95de64',
-                                  '&:hover': {
-                                    backgroundColor: '#73d13d',
-                                    color: '#003eb3'
-                                  },
-                                  ml: 3
-                                }}
-                                startIcon={<AutoFixHighIcon />}
-                              >
-                                Create a const.inp file
-                              </Button>
-                            </Typography>
-                          </Paper>
-                        </Grid>
                       </Grid>
                       <Grid
                         container
