@@ -51,6 +51,8 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 0.0.20
+  - Increase the max allowed file size of uploaded `PAE.json`` files from 20MB to 40MB
 - 0.0.19
   - Add necessary changes to make compatible with the new `v1` API
 - 0.0.18

@@ -364,8 +364,8 @@ export const af2paeJiffySchema = object().shape({
       }
       return false
     })
-    .test('file-size-check', 'Max file size is 20MB', (file) => {
-      if (file && (file as File).size <= 20000000) {
+    .test('file-size-check', 'Max file size is 40MB', (file) => {
+      if (file && (file as File).size <= 40000000) {
         // console.log(file.size)
         return true
       }
