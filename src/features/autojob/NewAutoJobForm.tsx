@@ -116,7 +116,7 @@ const NewAutoJobForm = () => {
 
         <Grid item xs={12}>
           <HeaderBox>
-            <Typography>BilboMD Job Form</Typography>
+            <Typography>BilboMD Auto Job Form</Typography>
           </HeaderBox>
 
           <Paper sx={{ p: 2 }}>
