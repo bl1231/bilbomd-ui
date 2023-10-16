@@ -59,11 +59,15 @@ const FileSelect = (props: FileSelectProps) => {
         </Grid>
         <Grid item>
           {fileName && !props.errorMessage ? (
-            <Alert variant="outlined" severity="success">
+            <Alert variant="outlined" severity="success" sx={{ py: 0 }}>
               {fileName}
             </Alert>
           ) : null}
-          {props.error ? <Alert severity="error">{props.errorMessage}</Alert> : null}
+          {props.error ? (
+            <Alert severity="error" sx={{ py: 0 }}>
+              {props.errorMessage}
+            </Alert>
+          ) : null}
         </Grid>
       </Grid>
     </FormControl>
