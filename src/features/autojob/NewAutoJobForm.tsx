@@ -29,10 +29,10 @@ const NewAutoJobForm = () => {
 
   const initialValues = {
     title: '',
-    psf_file: '',
     crd_file: '',
-    dat_file: '',
+    psf_file: '',
     pae_file: '',
+    dat_file: '',
     email: email
   }
 
@@ -237,11 +237,11 @@ const NewAutoJobForm = () => {
                           type="submit"
                           disabled={
                             !isValid ||
+                            values.title === '' ||
                             values.crd_file === '' ||
-                            values.pae_file === '' ||
                             values.psf_file === '' ||
-                            values.dat_file === '' ||
-                            values.title === ''
+                            values.pae_file === '' ||
+                            values.dat_file === ''
                           }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}
