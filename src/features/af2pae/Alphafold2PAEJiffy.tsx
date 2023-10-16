@@ -154,7 +154,7 @@ const Alphafold2PAEJiffy = () => {
         </Grid>
         <Grid item xs={12}>
           <HeaderBox>
-            <Typography>Upload your CRD and PAE files</Typography>
+            <Typography>Create const.inp from Alphafold PAE</Typography>
           </HeaderBox>
           <Paper sx={{ p: 1 }}>
             {success ? (
@@ -223,8 +223,7 @@ const Alphafold2PAEJiffy = () => {
                         setFieldTouched={setFieldTouched}
                         error={errors.crd_file && values.crd_file}
                         errorMessage={errors.crd_file ? errors.crd_file : ''}
-                        helperText="Select a CRD file to upload"
-                        fileType="*.crd"
+                        fileType="CHARMM-GUI *.crd"
                         fileExt=".crd"
                       />
                       <Field
@@ -237,8 +236,7 @@ const Alphafold2PAEJiffy = () => {
                         setFieldTouched={setFieldTouched}
                         error={errors.pae_file && values.pae_file}
                         errorMessage={errors.pae_file ? errors.pae_file : ''}
-                        helperText="Select a PAE JSON file to upload"
-                        fileType="*.json"
+                        fileType="Alphafold PAE *.json"
                         fileExt=".json"
                       />
                       {isSubmitting && (
@@ -256,6 +254,7 @@ const Alphafold2PAEJiffy = () => {
                           endIcon={<SendIcon />}
                           loadingPosition="end"
                           variant="contained"
+                          sx={{ width: '110px' }}
                         >
                           <span>Submit</span>
                         </LoadingButton>
