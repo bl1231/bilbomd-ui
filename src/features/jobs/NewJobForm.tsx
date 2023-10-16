@@ -8,18 +8,16 @@ import {
   Alert,
   AlertTitle,
   Paper,
-  Button,
   Accordion,
   AccordionSummary,
   AccordionDetails
 } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { Form, Formik, Field } from 'formik'
-import FileInput from './FileInput'
+import FileSelect from './FileSelect'
 import { useAddNewJobMutation } from './jobsApiSlice'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { bilbomdJobSchema, expdataSchema } from 'schemas/ValidationSchemas'
 import useAuth from 'hooks/useAuth'
@@ -244,7 +242,7 @@ const NewJobForm = () => {
                           <Field
                             name="crd_file"
                             id="crd-file-upload"
-                            as={FileInput}
+                            as={FileSelect}
                             title="Select File"
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
@@ -270,7 +268,7 @@ const NewJobForm = () => {
                           <Field
                             name="psf_file"
                             id="psf-file-upload"
-                            as={FileInput}
+                            as={FileSelect}
                             title="Select File"
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
@@ -296,7 +294,7 @@ const NewJobForm = () => {
                           <Field
                             name="constinp"
                             id="constinp-file-upload"
-                            as={FileInput}
+                            as={FileSelect}
                             title="Select File"
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
@@ -322,7 +320,7 @@ const NewJobForm = () => {
                           <Field
                             name="expdata"
                             id="expdata-file-upload"
-                            as={FileInput}
+                            as={FileSelect}
                             title="Select File"
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}

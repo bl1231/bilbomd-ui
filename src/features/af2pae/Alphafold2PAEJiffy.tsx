@@ -14,7 +14,7 @@ import { Form, Formik, Field } from 'formik'
 import useAuth from 'hooks/useAuth'
 import { useState, useEffect } from 'react'
 import { af2paeJiffySchema } from 'schemas/ValidationSchemas'
-import FileInput from 'features/jobs/FileInput'
+import FileSelect from 'features/jobs/FileSelect'
 import { Debug } from 'components/Debug'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
@@ -216,7 +216,7 @@ const Alphafold2PAEJiffy = () => {
                       <Field
                         name="crd_file"
                         id="crd-file-upload"
-                        as={FileInput}
+                        as={FileSelect}
                         title="Select File"
                         disabled={isSubmitting}
                         setFieldValue={setFieldValue}
@@ -230,7 +230,7 @@ const Alphafold2PAEJiffy = () => {
                       <Field
                         name="pae_file"
                         id="pae-file-upload"
-                        as={FileInput}
+                        as={FileSelect}
                         title="Select File"
                         disabled={isSubmitting}
                         setFieldValue={setFieldValue}

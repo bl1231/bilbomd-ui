@@ -12,7 +12,7 @@ import {
 } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { Form, Formik, Field } from 'formik'
-import FileSelect from './FileSelect'
+import FileSelect from 'features/jobs/FileSelect'
 import { useAddNewAutoJobMutation } from '../jobs/jobsApiSlice'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
