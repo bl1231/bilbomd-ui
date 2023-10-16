@@ -147,8 +147,8 @@ const NewAutoJobForm = () => {
                   setFieldTouched
                 }) => (
                   <Form>
-                    <Grid container spacing={2} direction="column">
-                      <Grid item>
+                    <Grid container direction="column">
+                      <Grid item sx={{ my: 2, width: '520px' }}>
                         <Field
                           fullWidth
                           label="Title"
@@ -176,8 +176,7 @@ const NewAutoJobForm = () => {
                           setFieldTouched={setFieldTouched}
                           error={errors.crd_file && values.crd_file}
                           errorMessage={errors.crd_file ? errors.crd_file : ''}
-                          helperText="Select a CRD file to upload"
-                          fileType="*.CRD"
+                          fileType="CHARMM-GUI *.crd"
                           fileExt=".crd"
                         />
                       </Grid>
@@ -193,8 +192,7 @@ const NewAutoJobForm = () => {
                           setFieldTouched={setFieldTouched}
                           error={errors.psf_file && values.psf_file}
                           errorMessage={errors.psf_file ? errors.psf_file : ''}
-                          helperText="Select a PSF file to upload"
-                          fileType="*.PSF"
+                          fileType="CHARMM-GUI *.psf"
                           fileExt=".psf"
                         />
                       </Grid>
@@ -209,8 +207,7 @@ const NewAutoJobForm = () => {
                           setFieldTouched={setFieldTouched}
                           error={errors.pae_file && values.pae_file}
                           errorMessage={errors.pae_file ? errors.pae_file : ''}
-                          helperText="Select a PAE file to upload"
-                          fileType="*.json"
+                          fileType="Alphafold PAE *.json"
                           fileExt=".json"
                         />
                       </Grid>
@@ -225,18 +222,17 @@ const NewAutoJobForm = () => {
                           setFieldTouched={setFieldTouched}
                           error={errors.dat_file && values.dat_file}
                           errorMessage={errors.dat_file ? errors.dat_file : ''}
-                          helperText="Select a PAE file to upload"
-                          fileType="*.dat"
+                          fileType="experimental SAXS data"
                           fileExt=".dat"
                         />
                       </Grid>
 
                       {isSubmitting && (
-                        <Box sx={{ width: '520px' }}>
+                        <Box sx={{ my: 1, width: '520px' }}>
                           <LinearProgress />
                         </Box>
                       )}
-                      <Grid item>
+                      <Grid item sx={{ mt: 2 }}>
                         <LoadingButton
                           type="submit"
                           disabled={

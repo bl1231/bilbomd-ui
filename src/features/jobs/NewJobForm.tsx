@@ -213,7 +213,7 @@ const NewJobForm = () => {
                       direction="column"
                       sx={{ display: 'flex' }}
                     >
-                      <Grid item sx={{ my: 2, display: 'flex', width: '520px' }}>
+                      <Grid item sx={{ my: 2, width: '520px' }}>
                         <Field
                           fullWidth
                           label="Title"
@@ -238,7 +238,7 @@ const NewJobForm = () => {
                           width: '520px'
                         }}
                       >
-                        <Grid item sx={{ my: 1, display: 'flex' }}>
+                        <Grid item>
                           <Field
                             name="crd_file"
                             id="crd-file-upload"
@@ -249,8 +249,7 @@ const NewJobForm = () => {
                             setFieldTouched={setFieldTouched}
                             error={errors.crd_file && values.crd_file}
                             errorMessage={errors.crd_file ? errors.crd_file : ''}
-                            helperText="Select a CRD file to upload"
-                            fileType="*.CRD"
+                            fileType="CHARMM-GUI *.crd"
                             fileExt=".crd"
                           />
                         </Grid>
@@ -264,7 +263,7 @@ const NewJobForm = () => {
                           width: '520px'
                         }}
                       >
-                        <Grid item sx={{ my: 1, display: 'flex' }}>
+                        <Grid item>
                           <Field
                             name="psf_file"
                             id="psf-file-upload"
@@ -275,8 +274,7 @@ const NewJobForm = () => {
                             setFieldTouched={setFieldTouched}
                             error={errors.psf_file && values.psf_file}
                             errorMessage={errors.psf_file ? errors.psf_file : ''}
-                            helperText="Select a PSF file to upload"
-                            fileType="*.PSF"
+                            fileType="CHARMM-GUI *.psf"
                             fileExt=".psf"
                           />
                         </Grid>
@@ -290,7 +288,7 @@ const NewJobForm = () => {
                           width: '520px'
                         }}
                       >
-                        <Grid item sx={{ my: 1, display: 'flex' }}>
+                        <Grid item>
                           <Field
                             name="constinp"
                             id="constinp-file-upload"
@@ -316,7 +314,7 @@ const NewJobForm = () => {
                           width: '520px'
                         }}
                       >
-                        <Grid item sx={{ my: 1, display: 'flex' }}>
+                        <Grid item>
                           <Field
                             name="expdata"
                             id="expdata-file-upload"
@@ -351,7 +349,7 @@ const NewJobForm = () => {
                         </Typography>
                       </Grid>
                       {isLoading && (
-                        <Box sx={{ width: '520px' }}>
+                        <Box sx={{ my: 1, width: '520px' }}>
                           <LinearProgress />
                         </Box>
                       )}
@@ -433,7 +431,17 @@ const NewJobForm = () => {
                       <Grid item xs={6} sx={{ my: 2 }}>
                         <LoadingButton
                           type="submit"
-                          disabled={!isValid}
+                          disabled={
+                            !isValid ||
+                            values.crd_file === '' ||
+                            values.constinp === '' ||
+                            values.psf_file === '' ||
+                            values.expdata === '' ||
+                            values.title === '' ||
+                            values.rg_max === '' ||
+                            values.rg_min === '' ||
+                            values.num_conf === ''
+                          }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}
                           loadingPosition="end"
