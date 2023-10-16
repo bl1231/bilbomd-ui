@@ -247,6 +247,7 @@ const NewAutoJobForm = () => {
                           endIcon={<SendIcon />}
                           loadingPosition="end"
                           variant="contained"
+                          sx={{ width: '110px' }}
                         >
                           <span>Submit</span>
                         </LoadingButton>

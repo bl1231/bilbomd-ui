@@ -446,7 +446,7 @@ const NewJobForm = () => {
                           endIcon={<SendIcon />}
                           loadingPosition="end"
                           variant="contained"
-                          size="large"
+                          sx={{ width: '110px' }}
                         >
                           <span>Submit</span>
                         </LoadingButton>
