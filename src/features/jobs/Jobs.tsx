@@ -14,31 +14,11 @@ import {
   Paper,
   Typography
 } from '@mui/material'
-import { styled } from '@mui/material/styles'
 import DeleteJob from './DeleteJob'
 import JobDetails from './JobDetails'
 import BullMQSummary from '../bullmq/BullMQSummary'
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'left',
-  color: theme.palette.text.primary
-}))
+import HeaderBox from 'components/HeaderBox'
 
-const HeaderThingee = {
-  textTransform: 'uppercase',
-  fontSize: 12,
-  borderTopLeftRadius: 4,
-  borderTopRightRadius: 4,
-  fontWeight: 500,
-  padding: '0.5rem',
-  background: '#888',
-  color: '#fff',
-  letterSpacing: '1px',
-  py: 2
-}
 const Jobs = () => {
   useTitle('BilboMD: Jobs List')
 
@@ -61,9 +41,28 @@ const Jobs = () => {
   if (isLoading) content = <CircularProgress />
 
   if (isError) {
-    console.log('err:', error)
-    // content = <p className="errmsg">{error?.data?.message}</p>
+    let errorMessage: string = ''
+
+    if ('status' in error) {
+      // you can access all properties of `FetchBaseQueryError` here
+      if (error.status === 404) {
+        errorMessage = 'No jobs found. Please run some jobs first.'
+      } else {
+        errorMessage = 'error' in error ? error.error : JSON.stringify(error.data)
+      }
+    } else {
+      errorMessage = 'Call Scott'
+    }
+
+    content = (
+      <Box>
+        <Alert severity="info" variant="outlined">
+          <AlertTitle>{errorMessage}</AlertTitle>
+        </Alert>
+      </Box>
+    )
   }
+
   if (isSuccess) {
     let filteredIds
 
@@ -144,8 +143,10 @@ const Jobs = () => {
           </Grid>
           {rows.length !== 0 ? (
             <Grid item xs={12}>
-              <Typography sx={HeaderThingee}>BilboMD Jobs</Typography>
-              <Item>
+              <HeaderBox>
+                <Typography>BilboMD Jobs</Typography>
+              </HeaderBox>
+              <Paper>
                 <Box
                   sx={{
                     width: '100%',
@@ -184,7 +185,7 @@ const Jobs = () => {
                     pageSizeOptions={[5, 10, 15, 25]}
                   />
                 </Box>
-              </Item>
+              </Paper>
             </Grid>
           ) : (
             <Box sx={{ height: 600 }}>

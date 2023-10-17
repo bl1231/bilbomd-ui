@@ -5,31 +5,20 @@ import * as PropTypes from 'prop-types'
 import CrdFileField from '../FormFields/CrdFileField'
 import CrdSummary from '../Helpers/CrdSummary'
 import Paper from '@mui/material/Paper'
-import { styled } from '@mui/material/styles'
+// import { styled } from '@mui/material/styles'
 import useTitle from 'hooks/useTitle'
 import { Box } from '@mui/system'
 import { Chain, RigidBody } from 'types/interfaces'
+import HeaderBox from 'components/HeaderBox'
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'left',
-  color: theme.palette.text.primary
-}))
-
-const HeaderThingee = {
-  textTransform: 'uppercase',
-  fontSize: 12,
-  borderTopLeftRadius: 4,
-  borderTopRightRadius: 4,
-  fontWeight: 500,
-  padding: '0.5rem',
-  background: '#888',
-  color: '#fff',
-  letterSpacing: '1px'
-}
+// const Item = styled(Paper)(({ theme }) => ({
+//   backgroundColor:
+//     theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
+//   ...theme.typography.body2,
+//   padding: theme.spacing(1),
+//   textAlign: 'left',
+//   color: theme.palette.text.primary
+// }))
 
 const UploadForm = ({ setStepIsValid }) => {
   useTitle('BilboMD: Upload CRD file')
@@ -147,8 +136,11 @@ const UploadForm = ({ setStepIsValid }) => {
     <>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Typography sx={HeaderThingee}>Instructions</Typography>
-          <Item>
+          <HeaderBox>
+            <Typography>Instructions</Typography>
+          </HeaderBox>
+
+          <Paper sx={{ p: 1 }}>
             <Typography variant="h4" sx={{ m: 1 }}>
               Select a *CRD file to upload
             </Typography>
@@ -182,24 +174,30 @@ const UploadForm = ({ setStepIsValid }) => {
                     'Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New;'
                 }}
               >
-                define fixed1 sele ( resid 40:137 .and. segid PROA ) end
+                define fixed1 sele ( resid 159:414 .and. segid PROA ) end
                 <br />
-                define fixed2 sele ( resid 150:203 .and. segid PROA ) end
+                define fixed2 sele ( resid 94:563 .and. segid PROB ) end
                 <br />
-                define fixed3 sele ( segid DNAA ) end
+                cons fix sele fixed1 .or. fixed2 end
                 <br />
-                define fixed4 sele ( segid DNAB ) end
+                define rigid1 sele ( resid 8:155 .and. segid PROA ) end
                 <br />
-                cons fix sele fixed1 .or. fixed2 .or. fixed3 .or. fixed4 end
+                shape desc dock1 rigid sele rigid1 end
+                <br />
+                define rigid1 sele ( resid 51:79 .and. segid PROB ) end
+                <br />
+                shape desc dock2 rigid sele rigid1 end
                 <br />
                 return
               </Typography>
             </Box>
-          </Item>
+          </Paper>
         </Grid>
         <Grid item xs={12}>
-          <Typography sx={HeaderThingee}>File Upload</Typography>
-          <Item>
+          <HeaderBox>
+            <Typography>File Upload</Typography>
+          </HeaderBox>
+          <Paper sx={{ p: 1 }}>
             <Grid container direction="column">
               <Grid item xs={6}>
                 <Field
@@ -225,18 +223,20 @@ const UploadForm = ({ setStepIsValid }) => {
                 )}
               </Grid>
             </Grid>
-          </Item>
+          </Paper>
         </Grid>
         {fileName && !error ? (
           <Grid item xs={12}>
-            <Typography sx={HeaderThingee}>Summary</Typography>
+            <HeaderBox>
+              <Typography>Summary</Typography>
+            </HeaderBox>
 
-            <Item>
+            <Paper sx={{ p: 1 }}>
               <Typography variant="h4" sx={{ my: 2 }}>
                 CRD Filename: {fileName}
               </Typography>
               {file && src && chains && <CrdSummary chains={chains}></CrdSummary>}
-            </Item>
+            </Paper>
           </Grid>
         ) : (
           ''

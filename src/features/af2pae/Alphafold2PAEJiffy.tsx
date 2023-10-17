@@ -12,10 +12,9 @@ import {
 } from '@mui/material'
 import { Form, Formik, Field } from 'formik'
 import useAuth from 'hooks/useAuth'
-import { styled } from '@mui/material/styles'
 import { useState, useEffect } from 'react'
 import { af2paeJiffySchema } from 'schemas/ValidationSchemas'
-import FileInput from 'features/jobs/FileInput'
+import FileSelect from 'features/jobs/FileSelect'
 import { Debug } from 'components/Debug'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
@@ -27,28 +26,7 @@ import { Box } from '@mui/system'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
 import LinearProgress from '@mui/material/LinearProgress'
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'left',
-  color: theme.palette.text.primary
-}))
-
-const HeaderThingee = {
-  textTransform: 'uppercase',
-  fontSize: 12,
-  borderTopLeftRadius: 4,
-  borderTopRightRadius: 4,
-  fontWeight: 500,
-  padding: '0.5rem',
-  background: '#888',
-  color: '#fff',
-  letterSpacing: '1px',
-  py: 2
-}
+import HeaderBox from 'components/HeaderBox'
 
 const Alphafold2PAEJiffy = () => {
   const token = useSelector(selectCurrentToken)
@@ -125,29 +103,19 @@ const Alphafold2PAEJiffy = () => {
     <>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Accordion>
+          <Accordion defaultExpanded={true}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
               sx={{
                 backgroundColor: '#888',
                 borderTopLeftRadius: 4,
                 borderTopRightRadius: 4,
-                pl: 1
+                pl: 0
               }}
             >
-              <Typography
-                sx={{
-                  textTransform: 'uppercase',
-                  fontSize: 12,
-                  fontWeight: 500,
-                  color: '#fff',
-                  letterSpacing: '1px'
-                }}
-              >
-                Instructions
-              </Typography>
+              <HeaderBox sx={{ py: 0 }}>
+                <Typography>Instructions</Typography>
+              </HeaderBox>
             </AccordionSummary>
             <AccordionDetails>
               <Alert severity="warning" sx={{ m: 2 }}>
@@ -185,8 +153,10 @@ const Alphafold2PAEJiffy = () => {
           </Accordion>
         </Grid>
         <Grid item xs={12}>
-          <Typography sx={HeaderThingee}>Upload your CRD and PAE files</Typography>
-          <Item>
+          <HeaderBox>
+            <Typography>Create const.inp from Alphafold PAE</Typography>
+          </HeaderBox>
+          <Paper sx={{ p: 1 }}>
             {success ? (
               <>
                 <Alert severity="success">
@@ -246,29 +216,27 @@ const Alphafold2PAEJiffy = () => {
                       <Field
                         name="crd_file"
                         id="crd-file-upload"
-                        as={FileInput}
+                        as={FileSelect}
                         title="Select File"
                         disabled={isSubmitting}
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}
                         error={errors.crd_file && values.crd_file}
                         errorMessage={errors.crd_file ? errors.crd_file : ''}
-                        helperText="Select a CRD file to upload"
-                        fileType="*.crd"
+                        fileType="CHARMM-GUI *.crd"
                         fileExt=".crd"
                       />
                       <Field
                         name="pae_file"
                         id="pae-file-upload"
-                        as={FileInput}
+                        as={FileSelect}
                         title="Select File"
                         disabled={isSubmitting}
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}
                         error={errors.pae_file && values.pae_file}
                         errorMessage={errors.pae_file ? errors.pae_file : ''}
-                        helperText="Select a PAE JSON file to upload"
-                        fileType="*.json"
+                        fileType="Alphafold PAE *.json"
                         fileExt=".json"
                       />
                       {isSubmitting && (
@@ -286,6 +254,7 @@ const Alphafold2PAEJiffy = () => {
                           endIcon={<SendIcon />}
                           loadingPosition="end"
                           variant="contained"
+                          sx={{ width: '110px' }}
                         >
                           <span>Submit</span>
                         </LoadingButton>
@@ -296,7 +265,7 @@ const Alphafold2PAEJiffy = () => {
                 )}
               </Formik>
             )}
-          </Item>
+          </Paper>
         </Grid>
       </Grid>
     </>

@@ -23,7 +23,6 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import { Field, Form, Formik } from 'formik'
-// import { Debug } from 'components/Debug'
 import { format } from 'date-fns'
 import { User, useUpdateUserMutation, useDeleteUserMutation } from './usersApiSlice'
 import { useGetJobsQuery } from 'features/jobs/jobsApiSlice'
@@ -33,29 +32,8 @@ import { useNavigate } from 'react-router-dom'
 import { editUserSchema } from 'schemas/ValidationSchemas'
 import { Box } from '@mui/system'
 import Paper from '@mui/material/Paper'
-import { styled } from '@mui/material/styles'
 import Chip from '@mui/material/Chip'
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'left',
-  color: theme.palette.text.primary
-}))
-
-const HeaderThingee = {
-  textTransform: 'uppercase',
-  fontSize: 12,
-  borderTopLeftRadius: 4,
-  borderTopRightRadius: 4,
-  fontWeight: 500,
-  padding: '0.5rem',
-  background: '#888',
-  color: '#fff',
-  letterSpacing: '1px'
-}
+import HeaderBox from 'components/HeaderBox'
 
 interface EditUserFormProps {
   user: User
@@ -136,8 +114,11 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
   const content = (
     <>
       <Box>
-        <Typography sx={HeaderThingee}>Edit User</Typography>
-        <Item>
+        <HeaderBox>
+          <Typography>Edit User</Typography>
+        </HeaderBox>
+
+        <Paper sx={{ p: 1 }}>
           <Formik
             initialValues={initialValues}
             validationSchema={editUserSchema}
@@ -258,12 +239,14 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
               </Form>
             )}
           </Formik>
-        </Item>
+        </Paper>
       </Box>
 
       <Box sx={{ my: 1 }}>
-        <Typography sx={HeaderThingee}>User Details</Typography>
-        <Item>
+        <HeaderBox>
+          <Typography>User Details</Typography>
+        </HeaderBox>
+        <Paper sx={{ p: 1 }}>
           <Typography>
             <b>Created:</b> {format(new Date(user.createdAt), 'MM/dd/yyyy HH:mm:ss')}
           </Typography>
@@ -274,20 +257,20 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
           <Typography>
             <b>UUID:</b> {user.UUID}
           </Typography>
-        </Item>
+        </Paper>
       </Box>
 
       <Box sx={{ my: 1 }}>
-        <Typography sx={HeaderThingee}>
+        <HeaderBox>
           <Chip label={`Jobs ${filteredJobs.length}`} color="success" />
-        </Typography>
-        <Item>
+        </HeaderBox>
+        <Paper sx={{ p: 1 }}>
           {filteredJobs.length >= 1 ? (
             filteredJobs.map((job, index) => <JobSummary key={index} job={job} />)
           ) : (
             <Typography>No jobs for this user</Typography>
           )}
-        </Item>
+        </Paper>
       </Box>
       {/* {process.env.NODE_ENV === 'development' ? <Debug /> : ''} */}
     </>

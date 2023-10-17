@@ -1,28 +1,7 @@
 import { Grid, Typography, Paper, Chip, CircularProgress } from '@mui/material'
-import { styled } from '@mui/material/styles'
 import { useGetQueueStateQuery } from 'features/bullmq/bullmqApiSlice'
+import HeaderBox from 'components/HeaderBox'
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'left',
-  color: theme.palette.text.primary
-}))
-
-const HeaderThingee = {
-  textTransform: 'uppercase',
-  fontSize: 12,
-  borderTopLeftRadius: 4,
-  borderTopRightRadius: 4,
-  fontWeight: 500,
-  padding: '0.5rem',
-  background: '#888',
-  color: '#fff',
-  letterSpacing: '1px',
-  py: 2
-}
 const BullMQSummary = () => {
   const {
     data: queueStatus,
@@ -45,11 +24,13 @@ const BullMQSummary = () => {
   }
 
   if (isSuccess) {
-    // console.log('queueStatus: ', queueStatus)
     content = (
       <>
-        <Typography sx={HeaderThingee}>Status of Backend Server</Typography>
-        <Item>
+        <HeaderBox>
+          <Typography>Status of Backend Server</Typography>
+        </HeaderBox>
+
+        <Paper sx={{ p: 1 }}>
           <Grid sx={{ m: 1, display: 'flex', alignItems: 'center' }}>
             <Typography>
               Number of <b>active</b> jobs:
@@ -87,7 +68,7 @@ const BullMQSummary = () => {
               }}
             />
           </Grid>
-        </Item>
+        </Paper>
       </>
     )
   }

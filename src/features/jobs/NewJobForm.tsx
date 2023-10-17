@@ -1,5 +1,6 @@
 // import { useState } from 'react'
 import {
+  Box,
   Grid,
   TextField,
   MenuItem,
@@ -7,51 +8,26 @@ import {
   Alert,
   AlertTitle,
   Paper,
-  Button,
   Accordion,
   AccordionSummary,
-  AccordionDetails,
-  Box
+  AccordionDetails
 } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { Form, Formik, Field } from 'formik'
-import FileInput from './FileInput'
+import FileSelect from './FileSelect'
 import { useAddNewJobMutation } from './jobsApiSlice'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { bilbomdJobSchema, expdataSchema } from 'schemas/ValidationSchemas'
 import useAuth from 'hooks/useAuth'
-import { styled } from '@mui/material/styles'
 import { Debug } from 'components/Debug'
 import axiosInstance from 'app/api/axios'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
 import { useState } from 'react'
 import LinearProgress from '@mui/material/LinearProgress'
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'left',
-  color: theme.palette.text.primary
-}))
-
-const HeaderThingee = {
-  textTransform: 'uppercase',
-  fontSize: 12,
-  borderTopLeftRadius: 4,
-  borderTopRightRadius: 4,
-  fontWeight: 500,
-  padding: '0.5rem',
-  background: '#888',
-  color: '#fff',
-  letterSpacing: '1px',
-  py: 2
-}
+import HeaderBox from 'components/HeaderBox'
 
 const NewJobForm = () => {
   const token = useSelector(selectCurrentToken)
@@ -124,8 +100,6 @@ const NewJobForm = () => {
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
               sx={{
                 backgroundColor: '#888',
                 borderTopLeftRadius: 4,
@@ -188,9 +162,9 @@ const NewJobForm = () => {
                 will calculate 5 equidistant steps bewteen <b>Rg Min</b> and <b>Rg Max</b>{' '}
                 to perform Molecular Dynamics. A good rule-of-thumb for your initial{' '}
                 <b>BilboMD</b> run is to select initial <b>Rg Min</b> and <b>Rg Max</b>{' '}
-                values from -7% to +25% around your experimental Rg respectively. If your{' '}
-                experimental Rg is 25-30 &#8491;, the MD simulations can behave eradically{' '}
-                if you specify an <b>Rg Min</b> that is too small. This is why we{' '}
+                values from -7% to +25% around your experimental Rg respectively. If your
+                experimental Rg is 25-30 &#8491;, the MD simulations can behave eradically
+                if you specify an <b>Rg Min</b> that is too small. This is why we
                 recommend <b>Rg Min</b> to be ~ 7% less than your experimental Rg.
                 However, if your experimental Rg is larger (e.g. &gt;50 &#8491;) then you
                 can probably explore a wider range and pick <b>Rg Min</b> and{' '}
@@ -198,12 +172,14 @@ const NewJobForm = () => {
               </Typography>
             </AccordionDetails>
           </Accordion>
-          {/* </Item> */}
         </Grid>
 
         <Grid item xs={12}>
-          <Typography sx={HeaderThingee}>BilboMD Job Form</Typography>
-          <Item>
+          <HeaderBox>
+            <Typography>BilboMD Job Form</Typography>
+          </HeaderBox>
+
+          <Paper sx={{ p: 2 }}>
             {isSuccess ? (
               <Alert severity="success">
                 <AlertTitle>Woot!</AlertTitle>
@@ -237,7 +213,7 @@ const NewJobForm = () => {
                       direction="column"
                       sx={{ display: 'flex' }}
                     >
-                      <Grid item sx={{ my: 2, display: 'flex', width: '520px' }}>
+                      <Grid item sx={{ my: 2, width: '520px' }}>
                         <Field
                           fullWidth
                           label="Title"
@@ -262,19 +238,18 @@ const NewJobForm = () => {
                           width: '520px'
                         }}
                       >
-                        <Grid item sx={{ my: 1, display: 'flex' }}>
+                        <Grid item>
                           <Field
                             name="crd_file"
                             id="crd-file-upload"
-                            as={FileInput}
+                            as={FileSelect}
                             title="Select File"
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
                             error={errors.crd_file && values.crd_file}
                             errorMessage={errors.crd_file ? errors.crd_file : ''}
-                            helperText="Select a CRD file to upload"
-                            fileType="*.CRD"
+                            fileType="CHARMM-GUI *.crd"
                             fileExt=".crd"
                           />
                         </Grid>
@@ -288,19 +263,18 @@ const NewJobForm = () => {
                           width: '520px'
                         }}
                       >
-                        <Grid item sx={{ my: 1, display: 'flex' }}>
+                        <Grid item>
                           <Field
                             name="psf_file"
                             id="psf-file-upload"
-                            as={FileInput}
+                            as={FileSelect}
                             title="Select File"
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
                             error={errors.psf_file && values.psf_file}
                             errorMessage={errors.psf_file ? errors.psf_file : ''}
-                            helperText="Select a PSF file to upload"
-                            fileType="*.PSF"
+                            fileType="CHARMM-GUI *.psf"
                             fileExt=".psf"
                           />
                         </Grid>
@@ -314,11 +288,11 @@ const NewJobForm = () => {
                           width: '520px'
                         }}
                       >
-                        <Grid item sx={{ my: 1, display: 'flex' }}>
+                        <Grid item>
                           <Field
                             name="constinp"
                             id="constinp-file-upload"
-                            as={FileInput}
+                            as={FileSelect}
                             title="Select File"
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
@@ -330,32 +304,6 @@ const NewJobForm = () => {
                             fileExt=".inp"
                           />
                         </Grid>
-                        <Grid
-                          item
-                          sx={{ my: 1, display: 'flex', alignItems: 'flex-end' }}
-                        >
-                          <Paper variant="outlined">
-                            <Typography sx={{ m: 1 }}>
-                              <b>*.inp</b> Jiffy:
-                              <Button
-                                href="constinp"
-                                variant="contained"
-                                sx={{
-                                  color: '#003eb3',
-                                  backgroundColor: '#95de64',
-                                  '&:hover': {
-                                    backgroundColor: '#73d13d',
-                                    color: '#003eb3'
-                                  },
-                                  ml: 3
-                                }}
-                                startIcon={<AutoFixHighIcon />}
-                              >
-                                Create a const.inp file
-                              </Button>
-                            </Typography>
-                          </Paper>
-                        </Grid>
                       </Grid>
                       <Grid
                         container
@@ -366,11 +314,11 @@ const NewJobForm = () => {
                           width: '520px'
                         }}
                       >
-                        <Grid item sx={{ my: 1, display: 'flex' }}>
+                        <Grid item>
                           <Field
                             name="expdata"
                             id="expdata-file-upload"
-                            as={FileInput}
+                            as={FileSelect}
                             title="Select File"
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
@@ -401,7 +349,7 @@ const NewJobForm = () => {
                         </Typography>
                       </Grid>
                       {isLoading && (
-                        <Box sx={{ width: '520px' }}>
+                        <Box sx={{ my: 1, width: '520px' }}>
                           <LinearProgress />
                         </Box>
                       )}
@@ -483,12 +431,22 @@ const NewJobForm = () => {
                       <Grid item xs={6} sx={{ my: 2 }}>
                         <LoadingButton
                           type="submit"
-                          disabled={!isValid}
+                          disabled={
+                            !isValid ||
+                            values.crd_file === '' ||
+                            values.constinp === '' ||
+                            values.psf_file === '' ||
+                            values.expdata === '' ||
+                            values.title === '' ||
+                            values.rg_max === '' ||
+                            values.rg_min === '' ||
+                            values.num_conf === ''
+                          }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}
                           loadingPosition="end"
                           variant="contained"
-                          size="large"
+                          sx={{ width: '110px' }}
                         >
                           <span>Submit</span>
                         </LoadingButton>
@@ -501,7 +459,7 @@ const NewJobForm = () => {
                 )}
               </Formik>
             )}
-          </Item>
+          </Paper>
         </Grid>
       </Grid>
     </>

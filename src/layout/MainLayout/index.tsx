@@ -41,14 +41,21 @@ export default function ClippedDrawer() {
       roles: ['user', 'manager']
     },
     {
-      text: 'New Job',
+      text: 'BilboMD',
       icon: <AddCircleOutlineOutlined color="secondary" />,
       path: '/dashboard/jobs/new',
       onclick: () => navigate('dashboard/jobs/new'),
       roles: ['user', 'manager']
     },
     {
-      text: 'Inp Jiffy',
+      text: 'BilboMD Auto',
+      icon: <AddCircleOutlineOutlined color="secondary" />,
+      path: '/dashboard/jobs/simple',
+      onclick: () => navigate('dashboard/jobs/simple'),
+      roles: ['user', 'manager']
+    },
+    {
+      text: 'inp Jiffy',
       icon: <AutoAwesome color="secondary" />,
       path: '/dashboard/jobs/constinp',
       onclick: () => navigate('dashboard/jobs/constinp'),
