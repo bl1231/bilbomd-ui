@@ -188,6 +188,9 @@ const SingleJobPage = () => {
                 <Divider sx={{ my: 2 }} />
 
                 <Typography sx={{ ml: 1 }}>
+                  <b>type:</b> {job.bullmq.data.type}
+                </Typography>
+                <Typography sx={{ ml: 1 }}>
                   <b>data:</b> {job.data_file}
                 </Typography>
                 <Typography sx={{ ml: 1 }}>

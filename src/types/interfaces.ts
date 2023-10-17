@@ -13,7 +13,13 @@ interface RigidDomain {
   end: number
 }
 
-interface BilboMDSteps {
+interface BullMQData {
+  type: string
+  title: string
+  uuid: string
+}
+
+interface BilboMDRegSteps {
   minimize: string
   heat: string
   md: string
@@ -23,12 +29,27 @@ interface BilboMDSteps {
   email: string
 }
 
+interface BilboMDAutoSteps {
+  pae: string
+  autorg: string
+  minimize: string
+  heat: string
+  md: string
+  foxs: string
+  multifoxs: string
+  results: string
+  email: string
+}
+
+type BilboMDSteps = BilboMDRegSteps | BilboMDAutoSteps
+
 export interface BullMQJob {
   id: number
   progress: number
   name: string
   bilbomdStep: BilboMDSteps
   bilbomdLastStep: string
+  data: BullMQData
 }
 
 export interface RigidBody {
@@ -39,6 +60,7 @@ export interface RigidBody {
 export interface Job {
   id: string
   _id: string
+  __t: string
   conformational_sampling: number
   const_inp_file: string
   crd_file: string
