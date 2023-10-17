@@ -41,9 +41,28 @@ const Jobs = () => {
   if (isLoading) content = <CircularProgress />
 
   if (isError) {
-    console.log('err:', error)
-    // content = <p className="errmsg">{error?.data?.message}</p>
+    let errorMessage: string = ''
+
+    if ('status' in error) {
+      // you can access all properties of `FetchBaseQueryError` here
+      if (error.status === 404) {
+        errorMessage = 'No jobs found. Please run some jobs first.'
+      } else {
+        errorMessage = 'error' in error ? error.error : JSON.stringify(error.data)
+      }
+    } else {
+      errorMessage = 'Call Scott'
+    }
+
+    content = (
+      <Box>
+        <Alert severity="info" variant="outlined">
+          <AlertTitle>{errorMessage}</AlertTitle>
+        </Alert>
+      </Box>
+    )
   }
+
   if (isSuccess) {
     let filteredIds
 
