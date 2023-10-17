@@ -174,15 +174,19 @@ const UploadForm = ({ setStepIsValid }) => {
                     'Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New;'
                 }}
               >
-                define fixed1 sele ( resid 40:137 .and. segid PROA ) end
+                define fixed1 sele ( resid 159:414 .and. segid PROA ) end
                 <br />
-                define fixed2 sele ( resid 150:203 .and. segid PROA ) end
+                define fixed2 sele ( resid 94:563 .and. segid PROB ) end
                 <br />
-                define fixed3 sele ( segid DNAA ) end
+                cons fix sele fixed1 .or. fixed2 end
                 <br />
-                define fixed4 sele ( segid DNAB ) end
+                define rigid1 sele ( resid 8:155 .and. segid PROA ) end
                 <br />
-                cons fix sele fixed1 .or. fixed2 .or. fixed3 .or. fixed4 end
+                shape desc dock1 rigid sele rigid1 end
+                <br />
+                define rigid1 sele ( resid 51:79 .and. segid PROB ) end
+                <br />
+                shape desc dock2 rigid sele rigid1 end
                 <br />
                 return
               </Typography>
