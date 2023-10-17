@@ -51,6 +51,10 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 1.0.0
+  - Add BilboMD Auto job submission form
+  - Fix bug in MultiFoXS with Eigne library
+  - Simplify the result PDBs bundled into `results.tar.gz`
 - 0.0.20
   - Increase the max allowed file size of uploaded `PAE.json`` files from 20MB to 40MB
 - 0.0.19
