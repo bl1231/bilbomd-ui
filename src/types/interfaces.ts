@@ -50,6 +50,7 @@ export interface BullMQJob {
   bilbomdStep: BilboMDSteps
   bilbomdLastStep: string
   data: BullMQData
+  failedReason?: string
 }
 
 export interface RigidBody {
