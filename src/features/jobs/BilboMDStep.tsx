@@ -3,6 +3,7 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
 // import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined'
 // import DirectionsRunIcon from '@mui/icons-material/DirectionsRun'
 import DirectionsRunRoundedIcon from '@mui/icons-material/DirectionsRunRounded'
+import ErrorIcon from '@mui/icons-material/Error'
 import { Chip, Grid } from '@mui/material'
 import Tooltip from '@mui/material/Tooltip'
 
@@ -53,6 +54,8 @@ const BilboMDStep = ({ stepName, stepStatus }: BilboMDStepProps) => {
             label={stepName}
             color="success"
           />
+        ) : stepStatus === 'error' ? (
+          <Chip icon={<ErrorIcon />} size="small" label={stepName} color="error" />
         ) : (
           <div>nope</div>
         )}
