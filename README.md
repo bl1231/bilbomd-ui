@@ -51,6 +51,8 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 1.1.0
+  - Add better error reporting for CHARMM steps
 - 1.0.0
   - Add BilboMD Auto job submission form
   - Fix bug in MultiFoXS with Eigne library
