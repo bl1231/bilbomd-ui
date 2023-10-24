@@ -23,8 +23,9 @@ import { selectCurrentToken } from '../auth/authSlice'
 import BilboMDSteps from './BilboMDSteps'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import HeaderBox from 'components/HeaderBox'
-import { useState, useEffect } from 'react'
+// import { useState } from 'react'
 import { Box } from '@mui/system'
+import JobError from './JobError'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -34,39 +35,23 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const SingleJobPage = () => {
   useTitle('BilboMD: Job Details')
-  const [logContent, setLogContent] = useState('')
+  // const [logContent, setLogContent] = useState('')
   const token = useSelector(selectCurrentToken)
   const { id } = useParams()
 
   // Will select the job with the given id, and will only rerender if the given jobs data changes
-  const { job } = useGetJobsQuery('jobsList', {
+  const { job, isLoading } = useGetJobsQuery('jobsList', {
     pollingInterval: 30000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
-    selectFromResult: ({ data }) =>
-      ({ job: data?.find((job) => job.id === id) }) as { job: Job }
+    selectFromResult: ({ data, isLoading }) =>
+      ({ job: data?.find((job) => job.id === id), isLoading }) as {
+        job: Job
+        isLoading: boolean
+      }
   })
 
-  useEffect(() => {
-    let stepWithError: string | undefined = undefined
-
-    // Iterate through bilbomdStep to find the first step with an error
-    for (const step in job.bullmq.bilbomdStep) {
-      if (job.bullmq.bilbomdStep[step] === 'error') {
-        stepWithError = step
-        // console.log('found error on step: ', stepWithError)
-        break // Exit the loop when the first error step is found
-      }
-    }
-
-    if (stepWithError) {
-      getErrorLog(job.id, stepWithError)
-    }
-    // eslint-disable-next-line
-  }, [job])
-
-  // console.log(job)
-  if (!job) {
+  if (isLoading) {
     return <PulseLoader color={'#FFF'} />
   }
 
@@ -98,26 +83,7 @@ const SingleJobPage = () => {
     }
   }
 
-  const getErrorLog = async (id: string, step: string) => {
-    try {
-      const response: AxiosResponse = await axiosInstance.get(
-        `jobs/${id}/logs?step=${step}`,
-        {
-          responseType: 'json',
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      )
-      // console.log(response.data)
-      setLogContent(response.data.logContent)
-    } catch (error) {
-      console.error('Error fetching log file:', error)
-    }
-  }
-
   const getStatusBackgroundColor = (status) => {
-    // Define the background colors based on status values
     const statusColors = {
       Submitted: '#d6e4ff',
       Pending: '#d6e4ff',
@@ -125,10 +91,15 @@ const SingleJobPage = () => {
       Completed: '#73d13d',
       Error: 'red'
     }
-    return statusColors[status]
+
+    // Check if status is defined and exists in the statusColors object
+    if (status in statusColors) {
+      return statusColors[status]
+    }
+    return '#d6e4ff'
   }
 
-  const statusBGColor = getStatusBackgroundColor(job.status)
+  const statusBGColor = getStatusBackgroundColor(job?.status)
 
   const content = job ? (
     <>
@@ -295,11 +266,12 @@ const SingleJobPage = () => {
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Error - {job.bullmq.failedReason}</Typography>
             </HeaderBox>
-            <Alert severity="info" variant="outlined">
-              Please scroll to the bottom of the log file to see why this step failed.
-            </Alert>
+
             <Item>
-              <pre>{logContent}</pre>
+              <Alert severity="error" variant="outlined">
+                Please scroll to the bottom of the log file to see why this step failed.
+              </Alert>
+              <JobError job={job} />
             </Item>
           </Grid>
         )}
