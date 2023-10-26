@@ -51,6 +51,8 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 1.1.2
+  - Increase max upload for PAE json files in `af2paeJiffySchema`
 - 1.1.1
   - Fix bug when directly loading Job component with error
 - 1.1.0
