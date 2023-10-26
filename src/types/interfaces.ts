@@ -19,36 +19,34 @@ interface BullMQData {
   uuid: string
 }
 
-interface BilboMDRegSteps {
-  minimize: string
-  heat: string
-  md: string
-  foxs: string
-  multifoxs: string
-  results: string
-  email: string
-}
+// interface BilboMDRegSteps {
+//   minimize: string
+//   heat: string
+//   md: string
+//   foxs: string
+//   multifoxs: string
+//   results: string
+//   email: string
+// }
 
-interface BilboMDAutoSteps {
-  pae: string
-  autorg: string
-  minimize: string
-  heat: string
-  md: string
-  foxs: string
-  multifoxs: string
-  results: string
-  email: string
-}
+// interface BilboMDAutoSteps {
+//   pae: string
+//   autorg: string
+//   minimize: string
+//   heat: string
+//   md: string
+//   foxs: string
+//   multifoxs: string
+//   results: string
+//   email: string
+// }
 
-type BilboMDSteps = BilboMDRegSteps | BilboMDAutoSteps
+// type BilboMDSteps = BilboMDRegSteps | BilboMDAutoSteps
 
 export interface BullMQJob {
   id: number
-  progress: number
+  progress: string
   name: string
-  bilbomdStep: BilboMDSteps
-  bilbomdLastStep: string
   data: BullMQData
   failedReason?: string
 }
@@ -77,9 +75,7 @@ export interface Job {
   title: string
   updatedAt: string
   user: string
-  username: string
   uuid: string
-  bullmq: BullMQJob
 }
 
 export interface Queue {
@@ -87,4 +83,29 @@ export interface Queue {
   queue_name: string
   active_count: number
   waiting_count: number
+}
+export type BilboMDSteps = {
+  pae?: string
+  autorg?: string
+  minimize: string
+  heat: string
+  md: string
+  foxs: string
+  multifoxs: string
+  results: string
+  email: string
+}
+
+export type BilboMDBullMQ = {
+  position: number
+  queuePosition: string
+  bilbomdStep: BilboMDSteps
+  bilbomdLastStep: string
+  bullmq: BullMQJob
+}
+export type BilboMDJob = {
+  id: string
+  mongo: Job
+  bullmq: BilboMDBullMQ
+  username: string
 }

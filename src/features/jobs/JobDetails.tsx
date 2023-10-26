@@ -9,6 +9,7 @@ interface JobDetailsProps {
 }
 
 const JobDetails = ({ job }: JobDetailsProps) => {
+  // console.log('JobDetails--->', job)
   const { id, title } = job
 
   return (

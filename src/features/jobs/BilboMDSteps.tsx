@@ -1,4 +1,4 @@
-import { BullMQJob } from 'types/interfaces'
+import { BilboMDBullMQ } from 'types/interfaces'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import BilboMDStep from './BilboMDStep'
@@ -16,7 +16,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }))
 
 interface BilboMDStepsProps {
-  job: BullMQJob
+  job: BilboMDBullMQ
 }
 
 const BilboMDSteps = ({ job }: BilboMDStepsProps) => {

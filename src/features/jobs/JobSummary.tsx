@@ -4,10 +4,10 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import JobDetails from './JobDetails'
 import DeleteJob from './DeleteJob'
-import { Job } from 'types/interfaces'
+import { BilboMDJob } from 'types/interfaces'
 
 interface JobSummaryProps {
-  job: Job
+  job: BilboMDJob
 }
 
 const JobSummary = ({ job }: JobSummaryProps) => {
@@ -21,12 +21,12 @@ const JobSummary = ({ job }: JobSummaryProps) => {
               component="h3"
               sx={{ display: 'flex', alignItems: 'center' }}
             >
-              {job.title}
+              {job.mongo.title}
               <JobDetails job={job} />
               <DeleteJob job={job} />
             </Typography>
-            <Typography variant="body2">Status: {job.status}</Typography>
-            <Typography variant="body2">Created At: {job.createdAt}</Typography>
+            <Typography variant="body2">Status: {job.mongo.status}</Typography>
+            <Typography variant="body2">Created At: {job.mongo.createdAt}</Typography>
           </CardContent>
         </Card>
       </Grid>

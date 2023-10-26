@@ -36,31 +36,35 @@ const BilboMDStep = ({ stepName, stepStatus }: BilboMDStepProps) => {
   }
   const tooltipMessage = getTooltipMessage(stepName)
   return (
-    <Grid key={stepName} sx={{ m: 1, display: 'flex', alignItems: 'center' }}>
-      <Tooltip title={tooltipMessage} arrow>
-        {stepStatus === 'no' ? (
-          <Chip icon={<RadioButtonUncheckedIcon />} size="small" label={stepName} />
-        ) : stepStatus === 'start' ? (
-          <Chip
-            icon={<DirectionsRunRoundedIcon />}
-            size="small"
-            label={stepName}
-            style={{ backgroundColor: '#fff566' }}
-          />
-        ) : stepStatus === 'end' ? (
-          <Chip
-            icon={<CheckCircleIcon />}
-            size="small"
-            label={stepName}
-            color="success"
-          />
-        ) : stepStatus === 'error' ? (
-          <Chip icon={<ErrorIcon />} size="small" label={stepName} color="error" />
-        ) : (
-          <div>nope</div>
-        )}
-      </Tooltip>
-    </Grid>
+    <>
+      {['no', 'start', 'end', 'error'].includes(stepStatus) ? (
+        <Grid key={stepName} sx={{ m: 0.5, display: 'flex', alignItems: 'center' }}>
+          <Tooltip title={tooltipMessage} arrow>
+            {stepStatus === 'no' ? (
+              <Chip icon={<RadioButtonUncheckedIcon />} size="small" label={stepName} />
+            ) : stepStatus === 'start' ? (
+              <Chip
+                icon={<DirectionsRunRoundedIcon />}
+                size="small"
+                label={stepName}
+                style={{ backgroundColor: '#fff566' }}
+              />
+            ) : stepStatus === 'end' ? (
+              <Chip
+                icon={<CheckCircleIcon />}
+                size="small"
+                label={stepName}
+                color="success"
+              />
+            ) : stepStatus === 'error' ? (
+              <Chip icon={<ErrorIcon />} size="small" label={stepName} color="error" />
+            ) : (
+              <div>nonono</div>
+            )}
+          </Tooltip>
+        </Grid>
+      ) : null}
+    </>
   )
 }
 

@@ -17,7 +17,7 @@ import { styled } from '@mui/material/styles'
 import axiosInstance, { AxiosResponse } from 'app/api/axios'
 import { format } from 'date-fns'
 import MissingJob from 'components/MissingJob'
-import { Job } from 'types/interfaces'
+import { BilboMDJob } from 'types/interfaces'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
 import BilboMDSteps from './BilboMDSteps'
@@ -45,8 +45,8 @@ const SingleJobPage = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
     selectFromResult: ({ data, isLoading }) =>
-      ({ job: data?.find((job) => job.id === id), isLoading }) as {
-        job: Job
+      ({ job: data?.find((job) => job.mongo.id === id), isLoading }) as {
+        job: BilboMDJob
         isLoading: boolean
       }
   })
@@ -99,10 +99,11 @@ const SingleJobPage = () => {
     return '#d6e4ff'
   }
 
-  const statusBGColor = getStatusBackgroundColor(job?.status)
+  const statusBGColor = getStatusBackgroundColor(job?.mongo.status)
 
   const content = job ? (
     <>
+      {/* {console.log('Job--->', job)} */}
       <Grid container spacing={2} rowSpacing={2}>
         <Grid item xs={6}>
           <HeaderBox sx={{ py: '6px' }}>
@@ -111,7 +112,7 @@ const SingleJobPage = () => {
 
           <Item>
             <Typography variant="h3" sx={{ ml: 1 }}>
-              {job.title}
+              {job.mongo.title}
             </Typography>
           </Item>
         </Grid>
@@ -121,7 +122,7 @@ const SingleJobPage = () => {
           </HeaderBox>
           <Item sx={{ backgroundColor: statusBGColor }}>
             <Typography variant="h3" sx={{ ml: 1 }}>
-              {job.status}
+              {job.mongo.status}
             </Typography>
           </Item>
         </Grid>
@@ -131,7 +132,7 @@ const SingleJobPage = () => {
           </HeaderBox>
           <Item>
             <Typography variant="h3" sx={{ ml: 1 }}>
-              {job.bullmq.progress} %
+              {job.bullmq.bullmq.progress} %
             </Typography>
           </Item>
         </Grid>
@@ -167,7 +168,7 @@ const SingleJobPage = () => {
                   </Grid>
                   <Grid item xs={3}>
                     <Typography sx={{ ml: 1 }}>
-                      {format(new Date(job.time_submitted), 'MM/dd/yyyy HH:mm:ss')}
+                      {format(new Date(job.mongo.time_submitted), 'MM/dd/yyyy HH:mm:ss')}
                     </Typography>
                   </Grid>
                   <Grid item xs={1}>
@@ -177,9 +178,9 @@ const SingleJobPage = () => {
                   </Grid>
                   <Grid item xs={3}>
                     <Typography sx={{ ml: 1 }}>
-                      {job.time_started
-                        ? format(new Date(job.time_started), 'MM/dd/yyyy HH:mm:ss')
-                        : job.status}
+                      {job.mongo.time_started
+                        ? format(new Date(job.mongo.time_started), 'MM/dd/yyyy HH:mm:ss')
+                        : job.mongo.status}
                     </Typography>
                   </Grid>
                   <Grid item xs={1}>
@@ -189,9 +190,12 @@ const SingleJobPage = () => {
                   </Grid>
                   <Grid item xs={3}>
                     <Typography sx={{ ml: 1 }}>
-                      {job.time_completed
-                        ? format(new Date(job.time_completed), 'MM/dd/yyyy HH:mm:ss')
-                        : job.status}
+                      {job.mongo.time_completed
+                        ? format(
+                            new Date(job.mongo.time_completed),
+                            'MM/dd/yyyy HH:mm:ss'
+                          )
+                        : job.mongo.status}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -200,25 +204,25 @@ const SingleJobPage = () => {
                   <Grid item xs={6}>
                     <Box padding={2}>
                       <Typography sx={{ ml: 1 }}>
-                        <b>type:</b> {job.bullmq.data.type}
+                        <b>type:</b> {job.bullmq.bullmq.data.type}
                       </Typography>
                       <Typography sx={{ ml: 1 }}>
-                        <b>data:</b> {job.data_file}
+                        <b>data:</b> {job.mongo.data_file}
                       </Typography>
                       <Typography sx={{ ml: 1 }}>
-                        <b>psf_file:</b> {job.psf_file}
+                        <b>psf_file:</b> {job.mongo.psf_file}
                       </Typography>
                       <Typography sx={{ ml: 1 }}>
-                        <b>crd_file:</b> {job.crd_file}
+                        <b>crd_file:</b> {job.mongo.crd_file}
                       </Typography>
                       <Typography sx={{ ml: 1 }}>
-                        <b>const_inp_file:</b> {job.const_inp_file}
+                        <b>const_inp_file:</b> {job.mongo.const_inp_file}
                       </Typography>
                       <Typography sx={{ ml: 1 }}>
-                        <b>rg_min:</b> {job.rg_min}
+                        <b>rg_min:</b> {job.mongo.rg_min}
                       </Typography>
                       <Typography sx={{ ml: 1 }}>
-                        <b>rg_max:</b> {job.rg_max}
+                        <b>rg_max:</b> {job.mongo.rg_max}
                       </Typography>
                     </Box>
                   </Grid>
@@ -233,17 +237,17 @@ const SingleJobPage = () => {
                 <Divider sx={{ my: 2 }} />
 
                 <Typography sx={{ ml: 1 }}>
-                  <b>ID:</b> {job.id}
+                  <b>ID:</b> {job.mongo.id}
                 </Typography>
                 <Typography sx={{ ml: 1 }}>
-                  <b>UUID:</b> {job.uuid}
+                  <b>UUID:</b> {job.mongo.uuid}
                 </Typography>
               </Item>
             </AccordionDetails>
           </Accordion>
         </Grid>
 
-        {job.status === 'Completed' && (
+        {job.mongo.status === 'Completed' && (
           <Grid item xs={12}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Results</Typography>
@@ -252,7 +256,7 @@ const SingleJobPage = () => {
               <Button
                 variant="contained"
                 onClick={() => {
-                  handleDownload(job.id)
+                  handleDownload(job.mongo.id)
                 }}
                 sx={{ my: 2 }}
               >
@@ -261,10 +265,10 @@ const SingleJobPage = () => {
             </Item>
           </Grid>
         )}
-        {job.status === 'Error' && (
+        {job.mongo.status === 'Error' && (
           <Grid item xs={12}>
             <HeaderBox sx={{ py: '6px' }}>
-              <Typography>Error - {job.bullmq.failedReason}</Typography>
+              <Typography>Error - {job.bullmq.bullmq.failedReason}</Typography>
             </HeaderBox>
 
             <Item>
