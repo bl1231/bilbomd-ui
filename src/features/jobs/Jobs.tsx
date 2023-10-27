@@ -66,6 +66,14 @@ const Jobs = () => {
   if (isSuccess) {
     let filteredIds
     // console.log(jobs)
+    // jobs.forEach((job) => {
+    //   console.log(
+    //     job.mongo.title,
+    //     job.bullmq.position,
+    //     job.bullmq.queuePosition,
+    //     job.username
+    //   )
+    // })
 
     if (isManager || isAdmin) {
       filteredIds = [...jobs]
@@ -73,7 +81,12 @@ const Jobs = () => {
       filteredIds = jobs.filter((job) => job.username === username)
     }
 
-    const rows = filteredIds.map((job) => job.mongo)
+    // const rows = filteredIds.map((job) => job.mongo)
+    const rows = filteredIds.map((job) => ({
+      ...job.mongo,
+      position: job.bullmq.queuePosition,
+      username: job.username
+    }))
 
     const columns: GridColDef[] = [
       { field: 'title', headerName: 'Title', width: 180 },
