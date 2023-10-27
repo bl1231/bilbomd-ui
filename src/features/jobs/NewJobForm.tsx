@@ -59,6 +59,7 @@ const NewJobForm = () => {
     form.append('expdata', values.expdata)
     form.append('constinp', values.constinp)
     form.append('email', values.email)
+    form.append('job_type', 'BilboMD')
 
     try {
       const newJob = await addNewJob(form).unwrap()
