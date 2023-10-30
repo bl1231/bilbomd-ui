@@ -1,4 +1,4 @@
-import axiosInstance, { AxiosResponse } from 'app/api/axios'
+import { axiosInstance, AxiosResponse } from 'app/api/axios'
 import { BilboMDJob } from 'types/interfaces'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
