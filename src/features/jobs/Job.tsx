@@ -14,7 +14,7 @@ import {
 } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
-import axiosInstance, { AxiosResponse } from 'app/api/axios'
+import { axiosInstance, AxiosResponse } from 'app/api/axios'
 import { format } from 'date-fns'
 import MissingJob from 'components/MissingJob'
 import { BilboMDJob } from 'types/interfaces'
