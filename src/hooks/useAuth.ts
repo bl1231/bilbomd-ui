@@ -1,6 +1,6 @@
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
 import { selectCurrentToken } from 'features/auth/authSlice'
-import jwtDecode from 'jwt-decode'
+import { jwtDecode } from 'jwt-decode'
 import { useAppSelector } from 'app/hooks'
 
 const useAuth = () => {
@@ -10,7 +10,7 @@ const useAuth = () => {
   let status = 'User'
 
   if (token) {
-    const decoded: any = jwtDecode(token)
+    const decoded = jwtDecode<JwtPayload>(token)
     const { username, roles, email } = decoded.UserInfo
     //console.log('useAuth1:', username, roles, email)
 

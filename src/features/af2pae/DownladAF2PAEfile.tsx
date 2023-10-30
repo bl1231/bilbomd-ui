@@ -1,6 +1,6 @@
 import { Button, Grid } from '@mui/material'
 import { Box } from '@mui/system'
-import axiosInstance, { AxiosResponse } from 'app/api/axios'
+import { axiosInstance } from 'app/api/axios'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
 
@@ -12,15 +12,12 @@ const Download = ({ uuid }: DownloadProps) => {
   const token = useSelector(selectCurrentToken)
   const handleDownload = async () => {
     try {
-      const response: AxiosResponse<Blob> = await axiosInstance.get(
-        `af2pae?uuid=${uuid}`,
-        {
-          responseType: 'blob',
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+      const response = await axiosInstance.get(`af2pae?uuid=${uuid}`, {
+        responseType: 'blob',
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-      )
+      })
       if (response.data) {
         const url = window.URL.createObjectURL(response.data)
         const link = document.createElement('a')

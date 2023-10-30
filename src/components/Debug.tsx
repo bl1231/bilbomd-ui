@@ -25,7 +25,10 @@ export const Debug = () => (
       Formik State
     </div>
     <FormikConsumer>
-      {({ validationSchema, validate, ...rest }) => (
+      {(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        { validationSchema, validate, ...rest }
+      ) => (
         <pre
           style={{
             fontSize: '.85rem',

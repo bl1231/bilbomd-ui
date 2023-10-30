@@ -11,7 +11,7 @@ import { Alert, AlertTitle, TextField, Typography, Grid } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { Link } from 'react-router-dom'
 import useTitle from 'hooks/useTitle'
-import axiosInstance from 'app/api/axios'
+import { axiosInstance } from 'app/api/axios'
 
 const MAGICKLINK_URL = '/magicklink'
 const VERIFICATION_CODE_URL = '/verify/resend'

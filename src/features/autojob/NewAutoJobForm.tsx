@@ -44,6 +44,7 @@ const NewAutoJobForm = () => {
     form.append('dat_file', values.dat_file)
     form.append('pae_file', values.pae_file)
     form.append('email', values.email)
+    form.append('job_type', 'BilboMDAuto')
 
     try {
       const newJob = await addNewAutoJob(form).unwrap()

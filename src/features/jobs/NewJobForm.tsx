@@ -22,7 +22,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { bilbomdJobSchema, expdataSchema } from 'schemas/ValidationSchemas'
 import useAuth from 'hooks/useAuth'
 import { Debug } from 'components/Debug'
-import axiosInstance from 'app/api/axios'
+import { axiosInstance } from 'app/api/axios'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
 import { useState } from 'react'
@@ -59,6 +59,7 @@ const NewJobForm = () => {
     form.append('expdata', values.expdata)
     form.append('constinp', values.constinp)
     form.append('email', values.email)
+    form.append('job_type', 'BilboMD')
 
     try {
       const newJob = await addNewJob(form).unwrap()

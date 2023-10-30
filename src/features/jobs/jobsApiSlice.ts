@@ -1,6 +1,6 @@
 import { createEntityAdapter } from '@reduxjs/toolkit'
 import { apiSlice } from 'app/api/apiSlice'
-import { Job } from 'types/interfaces'
+import { BilboMDJob } from 'types/interfaces'
 
 const jobsAdapter = createEntityAdapter({})
 
@@ -16,9 +16,10 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
           return response.status === 200 && !result.isError
         }
       }),
-      transformResponse: (responseData: Job[]) => {
+      transformResponse: (responseData: BilboMDJob[]) => {
         const loadedJobs = responseData.map((job) => {
-          job.id = job._id
+          job.mongo.id = job.mongo._id
+          job.id = job.mongo._id
           return job
         })
         jobsAdapter.setAll(initialState, loadedJobs)
@@ -28,7 +29,10 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
         result
           ? [
               { type: 'Job', id: 'LIST' },
-              ...(result as Job[]).map((job) => ({ type: 'Job' as const, id: job.id }))
+              ...(result as BilboMDJob[]).map((job) => ({
+                type: 'Job' as const,
+                id: job.mongo.id
+              }))
             ]
           : [{ type: 'Job', id: 'LIST' }]
     }),

@@ -392,7 +392,7 @@ export const bilbomdAutoJobSchema = object().shape({
   title: string()
     .required('Please provide a title for your BilboMD Job.')
     .min(4, 'Title must contain at least 4 characters.')
-    .max(20, 'Title must contain less than 20 characters.')
+    .max(30, 'Title must contain less than 30 characters.')
     .matches(/^[\w\s-]+$/, 'no special characters allowed'),
   psf_file: mixed()
     .test('required', 'PSF file obtained from CHARMM-GUI is required', (file) => {
