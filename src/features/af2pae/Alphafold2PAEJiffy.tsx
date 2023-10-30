@@ -19,7 +19,7 @@ import { Debug } from 'components/Debug'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import axiosInstance, { AxiosResponse } from 'app/api/axios'
+import { axiosInstance } from 'app/api/axios'
 import Download from './DownladAF2PAEfile'
 import CopyToClipboardButton from 'components/Common/CopyToClipboardButton'
 import { Box } from '@mui/system'
@@ -73,15 +73,12 @@ const Alphafold2PAEJiffy = () => {
           return // Don't make the request if uuid is undefined
         }
 
-        const response: AxiosResponse<Blob> = await axiosInstance.get(
-          `af2pae?uuid=${uuid}`,
-          {
-            responseType: 'blob',
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
+        const response = await axiosInstance.get(`af2pae?uuid=${uuid}`, {
+          responseType: 'blob',
+          headers: {
+            Authorization: `Bearer ${token}`
           }
-        )
+        })
 
         if (!response.data) {
           throw new Error('Failed to fetch file content')

@@ -9,11 +9,18 @@ const baseURL = import.meta.env.DEV
   : 'https://bl1231.als.lbl.gov/bilbomd-dev-backend/v1'
 
 const axiosInstance = axios.create({
-  baseURL: baseURL
+  baseURL: baseURL,
+  withCredentials: true
 })
 
-export type AxiosResponse<T = any> = BaseAxiosResponse<T>
+const axiosPrivate = axios.create({
+  baseURL: baseURL,
+  headers: { 'Content-Type': 'application/json' },
+  withCredentials: true
+})
+
+export type AxiosResponse = BaseAxiosResponse
 export type AxiosError = BaseAxiosError
 export const isAxiosError = baseIsAxiosError
 
-export default axiosInstance
+export { axiosInstance, axiosPrivate }
