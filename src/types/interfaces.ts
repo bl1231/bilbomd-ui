@@ -59,7 +59,6 @@ export interface RigidBody {
 export interface Job {
   id: string
   _id: string
-  __t: string
   conformational_sampling: number
   const_inp_file: string
   crd_file: string

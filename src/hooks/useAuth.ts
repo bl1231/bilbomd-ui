@@ -3,6 +3,16 @@ import { selectCurrentToken } from 'features/auth/authSlice'
 import { jwtDecode } from 'jwt-decode'
 import { useAppSelector } from 'app/hooks'
 
+interface JwtPayload {
+  UserInfo: BilboMDJwtPayload
+}
+
+interface BilboMDJwtPayload {
+  username: string
+  roles: string[]
+  email: string
+}
+
 const useAuth = () => {
   const token = useAppSelector(selectCurrentToken)
   let isManager = false

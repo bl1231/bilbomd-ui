@@ -14,7 +14,7 @@ import {
 } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
-import { axiosInstance, AxiosResponse } from 'app/api/axios'
+import { axiosInstance } from 'app/api/axios'
 import { format } from 'date-fns'
 import MissingJob from 'components/MissingJob'
 import { BilboMDJob } from 'types/interfaces'
@@ -57,15 +57,12 @@ const SingleJobPage = () => {
 
   const handleDownload = async (id: string) => {
     try {
-      const response: AxiosResponse<Blob> = await axiosInstance.get(
-        `jobs/${id}/results`,
-        {
-          responseType: 'blob',
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+      const response = await axiosInstance.get(`jobs/${id}/results`, {
+        responseType: 'blob',
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-      )
+      })
 
       if (response.data) {
         const url = window.URL.createObjectURL(response.data)

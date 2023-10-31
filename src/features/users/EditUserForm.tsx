@@ -57,7 +57,7 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
 
   let filteredJobs
   if (jobs) {
-    filteredJobs = jobs.filter((job) => job.user === user.id)
+    filteredJobs = jobs.filter((job) => job.mongo.user === user.id)
     console.log('got jobs: ', filteredJobs)
   } else {
     console.log('no jobs')

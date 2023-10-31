@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useDeleteJobMutation } from './jobsApiSlice'
-import { Job } from 'types/interfaces'
+// import { Job } from 'types/interfaces'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
@@ -9,11 +9,12 @@ import { Button, IconButton, Tooltip } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 
 interface DeleteJobProps {
-  job: Job
+  id: string
+  title: string
 }
 
-const DeleteJob = ({ job }: DeleteJobProps) => {
-  const { title, id } = job
+const DeleteJob = ({ id, title }: DeleteJobProps) => {
+  // const { title, id } = job
   const [open, setOpen] = useState(false)
   const [isDeleted, setDeleted] = useState(false)
   // const [deleteJob, { isSuccess, isError, error }] = useDeleteJobMutation()

@@ -1,17 +1,15 @@
 // import React from 'react'
 import InfoIcon from '@mui/icons-material/Info'
 import { IconButton, Tooltip } from '@mui/material'
-import { Job } from 'types/interfaces'
+// import { Job } from 'types/interfaces'
 import { Link } from 'react-router-dom'
 
 interface JobDetailsProps {
-  job: Job
+  id: string
+  title: string
 }
 
-const JobDetails = ({ job }: JobDetailsProps) => {
-  // console.log('JobDetails--->', job)
-  const { id, title } = job
-
+const JobDetails = ({ id, title }: JobDetailsProps) => {
   return (
     <>
       <Tooltip title={`Details for ${title}`} arrow>
