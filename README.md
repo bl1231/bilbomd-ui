@@ -51,6 +51,8 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 1.2.1
+  - Fix bug in Job/Jobs components when there is no BullMQ entry
 - 1.2.0
   - Changes to accomodate new Typescript backend code
 - 1.1.2
