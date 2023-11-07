@@ -203,9 +203,9 @@ const SingleJobPage = () => {
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
                     <Box padding={2}>
-                      {/* <Typography sx={{ ml: 1 }}>
-                        <b>type:</b> {job.bullmq.bullmq.data.type}
-                      </Typography> */}
+                      <Typography sx={{ ml: 1 }}>
+                        <b>type:</b> {job.mongo.__t ?? 'unavailable'}
+                      </Typography>
                       <Typography sx={{ ml: 1 }}>
                         <b>data:</b> {job.mongo.data_file}
                       </Typography>
