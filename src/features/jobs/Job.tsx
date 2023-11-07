@@ -129,16 +129,19 @@ const SingleJobPage = () => {
           </HeaderBox>
           <Item>
             <Typography variant="h3" sx={{ ml: 1 }}>
-              {job.bullmq.bullmq.progress} %
+              {job.bullmq?.bullmq?.progress ?? 'n/a'} %
             </Typography>
           </Item>
         </Grid>
-        <Grid item xs={12}>
-          <HeaderBox sx={{ py: '6px' }}>
-            <Typography>BilboMD Steps</Typography>
-          </HeaderBox>
-          <BilboMDSteps job={job.bullmq} />
-        </Grid>
+
+        {job.bullmq ? (
+          <Grid item xs={12}>
+            <HeaderBox sx={{ py: '6px' }}>
+              <Typography>BilboMD Steps</Typography>
+            </HeaderBox>
+            <BilboMDSteps job={job.bullmq} />
+          </Grid>
+        ) : null}
 
         <Grid item xs={12}>
           <Accordion>
@@ -200,9 +203,9 @@ const SingleJobPage = () => {
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
                     <Box padding={2}>
-                      <Typography sx={{ ml: 1 }}>
+                      {/* <Typography sx={{ ml: 1 }}>
                         <b>type:</b> {job.bullmq.bullmq.data.type}
-                      </Typography>
+                      </Typography> */}
                       <Typography sx={{ ml: 1 }}>
                         <b>data:</b> {job.mongo.data_file}
                       </Typography>

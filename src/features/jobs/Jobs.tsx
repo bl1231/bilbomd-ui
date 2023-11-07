@@ -84,7 +84,7 @@ const Jobs = () => {
     // const rows = filteredIds.map((job) => job.mongo)
     const rows = filteredIds.map((job) => ({
       ...job.mongo,
-      position: job.bullmq.queuePosition,
+      position: job.bullmq?.queuePosition ?? '',
       username: job.username
     }))
 
