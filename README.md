@@ -53,6 +53,7 @@ pm2 deploy ecosystem.config.cjs production update
 
 - 1.2.1
   - Fix bug in Job/Jobs components when there is no BullMQ entry
+  - Changed default `conformational_sampling` to `3` for BilboMD Auto jobs
 - 1.2.0
   - Changes to accomodate new Typescript backend code
 - 1.1.2
