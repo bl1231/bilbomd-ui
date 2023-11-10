@@ -98,7 +98,7 @@ export default function ClippedDrawer() {
 
   const content = (
     <Container>
-      <Box sx={{ display: 'flex', width: '100%', mb: 7 }}>
+      <Box sx={{ display: 'flex', mb: 7 }}>
         <Header />
       </Box>
 

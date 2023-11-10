@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react'
 import { Box } from '@mui/system'
 import useAuth from 'hooks/useAuth'
 import LogOut from 'features/auth/LogOut'
-import FortIcon from '@mui/icons-material/Fort'
+// import FortIcon from '@mui/icons-material/Fort'
 import PersonIcon from '@mui/icons-material/Person'
 import { useNavigate } from 'react-router'
 
@@ -80,27 +80,30 @@ const Header = () => {
           sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
           color="secondary"
         >
-          <Toolbar>
-            <FortIcon sx={{ mr: 1 }} />
+          <Toolbar sx={{ m: 0 }}>
+            {/* <FortIcon
+                sx={{ m: 1, p: 0, alignItems: 'center', alignContent: 'center' }}
+              /> */}
             <Typography
               variant="h3"
               noWrap
               component="a"
-              href="."
+              href="/welcome"
               sx={{
-                mr: 6,
-                display: 'flex',
+                display: 'flex-grow',
                 fontFamily: 'monospace',
-                fontWeight: 700,
+                fontWeight: 900,
                 letterSpacing: '.2rem',
                 color: 'inherit',
                 textDecoration: 'none'
+                // alignItems: 'center',
+                // alignContent: 'center'
               }}
             >
               BilboMD
             </Typography>
 
-            <Typography variant="h5" sx={{ display: { xs: 'none', sm: 'flex' } }}>
+            <Typography variant="h5" sx={{ display: { xs: 'none', sm: 'flex' }, ml: 8 }}>
               {time}
             </Typography>
 
