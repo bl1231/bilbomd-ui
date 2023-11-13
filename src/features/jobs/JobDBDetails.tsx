@@ -104,7 +104,7 @@ const JobDBDetails = (props: JobDBDetailsProps) => {
           <Divider sx={{ my: 1 }} />
 
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid item xs={8}>
               <Box
                 sx={{
                   display: 'flex',
