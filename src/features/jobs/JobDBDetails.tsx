@@ -8,17 +8,11 @@ import {
 } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import HeaderBox from 'components/HeaderBox'
-import Paper from '@mui/material/Paper'
-import { styled } from '@mui/material/styles'
+// import Paper from '@mui/material/Paper'
+// import { styled } from '@mui/material/styles'
 import { format } from 'date-fns'
 import { Box } from '@mui/system'
 import { BilboMDJob } from 'types/interfaces'
-
-const Item = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(1),
-  borderTopLeftRadius: 0,
-  borderTopRightRadius: 0
-}))
 
 interface JobDBDetailsProps {
   job: BilboMDJob
@@ -26,13 +20,22 @@ interface JobDBDetailsProps {
 
 const JobDBDetails = (props: JobDBDetailsProps) => {
   const { job } = props
-  // console.log('here--> ', job)
+
   const getNumConformations = () => {
-    const step = Math.round((job.mongo.rg_max - job.mongo.rg_min) / 5)
-    const numConformations = job.mongo.conformational_sampling * 200 * step
-    // console.log('numConformations', numConformations)
-    return numConformations
+    const rgMin = job.mongo.rg_min
+    const rgMax = job.mongo.rg_max
+    const conformationalSampling = job.mongo.conformational_sampling
+    let numSteps = 0
+    const stepSize = Math.round((rgMax - rgMin) / 5)
+    for (let rg = rgMin; rg <= rgMax; rg += stepSize) {
+      numSteps += 1
+    }
+    const numConformations = conformationalSampling * 200 * numSteps
+    return { stepSize, numSteps, numConformations }
   }
+
+  const { stepSize, numSteps, numConformations } = getNumConformations()
+
   return (
     <Grid item xs={12}>
       <Accordion>
@@ -50,92 +53,96 @@ const JobDBDetails = (props: JobDBDetailsProps) => {
           </HeaderBox>
         </AccordionSummary>
         <AccordionDetails>
-          <Item>
-            <Grid container>
-              <Grid item xs={1}>
-                <Typography>
-                  <b>Submitted: </b>
-                </Typography>
-              </Grid>
-              <Grid item xs={3}>
-                {job?.mongo?.time_submitted && (
-                  <Typography sx={{ ml: 1 }}>
-                    {format(new Date(job.mongo.time_submitted), 'MM/dd/yyyy HH:mm:ss')}
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={1}>
-                <Typography>
-                  <b>Started: </b>
-                </Typography>
-              </Grid>
-              <Grid item xs={3}>
-                {job?.mongo?.time_started && (
-                  <Typography sx={{ ml: 1 }}>
-                    {format(new Date(job.mongo.time_started), 'MM/dd/yyyy HH:mm:ss')}
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={1}>
-                <Typography>
-                  <b>Completed: </b>
-                </Typography>
-              </Grid>
-              <Grid item xs={3}>
-                {job?.mongo?.time_completed && (
-                  <Typography sx={{ ml: 1 }}>
-                    {format(new Date(job.mongo.time_completed), 'MM/dd/yyyy HH:mm:ss')}
-                  </Typography>
-                )}
-              </Grid>
+          <Grid container>
+            <Grid item xs={1}>
+              <Typography>
+                <b>Submitted: </b>
+              </Typography>
             </Grid>
-
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Box padding={2}>
-                  <Typography sx={{ ml: 1 }}>
-                    <b>Job type:</b> {job.mongo.__t ?? 'unavailable'}
-                  </Typography>
-                  <Typography sx={{ ml: 1 }}>
-                    <b>SAXS data:</b> {job.mongo.data_file}
-                  </Typography>
-                  <Typography sx={{ ml: 1 }}>
-                    <b>psf file:</b> {job.mongo.psf_file}
-                  </Typography>
-                  <Typography sx={{ ml: 1 }}>
-                    <b>crd file:</b> {job.mongo.crd_file}
-                  </Typography>
-                  <Typography sx={{ ml: 1 }}>
-                    <b>CHARMM constraint file:</b> {job.mongo.const_inp_file}
-                  </Typography>
-                  <Typography sx={{ ml: 1 }}>
-                    <b>Rg min:</b> {job.mongo.rg_min} &#8491;
-                  </Typography>
-                  <Typography sx={{ ml: 1 }}>
-                    <b>Rg max:</b> {job.mongo.rg_max} &#8491;
-                  </Typography>
-                  <Typography sx={{ ml: 1 }}>
-                    <b>Sampling:</b> {getNumConformations()} conformations
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item xs={6}>
-                <Box padding={2}>
-                  {/* Content for the right box */}
-                  <Typography>BullMQ Logs to go here</Typography>
-                </Box>
-              </Grid>
+            <Grid item xs={3}>
+              {job?.mongo?.time_submitted && (
+                <Typography sx={{ ml: 1 }}>
+                  {format(new Date(job.mongo.time_submitted), 'MM/dd/yyyy HH:mm:ss')}
+                </Typography>
+              )}
             </Grid>
+            <Grid item xs={1}>
+              <Typography>
+                <b>Started: </b>
+              </Typography>
+            </Grid>
+            <Grid item xs={3}>
+              {job?.mongo?.time_started && (
+                <Typography sx={{ ml: 1 }}>
+                  {format(new Date(job.mongo.time_started), 'MM/dd/yyyy HH:mm:ss')}
+                </Typography>
+              )}
+            </Grid>
+            <Grid item xs={1}>
+              <Typography>
+                <b>Completed: </b>
+              </Typography>
+            </Grid>
+            <Grid item xs={3}>
+              {job?.mongo?.time_completed && (
+                <Typography sx={{ ml: 1 }}>
+                  {format(new Date(job.mongo.time_completed), 'MM/dd/yyyy HH:mm:ss')}
+                </Typography>
+              )}
+            </Grid>
+          </Grid>
 
-            <Divider sx={{ my: 2 }} />
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <Box padding={2}>
+                <Typography sx={{ ml: 1 }}>
+                  <b>Job type:</b> {job.mongo.__t ?? 'unavailable'}
+                </Typography>
+                <Typography sx={{ ml: 1 }}>
+                  <b>SAXS data:</b> {job.mongo.data_file}
+                </Typography>
+                <Typography sx={{ ml: 1 }}>
+                  <b>psf file:</b> {job.mongo.psf_file}
+                </Typography>
+                <Typography sx={{ ml: 1 }}>
+                  <b>crd file:</b> {job.mongo.crd_file}
+                </Typography>
+                <Typography sx={{ ml: 1 }}>
+                  <b>CHARMM constraint file:</b> {job.mongo.const_inp_file}
+                </Typography>
+                <Typography sx={{ ml: 1 }}>
+                  <b>Rg min:</b> {job.mongo.rg_min} &#8491;
+                </Typography>
+                <Typography sx={{ ml: 1 }}>
+                  <b>Rg max:</b> {job.mongo.rg_max} &#8491;
+                </Typography>
+                <Typography sx={{ ml: 1 }}>
+                  <b>Rg step size:</b> {stepSize} &#8491;
+                </Typography>
+                <Typography sx={{ ml: 1 }}>
+                  <b>Number of MD Runs:</b> {numSteps}
+                </Typography>
+                <Typography sx={{ ml: 1 }}>
+                  <b>Number of conformations generated:</b> {numConformations}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={6}>
+              <Box padding={2}>
+                {/* Content for the right box */}
+                <Typography>BullMQ Logs to go here</Typography>
+              </Box>
+            </Grid>
+          </Grid>
 
-            <Typography sx={{ ml: 1 }}>
-              <b>ID:</b> {job.mongo.id}
-            </Typography>
-            <Typography sx={{ ml: 1 }}>
-              <b>UUID:</b> {job.mongo.uuid}
-            </Typography>
-          </Item>
+          <Divider sx={{ my: 2 }} />
+
+          <Typography sx={{ ml: 1 }}>
+            <b>ID:</b> {job.mongo.id}
+          </Typography>
+          <Typography sx={{ ml: 1 }}>
+            <b>UUID:</b> {job.mongo.uuid}
+          </Typography>
         </AccordionDetails>
       </Accordion>
     </Grid>
