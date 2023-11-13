@@ -170,12 +170,11 @@ const JobDBDetails = (props: JobDBDetailsProps) => {
                 </div>
               </Box>
             </Grid>
-            <Grid item xs={6}>
+            {/* <Grid item xs={6}>
               <Box padding={2}>
-                {/* Content for the right box */}
                 <Typography>BullMQ Logs to go here eventually.</Typography>
               </Box>
-            </Grid>
+            </Grid> */}
           </Grid>
 
           <Divider sx={{ my: 2 }} />
