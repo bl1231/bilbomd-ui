@@ -18,23 +18,32 @@ interface JobDBDetailsProps {
   job: BilboMDJob
 }
 
+interface ConformationInfo {
+  stepSize: number
+  numSteps: number
+  numConformations: number
+  rgList: number[]
+}
+
 const JobDBDetails = (props: JobDBDetailsProps) => {
   const { job } = props
 
-  const getNumConformations = () => {
-    const rgMin = job.mongo.rg_min
-    const rgMax = job.mongo.rg_max
-    const conformationalSampling = job.mongo.conformational_sampling
-    let numSteps = 0
+  const getNumConformations = (): ConformationInfo => {
+    const rgMin: number = job.mongo.rg_min
+    const rgMax: number = job.mongo.rg_max
+    const conformationalSampling: number = job.mongo.conformational_sampling
+    let numSteps: number = 0
+    const rgList: number[] = []
     const stepSize = Math.round((rgMax - rgMin) / 5)
-    for (let rg = rgMin; rg <= rgMax; rg += stepSize) {
+    for (let rg: number = rgMin; rg <= rgMax; rg += stepSize) {
       numSteps += 1
+      rgList.push(rg)
     }
-    const numConformations = conformationalSampling * 200 * numSteps
-    return { stepSize, numSteps, numConformations }
+    const numConformations: number = conformationalSampling * 200 * numSteps
+    return { stepSize, numSteps, numConformations, rgList }
   }
 
-  const { stepSize, numSteps, numConformations } = getNumConformations()
+  const { stepSize, numSteps, numConformations, rgList } = getNumConformations()
 
   return (
     <Grid item xs={12}>
@@ -92,55 +101,89 @@ const JobDBDetails = (props: JobDBDetailsProps) => {
             </Grid>
           </Grid>
 
+          <Divider sx={{ my: 1 }} />
+
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Box padding={2}>
-                <Typography sx={{ ml: 1 }}>
-                  <b>Job type:</b> {job.mongo.__t ?? 'unavailable'}
-                </Typography>
-                <Typography sx={{ ml: 1 }}>
-                  <b>SAXS data:</b> {job.mongo.data_file}
-                </Typography>
-                <Typography sx={{ ml: 1 }}>
-                  <b>psf file:</b> {job.mongo.psf_file}
-                </Typography>
-                <Typography sx={{ ml: 1 }}>
-                  <b>crd file:</b> {job.mongo.crd_file}
-                </Typography>
-                <Typography sx={{ ml: 1 }}>
-                  <b>CHARMM constraint file:</b> {job.mongo.const_inp_file}
-                </Typography>
-                <Typography sx={{ ml: 1 }}>
-                  <b>Rg min:</b> {job.mongo.rg_min} &#8491;
-                </Typography>
-                <Typography sx={{ ml: 1 }}>
-                  <b>Rg max:</b> {job.mongo.rg_max} &#8491;
-                </Typography>
-                <Typography sx={{ ml: 1 }}>
-                  <b>Rg step size:</b> {stepSize} &#8491;
-                </Typography>
-                <Typography sx={{ ml: 1 }}>
-                  <b>Number of MD Runs:</b> {numSteps}
-                </Typography>
-                <Typography sx={{ ml: 1 }}>
-                  <b>Number of conformations generated:</b> {numConformations}
-                </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  ml: 0,
+                  mr: 6,
+                  my: 2
+                }}
+              >
+                <div>
+                  <Typography>
+                    <b>Job type:</b>
+                  </Typography>
+                  <Typography>
+                    <b>SAXS data:</b>
+                  </Typography>
+                  <Typography>
+                    <b>PSF file:</b>
+                  </Typography>
+                  <Typography>
+                    <b>CRD file:</b>
+                  </Typography>
+                  <Typography>
+                    <b>CHARMM constraint file:</b>
+                  </Typography>
+                  <Typography>
+                    <b>Rg min:</b>
+                  </Typography>
+                  <Typography>
+                    <b>Rg max:</b>
+                  </Typography>
+                  <Typography>
+                    <b>Rg step size:</b>
+                  </Typography>
+                  <Typography>
+                    <b>Number of MD Runs:</b>
+                  </Typography>
+                  <Typography>
+                    <b>List of Rg runs:</b>
+                  </Typography>
+                  <Typography>
+                    <b>Number of conformations:</b>
+                  </Typography>
+                </div>
+                <div>
+                  <Typography>{job.mongo.__t ?? 'unavailable'}</Typography>
+                  <Typography>{job.mongo.data_file}</Typography>
+                  <Typography>{job.mongo.psf_file}</Typography>
+                  <Typography>{job.mongo.crd_file}</Typography>
+                  <Typography>{job.mongo.const_inp_file}</Typography>
+                  <Typography>{job.mongo.rg_min}&#8491;</Typography>
+                  <Typography>{job.mongo.rg_max}&#8491;</Typography>
+                  <Typography>{stepSize}&#8491;</Typography>
+                  <Typography>{numSteps}</Typography>
+                  <Typography>
+                    {rgList.map((rgValue, index) => (
+                      <span key={index}>
+                        {rgValue}&#8491; {index < rgList.length - 1 ? ', ' : ''}
+                      </span>
+                    ))}
+                  </Typography>
+                  <Typography>{numConformations}</Typography>
+                </div>
               </Box>
             </Grid>
             <Grid item xs={6}>
               <Box padding={2}>
                 {/* Content for the right box */}
-                <Typography>BullMQ Logs to go here</Typography>
+                <Typography>BullMQ Logs to go here eventually.</Typography>
               </Box>
             </Grid>
           </Grid>
 
           <Divider sx={{ my: 2 }} />
 
-          <Typography sx={{ ml: 1 }}>
+          <Typography sx={{ ml: 0 }}>
             <b>ID:</b> {job.mongo.id}
           </Typography>
-          <Typography sx={{ ml: 1 }}>
+          <Typography sx={{ ml: 0 }}>
             <b>UUID:</b> {job.mongo.uuid}
           </Typography>
         </AccordionDetails>
