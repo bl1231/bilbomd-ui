@@ -2,30 +2,18 @@ import { useParams } from 'react-router-dom'
 import { useGetJobsQuery } from './jobsApiSlice'
 import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
-import {
-  Button,
-  Divider,
-  Grid,
-  Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Alert
-} from '@mui/material'
+import { Button, Grid, Typography, Alert } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import { axiosInstance } from 'app/api/axios'
-import { format } from 'date-fns'
 import MissingJob from 'components/MissingJob'
 import { BilboMDJob } from 'types/interfaces'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
 import BilboMDSteps from './BilboMDSteps'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import HeaderBox from 'components/HeaderBox'
-// import { useState } from 'react'
-import { Box } from '@mui/system'
 import JobError from './JobError'
+import JobDBDetails from './JobDBDetails'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -100,13 +88,11 @@ const SingleJobPage = () => {
 
   const content = job ? (
     <>
-      {/* {console.log('Job--->', job)} */}
       <Grid container spacing={2} rowSpacing={2}>
         <Grid item xs={6}>
           <HeaderBox sx={{ py: '6px' }}>
             <Typography>Job Title</Typography>
           </HeaderBox>
-
           <Item>
             <Typography variant="h3" sx={{ ml: 1 }}>
               {job.mongo.title}
@@ -143,109 +129,7 @@ const SingleJobPage = () => {
           </Grid>
         ) : null}
 
-        <Grid item xs={12}>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
-              sx={{
-                backgroundColor: '#888',
-                borderTopLeftRadius: 4,
-                borderTopRightRadius: 4,
-                pl: 0
-              }}
-            >
-              <HeaderBox sx={{ py: 0 }}>
-                <Typography>Job Details</Typography>
-              </HeaderBox>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Item>
-                <Grid container>
-                  <Grid item xs={1}>
-                    <Typography>
-                      <b>Submitted: </b>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography sx={{ ml: 1 }}>
-                      {format(new Date(job.mongo.time_submitted), 'MM/dd/yyyy HH:mm:ss')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={1}>
-                    <Typography>
-                      <b>Started: </b>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography sx={{ ml: 1 }}>
-                      {job.mongo.time_started
-                        ? format(new Date(job.mongo.time_started), 'MM/dd/yyyy HH:mm:ss')
-                        : job.mongo.status}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={1}>
-                    <Typography>
-                      <b>Completed: </b>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography sx={{ ml: 1 }}>
-                      {job.mongo.time_completed
-                        ? format(
-                            new Date(job.mongo.time_completed),
-                            'MM/dd/yyyy HH:mm:ss'
-                          )
-                        : job.mongo.status}
-                    </Typography>
-                  </Grid>
-                </Grid>
-
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <Box padding={2}>
-                      <Typography sx={{ ml: 1 }}>
-                        <b>type:</b> {job.mongo.__t ?? 'unavailable'}
-                      </Typography>
-                      <Typography sx={{ ml: 1 }}>
-                        <b>data:</b> {job.mongo.data_file}
-                      </Typography>
-                      <Typography sx={{ ml: 1 }}>
-                        <b>psf_file:</b> {job.mongo.psf_file}
-                      </Typography>
-                      <Typography sx={{ ml: 1 }}>
-                        <b>crd_file:</b> {job.mongo.crd_file}
-                      </Typography>
-                      <Typography sx={{ ml: 1 }}>
-                        <b>const_inp_file:</b> {job.mongo.const_inp_file}
-                      </Typography>
-                      <Typography sx={{ ml: 1 }}>
-                        <b>rg_min:</b> {job.mongo.rg_min}
-                      </Typography>
-                      <Typography sx={{ ml: 1 }}>
-                        <b>rg_max:</b> {job.mongo.rg_max}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Box padding={2}>
-                      {/* Content for the right box */}
-                      <Typography>BullMQ Logs to go here</Typography>
-                    </Box>
-                  </Grid>
-                </Grid>
-
-                <Divider sx={{ my: 2 }} />
-
-                <Typography sx={{ ml: 1 }}>
-                  <b>ID:</b> {job.mongo.id}
-                </Typography>
-                <Typography sx={{ ml: 1 }}>
-                  <b>UUID:</b> {job.mongo.uuid}
-                </Typography>
-              </Item>
-            </AccordionDetails>
-          </Accordion>
-        </Grid>
+        <JobDBDetails job={job} />
 
         {job.mongo.status === 'Completed' && (
           <Grid item xs={12}>
@@ -265,6 +149,7 @@ const SingleJobPage = () => {
             </Item>
           </Grid>
         )}
+
         {job.mongo.status === 'Error' && (
           <Grid item xs={12}>
             <HeaderBox sx={{ py: '6px' }}>
