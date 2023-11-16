@@ -51,6 +51,10 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 1.2.3
+  - Some improvements to teh Job details component
+  - Changes to allow Docker deployment
+  - update Vite from 4.5.0 to 5.0.0
 - 1.2.2
   - Add better information about number of MD runs and conformation to Job details
 - 1.2.1
