@@ -51,8 +51,10 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 1.2.4
+  - Upgrade redux and redux toolkit
 - 1.2.3
-  - Some improvements to teh Job details component
+  - Some improvements to the Job details component
   - Changes to allow Docker deployment
   - update Vite from 4.5.0 to 5.0.0
 - 1.2.2
