@@ -58,7 +58,7 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
   let filteredJobs
   if (jobs) {
     filteredJobs = jobs.filter((job) => job.mongo.user === user.id)
-    console.log('got jobs: ', filteredJobs)
+    // console.log('got jobs: ', filteredJobs)
   } else {
     console.log('no jobs')
   }
@@ -96,6 +96,7 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
 
   useEffect(() => {
     if (updateResult.isSuccess || deleteResult.isSuccess) {
+      console.log('about to navigate back to /users')
       navigate('../users')
     }
   }, [updateResult.isSuccess, deleteResult.isSuccess, navigate])
