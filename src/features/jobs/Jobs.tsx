@@ -205,11 +205,14 @@ const Jobs = () => {
               </Paper>
             </Grid>
           ) : (
-            <Box sx={{ height: 600 }}>
+            <Grid item xs={12}>
+              <HeaderBox>
+                <Typography>BilboMD Jobs</Typography>
+              </HeaderBox>
               <Alert severity="info" variant="outlined">
                 <AlertTitle>No BilboMD Jobs found.</AlertTitle>Run some jobs first
               </Alert>
-            </Box>
+            </Grid>
           )}
         </Grid>
       </>
