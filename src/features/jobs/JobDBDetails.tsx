@@ -8,8 +8,6 @@ import {
 } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import HeaderBox from 'components/HeaderBox'
-// import Paper from '@mui/material/Paper'
-// import { styled } from '@mui/material/styles'
 import { format } from 'date-fns'
 import { Box } from '@mui/system'
 import { BilboMDJob } from 'types/interfaces'
@@ -44,6 +42,22 @@ const JobDBDetails = (props: JobDBDetailsProps) => {
   }
 
   const { stepSize, numSteps, numConformations, rgList } = getNumConformations()
+
+  // Helper function for conditional rendering
+  const renderJobProperty = (label, value, suffix = '') => {
+    if (value) {
+      return (
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography fontWeight={'bold'}>{label}:</Typography>
+          <Typography>
+            {value}
+            {suffix}
+          </Typography>
+        </Box>
+      )
+    }
+    return null
+  }
 
   return (
     <Grid item xs={12}>
@@ -108,57 +122,37 @@ const JobDBDetails = (props: JobDBDetailsProps) => {
               <Box
                 sx={{
                   display: 'flex',
-                  justifyContent: 'space-between',
+                  width: '100%',
+
                   ml: 0,
-                  mr: 6,
+                  mr: 3,
                   my: 2
                 }}
               >
                 <div>
-                  <Typography>
-                    <b>Job type:</b>
-                  </Typography>
-                  <Typography>
-                    <b>SAXS data:</b>
-                  </Typography>
-                  <Typography>
-                    <b>PSF file:</b>
-                  </Typography>
-                  <Typography>
-                    <b>CRD file:</b>
-                  </Typography>
-                  <Typography>
-                    <b>CHARMM constraint file:</b>
-                  </Typography>
-                  <Typography>
-                    <b>Rg min:</b>
-                  </Typography>
-                  <Typography>
-                    <b>Rg max:</b>
-                  </Typography>
-                  <Typography>
-                    <b>Rg step size:</b>
-                  </Typography>
-                  <Typography>
-                    <b>Number of MD Runs:</b>
-                  </Typography>
-                  <Typography>
-                    <b>List of Rg runs:</b>
-                  </Typography>
-                  <Typography>
-                    <b>Number of conformations:</b>
-                  </Typography>
-                </div>
-                <div>
-                  <Typography>{job.mongo.__t ?? 'unavailable'}</Typography>
-                  <Typography>{job.mongo.data_file}</Typography>
-                  <Typography>{job.mongo.psf_file}</Typography>
-                  <Typography>{job.mongo.crd_file}</Typography>
-                  <Typography>{job.mongo.const_inp_file}</Typography>
-                  <Typography>{job.mongo.rg_min}&#8491;</Typography>
-                  <Typography>{job.mongo.rg_max}&#8491;</Typography>
-                  <Typography>{stepSize}&#8491;</Typography>
-                  <Typography>{numSteps}</Typography>
+                  {/* Always displayed properties */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between'
+                    }}
+                  >
+                    <Typography>
+                      <b>Job type:</b>
+                    </Typography>
+                    <Typography>{job.mongo.__t ?? 'unavailable'}</Typography>
+                  </div>
+
+                  {/* Conditionally displayed properties */}
+                  {renderJobProperty('SAXS data', job.mongo.data_file)}
+                  {renderJobProperty('PSF file', job.mongo.psf_file)}
+                  {renderJobProperty('CRD file', job.mongo.crd_file)}
+                  {renderJobProperty('PDB file', job.mongo.pdb_file)}
+                  {renderJobProperty('CHARMM constraint file', job.mongo.const_inp_file)}
+                  {renderJobProperty('Rg min', job.mongo.rg_min, 'Å')}
+                  {renderJobProperty('Rg max', job.mongo.rg_max, 'Å')}
+                  {renderJobProperty('Rg step size', stepSize, 'Å')}
+                  {renderJobProperty('Number of MD Runs', numSteps)}
                   <Typography>
                     {rgList.map((rgValue, index) => (
                       <span key={index}>
@@ -166,21 +160,16 @@ const JobDBDetails = (props: JobDBDetailsProps) => {
                       </span>
                     ))}
                   </Typography>
-                  <Typography>{numConformations}</Typography>
+                  {renderJobProperty('Number of conformations', numConformations)}
                 </div>
               </Box>
             </Grid>
-            {/* <Grid item xs={6}>
-              <Box padding={2}>
-                <Typography>BullMQ Logs to go here eventually.</Typography>
-              </Box>
-            </Grid> */}
           </Grid>
 
           <Divider sx={{ my: 2 }} />
 
           <Typography sx={{ ml: 0 }}>
-            <b>ID:</b> {job.mongo.id}
+            <b>MongoDB ID:</b> {job.mongo.id}
           </Typography>
           <Typography sx={{ ml: 0 }}>
             <b>UUID:</b> {job.mongo.uuid}

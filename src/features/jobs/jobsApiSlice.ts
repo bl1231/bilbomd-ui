@@ -69,6 +69,14 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
         body: newJob
       }),
       invalidatesTags: [{ type: 'Job', id: 'LIST' }]
+    }),
+    addNewScoperJob: builder.mutation({
+      query: (newJob) => ({
+        url: '/jobs/bilbomd-scoper',
+        method: 'POST',
+        body: newJob
+      }),
+      invalidatesTags: [{ type: 'Job', id: 'LIST' }]
     })
   })
 })
@@ -78,7 +86,8 @@ export const {
   useAddNewJobMutation,
   useUpdateJobMutation,
   useDeleteJobMutation,
-  useAddNewAutoJobMutation
+  useAddNewAutoJobMutation,
+  useAddNewScoperJobMutation
 } = jobsApiSlice
 
 // returns the query result object
