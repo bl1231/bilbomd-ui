@@ -51,6 +51,8 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 1.3.0
+  - Add new Scoper options for RNA
 - 1.2.4
   - Upgrade redux and redux toolkit
 - 1.2.3
