@@ -14,12 +14,13 @@ import { ROLES } from 'config/roles'
 const Prefetch = Loadable(lazy(() => import('features/auth/Prefetch')))
 const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')))
 const NewAutoJob = Loadable(lazy(() => import('features/autojob/NewAutoJobForm')))
+const NewScoperJob = Loadable(lazy(() => import('features/scoperjob/NewScoperJobForm')))
 const ConstInpStepper = Loadable(
   lazy(() => import('components/ConstInpForm/ConstInpStepper'))
 )
 const AF2PAEJiffy = Loadable(lazy(() => import('features/af2pae/Alphafold2PAEJiffy')))
 const Jobs = Loadable(lazy(() => import('features/jobs/Jobs')))
-const Job = Loadable(lazy(() => import('features/jobs/Job')))
+const SingleJobPage = Loadable(lazy(() => import('features/jobs/SingleJobPage')))
 const Welcome = Loadable(lazy(() => import('features/auth/Welcome')))
 const UsersList = Loadable(lazy(() => import('features/users/UsersList')))
 const EditUser = Loadable(lazy(() => import('features/users/EditUser')))
@@ -76,15 +77,19 @@ const ProtectedMainRoutes = {
                     },
                     {
                       path: 'jobs/:id',
-                      element: <Job />
+                      element: <SingleJobPage />
                     },
                     {
-                      path: 'jobs/new',
+                      path: 'jobs/classic',
                       element: <NewJob />
                     },
                     {
-                      path: 'jobs/simple',
+                      path: 'jobs/auto',
                       element: <NewAutoJob />
+                    },
+                    {
+                      path: 'jobs/scoper',
+                      element: <NewScoperJob />
                     },
                     {
                       path: 'jobs/constinp',

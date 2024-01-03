@@ -25,7 +25,7 @@ import Header from './Header'
 import Footer from './Footer'
 // ==============================|| MAIN LAYOUT ||============================== //
 
-const drawerWidth = 160
+const drawerWidth = 170
 
 export default function ClippedDrawer() {
   const { isAdmin } = useAuth()
@@ -41,17 +41,24 @@ export default function ClippedDrawer() {
       roles: ['user', 'manager']
     },
     {
-      text: 'BilboMD',
+      text: 'BilboMD Classic',
       icon: <AddCircleOutlineOutlined color="secondary" />,
-      path: '/dashboard/jobs/new',
-      onclick: () => navigate('dashboard/jobs/new'),
+      path: '/dashboard/jobs/classic',
+      onclick: () => navigate('dashboard/jobs/classic'),
       roles: ['user', 'manager']
     },
     {
       text: 'BilboMD Auto',
       icon: <AddCircleOutlineOutlined color="secondary" />,
-      path: '/dashboard/jobs/simple',
-      onclick: () => navigate('dashboard/jobs/simple'),
+      path: '/dashboard/jobs/auto',
+      onclick: () => navigate('dashboard/jobs/auto'),
+      roles: ['user', 'manager']
+    },
+    {
+      text: 'BilboMD Scoper',
+      icon: <AddCircleOutlineOutlined color="secondary" />,
+      path: '/dashboard/jobs/scoper',
+      onclick: () => navigate('dashboard/jobs/scoper'),
       roles: ['user', 'manager']
     },
     {

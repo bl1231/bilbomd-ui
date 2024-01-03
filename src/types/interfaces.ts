@@ -19,30 +19,6 @@ interface BullMQData {
   uuid: string
 }
 
-// interface BilboMDRegSteps {
-//   minimize: string
-//   heat: string
-//   md: string
-//   foxs: string
-//   multifoxs: string
-//   results: string
-//   email: string
-// }
-
-// interface BilboMDAutoSteps {
-//   pae: string
-//   autorg: string
-//   minimize: string
-//   heat: string
-//   md: string
-//   foxs: string
-//   multifoxs: string
-//   results: string
-//   email: string
-// }
-
-// type BilboMDSteps = BilboMDRegSteps | BilboMDAutoSteps
-
 export interface BullMQJob {
   id: number
   progress: string
@@ -66,6 +42,7 @@ export interface Job {
   createdAt: string
   data_file: string
   psf_file: string
+  pdb_file: string
   rg_max: number
   rg_min: number
   status: string
@@ -84,6 +61,7 @@ export interface Queue {
   active_count: number
   waiting_count: number
 }
+
 export type BilboMDSteps = {
   pae?: string
   autorg?: string
@@ -96,10 +74,16 @@ export type BilboMDSteps = {
   email: string
 }
 
+export type ScoperSteps = {
+  scoper: string
+  results: string
+  email: string
+}
+
 export type BilboMDBullMQ = {
   position: number
   queuePosition: string
-  bilbomdStep: BilboMDSteps
+  bilbomdStep: BilboMDSteps | ScoperSteps
   bilbomdLastStep: string
   bullmq: BullMQJob
 }
