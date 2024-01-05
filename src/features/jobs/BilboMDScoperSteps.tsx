@@ -4,7 +4,7 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 // import BilboMDStep from './BilboMDStep'
-import { Chip, Grid, Typography } from '@mui/material'
+import { Alert, Chip, Grid } from '@mui/material'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -20,7 +20,8 @@ const BilboMDScoperSteps = ({ job }: BilboMDStepsProps) => {
   if (job.scoper && typeof job.scoper === 'object') {
     return (
       <Item>
-        <Typography>Scoper status is a work in progress</Typography>
+        <Alert severity="warning">Scoper status is a work in progress</Alert>
+
         <Grid container spacing={1}>
           {Object.entries(job.scoper).map(([stepName, stepValue]) => (
             <Grid item key={stepName}>
