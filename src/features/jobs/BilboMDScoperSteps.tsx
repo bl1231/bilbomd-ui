@@ -17,40 +17,44 @@ interface BilboMDStepsProps {
 }
 
 const BilboMDScoperSteps = ({ job }: BilboMDStepsProps) => {
+  const stepsToHide = ['scoper', 'results', 'email'] // Replace with actual step names to hide
+
   if (job.scoper && typeof job.scoper === 'object') {
     return (
       <Item>
         <Alert severity="warning">Scoper status is a work in progress</Alert>
 
         <Grid container spacing={1}>
-          {Object.entries(job.scoper).map(([stepName, stepValue]) => (
-            <Grid item key={stepName}>
-              <Chip
-                size="small"
-                label={
-                  typeof stepValue === 'boolean'
-                    ? `${stepName}`
-                    : `${stepName}: ${stepValue}`
-                }
-                icon={
-                  typeof stepValue === 'boolean' ? (
-                    stepValue ? (
-                      <CheckCircleIcon />
-                    ) : (
-                      <RadioButtonUncheckedIcon />
-                    )
-                  ) : undefined
-                }
-                color={
-                  typeof stepValue === 'boolean'
-                    ? stepValue
-                      ? 'success'
+          {Object.entries(job.scoper)
+            .filter(([stepName]) => !stepsToHide.includes(stepName))
+            .map(([stepName, stepValue]) => (
+              <Grid item key={stepName}>
+                <Chip
+                  size="small"
+                  label={
+                    typeof stepValue === 'boolean'
+                      ? `${stepName}`
+                      : `${stepName}: ${stepValue}`
+                  }
+                  icon={
+                    typeof stepValue === 'boolean' ? (
+                      stepValue ? (
+                        <CheckCircleIcon />
+                      ) : (
+                        <RadioButtonUncheckedIcon />
+                      )
+                    ) : undefined
+                  }
+                  color={
+                    typeof stepValue === 'boolean'
+                      ? stepValue
+                        ? 'success'
+                        : undefined
                       : undefined
-                    : undefined
-                }
-              />
-            </Grid>
-          ))}
+                  }
+                />
+              </Grid>
+            ))}
         </Grid>
       </Item>
     )
