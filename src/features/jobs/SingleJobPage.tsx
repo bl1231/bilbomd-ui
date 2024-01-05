@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { useGetJobsQuery } from './jobsApiSlice'
+import { useGetJobByIdQuery } from './jobsApiSlice'
 import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
 import { Button, Grid, Typography, Alert } from '@mui/material'
@@ -7,10 +7,11 @@ import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import { axiosInstance } from 'app/api/axios'
 import MissingJob from 'components/MissingJob'
-import { BilboMDJob } from 'types/interfaces'
+// import { BilboMDJob } from 'types/interfaces'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
 import BilboMDSteps from './BilboMDSteps'
+import BilboMDScoperSteps from './BilboMDScoperSteps'
 import HeaderBox from 'components/HeaderBox'
 import JobError from './JobError'
 import JobDBDetails from './JobDBDetails'
@@ -28,19 +29,40 @@ const SingleJobPage = () => {
   const { id } = useParams()
 
   // Will select the job with the given id, and will only rerender if the given jobs data changes
-  const { job, isLoading } = useGetJobsQuery('jobsList', {
+  // const { job, isLoading } = useGetJobsQuery('jobsList', {
+  //   pollingInterval: 30000,
+  //   refetchOnFocus: true,
+  //   refetchOnMountOrArgChange: true,
+  //   selectFromResult: ({ data, isLoading }) =>
+  //     ({ job: data?.find((job) => job.mongo.id === id), isLoading }) as {
+  //       job: BilboMDJob
+  //       isLoading: boolean
+  //     }
+  // })
+  // console.log('SingleJobPage job: ', job)
+  // if (isLoading) {
+  //   return <PulseLoader color={'#FFF'} />
+  // }
+  const {
+    data: job,
+    isLoading,
+    isError
+  } = useGetJobByIdQuery(id, {
     pollingInterval: 30000,
     refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
-    selectFromResult: ({ data, isLoading }) =>
-      ({ job: data?.find((job) => job.mongo.id === id), isLoading }) as {
-        job: BilboMDJob
-        isLoading: boolean
-      }
+    refetchOnMountOrArgChange: true
   })
-  console.log('SingleJobPage job: ', job)
+
+  if (process.env.NODE_ENV === 'development') {
+    console.log('SingleJobPage job -->', job)
+  }
+
   if (isLoading) {
     return <PulseLoader color={'#FFF'} />
+  }
+
+  if (isError) {
+    return <div>Error loading job.</div>
   }
 
   const handleDownload = async (id: string) => {
@@ -125,7 +147,16 @@ const SingleJobPage = () => {
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>BilboMD Steps</Typography>
             </HeaderBox>
-            <BilboMDSteps job={job.bullmq} />
+            <BilboMDSteps job={job} />
+          </Grid>
+        ) : null}
+
+        {job.scoper ? (
+          <Grid item xs={12}>
+            <HeaderBox sx={{ py: '6px' }}>
+              <Typography>Scoper Status</Typography>
+            </HeaderBox>
+            <BilboMDScoperSteps job={job} />
           </Grid>
         ) : null}
 
