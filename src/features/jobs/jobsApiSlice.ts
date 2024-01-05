@@ -36,6 +36,21 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
             ]
           : [{ type: 'Job', id: 'LIST' }]
     }),
+    getJobById: builder.query({
+      query: (id) => ({
+        url: `/jobs/${id}`,
+        method: 'GET',
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError
+        }
+      }),
+      transformResponse: (responseData: BilboMDJob) => {
+        responseData.mongo.id = responseData.mongo._id
+        responseData.id = responseData.mongo._id
+        return responseData
+      },
+      providesTags: (result, error, id) => [{ type: 'Job', id }]
+    }),
     addNewJob: builder.mutation({
       query: (newJob) => ({
         url: '/jobs',
@@ -83,6 +98,7 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetJobsQuery,
+  useGetJobByIdQuery,
   useAddNewJobMutation,
   useUpdateJobMutation,
   useDeleteJobMutation,

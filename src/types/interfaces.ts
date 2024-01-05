@@ -74,22 +74,43 @@ export type BilboMDSteps = {
   email: string
 }
 
-export type ScoperSteps = {
+// export type ScoperSteps = {
+//   scoper: string
+//   results: string
+//   email: string
+// }
+
+export type BilboMDBullMQ = {
+  position: number
+  queuePosition: string
+  bilbomdStep: BilboMDSteps | BilboMDScoperSteps
+  bilbomdLastStep: string
+  bullmq: BullMQJob
+}
+
+export type BilboMDScoperSteps = {
+  addHydrogens: boolean
+  runRNAview: boolean
+  KGSConformations: number
+  KGSFiles: number
+  FoXS: string
+  FoXSProgress: number
+  FoXSTopFile: string
+  FoXSTopScore: number
+  createdFeatures: boolean
+  predictionThreshold: number
+  MultiFoXS: string
+  MultiFoXSEnsembleSize: number
+  MultiFoXSScore: number
   scoper: string
   results: string
   email: string
 }
 
-export type BilboMDBullMQ = {
-  position: number
-  queuePosition: string
-  bilbomdStep: BilboMDSteps | ScoperSteps
-  bilbomdLastStep: string
-  bullmq: BullMQJob
-}
 export type BilboMDJob = {
   id: string
   mongo: Job
   bullmq: BilboMDBullMQ
+  scoper?: BilboMDScoperSteps
   username: string
 }
