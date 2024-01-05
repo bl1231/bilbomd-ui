@@ -51,6 +51,9 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 1.3.1
+  - Add better Scoper status information in the `SingleJobPage`
+    It still needs work, but I want to release what's been done so far.
 - 1.3.0
   - Add new Scoper options for RNA
 - 1.2.4
