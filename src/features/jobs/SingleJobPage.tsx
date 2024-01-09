@@ -15,6 +15,7 @@ import BilboMDScoperSteps from './BilboMDScoperSteps'
 import HeaderBox from 'components/HeaderBox'
 import JobError from './JobError'
 import JobDBDetails from './JobDBDetails'
+import MolstarViewer from 'features/molstar/Viewer'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -53,9 +54,9 @@ const SingleJobPage = () => {
     refetchOnMountOrArgChange: true
   })
 
-  if (process.env.NODE_ENV === 'development') {
-    console.log('SingleJobPage job -->', job)
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   console.log('SingleJobPage job -->', job)
+  // }
 
   if (isLoading) {
     return <PulseLoader color={'#FFF'} />
@@ -180,6 +181,13 @@ const SingleJobPage = () => {
             </Item>
           </Grid>
         )}
+
+        <Grid item xs={12}>
+          <HeaderBox sx={{ py: '6px' }}>
+            <Typography>Molstar Viewer</Typography>
+          </HeaderBox>
+          <MolstarViewer jobId={job.mongo.id} foxsBest={job.scoper?.FoXSTopFile} />
+        </Grid>
 
         {job.mongo.status === 'Error' && (
           <Grid item xs={12}>
