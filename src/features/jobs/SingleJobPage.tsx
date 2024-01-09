@@ -182,12 +182,14 @@ const SingleJobPage = () => {
           </Grid>
         )}
 
-        <Grid item xs={12}>
-          <HeaderBox sx={{ py: '6px' }}>
-            <Typography>Molstar Viewer</Typography>
-          </HeaderBox>
-          <MolstarViewer jobId={job.mongo.id} foxsBest={job.scoper?.FoXSTopFile} />
-        </Grid>
+        {job.mongo.status === 'Completed' && job.scoper && (
+          <Grid item xs={12}>
+            <HeaderBox sx={{ py: '6px' }}>
+              <Typography>Molstar Viewer</Typography>
+            </HeaderBox>
+            <MolstarViewer jobId={job.mongo.id} foxsBest={job.scoper.FoXSTopFile} />
+          </Grid>
+        )}
 
         {job.mongo.status === 'Error' && (
           <Grid item xs={12}>
