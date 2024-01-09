@@ -14,10 +14,7 @@ import { PluginSpec } from 'molstar/lib/mol-plugin/spec'
 import { PluginBehaviors } from 'molstar/lib/mol-plugin/behavior'
 import { renderReact18 } from 'molstar/lib/mol-plugin-ui/react18'
 import { PluginUIContext } from 'molstar/lib/mol-plugin-ui/context'
-
-/*  Might require extra configuration,
-see https://webpack.js.org/loaders/sass-loader/ for example.
-create-react-app should support this natively. */
+// import 'molstar/lib/mol-plugin-ui/skin/dark.scss'
 import 'molstar/lib/mol-plugin-ui/skin/light.scss'
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -31,6 +28,7 @@ declare global {
     molstar?: PluginUIContext
   }
 }
+
 const DefaultViewerOptions = {
   extensions: ObjectKeys({}),
   layoutIsExpanded: true,
@@ -78,7 +76,6 @@ const MolstarViewer = ({ jobId, foxsBest }: MolstarViewerProps) => {
   }
 
   const parent = createRef<HTMLDivElement>()
-  // const parent = useRef(null)
 
   useEffect(() => {
     async function init() {
@@ -96,7 +93,7 @@ const MolstarViewer = ({ jobId, foxsBest }: MolstarViewerProps) => {
           viewportShowControls: true,
           viewportShowSettings: true,
           viewportShowSelectionMode: false,
-          viewportShowAnimation: false
+          viewportShowAnimation: true
         }
       }
       const defaultSpec = DefaultPluginUISpec()
@@ -164,10 +161,14 @@ const MolstarViewer = ({ jobId, foxsBest }: MolstarViewerProps) => {
         data,
         'pdb'
       )
-
-      await window.molstar.builders.structure.hierarchy.applyPreset(trajectory, 'default')
+      const model = await window.molstar.builders.structure.createModel(trajectory)
+      const struct = await window.molstar.builders.structure.createStructure(model)
+      await window.molstar.builders.structure.representation.applyPreset(
+        struct,
+        'illustrative'
+      )
+      // await window.molstar.builders.structure.hierarchy.applyPreset(trajectory, 'default')
     }
-
     init()
     return () => {
       window.molstar?.dispose()
