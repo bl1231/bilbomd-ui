@@ -98,6 +98,7 @@ export type BilboMDScoperSteps = {
   multifoxs: string
   multifoxsEnsembleSize: number
   multifoxsScore: number
+  scoperPdb: string
   scoper: string
   results: string
   email: string

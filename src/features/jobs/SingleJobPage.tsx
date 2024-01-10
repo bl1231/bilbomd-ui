@@ -167,9 +167,15 @@ const SingleJobPage = () => {
                 }}
                 sx={{ my: 2 }}
               >
-                Download Results
+                Download
               </Button>
-              <Typography>results.tar.gz contains your results.</Typography>
+              <Typography>
+                The{' '}
+                <span style={{ fontWeight: 'bold', fontFamily: 'Courier, monospace' }}>
+                  results.tar.gz
+                </span>{' '}
+                will contains your original files plus some output files from Scoper.
+              </Typography>
             </Item>
           </Grid>
         )}
