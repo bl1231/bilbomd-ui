@@ -51,6 +51,8 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 1.4.0
+  - Add [Molstar][Molstar] viewer for Scoper Job detail page.
 - 1.3.1
   - Add better Scoper status information in the `SingleJobPage`
     It still needs work, but I want to release what's been done so far.
@@ -104,3 +106,5 @@ pm2 deploy ecosystem.config.cjs production update
   - Update nodejs dependencies
 - 0.0.11
   - Add PAE jiffy (creates const.inp from AlphaFold PAE JSON input file).
+
+[Molstar]: https://github.com/molstar/molstar
