@@ -51,6 +51,9 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 1.4.1
+  - Forgot to merge the feature brnach... oops.
+  - Now we should have a Molstar viewer.
 - 1.4.0
   - Add [Molstar][Molstar] viewer for Scoper Job detail page.
 - 1.3.1
