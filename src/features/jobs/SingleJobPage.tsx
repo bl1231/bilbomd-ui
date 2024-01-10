@@ -11,10 +11,12 @@ import MissingJob from 'components/MissingJob'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
 import BilboMDSteps from './BilboMDSteps'
-import BilboMDScoperSteps from './BilboMDScoperSteps'
+import { BilboMDScoperSteps } from './BilboMDScoperSteps'
 import HeaderBox from 'components/HeaderBox'
 import JobError from './JobError'
 import JobDBDetails from './JobDBDetails'
+import MolstarViewer from 'features/molstar/Viewer'
+import { BilboMDScoperTable } from './BilboMDScoperTable'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -24,25 +26,10 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const SingleJobPage = () => {
   useTitle('BilboMD: Job Details')
-  // const [logContent, setLogContent] = useState('')
+
   const token = useSelector(selectCurrentToken)
   const { id } = useParams()
 
-  // Will select the job with the given id, and will only rerender if the given jobs data changes
-  // const { job, isLoading } = useGetJobsQuery('jobsList', {
-  //   pollingInterval: 30000,
-  //   refetchOnFocus: true,
-  //   refetchOnMountOrArgChange: true,
-  //   selectFromResult: ({ data, isLoading }) =>
-  //     ({ job: data?.find((job) => job.mongo.id === id), isLoading }) as {
-  //       job: BilboMDJob
-  //       isLoading: boolean
-  //     }
-  // })
-  // console.log('SingleJobPage job: ', job)
-  // if (isLoading) {
-  //   return <PulseLoader color={'#FFF'} />
-  // }
   const {
     data: job,
     isLoading,
@@ -62,7 +49,11 @@ const SingleJobPage = () => {
   }
 
   if (isError) {
-    return <div>Error loading job.</div>
+    return (
+      <Alert severity="error" variant="outlined">
+        Error loading job.
+      </Alert>
+    )
   }
 
   const handleDownload = async (id: string) => {
@@ -151,14 +142,15 @@ const SingleJobPage = () => {
           </Grid>
         ) : null}
 
-        {job.scoper ? (
+        {job.scoper && (
           <Grid item xs={12}>
             <HeaderBox sx={{ py: '6px' }}>
-              <Typography>Scoper Status</Typography>
+              <Typography>Scoper Details</Typography>
             </HeaderBox>
             <BilboMDScoperSteps job={job} />
+            <BilboMDScoperTable scoper={job.scoper} />
           </Grid>
-        ) : null}
+        )}
 
         <JobDBDetails job={job} />
 
@@ -175,9 +167,25 @@ const SingleJobPage = () => {
                 }}
                 sx={{ my: 2 }}
               >
-                Download Results
+                Download
               </Button>
+              <Typography>
+                The{' '}
+                <span style={{ fontWeight: 'bold', fontFamily: 'Courier, monospace' }}>
+                  results.tar.gz
+                </span>{' '}
+                will contains your original files plus some output files from Scoper.
+              </Typography>
             </Item>
+          </Grid>
+        )}
+
+        {job.mongo.status === 'Completed' && job.scoper && (
+          <Grid item xs={12}>
+            <HeaderBox sx={{ py: '6px' }}>
+              <Typography>Molstar Viewer</Typography>
+            </HeaderBox>
+            <MolstarViewer jobId={job.mongo.id} foxsBest={job.scoper.foxsTopFile} />
           </Grid>
         )}
 

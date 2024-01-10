@@ -1,10 +1,12 @@
 import { BilboMDJob } from 'types/interfaces'
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
+// import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+// import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
+// import DirectionsRunRoundedIcon from '@mui/icons-material/DirectionsRunRounded'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 // import BilboMDStep from './BilboMDStep'
 import { Alert, Chip, Grid } from '@mui/material'
+import BilboMDScoperStep from './BilboMDScoperStep'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -17,43 +19,23 @@ interface BilboMDStepsProps {
 }
 
 const BilboMDScoperSteps = ({ job }: BilboMDStepsProps) => {
-  const stepsToHide = ['scoper', 'results', 'email'] // Replace with actual step names to hide
+  // const stepsToHide = ['scoper', 'results', 'email']
+  const stepsToShow = ['reduce', 'rnaview', 'kgs', 'foxs', 'IonNet', 'multifoxs']
 
   if (job.scoper && typeof job.scoper === 'object') {
     return (
       <Item>
-        <Alert severity="warning">Scoper status is a work in progress</Alert>
+        {/* <Alert severity="warning">Scoper status is a work in progress</Alert> */}
 
-        <Grid container spacing={1}>
+        <Grid container>
           {Object.entries(job.scoper)
-            .filter(([stepName]) => !stepsToHide.includes(stepName))
+            .filter(([stepName]) => stepsToShow.includes(stepName))
             .map(([stepName, stepValue]) => (
-              <Grid item key={stepName}>
-                <Chip
-                  size="small"
-                  label={
-                    typeof stepValue === 'boolean'
-                      ? `${stepName}`
-                      : `${stepName}: ${stepValue}`
-                  }
-                  icon={
-                    typeof stepValue === 'boolean' ? (
-                      stepValue ? (
-                        <CheckCircleIcon />
-                      ) : (
-                        <RadioButtonUncheckedIcon />
-                      )
-                    ) : undefined
-                  }
-                  color={
-                    typeof stepValue === 'boolean'
-                      ? stepValue
-                        ? 'success'
-                        : undefined
-                      : undefined
-                  }
-                />
-              </Grid>
+              <BilboMDScoperStep
+                key={stepName}
+                stepName={stepName}
+                stepStatus={String(stepValue)}
+              />
             ))}
         </Grid>
       </Item>
@@ -63,4 +45,26 @@ const BilboMDScoperSteps = ({ job }: BilboMDStepsProps) => {
   return <Item>No steps available</Item>
 }
 
-export default BilboMDScoperSteps
+const BilboMDScoperStepsV2 = ({ job }: BilboMDStepsProps) => {
+  // const stepsToHide = ['scoper', 'results', 'email', 'FoXSProgress'] // Replace with actual step names to hide
+
+  if (job.scoper && typeof job.scoper === 'object') {
+    return (
+      <Item>
+        <Alert severity="warning">Scoper status is a work in progress</Alert>
+
+        <Grid container spacing={1}>
+          <Grid sx={{ m: 0.5, display: 'flex', alignItems: 'center' }}>
+            <Chip size="small" label="reduce" />
+            <Chip size="small" label="RNAview" />
+            <Chip size="small" label="KGS" />
+          </Grid>
+        </Grid>
+      </Item>
+    )
+  }
+
+  return <Item>No steps available</Item>
+}
+
+export { BilboMDScoperSteps, BilboMDScoperStepsV2 }

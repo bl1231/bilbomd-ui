@@ -74,12 +74,6 @@ export type BilboMDSteps = {
   email: string
 }
 
-// export type ScoperSteps = {
-//   scoper: string
-//   results: string
-//   email: string
-// }
-
 export type BilboMDBullMQ = {
   position: number
   queuePosition: string
@@ -89,19 +83,22 @@ export type BilboMDBullMQ = {
 }
 
 export type BilboMDScoperSteps = {
-  addHydrogens: boolean
-  runRNAview: boolean
-  KGSConformations: number
-  KGSFiles: number
-  FoXS: string
-  FoXSProgress: number
-  FoXSTopFile: string
-  FoXSTopScore: number
+  reduce: string
+  rnaview: string
+  kgs: string
+  kgsConformations: number
+  kgsFiles: number
+  foxs: string
+  foxsProgress: number
+  foxsTopFile: string
+  foxsTopScore: number
   createdFeatures: boolean
+  IonNet: string
   predictionThreshold: number
-  MultiFoXS: string
-  MultiFoXSEnsembleSize: number
-  MultiFoXSScore: number
+  multifoxs: string
+  multifoxsEnsembleSize: number
+  multifoxsScore: number
+  scoperPdb: string
   scoper: string
   results: string
   email: string

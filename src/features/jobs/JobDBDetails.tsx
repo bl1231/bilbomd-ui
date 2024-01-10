@@ -72,7 +72,7 @@ const JobDBDetails = (props: JobDBDetailsProps) => {
           }}
         >
           <HeaderBox sx={{ py: 0 }}>
-            <Typography>Job Details</Typography>
+            <Typography>Job Database Details</Typography>
           </HeaderBox>
         </AccordionSummary>
         <AccordionDetails>
