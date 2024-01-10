@@ -15,19 +15,22 @@ interface BilboMDStepsProps {
 }
 
 const BilboMDSteps = ({ job }: BilboMDStepsProps) => {
+  const stepsToHide = ['reduce', 'rnaview', 'kgs', 'foxs', 'IonNet', 'multifoxs']
   const { bilbomdStep } = job.bullmq
   // Check if bilbomdStep is defined and not null before using Object.entries
   if (bilbomdStep && typeof bilbomdStep === 'object') {
     return (
       <Item>
         <Grid container>
-          {Object.entries(bilbomdStep).map(([stepName, stepValue]) => (
-            <BilboMDStep
-              key={stepName}
-              stepName={stepName}
-              stepStatus={String(stepValue)}
-            />
-          ))}
+          {Object.entries(bilbomdStep)
+            .filter(([stepName]) => !stepsToHide.includes(stepName))
+            .map(([stepName, stepValue]) => (
+              <BilboMDStep
+                key={stepName}
+                stepName={stepName}
+                stepStatus={String(stepValue)}
+              />
+            ))}
           <Grid sx={{ m: 1, display: 'flex', alignItems: 'center' }}>
             <Typography sx={{ mr: 1 }}>
               <b>INFO: </b>
