@@ -1,10 +1,11 @@
-import { useEffect, createRef } from 'react'
+import { useEffect, useRef, createRef } from 'react'
 import { Grid } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Paper from '@mui/material/Paper'
 import { axiosInstance } from 'app/api/axios'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
+import { BilboMDJob } from 'types/interfaces'
 import { createPluginUI } from 'molstar/lib/mol-plugin-ui'
 import { DefaultPluginUISpec, PluginUISpec } from 'molstar/lib/mol-plugin-ui/spec'
 import { PluginLayoutControlsDisplay } from 'molstar/lib/mol-plugin/layout'
@@ -14,7 +15,8 @@ import { PluginSpec } from 'molstar/lib/mol-plugin/spec'
 import { PluginBehaviors } from 'molstar/lib/mol-plugin/behavior'
 import { renderReact18 } from 'molstar/lib/mol-plugin-ui/react18'
 import { PluginUIContext } from 'molstar/lib/mol-plugin-ui/context'
-// import 'molstar/lib/mol-plugin-ui/skin/dark.scss'
+import { ShowButtons, ViewportComponent } from './Viewport'
+import { BuiltInTrajectoryFormat } from 'molstar/lib/mol-plugin-state/formats/trajectory'
 import 'molstar/lib/mol-plugin-ui/skin/light.scss'
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -29,15 +31,26 @@ declare global {
   }
 }
 
+type LoadParams = {
+  url: string
+  format: BuiltInTrajectoryFormat
+  fileName: string
+  isBinary?: boolean
+  assemblyId?: string
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type PDBsToLoad = LoadParams[]
+
 const DefaultViewerOptions = {
   extensions: ObjectKeys({}),
   layoutIsExpanded: true,
-  layoutShowControls: true,
-  layoutShowRemoteState: true,
+  layoutShowControls: false,
+  layoutShowRemoteState: false,
   layoutControlsDisplay: 'reactive' as PluginLayoutControlsDisplay,
-  layoutShowSequence: true,
-  layoutShowLog: true,
-  layoutShowLeftPanel: true,
+  layoutShowSequence: false,
+  layoutShowLog: false,
+  layoutShowLeftPanel: false,
 
   viewportShowExpand: PluginConfig.Viewport.ShowExpand.defaultValue,
   viewportShowControls: PluginConfig.Viewport.ShowControls.defaultValue,
@@ -51,17 +64,46 @@ const DefaultViewerOptions = {
 }
 
 interface MolstarViewerProps {
-  jobId: string
-  foxsBest: string
+  job: BilboMDJob
 }
 
-const MolstarViewer = ({ jobId, foxsBest }: MolstarViewerProps) => {
+const MolstarViewer = ({ job }: MolstarViewerProps) => {
   const token = useSelector(selectCurrentToken)
 
-  const fetchPdbData = async (jobId: string, foxsBest: string) => {
-    const pdbFilename = `scoper_combined_${foxsBest}`
+  const createLoadParamsArray = async (job: BilboMDJob): Promise<PDBsToLoad> => {
+    const loadParamsArray: LoadParams[] = []
+
+    // Helper function to generate file names and load parameters
+    const addFilesToLoadParams = (numEnsembles: number) => {
+      for (let i = 1; i <= numEnsembles; i++) {
+        const fileName = `ensemble_size_${i}_model.pdb`
+        loadParamsArray.push({
+          url: `/jobs/${job.mongo.id}/results/${fileName}`,
+          format: 'pdb',
+          fileName: fileName
+        })
+      }
+    }
+
+    if (job.mongo.__t === 'BilboMd' && job.classic?.numEnsembles) {
+      addFilesToLoadParams(job.classic.numEnsembles)
+    } else if (job.mongo.__t === 'BilboMdAuto' && job.auto?.numEnsembles) {
+      addFilesToLoadParams(job.auto.numEnsembles)
+    } else if (job.mongo.__t === 'BilboMdScoper' && job.scoper?.foxsTopFile) {
+      const pdbFilename = `scoper_combined_${job.scoper.foxsTopFile}`
+      loadParamsArray.push({
+        url: `/jobs/${job.mongo.id}/results/${pdbFilename}`,
+        format: 'pdb',
+        fileName: pdbFilename
+      })
+    }
+
+    return loadParamsArray
+  }
+
+  const fetchPdbData = async (url: string) => {
     try {
-      const response = await axiosInstance.get(`jobs/${jobId}/results/${pdbFilename}`, {
+      const response = await axiosInstance.get(url, {
         responseType: 'text',
         headers: {
           Authorization: `Bearer ${token}`
@@ -77,7 +119,15 @@ const MolstarViewer = ({ jobId, foxsBest }: MolstarViewerProps) => {
 
   const parent = createRef<HTMLDivElement>()
 
+  // Attempt to prevent React Strictmode from loading molstar twice in dev mode.
+  const hasRun = useRef(false)
+
   useEffect(() => {
+    if (hasRun.current) {
+      return
+    }
+    hasRun.current = true
+    const showButtons = true
     async function init() {
       const o = {
         ...DefaultViewerOptions,
@@ -85,15 +135,15 @@ const MolstarViewer = ({ jobId, foxsBest }: MolstarViewerProps) => {
           layoutIsExpanded: false,
           layoutShowControls: false,
           layoutShowRemoteState: false,
-          layoutShowSequence: true,
+          layoutShowSequence: false,
           layoutShowLog: false,
-          layoutShowLeftPanel: true,
+          layoutShowLeftPanel: false,
 
           viewportShowExpand: false,
           viewportShowControls: true,
-          viewportShowSettings: true,
+          viewportShowSettings: false,
           viewportShowSelectionMode: false,
-          viewportShowAnimation: true
+          viewportShowAnimation: false
         }
       }
       const defaultSpec = DefaultPluginUISpec()
@@ -127,10 +177,10 @@ const MolstarViewer = ({ jobId, foxsBest }: MolstarViewerProps) => {
             bottom: o.layoutShowLog ? undefined : 'none',
             left: o.layoutShowLeftPanel ? undefined : 'none'
           },
-          remoteState: o.layoutShowRemoteState ? 'default' : 'none'
-          // viewport: {
-          //   view: ViewportComponent
-          // }
+          remoteState: o.layoutShowRemoteState ? 'default' : 'none',
+          viewport: {
+            view: ViewportComponent
+          }
         },
         config: [
           [PluginConfig.Viewport.ShowExpand, o.viewportShowExpand],
@@ -143,7 +193,8 @@ const MolstarViewer = ({ jobId, foxsBest }: MolstarViewerProps) => {
           [PluginConfig.VolumeStreaming.DefaultServer, o.volumeStreamingServer],
           [PluginConfig.Download.DefaultPdbProvider, o.pdbProvider],
           [PluginConfig.Download.DefaultEmdbProvider, o.emdbProvider],
-          [PluginConfig.item('showButtons', true), true]
+          // [PluginConfig.item('showButtons', true), true]
+          [ShowButtons, showButtons]
         ]
       }
 
@@ -152,30 +203,43 @@ const MolstarViewer = ({ jobId, foxsBest }: MolstarViewerProps) => {
         spec,
         render: renderReact18
       })
+      const loadParamsArray = await createLoadParamsArray(job)
 
-      const pdbData = await fetchPdbData(jobId, foxsBest)
+      for (const { url, format, fileName } of loadParamsArray) {
+        const pdbData = await fetchPdbData(url)
+        const data = await window.molstar.builders.data.rawData({
+          data: pdbData,
+          label: fileName
+        })
 
-      const data = await window.molstar.builders.data.rawData({ data: pdbData })
+        const trajectory = await window.molstar.builders.structure.parseTrajectory(
+          data,
+          format
+        )
 
-      const trajectory = await window.molstar.builders.structure.parseTrajectory(
-        data,
-        'pdb'
-      )
-      const model = await window.molstar.builders.structure.createModel(trajectory)
-      const struct = await window.molstar.builders.structure.createStructure(model)
-      await window.molstar.builders.structure.representation.applyPreset(
-        struct,
-        'illustrative'
-      )
-      // await window.molstar.builders.structure.hierarchy.applyPreset(trajectory, 'default')
+        const model = await window.molstar.builders.structure.createModel(trajectory)
+
+        const struct = await window.molstar.builders.structure.createStructure(model)
+
+        await window.molstar.builders.structure.representation.addRepresentation(struct, {
+          type: 'ball-and-stick',
+          color: 'secondary-structure',
+          size: 'uniform',
+          sizeParams: { value: 3.33 },
+          typeParams: { aromaticBonds: true }
+        })
+      }
     }
+
     init()
+
     return () => {
       window.molstar?.dispose()
       window.molstar = undefined
+      hasRun.current = false
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [jobId, foxsBest])
+  }, [])
 
   return (
     <Item>
