@@ -15,18 +15,16 @@ const BilboMDScoperStep = ({ stepName, stepStatus }: BilboMDScoperStepProps) => 
   const getTooltipMessage = (stepName) => {
     if (stepName === 'reduce') {
       return 'In this step Hydrogen atoms are added to your RNA molecule.'
-    } else if (stepName === 'autorg') {
-      return 'In this step we use BioXTAS to determine the Radius of gyration for your SAXS data.'
-    } else if (stepName === 'minimize') {
-      return 'In this step we use CHARMM minimize the relax the model geometry.'
-    } else if (stepName === 'heat') {
-      return 'In this step we use CHARMM to heat and then cool your model.'
-    } else if (stepName === 'md') {
-      return 'In this step we use CHARMM molecular dynamics to generate possible model conformations.'
+    } else if (stepName === 'rnaview') {
+      return 'In this step we use RNAView to determine the basepairs in your RNA molecule.'
+    } else if (stepName === 'kgs') {
+      return 'In this step we use run KGS (Kino-Geometric Sampling) to generate an ensemble of 1000 possible conformations of your RNA molecule.'
     } else if (stepName === 'foxs') {
-      return 'In this step we use FoXS to calculate SAXS scattering curves from MD models.'
+      return 'In this step we use FoXS to calculate theoretical SAXS scattering curves from each KGS model.'
+    } else if (stepName === 'IonNet') {
+      return 'In this step we use the IonNet nueral network to create predictions of Mg ion locations for the best scoring KGS model.'
     } else if (stepName === 'multifoxs') {
-      return 'In this step we use MultiFoXS to determine the best FoXS curves to match your experimental SAXS data.'
+      return 'In this step we use MultiFoXS to determine the best constellation of Mg ions and RNA that match your experimental SAXS data.'
     } else if (stepName === 'results') {
       return 'In this step we are gathering the results together and creating a file for you to download.'
     } else if (stepName === 'email') {
