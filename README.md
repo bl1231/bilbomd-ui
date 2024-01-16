@@ -51,6 +51,8 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 1.4.2
+  - Improvements to the Molstar viewer.
 - 1.4.1
   - Forgot to merge the feature brnach... oops.
   - Now we should have a Molstar viewer.
