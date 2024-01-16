@@ -36,7 +36,7 @@ type LoadParams = {
   format: BuiltInTrajectoryFormat
   fileName: string
   isBinary?: boolean
-  assemblyId?: string
+  assemblyId: number
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -77,11 +77,16 @@ const MolstarViewer = ({ job }: MolstarViewerProps) => {
     const addFilesToLoadParams = (numEnsembles: number) => {
       for (let i = 1; i <= numEnsembles; i++) {
         const fileName = `ensemble_size_${i}_model.pdb`
-        loadParamsArray.push({
-          url: `/jobs/${job.mongo.id}/results/${fileName}`,
-          format: 'pdb',
-          fileName: fileName
-        })
+
+        // Add LoadParams for each assembly up to the current ensemble number
+        for (let assemblyId = 1; assemblyId <= i; assemblyId++) {
+          loadParamsArray.push({
+            url: `/jobs/${job.mongo.id}/results/${fileName}`,
+            format: 'pdb',
+            fileName: fileName,
+            assemblyId: assemblyId
+          })
+        }
       }
     }
 
@@ -94,7 +99,8 @@ const MolstarViewer = ({ job }: MolstarViewerProps) => {
       loadParamsArray.push({
         url: `/jobs/${job.mongo.id}/results/${pdbFilename}`,
         format: 'pdb',
-        fileName: pdbFilename
+        fileName: pdbFilename,
+        assemblyId: 1
       })
     }
 
@@ -133,11 +139,11 @@ const MolstarViewer = ({ job }: MolstarViewerProps) => {
         ...DefaultViewerOptions,
         ...{
           layoutIsExpanded: false,
-          layoutShowControls: false,
+          layoutShowControls: true,
           layoutShowRemoteState: false,
           layoutShowSequence: false,
           layoutShowLog: false,
-          layoutShowLeftPanel: false,
+          layoutShowLeftPanel: true,
 
           viewportShowExpand: false,
           viewportShowControls: true,
@@ -205,7 +211,7 @@ const MolstarViewer = ({ job }: MolstarViewerProps) => {
       })
       const loadParamsArray = await createLoadParamsArray(job)
 
-      for (const { url, format, fileName } of loadParamsArray) {
+      for (const { url, format, fileName, assemblyId } of loadParamsArray) {
         const pdbData = await fetchPdbData(url)
         const data = await window.molstar.builders.data.rawData({
           data: pdbData,
@@ -217,16 +223,17 @@ const MolstarViewer = ({ job }: MolstarViewerProps) => {
           format
         )
 
-        const model = await window.molstar.builders.structure.createModel(trajectory)
+        const model = await window.molstar.builders.structure.createModel(trajectory, {
+          modelIndex: assemblyId
+        })
 
         const struct = await window.molstar.builders.structure.createStructure(model)
 
         await window.molstar.builders.structure.representation.addRepresentation(struct, {
-          type: 'ball-and-stick',
+          type: 'cartoon',
           color: 'secondary-structure',
           size: 'uniform',
-          sizeParams: { value: 3.33 },
-          typeParams: { aromaticBonds: true }
+          sizeParams: { value: 1.0 }
         })
       }
     }
