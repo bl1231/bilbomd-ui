@@ -40,9 +40,9 @@ const SingleJobPage = () => {
     refetchOnMountOrArgChange: true
   })
 
-  if (process.env.NODE_ENV === 'development') {
-    console.log('SingleJobPage job -->', job)
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   console.log('SingleJobPage job -->', job)
+  // }
 
   if (isLoading) {
     return <PulseLoader color={'#FFF'} />
@@ -157,6 +157,15 @@ const SingleJobPage = () => {
         {job.mongo.status === 'Completed' && (
           <Grid item xs={12}>
             <HeaderBox sx={{ py: '6px' }}>
+              <Typography>Molstar Viewer</Typography>
+            </HeaderBox>
+            <MolstarViewer job={job} />
+          </Grid>
+        )}
+
+        {job.mongo.status === 'Completed' && (
+          <Grid item xs={12}>
+            <HeaderBox sx={{ py: '6px' }}>
               <Typography>Results</Typography>
             </HeaderBox>
             <Item>
@@ -177,15 +186,6 @@ const SingleJobPage = () => {
                 will contains your original files plus some output files from Scoper.
               </Typography>
             </Item>
-          </Grid>
-        )}
-
-        {job.mongo.status === 'Completed' && job.scoper && (
-          <Grid item xs={12}>
-            <HeaderBox sx={{ py: '6px' }}>
-              <Typography>Molstar Viewer</Typography>
-            </HeaderBox>
-            <MolstarViewer jobId={job.mongo.id} foxsBest={job.scoper.foxsTopFile} />
           </Grid>
         )}
 

@@ -15,7 +15,13 @@ interface BilboMDStepsProps {
 }
 
 const BilboMDSteps = ({ job }: BilboMDStepsProps) => {
-  const stepsToHide = ['reduce', 'rnaview', 'kgs', 'foxs', 'IonNet', 'multifoxs']
+  let stepsToHide: string[] = []
+  if (job.mongo.__t === 'BilboMdScoper') {
+    stepsToHide = ['reduce', 'rnaview', 'kgs', 'IonNet', 'foxs', 'multifoxs']
+  } else {
+    stepsToHide = ['reduce', 'rnaview', 'kgs', 'IonNet']
+  }
+
   const { bilbomdStep } = job.bullmq
   // Check if bilbomdStep is defined and not null before using Object.entries
   if (bilbomdStep && typeof bilbomdStep === 'object') {
