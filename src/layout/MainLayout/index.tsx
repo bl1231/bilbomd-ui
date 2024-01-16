@@ -55,7 +55,7 @@ export default function ClippedDrawer() {
       roles: ['user', 'manager']
     },
     {
-      text: 'BilboMD Scoper',
+      text: 'Scoper',
       icon: <AddCircleOutlineOutlined color="secondary" />,
       path: '/dashboard/jobs/scoper',
       onclick: () => navigate('dashboard/jobs/scoper'),
