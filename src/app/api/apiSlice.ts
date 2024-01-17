@@ -52,6 +52,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 // initialize an empty api service that we'll inject endpoints into later as needed
 export const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Job', 'User'],
+  tagTypes: ['Job', 'User', 'FoxsAnalysis'],
   endpoints: () => ({})
 })
