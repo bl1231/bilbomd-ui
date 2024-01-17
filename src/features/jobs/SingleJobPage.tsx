@@ -155,7 +155,7 @@ const SingleJobPage = () => {
 
         <JobDBDetails job={job} />
 
-        {job.scoper && id && (
+        {job.mongo.status === 'Completed' && job.scoper && id && (
           <Grid item xs={12}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Scoper FoXS Analysis</Typography>

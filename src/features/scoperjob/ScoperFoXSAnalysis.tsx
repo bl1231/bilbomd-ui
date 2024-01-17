@@ -7,8 +7,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  ReferenceLine,
-  Label
+  ReferenceLine
 } from 'recharts'
 import { Grid, Typography } from '@mui/material'
 import Paper from '@mui/material/Paper'
@@ -27,6 +26,8 @@ interface ScoperFoXSAnalysisProps {
 
 interface CustomChartLabelProps {
   chisq: number
+  c1: number
+  c2: number
   x: number
   y: number
 }
@@ -48,27 +49,71 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   const scopData = data[1].data
   const origChiSq = data[0].chisq
   const scopChiSq = data[1].chisq
+  const origC1 = data[0].c1
+  const scopC1 = data[1].c1
+  const origC2 = data[0].c2
+  const scopC2 = data[1].c2
 
+  //
+  const trimData = (data) =>
+    data.map((item) => ({
+      q: parseFloat(item.q.toFixed(3)),
+      exp_intensity: parseFloat(item.exp_intensity.toFixed(3)),
+      model_intensity: parseFloat(item.model_intensity.toFixed(3)),
+      error: parseFloat(item.error.toFixed(3))
+    }))
+  const origDataTrimmed = trimData(origData)
+  const scopDataTrimmed = trimData(scopData)
   // Calculate residuals
   const calculateResiduals = (dataPoints) => {
     return dataPoints.map((item) => ({
-      q: item.q,
-      res: (item.exp_intensity - item.model_intensity) / item.error
+      q: parseFloat(item.q.toFixed(3)), // Adjust as needed
+      res: parseFloat(
+        ((item.exp_intensity - item.model_intensity) / item.error).toFixed(3)
+      ) // Adjust as needed
     }))
   }
+
   const origResiduals = calculateResiduals(data[0].data)
   const scopResiduals = calculateResiduals(data[1].data)
 
-  // Define label positions (modify these values based on your chart's layout)
-  const labelXPosition = 80 // X position of the label
+  // Define a min/max values for the residuals plots
+  const maxYAxis = Math.max(...origResiduals.map((r) => Math.abs(r.res)))
+  const minYAxis = -maxYAxis
+  console.log(minYAxis, maxYAxis)
+
+  // Define label positions for the Chi^2 and C1/C2 values
+  const labelXPosition = 75 // X position of the label
   const labelYPosition = 20 // Y position of the label
 
   // eslint-disable-next-line react/prop-types
-  const ChiSquaredChartLabel = ({ chisq, x, y }: CustomChartLabelProps) => {
+  const ChiSquaredChartLabel = ({ chisq, c1, c2, x, y }: CustomChartLabelProps) => {
     return (
-      <text x={x} y={y} fill="black" fontSize={14}>
-        Chi²: {chisq.toFixed(2)}
-      </text>
+      <>
+        <text x={x} y={y} fill="black" fontSize={13}>
+          Chi²: {chisq.toFixed(2)}
+        </text>
+        <text x={x} y={y + 16} fill="black" fontSize={13}>
+          C
+          <tspan dy="3" fontSize="10">
+            1
+          </tspan>
+          :{' '}
+          <tspan dy="-3" fontSize="13">
+            {c1}
+          </tspan>
+        </text>
+        <text x={x} y={y + 32} fill="black" fontSize={13}>
+          C
+          <tspan dy="3" fontSize="10">
+            2
+          </tspan>
+          :{' '}
+          <tspan dy="-3" fontSize="13">
+            {c2}
+          </tspan>
+        </text>
+      </>
     )
   }
 
@@ -80,7 +125,7 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
             Original Model - <strong>{origPDBFile}</strong>
           </Typography>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={origData}>
+            <LineChart data={origDataTrimmed}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="q" scale="linear" type="number" />
               <YAxis yAxisId="left" scale="log" type="number" domain={['auto', 'auto']} />
@@ -106,10 +151,9 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={origResiduals}>
               <XAxis dataKey="q" scale="linear" type="number" />
-              <YAxis />
+              <YAxis domain={[minYAxis, maxYAxis]} />
               <Tooltip />
               <Legend />
-              <Label value="1.2345" position="bottom" />
               <Line type="monotone" dataKey="res" name="Residuals" stroke="#82ca9d" />
               <ReferenceLine
                 y={0}
@@ -117,6 +161,8 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
                 label={
                   <ChiSquaredChartLabel
                     chisq={origChiSq}
+                    c1={origC1}
+                    c2={origC2}
                     x={labelXPosition}
                     y={labelYPosition}
                   />
@@ -130,7 +176,7 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
             Scoper Model - <strong>{scopPDBFile}</strong>
           </Typography>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={scopData}>
+            <LineChart data={scopDataTrimmed}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="q" scale="linear" type="number" />
               <YAxis yAxisId="left" scale="log" type="number" domain={['auto', 'auto']} />
@@ -156,7 +202,7 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={scopResiduals}>
               <XAxis dataKey="q" scale="linear" type="number" />
-              <YAxis />
+              <YAxis domain={[minYAxis, maxYAxis]} />
               <Tooltip />
               <Legend />
               <Line type="monotone" dataKey="res" name="Residuals" stroke="#82ca9d" />
@@ -166,6 +212,8 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
                 label={
                   <ChiSquaredChartLabel
                     chisq={scopChiSq}
+                    c1={scopC1}
+                    c2={scopC2}
                     x={labelXPosition}
                     y={labelYPosition}
                   />
