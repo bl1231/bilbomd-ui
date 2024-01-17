@@ -17,6 +17,7 @@ import JobError from './JobError'
 import JobDBDetails from './JobDBDetails'
 import MolstarViewer from 'features/molstar/Viewer'
 import { BilboMDScoperTable } from './BilboMDScoperTable'
+import ScoperFoXSAnalysis from 'features/scoperjob/ScoperFoXSAnalysis'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -153,6 +154,15 @@ const SingleJobPage = () => {
         )}
 
         <JobDBDetails job={job} />
+
+        {job.scoper && id && (
+          <Grid item xs={12}>
+            <HeaderBox sx={{ py: '6px' }}>
+              <Typography>Scoper FoXS Analysis</Typography>
+            </HeaderBox>
+            <ScoperFoXSAnalysis id={id} />
+          </Grid>
+        )}
 
         {job.mongo.status === 'Completed' && (
           <Grid item xs={12}>
