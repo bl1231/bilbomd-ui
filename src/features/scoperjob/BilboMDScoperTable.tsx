@@ -14,13 +14,13 @@ interface BilboMDScoperTableProps {
 
 const BilboMDScoperTable = ({ scoper }: BilboMDScoperTableProps) => {
   const rows = [
-    { key: 'KGS Conformations', value: scoper.kgsConformations },
-    { key: 'KGS Files', value: scoper.kgsFiles },
-    { key: 'FoXS Top File', value: scoper.foxsTopFile },
-    { key: 'FoXS Top Score', value: scoper.foxsTopScore },
-    { key: 'IonNet threshold', value: scoper.predictionThreshold },
-    { key: 'Number of predicted Mg ions', value: scoper.multifoxsEnsembleSize },
-    { key: 'MultiFoXS Best Chi2 Score', value: scoper.multifoxsScore }
+    { key: 'KGS Number of Conformations to Generate', value: scoper.kgsConformations },
+    { key: 'KGS Progress', value: scoper.kgsFiles },
+    // { key: 'FoXS Top File', value: scoper.foxsTopFile },
+    // { key: 'FoXS Top Score', value: scoper.foxsTopScore },
+    // { key: 'IonNet threshold', value: scoper.predictionThreshold },
+    { key: 'Number of predicted Mg ions', value: scoper.multifoxsEnsembleSize }
+    // { key: 'MultiFoXS Best Chi2 Score', value: scoper.multifoxsScore }
   ]
 
   return (
