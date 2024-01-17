@@ -116,6 +116,12 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
     [scopData, foxsData]
   )
 
+  // Define a Memoized calculation for min and max Y axis values
+  const { minYAxis, maxYAxis } = useMemo(() => {
+    const maxY = Math.max(...origResiduals.map((r) => Math.abs(r.res)))
+    return { minYAxis: -maxY, maxYAxis: maxY }
+  }, [origResiduals])
+
   // Handle loading and error states
   if (isLoading) return <div>Loading...</div>
   if (isError || !data) return <div>Error loading data</div>
@@ -129,11 +135,6 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   const scopC1 = foxsData[1].c1
   const origC2 = foxsData[0].c2
   const scopC2 = foxsData[1].c2
-
-  // Define a min/max values for the residuals plots
-  const maxYAxis = Math.max(...origResiduals.map((r) => Math.abs(r.res)))
-  const minYAxis = -maxYAxis
-  console.log(minYAxis, maxYAxis)
 
   // Define label positions for the Chi^2 and C1/C2 values
   const labelXPosition = 75 // X position of the label
