@@ -51,6 +51,16 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
       },
       providesTags: (result, error, id) => [{ type: 'Job', id }]
     }),
+    getFoxsAnalysisById: builder.query({
+      query: (id) => ({
+        url: `/jobs/${id}/results/foxs`,
+        method: 'GET',
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError
+        }
+      }),
+      providesTags: (result, error, id) => [{ type: 'FoxsAnalysis', id }]
+    }),
     addNewJob: builder.mutation({
       query: (newJob) => ({
         url: '/jobs',
@@ -99,6 +109,7 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetJobsQuery,
   useGetJobByIdQuery,
+  useGetFoxsAnalysisByIdQuery,
   useAddNewJobMutation,
   useUpdateJobMutation,
   useDeleteJobMutation,
