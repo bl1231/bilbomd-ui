@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import {
   LineChart,
   Line,
@@ -20,6 +21,21 @@ const Item = styled(Paper)(({ theme }) => ({
   borderTopRightRadius: 0
 }))
 
+interface DataPoint {
+  q: number
+  exp_intensity: number
+  model_intensity: number
+  error: number
+}
+
+interface FoxsData {
+  filename: string
+  chisq: number
+  c1: number
+  c2: number
+  data: DataPoint[]
+}
+
 interface ScoperFoXSAnalysisProps {
   id: string
 }
@@ -32,6 +48,51 @@ interface CustomChartLabelProps {
   y: number
 }
 
+const trimData = (data: DataPoint[]): DataPoint[] =>
+  data.map((item) => ({
+    q: parseFloat(item.q.toFixed(3)),
+    exp_intensity: parseFloat(item.exp_intensity.toFixed(3)),
+    model_intensity: parseFloat(item.model_intensity.toFixed(3)),
+    error: parseFloat(item.error.toFixed(3))
+  }))
+
+const calculateResiduals = (dataPoints: DataPoint[]) => {
+  return dataPoints.map((item) => ({
+    q: parseFloat(item.q.toFixed(3)), // Adjust as needed
+    res: parseFloat(((item.exp_intensity - item.model_intensity) / item.error).toFixed(3)) // Adjust as needed
+  }))
+}
+
+const ChiSquaredChartLabel = ({ chisq, c1, c2, x, y }: CustomChartLabelProps) => {
+  return (
+    <>
+      <text x={x} y={y} fill="black" fontSize={14}>
+        Chi²: {chisq.toFixed(2)}
+      </text>
+      <text x={x} y={y + 18} fill="black" fontSize={14}>
+        C
+        <tspan dy="3" fontSize={10}>
+          1
+        </tspan>
+        :{' '}
+        <tspan dy="-3" fontSize={14}>
+          {c1}
+        </tspan>
+      </text>
+      <text x={x} y={y + 36} fill="black" fontSize={14}>
+        C
+        <tspan dy="3" fontSize={10}>
+          2
+        </tspan>
+        :{' '}
+        <tspan dy="-3" fontSize={14}>
+          {c2}
+        </tspan>
+      </text>
+    </>
+  )
+}
+
 const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   const { data, isLoading, isError } = useGetFoxsAnalysisByIdQuery(id, {
     pollingInterval: 30000,
@@ -39,43 +100,35 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
     refetchOnMountOrArgChange: true
   })
 
+  const foxsData: FoxsData[] = data as FoxsData[]
+
+  // Trim the original data to reduce the number of digits after the decimal point
+  const origData = useMemo(() => (foxsData ? trimData(foxsData[0].data) : []), [foxsData])
+  const scopData = useMemo(() => (foxsData ? trimData(foxsData[1].data) : []), [foxsData])
+
+  // Calculate residual values for both datasets
+  const origResiduals = useMemo(
+    () => (foxsData ? calculateResiduals(origData) : []),
+    [origData, foxsData]
+  )
+  const scopResiduals = useMemo(
+    () => (foxsData ? calculateResiduals(scopData) : []),
+    [scopData, foxsData]
+  )
+
   // Handle loading and error states
   if (isLoading) return <div>Loading...</div>
   if (isError || !data) return <div>Error loading data</div>
 
-  const origPDBFile = data[0].filename
-  const scopPDBFile = data[1].filename
-  const origData = data[0].data
-  const scopData = data[1].data
-  const origChiSq = data[0].chisq
-  const scopChiSq = data[1].chisq
-  const origC1 = data[0].c1
-  const scopC1 = data[1].c1
-  const origC2 = data[0].c2
-  const scopC2 = data[1].c2
-
-  //
-  const trimData = (data) =>
-    data.map((item) => ({
-      q: parseFloat(item.q.toFixed(3)),
-      exp_intensity: parseFloat(item.exp_intensity.toFixed(3)),
-      model_intensity: parseFloat(item.model_intensity.toFixed(3)),
-      error: parseFloat(item.error.toFixed(3))
-    }))
-  const origDataTrimmed = trimData(origData)
-  const scopDataTrimmed = trimData(scopData)
-  // Calculate residuals
-  const calculateResiduals = (dataPoints) => {
-    return dataPoints.map((item) => ({
-      q: parseFloat(item.q.toFixed(3)), // Adjust as needed
-      res: parseFloat(
-        ((item.exp_intensity - item.model_intensity) / item.error).toFixed(3)
-      ) // Adjust as needed
-    }))
-  }
-
-  const origResiduals = calculateResiduals(data[0].data)
-  const scopResiduals = calculateResiduals(data[1].data)
+  // Pull out the other info for adding info to the FoXS plots
+  const origPDBFile = foxsData[0].filename
+  const scopPDBFile = foxsData[1].filename
+  const origChiSq = foxsData[0].chisq
+  const scopChiSq = foxsData[1].chisq
+  const origC1 = foxsData[0].c1
+  const scopC1 = foxsData[1].c1
+  const origC2 = foxsData[0].c2
+  const scopC2 = foxsData[1].c2
 
   // Define a min/max values for the residuals plots
   const maxYAxis = Math.max(...origResiduals.map((r) => Math.abs(r.res)))
@@ -86,46 +139,15 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   const labelXPosition = 75 // X position of the label
   const labelYPosition = 20 // Y position of the label
 
-  // eslint-disable-next-line react/prop-types
-  const ChiSquaredChartLabel = ({ chisq, c1, c2, x, y }: CustomChartLabelProps) => {
-    return (
-      <>
-        <text x={x} y={y} fill="black" fontSize={13}>
-          Chi²: {chisq.toFixed(2)}
-        </text>
-        <text x={x} y={y + 16} fill="black" fontSize={13}>
-          C
-          <tspan dy="3" fontSize="10">
-            1
-          </tspan>
-          :{' '}
-          <tspan dy="-3" fontSize="13">
-            {c1}
-          </tspan>
-        </text>
-        <text x={x} y={y + 32} fill="black" fontSize={13}>
-          C
-          <tspan dy="3" fontSize="10">
-            2
-          </tspan>
-          :{' '}
-          <tspan dy="-3" fontSize="13">
-            {c2}
-          </tspan>
-        </text>
-      </>
-    )
-  }
-
   return (
     <Item>
       <Grid container spacing={2}>
         <Grid item xs={6}>
-          <Typography>
-            Original Model - <strong>{origPDBFile}</strong>
+          <Typography sx={{ m: 1 }}>
+            Original Model - <strong>{origPDBFile}</strong> - I vs. q
           </Typography>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={origDataTrimmed}>
+            <LineChart data={origData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="q" scale="linear" type="number" />
               <YAxis yAxisId="left" scale="log" type="number" domain={['auto', 'auto']} />
@@ -148,6 +170,9 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
               />
             </LineChart>
           </ResponsiveContainer>
+          <Typography sx={{ m: 1, mt: 3 }}>
+            Original Model - <strong>{origPDBFile}</strong> - residuals
+          </Typography>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={origResiduals}>
               <XAxis dataKey="q" scale="linear" type="number" />
@@ -172,11 +197,11 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
           </ResponsiveContainer>
         </Grid>
         <Grid item xs={6}>
-          <Typography>
-            Scoper Model - <strong>{scopPDBFile}</strong>
+          <Typography sx={{ m: 1 }}>
+            Scoper Model - <strong>{scopPDBFile}</strong> - I vs. q
           </Typography>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={scopDataTrimmed}>
+            <LineChart data={scopData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="q" scale="linear" type="number" />
               <YAxis yAxisId="left" scale="log" type="number" domain={['auto', 'auto']} />
@@ -199,6 +224,9 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
               />
             </LineChart>
           </ResponsiveContainer>
+          <Typography sx={{ m: 1, mt: 3 }}>
+            Scoper Model - <strong>{scopPDBFile}</strong> - residuals
+          </Typography>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={scopResiduals}>
               <XAxis dataKey="q" scale="linear" type="number" />
