@@ -85,7 +85,17 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
               <Tooltip />
               <Legend />
               <Line type="monotone" dataKey="res" name="Residuals" stroke="#82ca9d" />
-              <ReferenceLine y={0} stroke="black" label="Y=0" />
+              <ReferenceLine
+                y={0}
+                stroke="black"
+                label={{
+                  value: 'Y=0',
+                  position: 'insideTopLeft',
+                  fill: 'grey',
+                  fontSize: 12,
+                  fontWeight: 'bold'
+                }}
+              />
             </LineChart>
           </ResponsiveContainer>
         </Grid>
@@ -122,7 +132,17 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
               <Tooltip />
               <Legend />
               <Line type="monotone" dataKey="res" name="Residuals" stroke="#82ca9d" />
-              <ReferenceLine y={0} stroke="black" label="Y=0" />
+              <ReferenceLine
+                y={0}
+                stroke="black"
+                label={{
+                  value: 'Y=0',
+                  position: 'insideTopLeft',
+                  fill: 'grey',
+                  fontSize: 12,
+                  fontWeight: 'bold'
+                }}
+              />
             </LineChart>
           </ResponsiveContainer>
         </Grid>
