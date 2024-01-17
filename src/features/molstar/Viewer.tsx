@@ -139,7 +139,7 @@ const MolstarViewer = ({ job }: MolstarViewerProps) => {
         ...DefaultViewerOptions,
         ...{
           layoutIsExpanded: false,
-          layoutShowControls: true,
+          layoutShowControls: false,
           layoutShowRemoteState: false,
           layoutShowSequence: false,
           layoutShowLog: false,
