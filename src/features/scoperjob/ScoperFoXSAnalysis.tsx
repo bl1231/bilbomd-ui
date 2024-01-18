@@ -31,17 +31,19 @@ interface ScoperFoXSAnalysisProps {
 }
 
 const trimData = (data: DataPoint[]): DataPoint[] =>
-  data.map((item) => ({
-    q: parseFloat(item.q.toFixed(3)),
-    exp_intensity: parseFloat(item.exp_intensity.toFixed(3)),
-    model_intensity: parseFloat(item.model_intensity.toFixed(3)),
-    error: parseFloat(item.error.toFixed(3))
-  }))
+  data
+    .filter((item) => item.exp_intensity > 0 && item.model_intensity > 0)
+    .map((item) => ({
+      q: parseFloat(item.q.toFixed(4)),
+      exp_intensity: parseFloat(item.exp_intensity.toFixed(4)),
+      model_intensity: parseFloat(item.model_intensity.toFixed(4)),
+      error: parseFloat(item.error.toFixed(4))
+    }))
 
 const calculateResiduals = (dataPoints: DataPoint[]) => {
   return dataPoints.map((item) => ({
-    q: parseFloat(item.q.toFixed(3)), // Adjust as needed
-    res: parseFloat(((item.exp_intensity - item.model_intensity) / item.error).toFixed(3)) // Adjust as needed
+    q: parseFloat(item.q.toFixed(4)),
+    res: parseFloat(((item.exp_intensity - item.model_intensity) / item.error).toFixed(4))
   }))
 }
 
@@ -53,6 +55,7 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   })
 
   const foxsData: FoxsData[] = data as FoxsData[]
+  console.log('foxsData --->', foxsData)
 
   // Trim the original data to reduce the number of digits after the decimal point
   const origData = useMemo(() => (foxsData ? trimData(foxsData[0].data) : []), [foxsData])
@@ -68,6 +71,7 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
     [scopData, foxsData]
   )
 
+  console.log('origResiduals --->', origResiduals)
   // Define a Memoized calculation for min and max Y axis values
   const { minYAxis, maxYAxis } = useMemo(() => {
     const maxY = Math.max(...origResiduals.map((r) => Math.abs(r.res)))
