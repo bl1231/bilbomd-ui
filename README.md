@@ -51,6 +51,8 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 1.5.1
+  - Refactor and improve the Scoper job details page
 - 1.5.0
   - Add `rechart` dependency for displaying `FoXS` plots.
   - Display `FoXS` plots and Chi^2 values for Scoper results
