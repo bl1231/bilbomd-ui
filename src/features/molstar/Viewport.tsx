@@ -141,7 +141,7 @@ export const StructurePreset = StructureRepresentationPresetProvider({
         {
           type: 'cartoon',
           typeParams: { ...typeParams, material: CustomMaterial },
-          color: 'chain-id',
+          color: 'structure-index',
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           colorParams: { palette: (plugin.customState as any).colorPalette }
         },

@@ -11,6 +11,7 @@ import { DefaultPluginUISpec, PluginUISpec } from 'molstar/lib/mol-plugin-ui/spe
 import { PluginLayoutControlsDisplay } from 'molstar/lib/mol-plugin/layout'
 import { ObjectKeys } from 'molstar/lib/mol-util/type-helpers'
 import { PluginConfig } from 'molstar/lib/mol-plugin/config'
+// import { ColorListName } from 'molstar/lib/mol-util/color/lists'
 import { PluginSpec } from 'molstar/lib/mol-plugin/spec'
 import { PluginBehaviors } from 'molstar/lib/mol-plugin/behavior'
 import { renderReact18 } from 'molstar/lib/mol-plugin-ui/react18'
@@ -70,41 +71,46 @@ interface MolstarViewerProps {
 const MolstarViewer = ({ job }: MolstarViewerProps) => {
   const token = useSelector(selectCurrentToken)
 
-  const createLoadParamsArray = async (job: BilboMDJob): Promise<PDBsToLoad> => {
-    const loadParamsArray: LoadParams[] = []
+  const createLoadParamsArray = async (job: BilboMDJob): Promise<PDBsToLoad[]> => {
+    const loadParamsMap = new Map<string, LoadParams[]>()
 
-    // Helper function to generate file names and load parameters
-    const addFilesToLoadParams = (numEnsembles: number) => {
-      for (let i = 1; i <= numEnsembles; i++) {
-        const fileName = `ensemble_size_${i}_model.pdb`
+    // Helper function to add LoadParams to the Map
+    const addFilesToLoadParams = (fileName: string, numModels: number) => {
+      let paramsArray = loadParamsMap.get(fileName)
 
-        // Add LoadParams for each assembly up to the current ensemble number
-        for (let assemblyId = 1; assemblyId <= i; assemblyId++) {
-          loadParamsArray.push({
-            url: `/jobs/${job.mongo.id}/results/${fileName}`,
-            format: 'pdb',
-            fileName: fileName,
-            assemblyId: assemblyId
-          })
-        }
+      if (!paramsArray) {
+        paramsArray = []
+        loadParamsMap.set(fileName, paramsArray)
+      }
+
+      for (let assemblyId = 1; assemblyId <= numModels; assemblyId++) {
+        paramsArray.push({
+          url: `/jobs/${job.mongo.id}/results/${fileName}`,
+          format: 'pdb',
+          fileName: fileName,
+          assemblyId: assemblyId
+        })
       }
     }
 
+    // Adding LoadParams based on job type and number of ensembles
     if (job.mongo.__t === 'BilboMd' && job.classic?.numEnsembles) {
-      addFilesToLoadParams(job.classic.numEnsembles)
+      for (let i = 1; i <= job.classic.numEnsembles; i++) {
+        const fileName = `ensemble_size_${i}_model.pdb`
+        addFilesToLoadParams(fileName, i)
+      }
     } else if (job.mongo.__t === 'BilboMdAuto' && job.auto?.numEnsembles) {
-      addFilesToLoadParams(job.auto.numEnsembles)
+      for (let i = 1; i <= job.auto.numEnsembles; i++) {
+        const fileName = `ensemble_size_${i}_model.pdb`
+        addFilesToLoadParams(fileName, i)
+      }
     } else if (job.mongo.__t === 'BilboMdScoper' && job.scoper?.foxsTopFile) {
       const pdbFilename = `scoper_combined_${job.scoper.foxsTopFile}`
-      loadParamsArray.push({
-        url: `/jobs/${job.mongo.id}/results/${pdbFilename}`,
-        format: 'pdb',
-        fileName: pdbFilename,
-        assemblyId: 1
-      })
+      addFilesToLoadParams(pdbFilename, 1)
     }
 
-    return loadParamsArray
+    // Convert the Map values to an array of arrays
+    return Array.from(loadParamsMap.values())
   }
 
   const fetchPdbData = async (url: string) => {
@@ -115,6 +121,7 @@ const MolstarViewer = ({ job }: MolstarViewerProps) => {
           Authorization: `Bearer ${token}`
         }
       })
+      // console.log('fetch: ', url)
       return response.data
     } catch (error) {
       console.error('Error fetching PDB data:', error)
@@ -134,6 +141,7 @@ const MolstarViewer = ({ job }: MolstarViewerProps) => {
     }
     hasRun.current = true
     const showButtons = true
+
     async function init() {
       const o = {
         ...DefaultViewerOptions,
@@ -209,32 +217,39 @@ const MolstarViewer = ({ job }: MolstarViewerProps) => {
         spec,
         render: renderReact18
       })
+
       const loadParamsArray = await createLoadParamsArray(job)
-
-      for (const { url, format, fileName, assemblyId } of loadParamsArray) {
+      console.log(loadParamsArray)
+      for (const loadParamsGroup of loadParamsArray) {
+        const { url, format, fileName } = loadParamsGroup[0] // All items in group have same url, format, fileName
         const pdbData = await fetchPdbData(url)
-        const data = await window.molstar.builders.data.rawData({
-          data: pdbData,
-          label: fileName
-        })
 
-        const trajectory = await window.molstar.builders.structure.parseTrajectory(
-          data,
-          format
-        )
-
-        const model = await window.molstar.builders.structure.createModel(trajectory, {
-          modelIndex: assemblyId
-        })
-
-        const struct = await window.molstar.builders.structure.createStructure(model)
-
-        await window.molstar.builders.structure.representation.addRepresentation(struct, {
-          type: 'cartoon',
-          color: 'secondary-structure',
-          size: 'uniform',
-          sizeParams: { value: 1.0 }
-        })
+        for (const { assemblyId } of loadParamsGroup) {
+          const data = await window.molstar.builders.data.rawData({
+            data: pdbData,
+            label: fileName
+          })
+          const trajectory = await window.molstar.builders.structure.parseTrajectory(
+            data,
+            format
+          )
+          // console.log('traj: ', trajectory)
+          console.log('create model for assemblyId:', assemblyId)
+          const model = await window.molstar.builders.structure.createModel(trajectory, {
+            modelIndex: assemblyId
+          })
+          const struct = await window.molstar.builders.structure.createStructure(model)
+          // console.log('struct: ', struct)
+          await window.molstar.builders.structure.representation.addRepresentation(
+            struct,
+            {
+              type: 'cartoon',
+              color: 'structure-index',
+              size: 'uniform',
+              sizeParams: { value: 1.0 }
+            }
+          )
+        }
       }
     }
 
