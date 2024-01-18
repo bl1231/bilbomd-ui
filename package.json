@@ -19,7 +19,7 @@
     "@mui/joy": "^5.0.0-beta.22",
     "@mui/lab": "^5.0.0-alpha.160",
     "@mui/material": "^5.15.4",
-    "@mui/system": "^5.15.4",
+    "@mui/system": "^5.15.5",
     "@mui/x-data-grid": "^6.18.7",
     "@rcsb/rcsb-molstar": "^2.9.0",
     "@reduxjs/toolkit": "^2.0.1",
