@@ -55,7 +55,7 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   })
 
   const foxsData: FoxsData[] = data as FoxsData[]
-  console.log('foxsData --->', foxsData)
+  // console.log('foxsData --->', foxsData)
 
   // Trim the original data to reduce the number of digits after the decimal point
   const origData = useMemo(() => (foxsData ? trimData(foxsData[0].data) : []), [foxsData])
@@ -71,7 +71,7 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
     [scopData, foxsData]
   )
 
-  console.log('origResiduals --->', origResiduals)
+  // console.log('origResiduals --->', origResiduals)
   // Define a Memoized calculation for min and max Y axis values
   const { minYAxis, maxYAxis } = useMemo(() => {
     const maxY = Math.max(...origResiduals.map((r) => Math.abs(r.res)))
