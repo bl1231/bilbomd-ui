@@ -219,7 +219,7 @@ const MolstarViewer = ({ job }: MolstarViewerProps) => {
       })
 
       const loadParamsArray = await createLoadParamsArray(job)
-      console.log(loadParamsArray)
+      // console.log(loadParamsArray)
       for (const loadParamsGroup of loadParamsArray) {
         const { url, format, fileName } = loadParamsGroup[0] // All items in group have same url, format, fileName
         const pdbData = await fetchPdbData(url)
@@ -234,7 +234,7 @@ const MolstarViewer = ({ job }: MolstarViewerProps) => {
             format
           )
           // console.log('traj: ', trajectory)
-          console.log('create model for assemblyId:', assemblyId)
+          // console.log('create model for assemblyId:', assemblyId)
           const model = await window.molstar.builders.structure.createModel(trajectory, {
             modelIndex: assemblyId
           })

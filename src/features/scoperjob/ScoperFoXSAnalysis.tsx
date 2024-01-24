@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import FoXSChart from './FoXSChart'
-import { Grid } from '@mui/material'
+import { Alert, AlertTitle, Grid } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import { useGetFoxsAnalysisByIdQuery } from 'features/jobs/jobsApiSlice'
@@ -11,7 +11,7 @@ const Item = styled(Paper)(({ theme }) => ({
   borderTopRightRadius: 0
 }))
 
-interface DataPoint {
+interface FoxsDataPoint {
   q: number
   exp_intensity: number
   model_intensity: number
@@ -23,14 +23,14 @@ interface FoxsData {
   chisq: number
   c1: number
   c2: number
-  data: DataPoint[]
+  data: FoxsDataPoint[]
 }
 
 interface ScoperFoXSAnalysisProps {
   id: string
 }
 
-const trimData = (data: DataPoint[]): DataPoint[] =>
+const prepData = (data: FoxsDataPoint[]): FoxsDataPoint[] =>
   data
     .filter((item) => item.exp_intensity > 0 && item.model_intensity > 0)
     .map((item) => ({
@@ -40,7 +40,7 @@ const trimData = (data: DataPoint[]): DataPoint[] =>
       error: parseFloat(item.error.toFixed(4))
     }))
 
-const calculateResiduals = (dataPoints: DataPoint[]) => {
+const calculateResiduals = (dataPoints: FoxsDataPoint[]) => {
   return dataPoints.map((item) => ({
     q: parseFloat(item.q.toFixed(4)),
     res: parseFloat(((item.exp_intensity - item.model_intensity) / item.error).toFixed(4))
@@ -55,11 +55,11 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   })
 
   const foxsData: FoxsData[] = data as FoxsData[]
-  // console.log('foxsData --->', foxsData)
 
-  // Trim the original data to reduce the number of digits after the decimal point
-  const origData = useMemo(() => (foxsData ? trimData(foxsData[0].data) : []), [foxsData])
-  const scopData = useMemo(() => (foxsData ? trimData(foxsData[1].data) : []), [foxsData])
+  // Prepare original data to reduce the number of digits after the decimal point
+  // and filter out negative values
+  const origData = useMemo(() => (foxsData ? prepData(foxsData[0].data) : []), [foxsData])
+  const scopData = useMemo(() => (foxsData ? prepData(foxsData[1].data) : []), [foxsData])
 
   // Calculate residual values for both datasets
   const origResiduals = useMemo(
@@ -71,7 +71,6 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
     [scopData, foxsData]
   )
 
-  // console.log('origResiduals --->', origResiduals)
   // Define a Memoized calculation for min and max Y axis values
   const { minYAxis, maxYAxis } = useMemo(() => {
     const maxY = Math.max(...origResiduals.map((r) => Math.abs(r.res)))
@@ -80,7 +79,12 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
 
   // Handle loading and error states
   if (isLoading) return <div>Loading...</div>
-  if (isError || !data) return <div>Error loading data</div>
+  if (isError || !data)
+    return (
+      <Alert severity="info" variant="outlined">
+        <AlertTitle>FoXS data is unavailable for this job.</AlertTitle>
+      </Alert>
+    )
 
   // Pull out the other info needed for the FoXS plots
   const origPDBFile = foxsData[0].filename
