@@ -136,7 +136,7 @@ const SingleJobPage = () => {
         {job.bullmq ? (
           <Grid item xs={12}>
             <HeaderBox sx={{ py: '6px' }}>
-              <Typography>BilboMD Steps</Typography>
+              <Typography>Steps</Typography>
             </HeaderBox>
             <BilboMDSteps job={job} />
           </Grid>
