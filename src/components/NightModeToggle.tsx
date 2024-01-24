@@ -5,7 +5,7 @@ import { useThemeContext } from '../themes/ThemeContextProvider'
 
 const NightModeToggle = () => {
   const { mode, toggleColorMode } = useThemeContext()
-  console.log('NightModeToggle mode:', mode)
+  // console.log('NightModeToggle mode:', mode)
   return (
     <Box
       sx={{

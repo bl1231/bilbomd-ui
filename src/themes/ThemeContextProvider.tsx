@@ -18,7 +18,7 @@ export const ThemeContext = createContext<ThemeContextType>({
 
 export const ThemeContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const value = useColorTheme()
-  console.log('ThemeContextProvider', value)
+  // console.log('ThemeContextProvider', value)
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
 
