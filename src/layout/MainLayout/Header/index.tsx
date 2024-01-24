@@ -14,6 +14,7 @@ import { Box } from '@mui/system'
 import useAuth from 'hooks/useAuth'
 import LogOut from 'features/auth/LogOut'
 // import FortIcon from '@mui/icons-material/Fort'
+import NightModeToggle from 'components/NightModeToggle'
 import PersonIcon from '@mui/icons-material/Person'
 import { useNavigate } from 'react-router'
 
@@ -106,7 +107,7 @@ const Header = () => {
             <Typography variant="h5" sx={{ display: { xs: 'none', sm: 'flex' }, ml: 8 }}>
               {time}
             </Typography>
-
+            <NightModeToggle />
             <Typography
               variant="h5"
               sx={{ display: 'flex', flexGrow: '8', justifyContent: 'flex-end', mx: 2 }}
