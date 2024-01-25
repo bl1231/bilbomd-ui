@@ -51,6 +51,8 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 1.6.0
+  - Add ability to toggle between Dark and Light mode.
 - 1.5.1
   - Refactor and improve the Scoper job details page
 - 1.5.0
