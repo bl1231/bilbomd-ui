@@ -6,12 +6,15 @@ import DirectionsRunRoundedIcon from '@mui/icons-material/DirectionsRunRounded'
 import ErrorIcon from '@mui/icons-material/Error'
 import { Chip, Grid } from '@mui/material'
 import Tooltip from '@mui/material/Tooltip'
+// import { useTheme } from '@mui/material/styles'
 
 interface BilboMDStepProps {
   stepName: string
   stepStatus: string
 }
 const BilboMDStep = ({ stepName, stepStatus }: BilboMDStepProps) => {
+  // const theme = useTheme()
+
   const getTooltipMessage = (stepName: string) => {
     if (stepName === 'scoper') {
       return 'In this step we run Scoper. Details are below.'
@@ -46,10 +49,10 @@ const BilboMDStep = ({ stepName, stepStatus }: BilboMDStepProps) => {
               <Chip icon={<RadioButtonUncheckedIcon />} size="small" label={stepName} />
             ) : stepStatus === 'start' ? (
               <Chip
-                icon={<DirectionsRunRoundedIcon />}
+                icon={<DirectionsRunRoundedIcon style={{ color: '#000' }} />}
                 size="small"
                 label={stepName}
-                style={{ backgroundColor: '#fff566' }}
+                style={{ backgroundColor: '#fff566', color: '#000' }}
               />
             ) : stepStatus === 'end' ? (
               <Chip

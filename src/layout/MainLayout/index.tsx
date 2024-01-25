@@ -95,7 +95,7 @@ export default function ClippedDrawer() {
               backgroundColor:
                 location.pathname === item.path
                   ? theme.palette.mode === 'light'
-                    ? '#efefef'
+                    ? theme.palette.grey[200]
                     : theme.palette.grey[600]
                   : null,
               display: item.roles.includes('admin') && !isAdmin ? 'none' : 'flex'
