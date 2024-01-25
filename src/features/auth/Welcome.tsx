@@ -35,16 +35,50 @@ const Welcome = () => {
           X-ray scattering.
         </b>{' '}
         Gen Physiol Biophys. 2009 Jun;28(2):174-89. doi: 10.4149/gpb_2009_02_174. PMID:{' '}
-        <Link href="https://pubmed.ncbi.nlm.nih.gov/19592714/">19592714</Link>; PMCID:
-        PMC3773563.
+        <Link
+          href="https://pubmed.ncbi.nlm.nih.gov/19592714/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          19592714
+        </Link>
+        ; PMCID: PMC3773563.
       </Typography>
 
       <Typography>
-        <b>BilboMD</b> makes use of <Link href="https://academiccharmm.org/">CHARMM</Link>
-        , <Link href="https://www.charmm-gui.org/">CHARMM-GUI</Link>,{' '}
-        <Link href="https://modbase.compbio.ucsf.edu/foxs/about">FoXS</Link>, and{' '}
-        <Link href="https://modbase.compbio.ucsf.edu/multifoxs/about">MultiFoXS</Link>.
-        Please also consider citing them:
+        <b>BilboMD</b> makes use of{' '}
+        <Link
+          href="https://academiccharmm.org/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          CHARMM
+        </Link>
+        ,{' '}
+        <Link
+          href="https://www.charmm-gui.org/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          CHARMM-GUI
+        </Link>
+        ,{' '}
+        <Link
+          href="https://modbase.compbio.ucsf.edu/foxs/about"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          FoXS
+        </Link>
+        , and{' '}
+        <Link
+          href="https://modbase.compbio.ucsf.edu/multifoxs/about"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          MultiFoXS
+        </Link>
+        . Please also consider citing them:
       </Typography>
       <Typography variant="body2" sx={{ mx: 2, my: 2 }}>
         Brooks BR, Brooks CL 3rd, Mackerell AD Jr, Nilsson L, Petrella RJ, Roux B, Won Y,
