@@ -49,10 +49,10 @@ const BilboMDStep = ({ stepName, stepStatus }: BilboMDStepProps) => {
               <Chip icon={<RadioButtonUncheckedIcon />} size="small" label={stepName} />
             ) : stepStatus === 'start' ? (
               <Chip
-                icon={<DirectionsRunRoundedIcon style={{ color: '#000' }} />}
+                icon={<DirectionsRunRoundedIcon style={{ color: 'black' }} />}
                 size="small"
                 label={stepName}
-                style={{ backgroundColor: '#fff566', color: '#000' }}
+                style={{ backgroundColor: '#fff566', color: 'black' }}
               />
             ) : stepStatus === 'end' ? (
               <Chip
