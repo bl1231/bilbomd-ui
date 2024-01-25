@@ -1,44 +1,49 @@
 import { FormikConsumer } from 'formik'
+import { useTheme } from '@mui/material/styles'
+import { blue, green } from '@mui/material/colors'
 
-export const Debug = () => (
-  <div
-    style={{
-      margin: '3rem 1rem',
-      borderRadius: 4,
-      background: '#f6f8fa',
-      boxShadow: '0 0 1px  #eee inset'
-    }}
-  >
+export const Debug = () => {
+  const theme = useTheme()
+  console.log(theme)
+  return (
     <div
       style={{
-        textTransform: 'uppercase',
-        fontSize: 11,
-        borderTopLeftRadius: 4,
-        borderTopRightRadius: 4,
-        fontWeight: 500,
-        padding: '.5rem',
-        background: '#555',
-        color: '#fff',
-        letterSpacing: '1px'
+        margin: '3rem 1rem',
+        borderRadius: 4
       }}
     >
-      Formik State
+      <div
+        style={{
+          textTransform: 'uppercase',
+          fontSize: 12,
+          borderTopLeftRadius: 4,
+          borderTopRightRadius: 4,
+          fontWeight: 500,
+          padding: '.5rem',
+          background: '#555',
+
+          letterSpacing: '1px'
+        }}
+      >
+        Formik State
+      </div>
+      <FormikConsumer>
+        {(
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          { validationSchema, validate, ...rest }
+        ) => (
+          <pre
+            style={{
+              fontSize: '.85rem',
+              padding: '.25rem .5rem',
+              backgroundColor: theme.palette.mode === 'light' ? green[50] : green[900],
+              color: theme.palette.mode === 'light' ? blue[900] : blue[100]
+            }}
+          >
+            {JSON.stringify(rest, null, 3)}
+          </pre>
+        )}
+      </FormikConsumer>
     </div>
-    <FormikConsumer>
-      {(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        { validationSchema, validate, ...rest }
-      ) => (
-        <pre
-          style={{
-            fontSize: '.85rem',
-            padding: '.25rem .5rem',
-            overflowX: 'scroll'
-          }}
-        >
-          {JSON.stringify(rest, null, 3)}
-        </pre>
-      )}
-    </FormikConsumer>
-  </div>
-)
+  )
+}

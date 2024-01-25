@@ -8,7 +8,7 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-
+import { useTheme } from '@mui/material'
 import PeopleIcon from '@mui/icons-material/People'
 import {
   AddCircleOutlineOutlined,
@@ -31,6 +31,7 @@ export default function ClippedDrawer() {
   const { isAdmin } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  const theme = useTheme()
 
   const menuItems = [
     {
@@ -91,7 +92,12 @@ export default function ClippedDrawer() {
           <ListItemButton
             onClick={item.onclick}
             sx={{
-              backgroundColor: location.pathname === item.path ? '#efefef' : null,
+              backgroundColor:
+                location.pathname === item.path
+                  ? theme.palette.mode === 'light'
+                    ? '#efefef'
+                    : theme.palette.grey[600]
+                  : null,
               display: item.roles.includes('admin') && !isAdmin ? 'none' : 'flex'
             }}
           >
@@ -105,7 +111,7 @@ export default function ClippedDrawer() {
 
   const content = (
     <Container>
-      <Box sx={{ display: 'flex', mb: 7 }}>
+      <Box sx={{ display: 'flex', mb: 8 }}>
         <Header />
       </Box>
 

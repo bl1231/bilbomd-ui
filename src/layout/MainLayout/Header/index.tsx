@@ -17,6 +17,7 @@ import LogOut from 'features/auth/LogOut'
 import NightModeToggle from 'components/NightModeToggle'
 import PersonIcon from '@mui/icons-material/Person'
 import { useNavigate } from 'react-router'
+import { Link } from 'react-router-dom'
 
 const Header = () => {
   const [time, setTime] = useState('')
@@ -71,6 +72,16 @@ const Header = () => {
     }
   }, [])
 
+  const linkStyles = {
+    display: 'flex-grow',
+    fontFamily: 'monospace',
+    fontWeight: 900,
+    fontSize: '3em',
+    letterSpacing: '.2rem',
+    color: 'inherit',
+    textDecoration: 'none'
+  }
+
   return (
     <>
       <CssBaseline />
@@ -78,36 +89,17 @@ const Header = () => {
         <AppBar
           position="fixed"
           elevation={0}
-          sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          color="secondary"
+          sx={{ height: '70px', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         >
           <Toolbar sx={{ m: 0 }}>
-            {/* <FortIcon
-                sx={{ m: 1, p: 0, alignItems: 'center', alignContent: 'center' }}
-              /> */}
-            <Typography
-              variant="h3"
-              noWrap
-              component="a"
-              href="/welcome"
-              sx={{
-                display: 'flex-grow',
-                fontFamily: 'monospace',
-                fontWeight: 900,
-                letterSpacing: '.2rem',
-                color: 'inherit',
-                textDecoration: 'none'
-                // alignItems: 'center',
-                // alignContent: 'center'
-              }}
-            >
+            <Link to="/welcome" style={linkStyles}>
               BilboMD
-            </Typography>
+            </Link>
 
             <Typography variant="h5" sx={{ display: { xs: 'none', sm: 'flex' }, ml: 8 }}>
               {time}
             </Typography>
-            <NightModeToggle />
+
             <Typography
               variant="h5"
               sx={{ display: 'flex', flexGrow: '8', justifyContent: 'flex-end', mx: 2 }}
@@ -153,6 +145,7 @@ const Header = () => {
                 <LogOut />
               </MenuItem>
             </Menu>
+            <NightModeToggle />
           </Toolbar>
         </AppBar>
       </Box>

@@ -16,7 +16,7 @@ const NightModeToggle = () => {
         color: 'text.primary',
         borderColor: 'text.primary',
         border: '1px solid',
-        borderRadius: 5,
+        borderRadius: 2,
         pl: 2,
         mx: 2
       }}

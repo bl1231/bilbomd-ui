@@ -6,7 +6,7 @@ export default function BackGround(theme) {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          background: theme.palette.mode === 'light' ? blueGrey[100] : blueGrey[800]
+          background: theme.palette.mode === 'light' ? blueGrey[50] : blueGrey[800]
         }
       }
     }

@@ -4,7 +4,7 @@ import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
 import { Button, Grid, Typography, Alert } from '@mui/material'
 import Paper from '@mui/material/Paper'
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import { axiosInstance } from 'app/api/axios'
 import MissingJob from 'components/MissingJob'
 import { useSelector } from 'react-redux'
@@ -26,7 +26,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const SingleJobPage = () => {
   useTitle('BilboMD: Job Details')
-
+  const theme = useTheme()
   const token = useSelector(selectCurrentToken)
   const { id } = useParams()
 
@@ -45,7 +45,7 @@ const SingleJobPage = () => {
   // }
 
   if (isLoading) {
-    return <PulseLoader color={'#FFF'} />
+    return <PulseLoader color={'#ffffff'} />
   }
 
   if (isError) {
@@ -81,23 +81,43 @@ const SingleJobPage = () => {
     }
   }
 
-  const getStatusBackgroundColor = (status) => {
+  const getStatusColors = (status, theme) => {
     const statusColors = {
-      Submitted: '#d6e4ff',
-      Pending: '#d6e4ff',
-      Running: '#fff566',
-      Completed: '#73d13d',
-      Error: 'red'
+      Submitted: {
+        background: '#d6e4ff',
+        text: theme.palette.mode === 'light' ? 'black' : 'white'
+      },
+      Pending: {
+        background: '#d6e4ff',
+        text: theme.palette.mode === 'light' ? 'black' : 'white'
+      },
+      Running: {
+        background: '#fff566',
+        text: theme.palette.mode === 'light' ? 'black' : 'black'
+      },
+      Completed: {
+        background: '#73d13d',
+        text: theme.palette.mode === 'light' ? 'black' : 'black'
+      },
+      Error: {
+        background: 'red',
+        text: 'white'
+      }
     }
 
     // Check if status is defined and exists in the statusColors object
     if (status in statusColors) {
       return statusColors[status]
     }
-    return '#d6e4ff'
+
+    // Default background and text colors
+    return {
+      background: '#d6e4ff',
+      text: theme.palette.mode === 'light' ? 'black' : 'white'
+    }
   }
 
-  const statusBGColor = getStatusBackgroundColor(job?.mongo.status)
+  const statusColors = getStatusColors(job?.mongo.status, theme)
 
   const content = job ? (
     <>
@@ -116,7 +136,12 @@ const SingleJobPage = () => {
           <HeaderBox sx={{ py: '6px' }}>
             <Typography>Status</Typography>
           </HeaderBox>
-          <Item sx={{ backgroundColor: statusBGColor }}>
+          <Item
+            sx={{
+              backgroundColor: statusColors.background,
+              color: statusColors.text
+            }}
+          >
             <Typography variant="h3" sx={{ ml: 1 }}>
               {job.mongo.status}
             </Typography>

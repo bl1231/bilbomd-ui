@@ -161,7 +161,7 @@ const Jobs = () => {
           {rows.length !== 0 ? (
             <Grid item xs={12}>
               <HeaderBox>
-                <Typography>BilboMD Jobs</Typography>
+                <Typography>Jobs</Typography>
               </HeaderBox>
               <Paper>
                 <Box
@@ -195,7 +195,7 @@ const Jobs = () => {
                     initialState={{
                       pagination: {
                         paginationModel: {
-                          pageSize: 5
+                          pageSize: 10
                         }
                       }
                     }}
@@ -207,10 +207,10 @@ const Jobs = () => {
           ) : (
             <Grid item xs={12}>
               <HeaderBox>
-                <Typography>BilboMD Jobs</Typography>
+                <Typography>Jobs</Typography>
               </HeaderBox>
               <Alert severity="info" variant="outlined">
-                <AlertTitle>No BilboMD Jobs found.</AlertTitle>Run some jobs first
+                <AlertTitle>No Jobs found.</AlertTitle>Run some jobs first
               </Alert>
             </Grid>
           )}

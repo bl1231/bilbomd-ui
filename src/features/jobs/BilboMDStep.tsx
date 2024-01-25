@@ -12,8 +12,10 @@ interface BilboMDStepProps {
   stepStatus: string
 }
 const BilboMDStep = ({ stepName, stepStatus }: BilboMDStepProps) => {
-  const getTooltipMessage = (stepName) => {
-    if (stepName === 'pae') {
+  const getTooltipMessage = (stepName: string) => {
+    if (stepName === 'scoper') {
+      return 'In this step we run Scoper. Details are below.'
+    } else if (stepName === 'pae') {
       return 'In this step the PAE matrix from Alphafold is used to define rigid bodies and rigid domains of your molecule.'
     } else if (stepName === 'autorg') {
       return 'In this step we use BioXTAS to determine the Radius of gyration for your SAXS data.'

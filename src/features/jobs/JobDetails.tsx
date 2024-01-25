@@ -13,7 +13,7 @@ const JobDetails = ({ id, title }: JobDetailsProps) => {
   return (
     <>
       <Tooltip title={`Details for ${title}`} arrow>
-        <IconButton color="secondary" component={Link} to={`/dashboard/jobs/${id}`}>
+        <IconButton component={Link} to={`/dashboard/jobs/${id}`}>
           <InfoIcon />
         </IconButton>
       </Tooltip>
