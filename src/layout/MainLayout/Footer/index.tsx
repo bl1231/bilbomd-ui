@@ -37,7 +37,7 @@ const Footer = () => {
             mb: 2
           }}
         >
-          <Typography variant="caption" color="initial">
+          <Typography variant="caption">
             Copyright ©2023. SIBYLS Beamline - BilboMD v{version}
           </Typography>
         </Box>

@@ -42,7 +42,7 @@ const DeleteJob = ({ id, title }: DeleteJobProps) => {
     <>
       {isDeleted && <p>Job deleted successfully!</p>}
       <Tooltip title={`Delete ${title}`} arrow>
-        <IconButton color="secondary" onClick={handleClickOpen}>
+        <IconButton onClick={handleClickOpen}>
           <DeleteIcon />
         </IconButton>
       </Tooltip>

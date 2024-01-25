@@ -114,7 +114,6 @@ const MagickLink = () => {
               bgcolor: 'background.paper',
               border: 1,
               borderRadius: 1,
-              borderColor: 'secondary.main',
               width: '400px'
             }}
           >
@@ -220,7 +219,6 @@ const MagickLink = () => {
                       sx={{ my: 2 }}
                       variant="contained"
                       type="button"
-                      color="secondary"
                       endIcon={<ChevronRightIcon />}
                       component={Link}
                       to="../register"

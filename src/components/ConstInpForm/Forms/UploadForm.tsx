@@ -1,28 +1,19 @@
 import { useState, useEffect } from 'react'
 import { Field, useField, useFormikContext } from 'formik'
-import { Alert, Grid, Typography } from '@mui/material'
+import { Alert, Grid, Typography, Link } from '@mui/material'
 import * as PropTypes from 'prop-types'
 import CrdFileField from '../FormFields/CrdFileField'
 import CrdSummary from '../Helpers/CrdSummary'
 import Paper from '@mui/material/Paper'
-// import { styled } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import useTitle from 'hooks/useTitle'
 import { Box } from '@mui/system'
 import { Chain, RigidBody } from 'types/interfaces'
 import HeaderBox from 'components/HeaderBox'
 
-// const Item = styled(Paper)(({ theme }) => ({
-//   backgroundColor:
-//     theme.palette.mode === 'dark' ? '#1A2027' : theme.palette.background.paper,
-//   ...theme.typography.body2,
-//   padding: theme.spacing(1),
-//   textAlign: 'left',
-//   color: theme.palette.text.primary
-// }))
-
 const UploadForm = ({ setStepIsValid }) => {
   useTitle('BilboMD: Upload CRD file')
-
+  const theme = useTheme()
   const { isValid } = useFormikContext()
   const [field, meta, helper] = useField('crd_file')
   const { value } = field
@@ -145,18 +136,35 @@ const UploadForm = ({ setStepIsValid }) => {
               Select a *CRD file to upload
             </Typography>
             <Typography sx={{ m: 1 }}>
-              <b>BilboMD</b> uses <a href="https://academiccharmm.org/">CHARMM</a> to
-              generate an ensemble of molecular models. In order for the Molecular
+              <b>BilboMD</b> uses{' '}
+              <Link
+                href="https://academiccharmm.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                CHARMM
+              </Link>{' '}
+              to generate an ensemble of molecular models. In order for the Molecular
               Dynamics steps to run successfully it is imperative that the rigid and
               flexible regions of your molecule are defined in proper CHARMM{' '}
-              <a href="https://academiccharmm.org/documentation/version/c47b2/select">
+              <Link
+                href="https://academiccharmm.org/documentation/version/c47b2/select"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 atom selection
-              </a>{' '}
+              </Link>{' '}
               syntax. This web jiffy should help you get started. You will need to use the{' '}
               <b>PDB Reader</b> tool available from{' '}
-              <a href="https://www.charmm-gui.org/">CHARMM-GUI</a> to convert your PDB
-              file to CRD. You will need to register for a account before you can use
-              CHARMM-GUI tools.
+              <Link
+                href="https://www.charmm-gui.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                CHARMM-GUI
+              </Link>{' '}
+              to convert your PDB file to CRD. You will need to register for a account
+              before you can use CHARMM-GUI tools.
             </Typography>
             <Typography sx={{ m: 1 }}>
               Example{' '}
@@ -165,7 +173,16 @@ const UploadForm = ({ setStepIsValid }) => {
               </b>{' '}
               file:
             </Typography>
-            <Box sx={{ backgroundColor: '#f0f0f0', m: 1, p: 1 }}>
+            <Box
+              sx={{
+                backgroundColor:
+                  theme.palette.mode === 'light'
+                    ? theme.palette.grey[100]
+                    : theme.palette.grey[600],
+                m: 1,
+                p: 1
+              }}
+            >
               <Typography
                 component="pre"
                 sx={{
