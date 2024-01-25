@@ -238,7 +238,8 @@ const SingleJobPage = () => {
 
             <Item>
               <Alert severity="error" variant="outlined">
-                Please scroll to the bottom of the log file to see why this step failed.
+                Hmmmm... Well something didn&apos;t work. Please try submitting again and
+                if things still don&apos;t work contact Scott or Michal.
               </Alert>
               <JobError job={job} />
             </Item>
