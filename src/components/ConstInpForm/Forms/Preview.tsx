@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useFormikContext, FormikValues } from 'formik'
 import { Grid, Typography } from '@mui/material'
+// import { useTheme } from '@mui/material/styles'
 import Paper from '@mui/material/Paper'
 import useTitle from 'hooks/useTitle'
 import { Box } from '@mui/system'
@@ -11,6 +12,7 @@ import HeaderBox from 'components/HeaderBox'
 
 const Preview = () => {
   useTitle('BilboMD: Preview const.inp file')
+  // const theme = useTheme()
   const [constFilePreview, setConstFilePreview] = useState('')
   const [constFileBlob, setConstFileBlob] = useState<Blob | null>(null)
   const { values } = useFormikContext<FormikValues>()
@@ -109,7 +111,8 @@ const Preview = () => {
                   flexDirection: 'column',
                   p: 2,
                   m: 1,
-                  backgroundColor: '#bae0ff', //blue-2
+                  backgroundColor: '#bae0ff',
+                  color: 'black',
                   borderRadius: 1,
                   // alignItems: 'center',
                   flex: '0 1 100%'

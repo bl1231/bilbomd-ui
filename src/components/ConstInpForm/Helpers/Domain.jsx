@@ -4,21 +4,6 @@ import { Grid, TextField, Typography, Chip, Alert, MenuItem } from '@mui/materia
 import { Box } from '@mui/system'
 import * as PropTypes from 'prop-types'
 
-// interface FormErrors {
-//   crd_file?: {
-//     rigid_bodies?: {
-//       [index: number]: {
-//         domains?: {
-//           [index: number]: {
-//             start?: string
-//             end?: string
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
-
 const Domain = ({ rigidBodyIndex: rbidx, domain, domainIndex: didx }) => {
   // const [field, meta, helper] = useField('crd_file')
   // const { touched, error } = meta
@@ -72,9 +57,9 @@ const Domain = ({ rigidBodyIndex: rbidx, domain, domainIndex: didx }) => {
                     }
               }
               InputLabelProps={{
-                style: { backgroundColor: 'transparent' }
+                style: { backgroundColor: 'transparent', color: 'black' }
               }}
-              // color="warning"
+              InputProps={{ style: { color: 'black' } }}
               onChange={handleChange}
               onBlur={handleBlur}
               error={typedErrors?.crd_file?.rigid_bodies[rbidx]?.domains[didx]?.chainid}
@@ -104,14 +89,15 @@ const Domain = ({ rigidBodyIndex: rbidx, domain, domainIndex: didx }) => {
                     }
               }
               InputLabelProps={{
-                style: { backgroundColor: 'transparent' }
+                style: { backgroundColor: 'transparent', color: 'black' }
               }}
+              InputProps={{ style: { color: 'black' } }}
               onChange={handleChange}
               onBlur={handleBlur}
               error={Boolean(
                 typedErrors?.crd_file?.rigid_bodies[rbidx]?.domains[didx]?.start
               )}
-              sx={{ mx: 1 }}
+              sx={{ mx: 1, color: 'black' }}
             />
 
             <Field
@@ -131,8 +117,9 @@ const Domain = ({ rigidBodyIndex: rbidx, domain, domainIndex: didx }) => {
                     }
               }
               InputLabelProps={{
-                style: { backgroundColor: 'transparent' }
+                style: { backgroundColor: 'transparent', color: 'black' }
               }}
+              InputProps={{ style: { color: 'black' } }}
               onChange={handleChange}
               onBlur={handleBlur}
               error={errors.crd_file?.rigid_bodies[rbidx]?.domains[didx]?.end}
@@ -154,10 +141,8 @@ const Domain = ({ rigidBodyIndex: rbidx, domain, domainIndex: didx }) => {
               <Typography
                 variant="h5"
                 sx={{
-                  // display: 'flex',
-                  // flex: '0 1 auto',
-                  // alignItems: 'flex-start',
-                  mx: 2
+                  mx: 2,
+                  color: 'black'
                 }}
               >
                 {domain.chainid} rigid{didx + 1}:
@@ -165,7 +150,7 @@ const Domain = ({ rigidBodyIndex: rbidx, domain, domainIndex: didx }) => {
               <Chip
                 label={`${domain.start} - ${domain.end}`}
                 variant="outlined"
-                sx={{ backgroundColor: '#a0d919' }}
+                sx={{ backgroundColor: '#a0d919', color: 'black' }}
               />
             </Box>
           </Box>

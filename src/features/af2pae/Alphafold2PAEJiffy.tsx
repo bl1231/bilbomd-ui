@@ -13,6 +13,7 @@ import {
 import { Form, Formik, Field } from 'formik'
 import useAuth from 'hooks/useAuth'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { af2paeJiffySchema } from 'schemas/ValidationSchemas'
 import FileSelect from 'features/jobs/FileSelect'
 import { Debug } from 'components/Debug'
@@ -30,6 +31,8 @@ import HeaderBox from 'components/HeaderBox'
 
 const Alphafold2PAEJiffy = () => {
   const token = useSelector(selectCurrentToken)
+  const navigate = useNavigate()
+  // const { resetForm } = useFormikContext()
   const { email } = useAuth()
   const [success, setSuccess] = useState(false)
   const [uuid, setUuid] = useState('')
@@ -65,7 +68,11 @@ const Alphafold2PAEJiffy = () => {
       console.log('failed')
     }
   }
-
+  const handleReset = () => {
+    // resetForm() // Reset the form using resetForm
+    setSuccess(false)
+    navigate('/dashboard/af2pae')
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -170,7 +177,8 @@ const Alphafold2PAEJiffy = () => {
                     borderRadius: '4px',
                     p: 2,
                     my: 1,
-                    backgroundColor: '#bae0ff'
+                    backgroundColor: '#bae0ff',
+                    color: 'black'
                   }}
                 >
                   <Typography style={{ whiteSpace: 'pre-line' }}>{constfile}</Typography>
@@ -180,11 +188,7 @@ const Alphafold2PAEJiffy = () => {
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                   <Download uuid={uuid} />
-                  <Button
-                    variant="outlined"
-                    type="button"
-                    onClick={() => window.location.reload()}
-                  >
+                  <Button variant="outlined" type="button" onClick={handleReset}>
                     Reset
                   </Button>
                 </Box>
