@@ -1,6 +1,23 @@
-import { Grid, Typography, Paper, Chip, CircularProgress } from '@mui/material'
+import { Grid, Typography, Paper, Chip, CircularProgress, Alert } from '@mui/material'
+import Divider from '@mui/material/Divider'
 import { useGetQueueStateQuery } from 'features/bullmq/bullmqApiSlice'
+// import ApiError <----- not sure where this is. ChatGPT suggests I use this type
 import HeaderBox from 'components/HeaderBox'
+
+interface QueueStatus {
+  bilbomd: {
+    active_count: number
+    waiting_count: number
+    worker_count: number
+  }
+  scoper: {
+    active_count: number
+    waiting_count: number
+    worker_count: number
+  }
+}
+
+type ContentType = React.ReactNode | string
 
 const BullMQSummary = () => {
   const {
@@ -13,14 +30,22 @@ const BullMQSummary = () => {
     pollingInterval: 60000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
-  })
+  }) as {
+    data: QueueStatus | undefined
+    isLoading: boolean
+    isSuccess: boolean
+    isError: boolean
+    error: Error
+  }
+  console.log('queue data', queueStatus)
 
-  let content
+  let content: ContentType
 
   if (isLoading) content = <CircularProgress />
 
   if (isError) {
     console.log('err:', error)
+    content = <Alert>Error loading BullMQ Queue Status.</Alert>
   }
 
   if (isSuccess) {
@@ -31,12 +56,16 @@ const BullMQSummary = () => {
         </HeaderBox>
 
         <Paper sx={{ p: 1 }}>
+          <Divider textAlign="left" variant="fullWidth" sx={{ mb: 3 }}>
+            <Chip label="BilboMD Queue" />
+          </Divider>
+
           <Grid sx={{ m: 1, display: 'flex', alignItems: 'center' }}>
             <Typography>
-              Number of <b>active</b> jobs:
+              <b>Active</b> jobs:
             </Typography>
             <Chip
-              label={queueStatus.active_count}
+              label={queueStatus?.bilbomd.active_count}
               sx={{
                 mx: 1,
                 backgroundColor: '#262626',
@@ -45,9 +74,9 @@ const BullMQSummary = () => {
                 fontWeight: 'bold'
               }}
             />
-            <Typography sx={{ ml: 4 }}>Number of jobs in queue:</Typography>
+            <Typography sx={{ ml: 4 }}>Queued jobs:</Typography>
             <Chip
-              label={queueStatus.waiting_count}
+              label={queueStatus?.bilbomd.waiting_count}
               sx={{
                 mx: 1,
                 backgroundColor: '#262626',
@@ -58,7 +87,49 @@ const BullMQSummary = () => {
             />
             <Typography sx={{ ml: 4 }}>Number of workers:</Typography>
             <Chip
-              label={queueStatus.worker_count}
+              label={queueStatus?.bilbomd.worker_count}
+              sx={{
+                mx: 1,
+                backgroundColor: '#262626',
+                color: '#bae637',
+                fontSize: '1.6em',
+                fontWeight: 'bold'
+              }}
+            />
+          </Grid>
+
+          <Divider textAlign="left" variant="fullWidth" sx={{ my: 3 }}>
+            <Chip label="Scoper Queue" />
+          </Divider>
+
+          <Grid sx={{ m: 1, display: 'flex', alignItems: 'center' }}>
+            <Typography>
+              <b>Active</b> jobs:
+            </Typography>
+            <Chip
+              label={queueStatus?.scoper.active_count}
+              sx={{
+                mx: 1,
+                backgroundColor: '#262626',
+                color: '#bae637',
+                fontSize: '1.6em',
+                fontWeight: 'bold'
+              }}
+            />
+            <Typography sx={{ ml: 4 }}>Queued jobs:</Typography>
+            <Chip
+              label={queueStatus?.scoper.waiting_count}
+              sx={{
+                mx: 1,
+                backgroundColor: '#262626',
+                color: '#bae637',
+                fontSize: '1.6em',
+                fontWeight: 'bold'
+              }}
+            />
+            <Typography sx={{ ml: 4 }}>Number of workers:</Typography>
+            <Chip
+              label={queueStatus?.scoper.worker_count}
               sx={{
                 mx: 1,
                 backgroundColor: '#262626',
