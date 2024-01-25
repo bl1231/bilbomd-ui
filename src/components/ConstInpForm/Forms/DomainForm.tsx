@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, Fragment } from 'react'
 import { useFormikContext, FieldArray, FormikValues } from 'formik'
 import { Typography, Grid, Button, Chip } from '@mui/material'
+// import { useTheme } from '@mui/material/styles'
 import * as PropTypes from 'prop-types'
 import Paper from '@mui/material/Paper'
 import AddIcon from '@mui/icons-material/Add'
@@ -10,6 +11,7 @@ import RigidBody from '../Helpers/RigidBody'
 
 const DomainForm = ({ setStepIsValid }) => {
   useTitle('BilboMD: Define domains')
+  // const theme = useTheme()
   const { values, isValid } = useFormikContext<FormikValues>()
   const [rigidBodyIndex, setRigidBodyIndex] = useState(1)
   const effectRan = useRef(false)
@@ -71,8 +73,6 @@ const DomainForm = ({ setStepIsValid }) => {
               <Chip
                 key={index}
                 label={`${chain.id} : ${chain.first_res}-${chain.last_res}`}
-                variant="outlined"
-                sx={{ backgroundColor: '#d9d9d9', m: 2 }}
               />
             ))}
 

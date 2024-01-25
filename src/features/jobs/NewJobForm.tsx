@@ -10,9 +10,10 @@ import {
   Paper,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
+  Link
 } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 import { Form, Formik, Field } from 'formik'
 import FileSelect from './FileSelect'
 import { useAddNewJobMutation } from './jobsApiSlice'
@@ -122,8 +123,15 @@ const NewJobForm = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Typography sx={{ m: 1 }}>
-                <b>BilboMD</b> uses <a href="https://academiccharmm.org/">CHARMM</a> to
-                generate an ensemble of molecular models. In order for the Molecular
+                <b>BilboMD</b> uses{' '}
+                <Link
+                  href="https://academiccharmm.org/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  CHARMM
+                </Link>{' '}
+                to generate an ensemble of molecular models. In order for the Molecular
                 Dynamics steps to run successfully it is imperative that you provide
                 compatible input files.
                 <li>
@@ -131,9 +139,13 @@ const NewJobForm = () => {
                 </li>
                 <li>
                   <b>*.psf</b> file (A CHARMM{' '}
-                  <a href="https://academiccharmm.org/documentation/version/c47b2/struct">
+                  <Link
+                    href="https://academiccharmm.org/documentation/version/c47b2/struct"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     data structure
-                  </a>{' '}
+                  </Link>{' '}
                   file)
                 </li>
                 <li>
@@ -146,10 +158,17 @@ const NewJobForm = () => {
               </Typography>
               <Typography sx={{ m: 1 }}>
                 Use the <b>PDB Reader</b> tool available from{' '}
-                <a href="https://www.charmm-gui.org/">CHARMM-GUI</a> to convert your
-                standard PDB file to a CRD file. If you need help generating a valid{' '}
-                <b>const.inp</b> file you can use our little Jiffy (green button below or
-                &ldquo;Jiffy&rdquo; links to the left) to help get you started.
+                <Link
+                  href="https://www.charmm-gui.org/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  CHARMM-GUI
+                </Link>{' '}
+                to convert your standard PDB file to a CRD file. If you need help
+                generating a valid <b>const.inp</b> file you can use our little Jiffy
+                (green button below or &ldquo;Jiffy&rdquo; links to the left) to help get
+                you started.
               </Typography>
               <Typography sx={{ m: 1 }}>
                 <b>Conformations per Rg</b> - Specify the number of atomic models to be
@@ -186,7 +205,7 @@ const NewJobForm = () => {
                 <AlertTitle>Woot!</AlertTitle>
                 <Typography>
                   Your job has been submitted. Check out the{' '}
-                  <Link to="../jobs">details</Link>.
+                  <RouterLink to="../jobs">details</RouterLink>.
                 </Typography>
               </Alert>
             ) : (

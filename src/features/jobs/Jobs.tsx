@@ -14,10 +14,17 @@ import {
   Paper,
   Typography
 } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import DeleteJob from './DeleteJob'
 import JobDetails from './JobDetails'
 import BullMQSummary from '../bullmq/BullMQSummary'
 import HeaderBox from 'components/HeaderBox'
+
+const Item = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(1),
+  borderTopLeftRadius: 0,
+  borderTopRightRadius: 0
+}))
 
 const Jobs = () => {
   useTitle('BilboMD: Jobs List')
@@ -161,9 +168,9 @@ const Jobs = () => {
           {rows.length !== 0 ? (
             <Grid item xs={12}>
               <HeaderBox>
-                <Typography>BilboMD Jobs</Typography>
+                <Typography>Jobs</Typography>
               </HeaderBox>
-              <Paper>
+              <Item>
                 <Box
                   sx={{
                     width: '100%',
@@ -195,22 +202,22 @@ const Jobs = () => {
                     initialState={{
                       pagination: {
                         paginationModel: {
-                          pageSize: 5
+                          pageSize: 10
                         }
                       }
                     }}
                     pageSizeOptions={[5, 10, 15, 25]}
                   />
                 </Box>
-              </Paper>
+              </Item>
             </Grid>
           ) : (
             <Grid item xs={12}>
               <HeaderBox>
-                <Typography>BilboMD Jobs</Typography>
+                <Typography>Jobs</Typography>
               </HeaderBox>
               <Alert severity="info" variant="outlined">
-                <AlertTitle>No BilboMD Jobs found.</AlertTitle>Run some jobs first
+                <AlertTitle>No Jobs found.</AlertTitle>Run some jobs first
               </Alert>
             </Grid>
           )}

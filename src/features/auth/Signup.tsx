@@ -68,7 +68,6 @@ const Signup = () => {
             bgcolor: 'background.paper',
             border: 1,
             borderRadius: 1,
-            borderColor: 'secondary.main',
             width: '400px'
           }}
         >
@@ -160,7 +159,6 @@ const Signup = () => {
                     sx={{ my: 2 }}
                     variant="contained"
                     type="submit"
-                    color="primary"
                     disabled={isSubmitting}
                     startIcon={<AddCircleOutlineIcon />}
                   >
@@ -177,7 +175,6 @@ const Signup = () => {
                     sx={{ my: 2 }}
                     variant="contained"
                     type="button"
-                    color="secondary"
                     endIcon={<AutoFixHighIcon />}
                     component={Link}
                     to="../magicklink"

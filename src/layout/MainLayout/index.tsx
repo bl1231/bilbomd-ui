@@ -8,7 +8,7 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-
+import { useTheme } from '@mui/material'
 import PeopleIcon from '@mui/icons-material/People'
 import {
   AddCircleOutlineOutlined,
@@ -31,53 +31,54 @@ export default function ClippedDrawer() {
   const { isAdmin } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  const theme = useTheme()
 
   const menuItems = [
     {
       text: 'Jobs',
-      icon: <SubjectOutlined color="secondary" />,
+      icon: <SubjectOutlined />,
       path: '/dashboard/jobs',
       onclick: () => navigate('dashboard/jobs'),
       roles: ['user', 'manager']
     },
     {
       text: 'BilboMD Classic',
-      icon: <AddCircleOutlineOutlined color="secondary" />,
+      icon: <AddCircleOutlineOutlined />,
       path: '/dashboard/jobs/classic',
       onclick: () => navigate('dashboard/jobs/classic'),
       roles: ['user', 'manager']
     },
     {
       text: 'BilboMD Auto',
-      icon: <AddCircleOutlineOutlined color="secondary" />,
+      icon: <AddCircleOutlineOutlined />,
       path: '/dashboard/jobs/auto',
       onclick: () => navigate('dashboard/jobs/auto'),
       roles: ['user', 'manager']
     },
     {
-      text: 'BilboMD Scoper',
-      icon: <AddCircleOutlineOutlined color="secondary" />,
+      text: 'Scoper',
+      icon: <AddCircleOutlineOutlined />,
       path: '/dashboard/jobs/scoper',
       onclick: () => navigate('dashboard/jobs/scoper'),
       roles: ['user', 'manager']
     },
     {
       text: 'inp Jiffy',
-      icon: <AutoAwesome color="secondary" />,
+      icon: <AutoAwesome />,
       path: '/dashboard/jobs/constinp',
       onclick: () => navigate('dashboard/jobs/constinp'),
       roles: ['user', 'manager']
     },
     {
       text: 'PAE Jiffy',
-      icon: <AutoAwesome color="secondary" />,
+      icon: <AutoAwesome />,
       path: '/dashboard/af2pae',
       onclick: () => navigate('dashboard/af2pae'),
       roles: ['user']
     },
     {
       text: 'Users',
-      icon: <PeopleIcon color="secondary" />,
+      icon: <PeopleIcon />,
       path: '/dashboard/users',
       onclick: () => navigate('dashboard/users'),
       roles: ['admin']
@@ -91,7 +92,12 @@ export default function ClippedDrawer() {
           <ListItemButton
             onClick={item.onclick}
             sx={{
-              backgroundColor: location.pathname === item.path ? '#efefef' : null,
+              backgroundColor:
+                location.pathname === item.path
+                  ? theme.palette.mode === 'light'
+                    ? theme.palette.grey[200]
+                    : theme.palette.grey[600]
+                  : null,
               display: item.roles.includes('admin') && !isAdmin ? 'none' : 'flex'
             }}
           >
@@ -105,7 +111,7 @@ export default function ClippedDrawer() {
 
   const content = (
     <Container>
-      <Box sx={{ display: 'flex', mb: 7 }}>
+      <Box sx={{ display: 'flex', mb: 8 }}>
         <Header />
       </Box>
 

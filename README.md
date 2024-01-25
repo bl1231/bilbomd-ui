@@ -51,6 +51,23 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 1.6.0
+  - Add ability to toggle between Dark and Light mode.
+- 1.5.1
+  - Refactor and improve the Scoper job details page
+- 1.5.0
+  - Add `rechart` dependency for displaying `FoXS` plots.
+  - Display `FoXS` plots and Chi^2 values for Scoper results
+- 1.4.2
+  - Improvements to the Molstar viewer.
+- 1.4.1
+  - Forgot to merge the feature brnach... oops.
+  - Now we should have a Molstar viewer.
+- 1.4.0
+  - Add [Molstar][Molstar] viewer for Scoper Job detail page.
+- 1.3.1
+  - Add better Scoper status information in the `SingleJobPage`
+    It still needs work, but I want to release what's been done so far.
 - 1.3.0
   - Add new Scoper options for RNA
 - 1.2.4
@@ -101,3 +118,5 @@ pm2 deploy ecosystem.config.cjs production update
   - Update nodejs dependencies
 - 0.0.11
   - Add PAE jiffy (creates const.inp from AlphaFold PAE JSON input file).
+
+[Molstar]: https://github.com/molstar/molstar

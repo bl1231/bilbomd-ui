@@ -1,11 +1,15 @@
 import Routes from 'routes'
-import ThemeCustomization from 'themes'
+import { CssBaseline, ThemeProvider } from '@mui/material'
+import { useThemeContext } from 'themes/ThemeContextProvider'
 
 function App() {
+  const { theme } = useThemeContext()
+  // console.log('App theme', theme.palette.mode)
   return (
-    <ThemeCustomization>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Routes />
-    </ThemeCustomization>
+    </ThemeProvider>
   )
 }
 

@@ -8,9 +8,10 @@ import {
   Paper,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
+  Link
 } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 import { Form, Formik, Field } from 'formik'
 import FileSelect from 'features/jobs/FileSelect'
 import { useAddNewScoperJobMutation } from '../jobs/jobsApiSlice'
@@ -79,10 +80,10 @@ const NewScoperJobForm = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Typography sx={{ m: 1 }}>
-                BilboMD Scoper is a novel pipeline that uses a combination of classical
-                algorithms and deep-learning techniques to find structures, along with
-                magnesium ion binding sites that fit a given SAXS profile, given an
-                initial structure to work with.
+                Scoper is a novel data analysis pipeline that uses a combination of
+                classical algorithms and deep-learning techniques to find structures,
+                along with magnesium ion binding sites that fit a given SAXS profile,
+                given an initial structure to work with.
               </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
                 <img
@@ -103,13 +104,26 @@ const NewScoperJobForm = () => {
                   style={{ maxWidth: '100%', height: 'auto' }}
                 />
               </Box>
+              <Typography>
+                Scoper was created by Edan Patt, Dina Schneidman, and Michal Hammel. The
+                web implementation was done by Scott Classen. The source code and trained
+                model for the backend Scoper/IonNet analysis steps comes from the{' '}
+                <Link
+                  href="https://github.com/dina-lab3D/IonNet"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  IonNet
+                </Link>{' '}
+                repository.{' '}
+              </Typography>
             </AccordionDetails>
           </Accordion>
         </Grid>
 
         <Grid item xs={12}>
           <HeaderBox>
-            <Typography>BilboMD Scoper Job Form</Typography>
+            <Typography>Scoper Job Form</Typography>
           </HeaderBox>
 
           <Paper sx={{ p: 2 }}>
@@ -118,7 +132,7 @@ const NewScoperJobForm = () => {
                 <AlertTitle>Woot!</AlertTitle>
                 <Typography>
                   Your Scoper job has been submitted. Check out the{' '}
-                  <Link to="../jobs">details</Link>.
+                  <RouterLink to="../jobs">details</RouterLink>.
                 </Typography>
               </Alert>
             ) : (

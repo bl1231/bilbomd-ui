@@ -72,9 +72,26 @@ export type BilboMDSteps = {
   multifoxs: string
   results: string
   email: string
+  numEnsembles: number
 }
 
-export type ScoperSteps = {
+export type BilboMDScoperSteps = {
+  reduce: string
+  rnaview: string
+  kgs: string
+  kgsConformations: number
+  kgsFiles: number
+  foxs: string
+  foxsProgress: number
+  foxsTopFile: string
+  foxsTopScore: number
+  createdFeatures: boolean
+  IonNet: string
+  predictionThreshold: number
+  multifoxs: string
+  multifoxsEnsembleSize: number
+  multifoxsScore: number
+  scoperPdb: string
   scoper: string
   results: string
   email: string
@@ -83,13 +100,17 @@ export type ScoperSteps = {
 export type BilboMDBullMQ = {
   position: number
   queuePosition: string
-  bilbomdStep: BilboMDSteps | ScoperSteps
+  bilbomdStep: BilboMDSteps | BilboMDScoperSteps
   bilbomdLastStep: string
   bullmq: BullMQJob
 }
+
 export type BilboMDJob = {
   id: string
+  username: string
   mongo: Job
   bullmq: BilboMDBullMQ
-  username: string
+  scoper?: BilboMDScoperSteps
+  classic?: BilboMDSteps
+  auto?: BilboMDSteps
 }

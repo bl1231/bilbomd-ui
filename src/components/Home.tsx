@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Button, Typography, CircularProgress } from '@mui/material'
+import { Button, Typography, CircularProgress, Link } from '@mui/material'
 import { Box, Container } from '@mui/system'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate, Link as RouterLink } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from 'features/auth/authSlice'
 import { useRefreshMutation } from 'features/auth/authApiSlice'
@@ -64,12 +64,30 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
               <b>BilboMD</b> allows you to determine the three-dimensional domain
               structure of proteins based on conformational sampling using a Molecular
               Dynamics (MD) approach. Conformational sampling performed by{' '}
-              <Link to="https://academiccharmm.org/documentation">CHARMM</Link> is
-              followed by structure validation using{' '}
-              <Link to="https://modbase.compbio.ucsf.edu/foxs/about">FoXS</Link> and
-              ensemble analysis using Minimal Ensemble Search (MES) via{' '}
-              <Link to="https://modbase.compbio.ucsf.edu/multifoxs/">MultiFoXS</Link>.
-              Details of the implementation and integration of these tools into{' '}
+              <Link
+                href="https://academiccharmm.org/documentation"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                CHARMM
+              </Link>{' '}
+              is followed by structure validation using{' '}
+              <Link
+                href="https://modbase.compbio.ucsf.edu/foxs/about"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                FoXS
+              </Link>{' '}
+              and ensemble analysis using Minimal Ensemble Search (MES) via{' '}
+              <Link
+                href="https://modbase.compbio.ucsf.edu/multifoxs/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                MultiFoXS
+              </Link>
+              . Details of the implementation and integration of these tools into{' '}
               <b>BilboMD</b> are described in the following manuscript:
             </Typography>
             <Typography variant="body2" sx={{ mx: 5, my: 2 }}>
@@ -79,8 +97,15 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
                 angle X-ray scattering.
               </b>{' '}
               Gen Physiol Biophys. 2009 Jun;28(2):174-89. doi: 10.4149/gpb_2009_02_174.
-              PMID: ,<Link to="https://pubmed.ncbi.nlm.nih.gov/19592714/">19592714</Link>;
-              PMCID: PMC3773563.
+              PMID: ,
+              <Link
+                href="https://pubmed.ncbi.nlm.nih.gov/19592714/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                19592714
+              </Link>
+              ; PMCID: PMC3773563.
             </Typography>
             <Typography variant="body1" sx={{ my: 1 }}>
               <b>BilboMD</b> runs on dedicated servers at the SIBYLS beamline. Please
@@ -114,12 +139,17 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
             <Button
               variant="contained"
               to="register"
-              component={Link}
+              component={RouterLink}
               sx={{ my: 2, mr: 2 }}
             >
               Register
             </Button>
-            <Button variant="contained" to="login" component={Link} sx={{ my: 2, mr: 2 }}>
+            <Button
+              variant="contained"
+              to="login"
+              component={RouterLink}
+              sx={{ my: 2, mr: 2 }}
+            >
               Login
             </Button>
           </Box>
