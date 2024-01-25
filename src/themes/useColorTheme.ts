@@ -6,10 +6,9 @@ export const useColorTheme = () => {
   const [mode, setMode] = useState<PaletteMode>('light')
 
   const toggleColorMode = () => {
-    // console.log('toggleColorMode function called')
     setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'))
   }
-  // console.log('mode:', mode)
+
   const modifiedTheme = useMemo(() => createTheme(getDesignTokens(mode)), [mode])
 
   return {

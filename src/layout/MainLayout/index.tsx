@@ -35,49 +35,49 @@ export default function ClippedDrawer() {
   const menuItems = [
     {
       text: 'Jobs',
-      icon: <SubjectOutlined color="secondary" />,
+      icon: <SubjectOutlined />,
       path: '/dashboard/jobs',
       onclick: () => navigate('dashboard/jobs'),
       roles: ['user', 'manager']
     },
     {
       text: 'BilboMD Classic',
-      icon: <AddCircleOutlineOutlined color="secondary" />,
+      icon: <AddCircleOutlineOutlined />,
       path: '/dashboard/jobs/classic',
       onclick: () => navigate('dashboard/jobs/classic'),
       roles: ['user', 'manager']
     },
     {
       text: 'BilboMD Auto',
-      icon: <AddCircleOutlineOutlined color="secondary" />,
+      icon: <AddCircleOutlineOutlined />,
       path: '/dashboard/jobs/auto',
       onclick: () => navigate('dashboard/jobs/auto'),
       roles: ['user', 'manager']
     },
     {
       text: 'Scoper',
-      icon: <AddCircleOutlineOutlined color="secondary" />,
+      icon: <AddCircleOutlineOutlined />,
       path: '/dashboard/jobs/scoper',
       onclick: () => navigate('dashboard/jobs/scoper'),
       roles: ['user', 'manager']
     },
     {
       text: 'inp Jiffy',
-      icon: <AutoAwesome color="secondary" />,
+      icon: <AutoAwesome />,
       path: '/dashboard/jobs/constinp',
       onclick: () => navigate('dashboard/jobs/constinp'),
       roles: ['user', 'manager']
     },
     {
       text: 'PAE Jiffy',
-      icon: <AutoAwesome color="secondary" />,
+      icon: <AutoAwesome />,
       path: '/dashboard/af2pae',
       onclick: () => navigate('dashboard/af2pae'),
       roles: ['user']
     },
     {
       text: 'Users',
-      icon: <PeopleIcon color="secondary" />,
+      icon: <PeopleIcon />,
       path: '/dashboard/users',
       onclick: () => navigate('dashboard/users'),
       roles: ['admin']
