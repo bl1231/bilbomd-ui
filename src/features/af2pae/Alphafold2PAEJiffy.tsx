@@ -137,13 +137,25 @@ const Alphafold2PAEJiffy = () => {
                     Obtain the PAE file from AlphaFold. This can either be from running
                     AlphaFold on your own in a colabfold notebook or downloaded from
                     pre-predicted structures available from the{' '}
-                    <Link href="https://alphafold.ebi.ac.uk/">AlphaFold</Link> database
-                    hosted at EMBL-EBI.
+                    <Link
+                      href="https://alphafold.ebi.ac.uk/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      AlphaFold
+                    </Link>{' '}
+                    database hosted at EMBL-EBI.
                   </li>
                   <li>
                     Use the <b>PDB Reader</b> tool available from{' '}
-                    <a href="https://www.charmm-gui.org/">CHARMM-GUI</a> to convert a
-                    standard PDB file to a CRD file.
+                    <Link
+                      href="https://www.charmm-gui.org/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      CHARMM-GUI
+                    </Link>{' '}
+                    to convert a standard PDB file to a CRD file.
                   </li>
                   <li>
                     Upload the files here and our server will create a{' '}

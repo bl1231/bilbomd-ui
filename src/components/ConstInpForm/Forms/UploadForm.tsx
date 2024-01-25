@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Field, useField, useFormikContext } from 'formik'
-import { Alert, Grid, Typography } from '@mui/material'
+import { Alert, Grid, Typography, Link } from '@mui/material'
 import * as PropTypes from 'prop-types'
 import CrdFileField from '../FormFields/CrdFileField'
 import CrdSummary from '../Helpers/CrdSummary'
@@ -136,18 +136,35 @@ const UploadForm = ({ setStepIsValid }) => {
               Select a *CRD file to upload
             </Typography>
             <Typography sx={{ m: 1 }}>
-              <b>BilboMD</b> uses <a href="https://academiccharmm.org/">CHARMM</a> to
-              generate an ensemble of molecular models. In order for the Molecular
+              <b>BilboMD</b> uses{' '}
+              <Link
+                href="https://academiccharmm.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                CHARMM
+              </Link>{' '}
+              to generate an ensemble of molecular models. In order for the Molecular
               Dynamics steps to run successfully it is imperative that the rigid and
               flexible regions of your molecule are defined in proper CHARMM{' '}
-              <a href="https://academiccharmm.org/documentation/version/c47b2/select">
+              <Link
+                href="https://academiccharmm.org/documentation/version/c47b2/select"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 atom selection
-              </a>{' '}
+              </Link>{' '}
               syntax. This web jiffy should help you get started. You will need to use the{' '}
               <b>PDB Reader</b> tool available from{' '}
-              <a href="https://www.charmm-gui.org/">CHARMM-GUI</a> to convert your PDB
-              file to CRD. You will need to register for a account before you can use
-              CHARMM-GUI tools.
+              <Link
+                href="https://www.charmm-gui.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                CHARMM-GUI
+              </Link>{' '}
+              to convert your PDB file to CRD. You will need to register for a account
+              before you can use CHARMM-GUI tools.
             </Typography>
             <Typography sx={{ m: 1 }}>
               Example{' '}

@@ -8,9 +8,10 @@ import {
   Paper,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
+  Link
 } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 import { Form, Formik, Field } from 'formik'
 import FileSelect from 'features/jobs/FileSelect'
 import { useAddNewScoperJobMutation } from '../jobs/jobsApiSlice'
@@ -107,13 +108,13 @@ const NewScoperJobForm = () => {
                 Scoper was created by Edan Patt, Dina Schneidman, and Michal Hammel. The
                 web implementation was done by Scott Classen. The source code and trained
                 model for the backend Scoper/IonNet analysis steps comes from the{' '}
-                <a
+                <Link
                   href="https://github.com/dina-lab3D/IonNet"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   IonNet
-                </a>{' '}
+                </Link>{' '}
                 repository.{' '}
               </Typography>
             </AccordionDetails>
@@ -131,7 +132,7 @@ const NewScoperJobForm = () => {
                 <AlertTitle>Woot!</AlertTitle>
                 <Typography>
                   Your Scoper job has been submitted. Check out the{' '}
-                  <Link to="../jobs">details</Link>.
+                  <RouterLink to="../jobs">details</RouterLink>.
                 </Typography>
               </Alert>
             ) : (
