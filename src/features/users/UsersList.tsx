@@ -5,7 +5,17 @@ import EditIcon from '@mui/icons-material/Edit'
 import useTitle from 'hooks/useTitle'
 import { Box } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
-import { CircularProgress } from '@mui/material'
+import { CircularProgress, Typography, Paper } from '@mui/material'
+import HeaderBox from 'components/HeaderBox'
+import { styled } from '@mui/material/styles'
+
+const Item = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(1),
+  borderTopLeftRadius: 0,
+  borderTopRightRadius: 0
+}))
+
+type ContentType = React.ReactNode | string
 
 const UsersList = () => {
   useTitle('BilboMD: Users List')
@@ -22,7 +32,7 @@ const UsersList = () => {
     refetchOnMountOrArgChange: true
   })
 
-  let content
+  let content: ContentType
 
   if (isLoading) content = <CircularProgress />
 
@@ -54,19 +64,24 @@ const UsersList = () => {
     ]
 
     content = (
-      <Box sx={{ height: 600 }}>
-        <DataGrid
-          rows={users}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 5
+      <Box>
+        <HeaderBox>
+          <Typography>Users</Typography>
+        </HeaderBox>
+        <Item>
+          <DataGrid
+            rows={users}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 10
+                }
               }
-            }
-          }}
-          pageSizeOptions={[5]}
-        />
+            }}
+            pageSizeOptions={[5, 10, 15, 25]}
+          />
+        </Item>
       </Box>
     )
   }

@@ -14,10 +14,17 @@ import {
   Paper,
   Typography
 } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import DeleteJob from './DeleteJob'
 import JobDetails from './JobDetails'
 import BullMQSummary from '../bullmq/BullMQSummary'
 import HeaderBox from 'components/HeaderBox'
+
+const Item = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(1),
+  borderTopLeftRadius: 0,
+  borderTopRightRadius: 0
+}))
 
 const Jobs = () => {
   useTitle('BilboMD: Jobs List')
@@ -163,7 +170,7 @@ const Jobs = () => {
               <HeaderBox>
                 <Typography>Jobs</Typography>
               </HeaderBox>
-              <Paper>
+              <Item>
                 <Box
                   sx={{
                     width: '100%',
@@ -202,7 +209,7 @@ const Jobs = () => {
                     pageSizeOptions={[5, 10, 15, 25]}
                   />
                 </Box>
-              </Paper>
+              </Item>
             </Grid>
           ) : (
             <Grid item xs={12}>
