@@ -3,6 +3,7 @@ import { useGetJobByIdQuery } from './jobsApiSlice'
 import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
 import { Button, Grid, Typography, Alert } from '@mui/material'
+import LinearProgress from '@mui/material/LinearProgress'
 import Paper from '@mui/material/Paper'
 import { styled, useTheme } from '@mui/material/styles'
 import { axiosInstance } from 'app/api/axios'
@@ -147,11 +148,17 @@ const SingleJobPage = () => {
             </Typography>
           </Item>
         </Grid>
+
         <Grid item xs={3}>
           <HeaderBox sx={{ py: '6px' }}>
             <Typography>Progress</Typography>
           </HeaderBox>
-          <Item>
+          <Item sx={{ display: 'flex', alignItems: 'center' }}>
+            <LinearProgress
+              variant="determinate"
+              value={parseFloat(job.bullmq?.bullmq?.progress ?? '0')}
+              sx={{ flexGrow: 1 }}
+            />
             <Typography variant="h3" sx={{ ml: 1 }}>
               {job.bullmq?.bullmq?.progress ?? 'n/a'} %
             </Typography>
