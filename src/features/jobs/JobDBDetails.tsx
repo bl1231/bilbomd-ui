@@ -32,7 +32,7 @@ const JobDBDetails = (props: JobDBDetailsProps) => {
     const conformationalSampling: number = job.mongo.conformational_sampling
     let numSteps: number = 0
     const rgList: number[] = []
-    const stepSize = Math.round((rgMax - rgMin) / 5)
+    const stepSize = Math.max(Math.round((rgMax - rgMin) / 5), 1)
     for (let rg: number = rgMin; rg <= rgMax; rg += stepSize) {
       numSteps += 1
       rgList.push(rg)
