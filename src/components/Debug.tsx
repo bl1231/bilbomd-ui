@@ -4,7 +4,7 @@ import { blue, green } from '@mui/material/colors'
 
 export const Debug = () => {
   const theme = useTheme()
-  console.log(theme)
+  // console.log(theme)
   return (
     <div
       style={{
