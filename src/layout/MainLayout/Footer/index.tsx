@@ -3,19 +3,20 @@ import { Box, Container } from '@mui/system'
 import { version } from '../../../../package.json'
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear()
   return (
     <Paper
       sx={{
         marginTop: 'calc(10% + 60px)',
-        width: '100%',
+        width: '110%',
         position: 'fixed',
         bottom: 0
       }}
-      component="footer"
+      // component="footer"
       square
       variant="outlined"
     >
-      <Container maxWidth="lg">
+      <Container fixed>
         <Box
           sx={{
             flexGrow: 1,
@@ -23,11 +24,7 @@ const Footer = () => {
             display: 'flex',
             my: 1
           }}
-        >
-          {/* <div>
-            <Image priority src="/Logo.svg" width={75} height={30} alt="Logo" />
-          </div> */}
-        </Box>
+        ></Box>
 
         <Box
           sx={{
@@ -38,7 +35,7 @@ const Footer = () => {
           }}
         >
           <Typography variant="caption">
-            Copyright ©2023. SIBYLS Beamline - BilboMD v{version}
+            Copyright ©{currentYear}. SIBYLS Beamline - BilboMD v{version}
           </Typography>
         </Box>
       </Container>
