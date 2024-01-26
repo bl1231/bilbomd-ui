@@ -51,6 +51,8 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 1.6.1
+  - Fix bug when `rg_min` and `rg_max` are too close.
 - 1.6.0
   - Add ability to toggle between Dark and Light mode.
 - 1.5.1
