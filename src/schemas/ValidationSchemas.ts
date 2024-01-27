@@ -200,6 +200,14 @@ export const bilbomdJobSchema = object().shape({
     .min(10)
     .max(100)
     .required('Please provide a Maximum Rg value')
+    .test(
+      'is-greater',
+      'Rg Maximum must be at least 1 Å greater than Rg Minimum',
+      function (value) {
+        const { rg_min } = this.parent
+        return value > rg_min
+      }
+    )
 })
 export const expdataSchema = mixed()
   .test('required', 'Experimental SAXS data is required', (file) => {
