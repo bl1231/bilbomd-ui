@@ -51,8 +51,10 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
-- 1.6.1
+- 1.6.2
   - Fix bug when `rg_min` and `rg_max` are too close.
+- 1.6.1
+  - Better feedback about status of `bilbomd` and `scoper` BullMQ queues.
 - 1.6.0
   - Add ability to toggle between Dark and Light mode.
 - 1.5.1
