@@ -31,7 +31,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         }
       }),
       transformResponse: (responseData: User[]) => {
-        // console.log('users:', responseData)
         const loadedUsers = responseData.map((user) => {
           user.id = user._id
           return user
@@ -61,11 +60,11 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: [{ type: 'User', id: 'LIST' }]
     }),
     updateUser: builder.mutation({
-      query: (initialUserData) => ({
-        url: '/users',
+      query: ({ id, ...userData }) => ({
+        url: `/users/${id}`,
         method: 'PATCH',
         body: {
-          ...initialUserData
+          ...userData
         }
       }),
       invalidatesTags: (result, error, arg) => [{ type: 'User', id: arg.id }]
@@ -76,6 +75,16 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         method: 'DELETE'
       }),
       invalidatesTags: (result, error, arg) => [{ type: 'User', id: arg.id }]
+    }),
+    getUserById: builder.query({
+      query: ({ id }) => ({
+        url: `/users/${id}`,
+        method: 'GET',
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError
+        }
+      }),
+      providesTags: (result, error, arg) => [{ type: 'User', id: arg.id }]
     })
   })
 })
@@ -84,7 +93,8 @@ export const {
   useGetUsersQuery,
   useAddNewUserMutation,
   useUpdateUserMutation,
-  useDeleteUserMutation
+  useDeleteUserMutation,
+  useGetUserByIdQuery
 } = usersApiSlice
 
 // returns the query result object
@@ -96,7 +106,7 @@ export const selectUsersResult = usersApiSlice.endpoints.getUsers.select({})
 //   (usersResult) => usersResult.data // normalized state object with ids & entities
 // )
 
-// //getSelectors creates these selectors and we rename them with aliases using destructuring
+//getSelectors creates these selectors and we rename them with aliases using destructuring
 // export const {
 //   selectAll: selectAllUsers,
 //   selectById: selectUserById,
