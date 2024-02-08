@@ -93,7 +93,12 @@ const FoXSChart = ({
           <XAxis dataKey="q" scale="linear" type="number" />
           <YAxis yAxisId="left" scale="log" type="number" domain={['auto', 'auto']} />
           <Tooltip />
-          <Legend />
+          <Legend
+            iconType="line"
+            verticalAlign="bottom"
+            height={30}
+            layout="horizontal"
+          />
           <Line
             yAxisId="left"
             type="monotone"
@@ -117,7 +122,13 @@ const FoXSChart = ({
           <XAxis dataKey="q" scale="linear" type="number" />
           <YAxis domain={[minYAxis, maxYAxis]} />
           <Tooltip />
-          <Legend />
+          <Legend
+            iconType="line"
+            verticalAlign="bottom"
+            height={30}
+            layout="horizontal"
+            align="center"
+          />
           <Line type="monotone" dataKey="res" name="Residuals" stroke="#82ca9d" />
           <ReferenceLine
             y={0}
