@@ -101,7 +101,7 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <FoXSChart
-            title={`Original Model - ${origPDBFile} - I vs. q`}
+            title={`Original Model - ${origPDBFile}`}
             data={origData}
             residualsData={origResiduals}
             chisq={origChiSq}
@@ -113,7 +113,7 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
         </Grid>
         <Grid item xs={6}>
           <FoXSChart
-            title={`Scoper Model - ${scopPDBFile} - I vs. q`}
+            title={`Scoper Model - ${scopPDBFile}`}
             data={scopData}
             residualsData={scopResiduals}
             chisq={scopChiSq}
