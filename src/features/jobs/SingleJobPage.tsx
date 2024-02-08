@@ -18,6 +18,7 @@ import JobDBDetails from './JobDBDetails'
 import MolstarViewer from 'features/molstar/Viewer'
 import { BilboMDScoperTable } from '../scoperjob/BilboMDScoperTable'
 import ScoperFoXSAnalysis from 'features/scoperjob/ScoperFoXSAnalysis'
+import FoXSAnalysis from './FoXSAnalysis'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -192,6 +193,15 @@ const SingleJobPage = () => {
               <Typography>Scoper FoXS Analysis</Typography>
             </HeaderBox>
             <ScoperFoXSAnalysis id={id} />
+          </Grid>
+        )}
+
+        {job.mongo.status === 'Completed' && (job.classic || job.auto) && id && (
+          <Grid item xs={12}>
+            <HeaderBox sx={{ py: '6px' }}>
+              <Typography>BilboMD FoXS Analysis</Typography>
+            </HeaderBox>
+            <FoXSAnalysis id={id} />
           </Grid>
         )}
 
