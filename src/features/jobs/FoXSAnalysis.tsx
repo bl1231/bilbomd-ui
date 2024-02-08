@@ -16,6 +16,8 @@ import {
   ReferenceLine
 } from 'recharts'
 import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material'
+import CircularProgress from '@mui/material/CircularProgress'
+
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   borderTopLeftRadius: 0,
@@ -158,7 +160,20 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   }, [origResiduals])
 
   // Handle loading and error states
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading)
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh'
+        }}
+      >
+        <CircularProgress />
+      </div>
+    )
+
   if (isError || !data)
     return (
       <Alert severity="info" variant="outlined">
@@ -167,7 +182,7 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
     )
 
   // Pull out the other info needed for the FoXS plots
-  const origPDBFile = foxsData[0].filename
+  // const origPDBFile = foxsData[0].filename
   const origChiSq = foxsData[0].chisq
   const origC1 = foxsData[0].c1
   const origC2 = foxsData[0].c2
@@ -179,7 +194,7 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <FoXSChart
-            title={`Original Model - ${origPDBFile}`}
+            title={`Original Model`}
             data={origData}
             residualsData={origResiduals}
             chisq={origChiSq}
@@ -227,7 +242,9 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
               ))}
             </LineChart>
           </ResponsiveContainer>
-          <Typography sx={{ pl: 2, m: 1, mt: 3 }}>Ensemble Models - residuals</Typography>
+          <Typography sx={{ pl: 2, m: 1, mt: 3 }}>
+            Ensemble Models - Chi^2 residuals
+          </Typography>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={ensembleData}>
               <XAxis dataKey="q" scale="linear" type="number" />
