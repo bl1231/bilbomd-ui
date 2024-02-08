@@ -86,14 +86,19 @@ const FoXSChart = ({
 
   return (
     <>
-      <Typography sx={{ m: 1 }}>{title}</Typography>
+      <Typography sx={{ pl: 2, m: 1 }}>{title} - I vs. q</Typography>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="q" scale="linear" type="number" />
           <YAxis yAxisId="left" scale="log" type="number" domain={['auto', 'auto']} />
           <Tooltip />
-          <Legend />
+          <Legend
+            iconType="line"
+            verticalAlign="bottom"
+            height={30}
+            layout="horizontal"
+          />
           <Line
             yAxisId="left"
             type="monotone"
@@ -111,13 +116,19 @@ const FoXSChart = ({
           />
         </LineChart>
       </ResponsiveContainer>
-      <Typography sx={{ m: 1, mt: 3 }}>{title} - residuals</Typography>
+      <Typography sx={{ pl: 2, m: 1, mt: 3 }}>{title} - Chi^2 residuals</Typography>
       <ResponsiveContainer width="100%" height={200}>
         <LineChart data={residualsData}>
           <XAxis dataKey="q" scale="linear" type="number" />
           <YAxis domain={[minYAxis, maxYAxis]} />
           <Tooltip />
-          <Legend />
+          <Legend
+            iconType="line"
+            verticalAlign="bottom"
+            height={30}
+            layout="horizontal"
+            align="center"
+          />
           <Line type="monotone" dataKey="res" name="Residuals" stroke="#82ca9d" />
           <ReferenceLine
             y={0}
