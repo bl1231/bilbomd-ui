@@ -51,6 +51,8 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 1.7.0
+  - Add components for displaying `FoXS` analysis for BilboMD classic/auto jobs.
 - 1.6.2
   - Fix bug when `rg_min` and `rg_max` are too close.
 - 1.6.1
