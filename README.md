@@ -51,6 +51,9 @@ pm2 deploy ecosystem.config.cjs production update
 
 ## Version History
 
+- 1.7.1
+  - Hide delete button for jobs that are "Submitted" or "Running"
+  - Comment out some verbose unneeded console logs
 - 1.7.0
   - Add components for displaying `FoXS` analysis for BilboMD classic/auto jobs.
 - 1.6.2
