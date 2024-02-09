@@ -43,7 +43,7 @@ const BullMQSummary = () => {
     isError: boolean
     error: Error
   }
-  console.log('queue data', queueStatus)
+  // console.log('queue data', queueStatus)
 
   let content: ContentType
 
