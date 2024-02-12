@@ -11,13 +11,14 @@ import LinearProgress from '@mui/material/LinearProgress'
 interface DeleteJobProps {
   id: string
   title: string
+  hide: boolean
 }
 
-const DeleteJob = ({ id, title }: DeleteJobProps) => {
+const DeleteJob = ({ id, title, hide }: DeleteJobProps) => {
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [deleteJob, { isSuccess, isError, error }] = useDeleteJobMutation()
-
+  console.log('title:', title, 'hide:', hide)
   const onClickDelete = async () => {
     setDeleting(true) // Start deletion process
     // const start = Date.now()
@@ -33,7 +34,7 @@ const DeleteJob = ({ id, title }: DeleteJobProps) => {
   const handleCloseDialog = () => {
     setConfirmOpen(false)
     if (deleting) {
-      // If the dialog is closed while deleting, stop showing the progress
+      // If the dialog is closed while deleting, stop hideing the progress
       setDeleting(false)
     }
   }
@@ -49,11 +50,21 @@ const DeleteJob = ({ id, title }: DeleteJobProps) => {
 
   return (
     <>
-      <Tooltip title={`Delete ${title}`} arrow>
-        <IconButton onClick={() => setConfirmOpen(true)}>
-          <DeleteIcon />
-        </IconButton>
+      <Tooltip
+        title={
+          deleting || hide
+            ? 'Cannot delete a Running or Submitted job'
+            : `Delete ${title}`
+        }
+        arrow
+      >
+        <span>
+          <IconButton onClick={() => setConfirmOpen(true)} disabled={deleting || hide}>
+            <DeleteIcon />
+          </IconButton>
+        </span>
       </Tooltip>
+
       <Dialog
         open={confirmOpen}
         onClose={handleCloseDialog}

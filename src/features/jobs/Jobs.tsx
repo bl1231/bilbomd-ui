@@ -151,11 +151,22 @@ const Jobs = () => {
         getActions: (params: GridRowParams) => {
           if (params.row.status !== 'Submitted' && params.row.status !== 'Running') {
             return [
-              <DeleteJob key={params.id} id={params.row.id} title={params.row.title} />,
+              <DeleteJob
+                key={params.id}
+                id={params.row.id}
+                title={params.row.title}
+                hide={false}
+              />,
               <JobDetails key={params.id} id={params.row.id} title={params.row.title} />
             ]
           } else {
             return [
+              <DeleteJob
+                key={params.id}
+                id={params.row.id}
+                title={params.row.title}
+                hide={true}
+              />,
               <JobDetails key={params.id} id={params.row.id} title={params.row.title} />
             ]
           }
