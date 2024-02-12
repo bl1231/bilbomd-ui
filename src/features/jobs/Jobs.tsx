@@ -39,8 +39,7 @@ const Jobs = () => {
     error
   } = useGetJobsQuery('jobsList', {
     pollingInterval: 60000,
-    refetchOnFocus: true,
-    refetchOnMountOrArgChange: true
+    refetchOnFocus: true
   })
 
   let content
