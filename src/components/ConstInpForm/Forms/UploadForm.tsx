@@ -59,7 +59,6 @@ const UploadForm = ({ setStepIsValid }) => {
     const demRigidBodies: RigidBody[] = [{ id: 'PRIMARY', domains: [] }]
 
     uniqueChains.forEach((chainId) => {
-      // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
       const filteredData = data!.filter((line) => line.includes(chainId))
 
       const length = filteredData.length

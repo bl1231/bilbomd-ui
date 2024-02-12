@@ -40,7 +40,6 @@ type LoadParams = {
   assemblyId: number
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type PDBsToLoad = LoadParams[]
 
 const DefaultViewerOptions = {

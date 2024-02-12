@@ -1,10 +1,10 @@
 # bilbomd-ui
 
-`bilbomd-ui` is the frontend GUI for BilboMD. It is a Single Page Application [SPA](https://developer.mozilla.org/en-US/docs/Glossary/SPA). The deploy [instructions](https://github.com/bl1231/bilbomd#2-deploy-the-bilbomd-front-end-ui) are outlined in more detail the [bilbomd](https://github.com/bl1231/bilbomd) repo, and give instructions for using [PM2](https://pm2.keymetrics.io/docs/usage/quick-start/) to deploy a production instance to `https://bilbomd.bl1231.als.lbl.gov`, but if you want to start a development version you can just check this code out and fire it up interactively.
+`bilbomd-ui` is the frontend GUI for BilboMD. It is a Single Page Application [SPA](https://developer.mozilla.org/en-US/docs/Glossary/SPA). The deploy [instructions](https://github.com/bl1231/bilbomd#2-deploy-the-bilbomd-front-end-ui) are outlined in more detail the [bilbomd](https://github.com/bl1231/bilbomd) repo, and give instructions for deploying a production instance to `https://bilbomd.bl1231.als.lbl.gov`, but if you want to start a development version you can just check this code out and fire it up interactively.
 
-## Getting Started with Create React App
+## Getting Started with Vite
 
-This project was initially bootstrapped with [Create React App](https://github.com/facebook/create-react-app), but since CRA seems is no longer maintained I switched to using [Vite](https://vitejs.dev/)
+Although this project was initially bootstrapped with [Create React App](https://github.com/facebook/create-react-app), CRA is no longer maintained and we switched to using [Vite](https://vitejs.dev/). Have a look at the Vite documentation to see why we use it.
 
 ## Available Scripts
 
@@ -17,15 +17,16 @@ There are a number of scripts defined in the `package.json` file:
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "optimize": "vite optimize"
+  }
 ```
 
 ### `npm run dev`
 
-Runs the app in the development mode, and will serve on port 3003.\
-Open [http://localhost:3003](http://localhost:3003) to view it in the browser.
+Runs the app in the development mode, and will serve on port 3002.\
 
-The page will automagically refresh if you make edits.\
-You will also see any lint errors in the console.
+Open [http://localhost:3002](http://localhost:3002) to view the developemnt instance in the browser.
+
+The page will automagically refresh if you make edits. You will also see any linting errors in the console.
 
 ### `npm run build`
 
@@ -45,9 +46,7 @@ Pre-bundle dependencies.
 
 ## Deploy production
 
-```bash
-pm2 deploy ecosystem.config.cjs production update
-```
+The production instance is served from an `ngnix` Docker container. Have a look at the `Dockerfile` for details of the docker build. The entire production ecosystem is deployed as a single Docker compose setup. Details are in the [bilbomd](https://github.com/bl1231/bilbomd) repo.
 
 ## Version History
 

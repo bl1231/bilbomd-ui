@@ -25,7 +25,7 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
   useEffect(() => {
     const verifyRefreshToken = async () => {
       try {
-        await refresh()
+        await refresh({})
         setTrueSuccess(true)
       } catch (error) {
         console.error('verifyRefreshToken error:', error)

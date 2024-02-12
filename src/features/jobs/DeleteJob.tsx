@@ -45,7 +45,6 @@ const DeleteJob = ({ id, title }: DeleteJobProps) => {
     if (isError) {
       console.log('DeleteJob isError:', isError, 'error:', error)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess, isError, error])
 
   return (
