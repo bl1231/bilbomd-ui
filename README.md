@@ -46,7 +46,7 @@ Pre-bundle dependencies.
 
 ## Deploy production
 
-The production instance is served from an `ngnix` Docker container. Have a look at the `Dockerfile` for details of the docker build. The entire production ecosystem is deployed as a single Docker compose setup. Details are in the [bilbomd](https://github.com/bl1231/bilbomd) repo.
+The production instance is served from an `ngnix` [Docker container](https://hub.docker.com/_/nginx). Have a look at the `Dockerfile` for details of the docker build. The entire production ecosystem is deployed as a single Docker compose setup. Details are in the [bilbomd](https://github.com/bl1231/bilbomd) repo.
 
 ## Version History
 
@@ -69,7 +69,7 @@ The production instance is served from an `ngnix` Docker container. Have a look 
 - 1.4.2
   - Improvements to the Molstar viewer.
 - 1.4.1
-  - Forgot to merge the feature brnach... oops.
+  - Forgot to merge the feature branch... oops.
   - Now we should have a Molstar viewer.
 - 1.4.0
   - Add [Molstar][Molstar] viewer for Scoper Job detail page.
@@ -82,7 +82,7 @@ The production instance is served from an `ngnix` Docker container. Have a look 
   - Upgrade redux and redux toolkit
 - 1.2.3
   - Some improvements to the Job details component
-  - Changes to allow Docker deployment
+  - Changes to allow Docker deployment for UI
   - update Vite from 4.5.0 to 5.0.0
 - 1.2.2
   - Add better information about number of MD runs and conformation to Job details
