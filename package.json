@@ -21,7 +21,7 @@
     "@mui/material": "^5.15.10",
     "@mui/system": "^5.15.9",
     "@mui/x-data-grid": "^6.19.4",
-    "@reduxjs/toolkit": "^2.1.0",
+    "@reduxjs/toolkit": "^2.2.0",
     "@types/node": "^20.11.17",
     "axios": "^1.6.7",
     "clsx": "^2.1.0",
