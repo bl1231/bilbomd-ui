@@ -23,7 +23,7 @@ const JobSummary = ({ job }: JobSummaryProps) => {
             >
               {job.mongo.title}
               <JobDetails id={job.mongo.id} title={job.mongo.title} />
-              <DeleteJob id={job.mongo.id} title={job.mongo.title} />
+              <DeleteJob id={job.mongo.id} title={job.mongo.title} hide={false} />
             </Typography>
             <Typography variant="body2">Status: {job.mongo.status}</Typography>
             <Typography variant="body2">Created At: {job.mongo.createdAt}</Typography>
