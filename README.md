@@ -50,6 +50,8 @@ The production instance is served from an `ngnix` [Docker container](https://hub
 
 ## Version History
 
+- 1.7.2
+  - PAE Jiffy now accepts only `PDB` file instead of CRD.
 - 1.7.1
   - Hide delete button for jobs that are "Submitted" or "Running"
   - Comment out some verbose unneeded console logs
