@@ -32,7 +32,6 @@ import HeaderBox from 'components/HeaderBox'
 const Alphafold2PAEJiffy = () => {
   const token = useSelector(selectCurrentToken)
   const navigate = useNavigate()
-  // const { resetForm } = useFormikContext()
   const { email } = useAuth()
   const [success, setSuccess] = useState(false)
   const [uuid, setUuid] = useState('')
@@ -59,7 +58,6 @@ const Alphafold2PAEJiffy = () => {
       if (response.status === 200) {
         const data = response.data
         setUuid(data.uuid)
-        // setConstfile(data.const_file)
         setSuccess(true)
       } else {
         console.log('API request failed')
@@ -68,11 +66,12 @@ const Alphafold2PAEJiffy = () => {
       console.log('failed')
     }
   }
+
   const handleReset = () => {
-    // resetForm() // Reset the form using resetForm
     setSuccess(false)
     navigate('/dashboard/af2pae')
   }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -122,10 +121,6 @@ const Alphafold2PAEJiffy = () => {
               </HeaderBox>
             </AccordionSummary>
             <AccordionDetails>
-              {/* <Alert severity="warning" sx={{ m: 2 }}>
-                This tool is very new and still under active development. If you run into
-                any issues please let us know.
-              </Alert> */}
               <Typography sx={{ mx: 1 }}>
                 The <b>PAE Jiffy</b> will use the Predicted Alignment Error (PAE) file in
                 JSON format from AlphaFold to automagically define the rigid bodies and
@@ -146,17 +141,6 @@ const Alphafold2PAEJiffy = () => {
                     </Link>{' '}
                     database hosted at EMBL-EBI.
                   </li>
-                  {/* <li>
-                    Use the <b>PDB Reader</b> tool available from{' '}
-                    <Link
-                      href="https://www.charmm-gui.org/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      CHARMM-GUI
-                    </Link>{' '}
-                    to convert a standard PDB file to a CRD file.
-                  </li> */}
                   <li>
                     Upload the files here and our server will create a CHARMM-compatable{' '}
                     <code>const.inp</code> file for you. After you download your{' '}
