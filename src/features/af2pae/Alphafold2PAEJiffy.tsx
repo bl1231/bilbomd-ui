@@ -14,7 +14,7 @@ import { Form, Formik, Field } from 'formik'
 import useAuth from 'hooks/useAuth'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { af2paeJiffySchema } from 'schemas/ValidationSchemas'
+import { af2paeJiffySchema } from 'schemas/Alphafold2PAEValidationSchema'
 import FileSelect from 'features/jobs/FileSelect'
 import { Debug } from 'components/Debug'
 import LoadingButton from '@mui/lab/LoadingButton'
@@ -32,14 +32,13 @@ import HeaderBox from 'components/HeaderBox'
 const Alphafold2PAEJiffy = () => {
   const token = useSelector(selectCurrentToken)
   const navigate = useNavigate()
-  // const { resetForm } = useFormikContext()
   const { email } = useAuth()
   const [success, setSuccess] = useState(false)
   const [uuid, setUuid] = useState('')
   const [constfile, setConstfile] = useState('')
 
   const initialValues = {
-    crd_file: '',
+    pdb_file: '',
     pae_file: '',
     email: email
   }
@@ -47,7 +46,7 @@ const Alphafold2PAEJiffy = () => {
   const onSubmit = async (values) => {
     console.log('submit form')
     const form = new FormData()
-    form.append('crd_file', values.crd_file)
+    form.append('pdb_file', values.pdb_file)
     form.append('pae_file', values.pae_file)
     form.append('email', values.email)
     try {
@@ -59,7 +58,6 @@ const Alphafold2PAEJiffy = () => {
       if (response.status === 200) {
         const data = response.data
         setUuid(data.uuid)
-        // setConstfile(data.const_file)
         setSuccess(true)
       } else {
         console.log('API request failed')
@@ -68,11 +66,12 @@ const Alphafold2PAEJiffy = () => {
       console.log('failed')
     }
   }
+
   const handleReset = () => {
-    // resetForm() // Reset the form using resetForm
     setSuccess(false)
     navigate('/dashboard/af2pae')
   }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -122,21 +121,17 @@ const Alphafold2PAEJiffy = () => {
               </HeaderBox>
             </AccordionSummary>
             <AccordionDetails>
-              <Alert severity="warning" sx={{ m: 2 }}>
-                This tool is very new and still under active development. If you run into
-                any issues please let us know.
-              </Alert>
               <Typography sx={{ mx: 1 }}>
                 The <b>PAE Jiffy</b> will use the Predicted Alignment Error (PAE) file in
                 JSON format from AlphaFold to automagically define the rigid bodies and
-                rigid domains of your CRD file, for input into BilboMD.
+                rigid domains of your PDB file, for input into BilboMD.
               </Typography>
               <Typography component={'span'} variant={'body1'}>
                 <ol>
                   <li>
-                    Obtain the PAE file from AlphaFold. This can either be from running
-                    AlphaFold on your own in a colabfold notebook or downloaded from
-                    pre-predicted structures available from the{' '}
+                    Obtain the PAE file from AlphaFold. Either from running AlphaFold on
+                    your own in a colabfold notebook or downloaded from pre-predicted
+                    structures available from the{' '}
                     <Link
                       href="https://alphafold.ebi.ac.uk/"
                       target="_blank"
@@ -147,18 +142,7 @@ const Alphafold2PAEJiffy = () => {
                     database hosted at EMBL-EBI.
                   </li>
                   <li>
-                    Use the <b>PDB Reader</b> tool available from{' '}
-                    <Link
-                      href="https://www.charmm-gui.org/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      CHARMM-GUI
-                    </Link>{' '}
-                    to convert a standard PDB file to a CRD file.
-                  </li>
-                  <li>
-                    Upload the files here and our server will create a{' '}
+                    Upload the files here and our server will create a CHARMM-compatable{' '}
                     <code>const.inp</code> file for you. After you download your{' '}
                     <code>const.inp</code> file please check that it makes sense to you
                     before using it in a <b>BilboMD</b> run.
@@ -227,16 +211,16 @@ const Alphafold2PAEJiffy = () => {
                       sx={{ display: 'flex' }}
                     >
                       <Field
-                        name="crd_file"
-                        id="crd-file-upload"
+                        name="pdb_file"
+                        id="pdb-file-upload"
                         as={FileSelect}
                         title="Select File"
                         disabled={isSubmitting}
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}
-                        error={errors.crd_file && values.crd_file}
-                        errorMessage={errors.crd_file ? errors.crd_file : ''}
-                        fileType="CHARMM-GUI *.crd"
+                        error={errors.pdb_file && values.pdb_file}
+                        errorMessage={errors.pdb_file ? errors.pdb_file : ''}
+                        fileType="*.pdb"
                         fileExt=".crd"
                       />
                       <Field
@@ -261,7 +245,7 @@ const Alphafold2PAEJiffy = () => {
                         <LoadingButton
                           type="submit"
                           disabled={
-                            !isValid || values.crd_file === '' || values.pae_file === ''
+                            !isValid || values.pdb_file === '' || values.pae_file === ''
                           }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}
