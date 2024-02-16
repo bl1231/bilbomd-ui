@@ -1,121 +1,156 @@
-import { useState, useEffect } from 'react'
-import { Field, useField, useFormikContext } from 'formik'
-import { Alert, Grid, Typography, Link } from '@mui/material'
+import { ChangeEvent, useEffect } from 'react'
+import { Field, useFormikContext } from 'formik'
+import { Grid, Typography, Link } from '@mui/material'
 import * as PropTypes from 'prop-types'
-import CrdFileField from '../FormFields/CrdFileField'
+import FileField from '../FormFields/FileField'
 import CrdSummary from '../Helpers/CrdSummary'
 import Paper from '@mui/material/Paper'
 import { useTheme } from '@mui/material/styles'
 import useTitle from 'hooks/useTitle'
 import { Box } from '@mui/system'
-import { Chain, RigidBody } from 'types/interfaces'
+import { Chain, RigidBody, Atom } from 'types/interfaces'
 import HeaderBox from 'components/HeaderBox'
 
+interface AtomsByChain {
+  [chainId: string]: Atom[]
+}
+interface MyFormValues {
+  pdb_file: {
+    file: File | null
+    src: string | null
+    name: string
+    chains: Chain[]
+    rigid_bodies: RigidBody[]
+  }
+}
+
 const UploadForm = ({ setStepIsValid }) => {
-  useTitle('BilboMD: Upload CRD file')
+  useTitle('BilboMD: Upload PDB file')
   const theme = useTheme()
-  const { isValid } = useFormikContext()
-  const [field, meta, helper] = useField('crd_file')
-  const { value } = field
-  const { touched, error } = meta
-  const { setValue } = helper
-  const isError = touched && error
-  const [fileName, setFileName] = useState<string>(value.name)
-  const [file, setFile] = useState<File | undefined>(value.file)
-  const [src, setSrc] = useState<FileReader | null>(value.src)
-  const [chains, setChains] = useState<Chain[]>(value.chains)
-  const [rigidBodies, setRigidBodies] = useState<RigidBody[]>(value.rigid_bodies)
+  const { values, setFieldValue, setFieldError, isValid, errors } =
+    useFormikContext<MyFormValues>()
+  const { name, src, chains, rigid_bodies } = values.pdb_file
 
-  const parseCrdFile = () => {
-    setValue({
-      file: file,
-      src: src,
-      name: fileName,
-      chains: chains,
-      rigid_bodies: rigidBodies
-    })
+  const parsePdbFile = () => {
+    const src = values.pdb_file.src
+    let atomLines: string[] = []
 
-    const loi =
-      /^\s*(?:\d+\s+){2}(?:\S+\s+){2}(?:[+-]?\d+\.\d+\s+){3}(?:\D+\s+){1}(?:\d+\s+){1}(?:\d+\.\d+){1}$/gm
+    if (src !== null && typeof src === 'string') {
+      // Preliminary check for ATOM lines to validate PDB file format
+      const hasValidAtomLines = src
+        .split('\n')
+        .some((line) => line.startsWith('ATOM') || line.startsWith('HETATM'))
 
-    let data: RegExpMatchArray | null = null
-    // let data: RegExpMatchArray
-    if (src !== null && typeof src.result === 'string') {
-      data = src.result.match(loi)
+      if (!hasValidAtomLines) {
+        // Handle invalid file format (e.g., set an error state, show a message)
+        setFieldError('pdb_file.file', 'Invalid PDB file: No ATOM/HETATM records found.')
+        return // Exit the function early
+      }
+      atomLines = src.split('\n').filter((line) => line.startsWith('ATOM'))
     }
-    if (!data) return
-    // console.log('data:', data)
-    // data is now an Array so grab 8th item from every element. use map?
-    // console.time('get unique chains')
-    const allChainIds: string[] = data.map((line: string) => {
-      //console.log(line)
-      const items = line.split(/\s+/)
-      return items[8]
+
+    const atoms: Atom[] = atomLines.map((line) => {
+      return {
+        serial: parseInt(line.substring(6, 11).trim()),
+        name: line.substring(12, 16).trim(),
+        altLoc: line.substring(16, 17).trim(),
+        resName: line.substring(17, 20).trim(),
+        chainID: line.substring(21, 22).trim(),
+        resSeq: parseInt(line.substring(22, 26).trim()),
+        iCode: line.substring(26, 27).trim(),
+        x: parseFloat(line.substring(30, 38).trim()),
+        y: parseFloat(line.substring(38, 46).trim()),
+        z: parseFloat(line.substring(46, 54).trim()),
+        occupancy: parseFloat(line.substring(54, 60).trim()),
+        tempFactor: parseFloat(line.substring(60, 66).trim()),
+        element: line.substring(76, 78).trim(),
+        charge: line.substring(78, 80).trim()
+      }
     })
 
-    const uniqueChains: string[] = [...new Set(allChainIds)]
-    // console.log('uniqueChains', uniqueChains)
+    const uniqueChains = [...new Set(atoms.map((atom) => atom.chainID))]
+    console.log('Unique Chains:', uniqueChains)
+
     const charmmChains: Chain[] = []
     const demRigidBodies: RigidBody[] = [{ id: 'PRIMARY', domains: [] }]
 
-    uniqueChains.forEach((chainId) => {
-      const filteredData = data!.filter((line) => line.includes(chainId))
+    const atomsByChain: AtomsByChain = atoms.reduce((acc: AtomsByChain, atom: Atom) => {
+      const { chainID } = atom
+      if (!acc[chainID]) {
+        acc[chainID] = []
+      }
+      acc[chainID].push(atom)
+      return acc
+    }, {})
 
-      const length = filteredData.length
-      const firstLine = filteredData[0]
-      const lastLine = filteredData[length - 1]
-      const firstRes = Number(firstLine.split(/\s+/)[9])
-      const lastRes = Number(lastLine.split(/\s+/)[9])
-      const numResidues = lastRes - firstRes
+    Object.entries(atomsByChain).forEach(([chainId, atoms]) => {
+      // Ensure atoms are sorted by their residue sequence number
+      const sortedAtoms = atoms.sort((a, b) => a.resSeq - b.resSeq)
+
+      const firstAtom = sortedAtoms[0]
+      const lastAtom = sortedAtoms[sortedAtoms.length - 1]
+
+      // Use nullish coalescing or other type-safe operations to handle potential undefined values
+      const firstRes: number = firstAtom?.resSeq ?? 0
+      const lastRes: number = lastAtom?.resSeq ?? 0
+      const numResidues: number = lastRes - firstRes + 1
+
       const charmmChain: Chain = {
         id: chainId,
-        atoms: length,
+        atoms: sortedAtoms.length,
         first_res: firstRes,
         last_res: lastRes,
         num_res: numResidues,
         domains: [{ start: firstRes, end: lastRes }]
       }
       charmmChains.push(charmmChain)
+
       demRigidBodies[0].domains.push({
         chainid: chainId,
         start: firstRes,
         end: lastRes
       })
     })
-    setChains(charmmChains)
-    setRigidBodies(demRigidBodies)
+
+    // Before updating Formik state, check if new data is different from current state
+    if (
+      JSON.stringify(chains) !== JSON.stringify(charmmChains) ||
+      JSON.stringify(rigid_bodies) !== JSON.stringify(demRigidBodies)
+    ) {
+      setFieldValue('pdb_file.chains', charmmChains)
+      setFieldValue('pdb_file.rigid_bodies', demRigidBodies)
+    }
   }
 
-  const onChange = async (event) => {
-    // setTouched()
-    const file = event.target.files[0]
-    const filePromise = new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onload = async () => {
-        try {
-          const result = await reader.DONE
-          setSrc(reader)
-          setFile(file)
-          setFileName(file.name)
-          resolve(result)
-        } catch (error) {
-          reject(error)
+  const onChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0]
+      if (file) {
+        setFieldValue('pdb_file.file', file)
+        setFieldValue('pdb_file.name', file.name)
+        const reader = new FileReader()
+        reader.onload = () => {
+          // Ensure reader.result is a string before setting the value
+          if (typeof reader.result === 'string') {
+            setFieldValue('pdb_file.src', reader.result)
+          }
+          setFieldValue('pdb_file.name', file.name)
+          setFieldValue('pdb_file.file', file)
         }
+        reader.onerror = (error) => {
+          console.error('File reading error:', error)
+        }
+        reader.readAsText(file)
       }
-      reader.onerror = (error) => {
-        reject(error)
-      }
-      reader.readAsText(file)
-    })
-    await filePromise
+    }
   }
 
   useEffect(() => {
-    if (file && fileName && src && chains) {
-      parseCrdFile()
+    if (src) {
+      parsePdbFile()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [src, fileName, file, chains[0]?.id])
+  }, [src])
 
   useEffect(() => {
     setStepIsValid(isValid)
@@ -132,7 +167,7 @@ const UploadForm = ({ setStepIsValid }) => {
 
           <Paper sx={{ p: 1 }}>
             <Typography variant="h4" sx={{ m: 1 }}>
-              Select a *CRD file to upload
+              Select a PDB file to upload
             </Typography>
             <Typography sx={{ m: 1 }}>
               <b>BilboMD</b> uses{' '}
@@ -144,8 +179,8 @@ const UploadForm = ({ setStepIsValid }) => {
                 CHARMM
               </Link>{' '}
               to generate an ensemble of molecular models. In order for the Molecular
-              Dynamics steps to run successfully it is imperative that the rigid and
-              flexible regions of your molecule are defined in proper CHARMM{' '}
+              Dynamics steps to run successfully you must define the rigid and flexible
+              regions of your molecule using proper CHARMM{' '}
               <Link
                 href="https://academiccharmm.org/documentation/version/c47b2/select"
                 target="_blank"
@@ -153,17 +188,7 @@ const UploadForm = ({ setStepIsValid }) => {
               >
                 atom selection
               </Link>{' '}
-              syntax. This web jiffy should help you get started. You will need to use the{' '}
-              <b>PDB Reader</b> tool available from{' '}
-              <Link
-                href="https://www.charmm-gui.org/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                CHARMM-GUI
-              </Link>{' '}
-              to convert your PDB file to CRD. You will need to register for a account
-              before you can use CHARMM-GUI tools.
+              syntax.
             </Typography>
             <Typography sx={{ m: 1 }}>
               Example{' '}
@@ -196,13 +221,16 @@ const UploadForm = ({ setStepIsValid }) => {
                 <br />
                 cons fix sele fixed1 .or. fixed2 end
                 <br />
+                <br />
                 define rigid1 sele ( resid 8:155 .and. segid PROA ) end
                 <br />
                 shape desc dock1 rigid sele rigid1 end
                 <br />
+                <br />
                 define rigid1 sele ( resid 51:79 .and. segid PROB ) end
                 <br />
                 shape desc dock2 rigid sele rigid1 end
+                <br />
                 <br />
                 return
               </Typography>
@@ -217,31 +245,21 @@ const UploadForm = ({ setStepIsValid }) => {
             <Grid container direction="column">
               <Grid item xs={6}>
                 <Field
-                  name="crd_file"
-                  id="crd_file"
-                  title="Select CRD File"
-                  // variant="outlined"
-                  // field={field}
-                  as={CrdFileField}
+                  name="pdb_file"
+                  id="pdb_file"
+                  title="Select PDB File"
+                  as={FileField}
                   onChange={onChange}
-                  isError={Boolean(error && touched)}
-                  error={error}
-                  errorMessage={isError ? error : ''}
+                  isError={Boolean(errors.pdb_file)}
+                  errorMessage={
+                    errors.pdb_file ? errors.pdb_file.file || 'Error uploading file' : ''
+                  }
                 />
-              </Grid>
-              <Grid item>
-                {isError ? (
-                  <Alert severity="error" sx={{ my: 1 }}>
-                    <Typography>ERROR</Typography>
-                  </Alert>
-                ) : (
-                  ''
-                )}
               </Grid>
             </Grid>
           </Paper>
         </Grid>
-        {fileName && !error ? (
+        {name && (!errors.pdb_file || !errors.pdb_file.file) ? (
           <Grid item xs={12}>
             <HeaderBox>
               <Typography>Summary</Typography>
@@ -249,9 +267,9 @@ const UploadForm = ({ setStepIsValid }) => {
 
             <Paper sx={{ p: 1 }}>
               <Typography variant="h4" sx={{ my: 2 }}>
-                CRD Filename: {fileName}
+                PDB Filename: {name}
               </Typography>
-              {file && src && chains && <CrdSummary chains={chains}></CrdSummary>}
+              <CrdSummary chains={chains}></CrdSummary>
             </Paper>
           </Grid>
         ) : (
@@ -267,3 +285,4 @@ UploadForm.propTypes = {
 }
 
 export default UploadForm
+//

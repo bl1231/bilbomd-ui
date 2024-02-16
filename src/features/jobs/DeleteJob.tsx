@@ -18,7 +18,7 @@ const DeleteJob = ({ id, title, hide }: DeleteJobProps) => {
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [deleteJob, { isSuccess, isError, error }] = useDeleteJobMutation()
-  console.log('title:', title, 'hide:', hide)
+  // console.log('title:', title, 'hide:', hide)
   const onClickDelete = async () => {
     setDeleting(true) // Start deletion process
     // const start = Date.now()

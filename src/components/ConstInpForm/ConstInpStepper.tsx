@@ -14,7 +14,7 @@ import { Form, Formik } from 'formik'
 import { Debug } from 'components/Debug'
 import { Alert } from '@mui/material'
 
-const steps = ['Upload CRD File', 'Select Rigid domains', 'Preview & Download']
+const steps = ['Upload PDB File', 'Select Rigid domains', 'Preview & Download']
 
 // interesting idea see Niiima Bastani on codesandbox
 const { formId } = formModel
@@ -120,7 +120,7 @@ const ConstInpStepper = () => {
             <Formik
               initialValues={initialValues}
               validationSchema={currentValidationSchema}
-              validateOnMount={true}
+              validateOnMount={false}
               enableReinitialize={true}
               onSubmit={(values, { resetForm }) => {
                 // Handle form submission logic here

@@ -16,7 +16,7 @@ const Preview = () => {
   const [constFilePreview, setConstFilePreview] = useState('')
   const [constFileBlob, setConstFileBlob] = useState<Blob | null>(null)
   const { values } = useFormikContext<FormikValues>()
-  const rigid_bodies = values.crd_file.rigid_bodies as RigidBody[]
+  const rigid_bodies = values.pdb_file.rigid_bodies as RigidBody[]
 
   const prepareConstInputFile = (rigidBodies: RigidBody[]) => {
     const contentArray: string[] = []

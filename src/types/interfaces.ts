@@ -13,6 +13,28 @@ interface RigidDomain {
   end: number
 }
 
+export interface RigidBody {
+  id: string
+  domains: RigidDomain[]
+}
+
+export interface Atom {
+  serial: number // Atom serial number
+  name: string // Atom name
+  altLoc: string // Alternate location indicator
+  resName: string // Residue name
+  chainID: string // Chain identifier
+  resSeq: number // Residue sequence number
+  iCode: string // Code for insertion of residues
+  x: number // Orthogonal coordinates for X in Angstroms
+  y: number // Orthogonal coordinates for Y in Angstroms
+  z: number // Orthogonal coordinates for Z in Angstroms
+  occupancy: number // Occupancy
+  tempFactor: number // Temperature factor
+  element: string // Element symbol
+  charge: string // Charge on the atom
+}
+
 interface BullMQData {
   type: string
   title: string
@@ -25,11 +47,6 @@ export interface BullMQJob {
   name: string
   data: BullMQData
   failedReason?: string
-}
-
-export interface RigidBody {
-  id: string
-  domains: RigidDomain[]
 }
 
 export interface Job {

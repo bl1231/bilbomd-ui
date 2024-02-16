@@ -69,7 +69,7 @@ const DomainForm = ({ setStepIsValid }) => {
           </HeaderBox>
           <Paper sx={{ p: 1 }}>
             <Typography>Available Chains: </Typography>
-            {values.crd_file.chains.map((chain, index) => (
+            {values.pdb_file.chains.map((chain, index) => (
               <Chip
                 key={index}
                 label={`${chain.id} : ${chain.first_res}-${chain.last_res}`}
@@ -77,11 +77,11 @@ const DomainForm = ({ setStepIsValid }) => {
             ))}
 
             <Grid item sx={{ my: 3 }}>
-              <FieldArray name="crd_file.rigid_bodies">
+              <FieldArray name="pdb_file.rigid_bodies">
                 {(arrayHelpers) => (
                   <>
-                    {values.crd_file.rigid_bodies.length > 0 &&
-                      values.crd_file.rigid_bodies.map((rigid_body, index) => (
+                    {values.pdb_file.rigid_bodies.length > 0 &&
+                      values.pdb_file.rigid_bodies.map((rigid_body, index) => (
                         <Fragment key={index}>
                           <Grid item sx={{ mb: 4, py: 1 }}>
                             <Grid
@@ -97,7 +97,7 @@ const DomainForm = ({ setStepIsValid }) => {
                               <Typography variant="h4">
                                 Rigid Body: <Chip label={rigid_body.id} />
                               </Typography>
-                              {values.crd_file.rigid_bodies[index]?.id === 'PRIMARY' ? (
+                              {values.pdb_file.rigid_bodies[index]?.id === 'PRIMARY' ? (
                                 <Typography sx={{ ml: 3 }}>
                                   <b>note:</b> Residues in <b>PRIMARY</b> will remain
                                   absolutely fixed during the Molecular Dynamics steps.
@@ -114,7 +114,7 @@ const DomainForm = ({ setStepIsValid }) => {
                               // rigidBodiesArrayHelpers={arrayHelpers}
                             />
                             {/* DO NOT SHOW DELETE BUTTON FOR PRIMARY */}
-                            {values.crd_file.rigid_bodies[index]?.id !== 'PRIMARY' ? (
+                            {values.pdb_file.rigid_bodies[index]?.id !== 'PRIMARY' ? (
                               <Button
                                 variant="contained"
                                 color="error"
@@ -123,7 +123,7 @@ const DomainForm = ({ setStepIsValid }) => {
                                   arrayHelpers.remove(index)
                                 }}
                               >
-                                Delete {values.crd_file.rigid_bodies[index]?.id}
+                                Delete {values.pdb_file.rigid_bodies[index]?.id}
                               </Button>
                             ) : (
                               ''
@@ -139,7 +139,7 @@ const DomainForm = ({ setStepIsValid }) => {
                           id: 'RIGID ' + rigidBodyIndex,
                           domains: [
                             {
-                              chainid: values.crd_file.chains[0].id,
+                              chainid: values.pdb_file.chains[0].id,
                               start: '',
                               end: ''
                             }

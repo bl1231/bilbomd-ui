@@ -1,9 +1,10 @@
-import { Button, FormControl, Input } from '@mui/material'
+// CrdFileField.tsx
+import { Button, FormControl, Input, FormHelperText } from '@mui/material'
 import * as PropTypes from 'prop-types'
 
-const CrdFileField = ({ id, name, onChange, title }) => {
+const CrdFileField = ({ id, name, onChange, title, isError, errorMessage }) => {
   return (
-    <FormControl>
+    <FormControl error={isError}>
       <Input
         style={{ display: 'none' }}
         id={id}
@@ -16,6 +17,7 @@ const CrdFileField = ({ id, name, onChange, title }) => {
           {title}
         </Button>
       </label>
+      {isError && <FormHelperText>{errorMessage}</FormHelperText>}
     </FormControl>
   )
 }
@@ -24,7 +26,9 @@ CrdFileField.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  isError: PropTypes.bool,
+  errorMessage: PropTypes.string
 }
 
 export default CrdFileField

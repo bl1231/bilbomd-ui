@@ -21,10 +21,10 @@ const RigidBody = ({ rigidBodyIndex }) => {
           }}
         >
           <>
-            <FieldArray name={`crd_file.rigid_bodies[${rigidBodyIndex}].domains`}>
+            <FieldArray name={`pdb_file.rigid_bodies[${rigidBodyIndex}].domains`}>
               {(arrayHelpers) => (
                 <>
-                  {values.crd_file.rigid_bodies[rigidBodyIndex].domains.map(
+                  {values.pdb_file.rigid_bodies[rigidBodyIndex].domains.map(
                     (domain, index) => (
                       <Fragment key={index}>
                         <Grid

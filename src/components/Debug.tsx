@@ -4,7 +4,6 @@ import { blue, green } from '@mui/material/colors'
 
 export const Debug = () => {
   const theme = useTheme()
-  // console.log(theme)
   return (
     <div
       style={{
@@ -21,7 +20,6 @@ export const Debug = () => {
           fontWeight: 500,
           padding: '.5rem',
           background: '#555',
-
           letterSpacing: '1px'
         }}
       >
@@ -37,7 +35,11 @@ export const Debug = () => {
               fontSize: '.85rem',
               padding: '.25rem .5rem',
               backgroundColor: theme.palette.mode === 'light' ? green[50] : green[900],
-              color: theme.palette.mode === 'light' ? blue[900] : blue[100]
+              color: theme.palette.mode === 'light' ? blue[900] : blue[100],
+              width: '90%',
+              overflowX: 'auto',
+              wordWrap: 'break-word', // Enable word wrapping
+              whiteSpace: 'pre-wrap' // Keep formatting but allow breaks
             }}
           >
             {JSON.stringify(rest, null, 3)}
