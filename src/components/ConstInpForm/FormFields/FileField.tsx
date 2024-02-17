@@ -51,8 +51,12 @@ const FileField = ({
             <Button
               variant="contained"
               component="span"
-              sx={{ width: '150px' }}
-              size="large"
+              sx={{
+                height: '55px',
+                width: '160px',
+                fontSize: '1.1rem',
+                alignItems: 'center'
+              }}
             >
               {title}
             </Button>
@@ -60,12 +64,27 @@ const FileField = ({
         </Grid>
         <Grid item>
           {fileName && !errorMessage ? (
-            <Alert variant="outlined" severity="success" sx={{ py: 0 }}>
+            <Alert
+              variant="outlined"
+              severity="success"
+              sx={{
+                height: '55px',
+                fontSize: '1.1rem',
+                alignItems: 'center'
+              }}
+            >
               {fileName}
             </Alert>
           ) : null}
           {isError ? (
-            <Alert severity="error" sx={{ py: 0 }}>
+            <Alert
+              severity="error"
+              sx={{
+                height: '55px',
+                fontSize: '1.1rem',
+                alignItems: 'center'
+              }}
+            >
               {errorMessage}
             </Alert>
           ) : null}
