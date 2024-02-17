@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect } from 'react'
 import { Field, useFormikContext } from 'formik'
-import { Grid, Typography, Link } from '@mui/material'
+import { Grid, Typography, Link, Alert } from '@mui/material'
 import * as PropTypes from 'prop-types'
 import FileField from '../FormFields/FileField'
 import ChainSummary from '../Helpers/ChainSummary'
@@ -23,6 +23,58 @@ interface MyFormValues {
     rigid_bodies: RigidBody[]
   }
 }
+const proteinResidues = new Set([
+  'ALA',
+  'CYS',
+  'ASP',
+  'GLU',
+  'PHE',
+  'GLY',
+  'HIS',
+  'ILE',
+  'LYS',
+  'LEU',
+  'MET',
+  'ASN',
+  'PRO',
+  'GLN',
+  'ARG',
+  'SER',
+  'THR',
+  'VAL',
+  'TRP',
+  'TYR'
+])
+const dnaResidues = new Set(['DA', 'DC', 'DG', 'DT', 'DU']) // Deoxyribonucleotides
+const rnaResidues = new Set(['A', 'C', 'G', 'U']) // Ribonucleotides
+const carbResidues = new Set([
+  'AFL',
+  'ALL',
+  'BMA',
+  'BGC',
+  'BOG',
+  'FCA',
+  'FCB',
+  'FMF',
+  'FUC',
+  'FUL',
+  'G4S',
+  'GAL',
+  'GLA',
+  'GLB',
+  'GLC',
+  'GLS',
+  'GSA',
+  'LAK',
+  'LAT',
+  'MAF',
+  'MAL',
+  'NAG',
+  'NAN',
+  'NGA',
+  'SIA',
+  'SLB'
+])
 
 const UploadForm = ({ setStepIsValid }) => {
   useTitle('BilboMD: Upload PDB file')
@@ -44,9 +96,11 @@ const UploadForm = ({ setStepIsValid }) => {
       if (!hasValidAtomLines) {
         // Handle invalid file format (e.g., set an error state, show a message)
         setFieldError('pdb_file.file', 'Invalid PDB file: No ATOM/HETATM records found.')
-        return // Exit the function early
+        return
       }
-      atomLines = src.split('\n').filter((line) => line.startsWith('ATOM'))
+      atomLines = src
+        .split('\n')
+        .filter((line) => line.startsWith('ATOM') || line.startsWith('HETATM'))
     }
 
     const atoms: Atom[] = atomLines.map((line) => {
@@ -94,6 +148,19 @@ const UploadForm = ({ setStepIsValid }) => {
       const firstRes: number = firstAtom?.resSeq ?? 0
       const lastRes: number = lastAtom?.resSeq ?? 0
       const numResidues: number = lastRes - firstRes + 1
+      // Determine chain type
+      let chainType = 'Other' // Default category
+      const resNames = new Set(atoms.map((atom) => atom.resName))
+
+      if (Array.from(resNames).some((resName) => proteinResidues.has(resName))) {
+        chainType = 'Protein'
+      } else if (Array.from(resNames).some((resName) => dnaResidues.has(resName))) {
+        chainType = 'DNA'
+      } else if (Array.from(resNames).some((resName) => rnaResidues.has(resName))) {
+        chainType = 'RNA'
+      } else if (Array.from(resNames).some((resName) => carbResidues.has(resName))) {
+        chainType = 'Carbohydrate'
+      }
 
       const charmmChain: Chain = {
         id: chainId,
@@ -101,6 +168,7 @@ const UploadForm = ({ setStepIsValid }) => {
         first_res: firstRes,
         last_res: lastRes,
         num_res: numResidues,
+        type: chainType,
         domains: [{ start: firstRes, end: lastRes }]
       }
       charmmChains.push(charmmChain)
@@ -268,9 +336,12 @@ const UploadForm = ({ setStepIsValid }) => {
             </HeaderBox>
 
             <Paper sx={{ p: 1 }}>
-              <Typography variant="h4" sx={{ my: 2 }}>
+              {/* <Typography variant="h4" sx={{ my: 2 }}>
                 PDB Filename: {name}
-              </Typography>
+              </Typography> */}
+              <Alert variant="outlined" severity="success" sx={{ p: 1, my: 2 }}>
+                File Name: {name}
+              </Alert>
               <ChainSummary chains={chains}></ChainSummary>
             </Paper>
           </Grid>

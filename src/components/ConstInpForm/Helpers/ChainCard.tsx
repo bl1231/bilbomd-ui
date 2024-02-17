@@ -18,8 +18,9 @@ const ChainCard = ({ chain }: ChainCardProps) => {
               : theme.palette.grey[600]
         }}
       >
-        <CardHeader title={'Chain ID: ' + chain.id} />
+        <CardHeader title={'Chain ID:  ' + chain.id} />
         <CardContent>
+          <Typography>Type: {chain.type}</Typography>
           <Typography variant="body1">Residues: {chain.num_res}</Typography>
           <Typography variant="body1">Atoms: {chain.atoms}</Typography>
           <Typography variant="body1">First Res: {chain.first_res}</Typography>

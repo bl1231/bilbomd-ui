@@ -4,6 +4,7 @@ export interface Chain {
   first_res: number
   last_res: number
   num_res: number
+  type: string
   domains: { start: number; end: number }[]
 }
 
