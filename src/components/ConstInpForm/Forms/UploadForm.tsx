@@ -68,8 +68,8 @@ const UploadForm = ({ setStepIsValid }) => {
       }
     })
 
-    const uniqueChains = [...new Set(atoms.map((atom) => atom.chainID))]
-    console.log('Unique Chains:', uniqueChains)
+    // const uniqueChains = [...new Set(atoms.map((atom) => atom.chainID))]
+    // console.log('Unique Chains:', uniqueChains)
 
     const charmmChains: Chain[] = []
     const demRigidBodies: RigidBody[] = [{ id: 'PRIMARY', domains: [] }]
@@ -134,6 +134,7 @@ const UploadForm = ({ setStepIsValid }) => {
           if (typeof reader.result === 'string') {
             setFieldValue('pdb_file.src', reader.result)
           }
+          // console.log('read file.... I think')
           setFieldValue('pdb_file.name', file.name)
           setFieldValue('pdb_file.file', file)
         }
@@ -250,6 +251,7 @@ const UploadForm = ({ setStepIsValid }) => {
                   title="Select PDB File"
                   as={FileField}
                   onChange={onChange}
+                  setFieldValue={setFieldValue}
                   isError={Boolean(errors.pdb_file)}
                   errorMessage={
                     errors.pdb_file ? errors.pdb_file.file || 'Error uploading file' : ''
@@ -259,7 +261,7 @@ const UploadForm = ({ setStepIsValid }) => {
             </Grid>
           </Paper>
         </Grid>
-        {name && (!errors.pdb_file || !errors.pdb_file.file) ? (
+        {name && (!errors.pdb_file || !errors.pdb_file.file) && chains ? (
           <Grid item xs={12}>
             <HeaderBox>
               <Typography>Summary</Typography>
