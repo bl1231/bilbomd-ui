@@ -73,6 +73,7 @@ const DomainForm = ({ setStepIsValid }) => {
               <Chip
                 key={index}
                 label={`${chain.id} : ${chain.first_res}-${chain.last_res}`}
+                sx={{ mr: 1 }}
               />
             ))}
 
