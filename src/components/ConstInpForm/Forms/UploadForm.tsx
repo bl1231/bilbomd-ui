@@ -3,7 +3,7 @@ import { Field, useFormikContext } from 'formik'
 import { Grid, Typography, Link } from '@mui/material'
 import * as PropTypes from 'prop-types'
 import FileField from '../FormFields/FileField'
-import CrdSummary from '../Helpers/CrdSummary'
+import ChainSummary from '../Helpers/ChainSummary'
 import Paper from '@mui/material/Paper'
 import { useTheme } from '@mui/material/styles'
 import useTitle from 'hooks/useTitle'
@@ -271,7 +271,7 @@ const UploadForm = ({ setStepIsValid }) => {
               <Typography variant="h4" sx={{ my: 2 }}>
                 PDB Filename: {name}
               </Typography>
-              <CrdSummary chains={chains}></CrdSummary>
+              <ChainSummary chains={chains}></ChainSummary>
             </Paper>
           </Grid>
         ) : (

@@ -2,11 +2,12 @@ import { Grid } from '@mui/material'
 import { Chain } from 'types/interfaces'
 import ChainCard from './ChainCard'
 
-interface CrdSummaryProps {
+interface ChainSummaryProps {
   chains: Chain[]
 }
 
-const CrdSummary = ({ chains }: CrdSummaryProps) => {
+const ChainSummary = ({ chains }: ChainSummaryProps) => {
+  // console.log('ChainSummary', chains)
   const chainCard = (
     <Grid container spacing={3}>
       {chains.map((chain) => (
@@ -20,4 +21,4 @@ const CrdSummary = ({ chains }: CrdSummaryProps) => {
   return chainCard
 }
 
-export default CrdSummary
+export default ChainSummary
