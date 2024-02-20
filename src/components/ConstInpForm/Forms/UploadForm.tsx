@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect } from 'react'
 import { Field, useFormikContext } from 'formik'
-import { Grid, Typography, Link, Alert } from '@mui/material'
+import { Grid, Typography, Link, Chip } from '@mui/material'
 import * as PropTypes from 'prop-types'
 import FileField from '../FormFields/FileField'
 import ChainSummary from '../Helpers/ChainSummary'
@@ -13,6 +13,9 @@ import HeaderBox from 'components/HeaderBox'
 
 interface AtomsByChain {
   [chainId: string]: Atom[]
+}
+interface ResidueAtomNames {
+  [key: string]: string[] // Each key is a residue identifier, mapping to an array of atom names
 }
 interface MyFormValues {
   pdb_file: {
@@ -45,8 +48,8 @@ const proteinResidues = new Set([
   'TRP',
   'TYR'
 ])
-const dnaResidues = new Set(['DA', 'DC', 'DG', 'DT', 'DU']) // Deoxyribonucleotides
-const rnaResidues = new Set(['A', 'C', 'G', 'U']) // Ribonucleotides
+const dnaResidues = new Set(['DA', 'DC', 'DG', 'DT', 'DU', 'ADE', 'CYT', 'GUA', 'THY']) // Deoxyribonucleotides
+// const rnaResidues = new Set(['A', 'C', 'G', 'U', 'URA']) // Ribonucleotides
 const carbResidues = new Set([
   'AFL',
   'ALL',
@@ -148,16 +151,36 @@ const UploadForm = ({ setStepIsValid }) => {
       const firstRes: number = firstAtom?.resSeq ?? 0
       const lastRes: number = lastAtom?.resSeq ?? 0
       const numResidues: number = lastRes - firstRes + 1
+
+      // Collect atom names for each residue within the chain
+      const residueAtomNames = atoms.reduce((acc: ResidueAtomNames, atom: Atom) => {
+        const key = `${atom.resName}-${atom.resSeq}`
+        if (!acc[key]) acc[key] = []
+        acc[key].push(atom.name)
+        return acc
+      }, {})
+
       // Determine chain type
       let chainType = 'Other' // Default category
       const resNames = new Set(atoms.map((atom) => atom.resName))
 
-      if (Array.from(resNames).some((resName) => proteinResidues.has(resName))) {
+      // const allResiduesHaveO2Prime = Object.values(residueAtomNames).every((names) =>
+      //   names.includes("O2'")
+      // )
+      // Calculate the fraction or percentage of residues that have an O2' atom
+      const fractionOfResiduesWithO2Prime =
+        Object.values(residueAtomNames).filter((names) => names.includes("O2'")).length /
+        Object.values(residueAtomNames).length
+      // console.log('fractionOfResiduesWithO2Prime:', fractionOfResiduesWithO2Prime)
+      // Determine if "most" residues have an O2' atom, e.g., more than 50%
+      const mostResiduesHaveO2Prime = fractionOfResiduesWithO2Prime > 0.5
+
+      if (mostResiduesHaveO2Prime) {
+        chainType = 'RNA'
+      } else if (Array.from(resNames).some((resName) => proteinResidues.has(resName))) {
         chainType = 'Protein'
       } else if (Array.from(resNames).some((resName) => dnaResidues.has(resName))) {
         chainType = 'DNA'
-      } else if (Array.from(resNames).some((resName) => rnaResidues.has(resName))) {
-        chainType = 'RNA'
       } else if (Array.from(resNames).some((resName) => carbResidues.has(resName))) {
         chainType = 'Carbohydrate'
       }
@@ -225,7 +248,14 @@ const UploadForm = ({ setStepIsValid }) => {
     setStepIsValid(isValid)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid])
-
+  const customColors = {
+    Protein: theme.palette.mode === 'light' ? '#E6A8A8' : '#b76e79',
+    DNA: theme.palette.mode === 'light' ? '#E9D8A6' : '#b3a272',
+    RNA: theme.palette.mode === 'light' ? '#B5E3D8' : '#6daba4',
+    Carbohydrate: theme.palette.mode === 'light' ? '#A8CCE6' : '#6b95b8',
+    Other: theme.palette.mode === 'light' ? '#D1A8E6' : '#9773b9'
+  }
+  const macroMolecules = ['Protein', 'DNA', 'RNA', 'Carbohydrate', 'Other']
   return (
     <>
       <Grid container spacing={3}>
@@ -336,12 +366,20 @@ const UploadForm = ({ setStepIsValid }) => {
             </HeaderBox>
 
             <Paper sx={{ p: 1 }}>
-              {/* <Typography variant="h4" sx={{ my: 2 }}>
-                PDB Filename: {name}
-              </Typography> */}
-              <Alert variant="outlined" severity="success" sx={{ p: 1, my: 2 }}>
-                File Name: {name}
-              </Alert>
+              <Grid item>
+                {macroMolecules.map((chain: string, index: number) => (
+                  <Chip
+                    key={index}
+                    label={`${chain}`}
+                    sx={{
+                      mr: 1,
+                      mb: 1,
+                      backgroundColor: customColors[chain] || '#9773b9',
+                      color: theme.palette.getContrastText(customColors[chain])
+                    }}
+                  />
+                ))}
+              </Grid>
               <ChainSummary chains={chains}></ChainSummary>
             </Paper>
           </Grid>
