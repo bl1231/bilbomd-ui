@@ -176,17 +176,14 @@ const UploadForm = ({ setStepIsValid }) => {
       }, {})
 
       // Determine chain type
-      let chainType = 'Other' // Default category
+      let chainType = 'Other'
       const resNames = new Set(atoms.map((atom) => atom.resName))
 
-      // const allResiduesHaveO2Prime = Object.values(residueAtomNames).every((names) =>
-      //   names.includes("O2'")
-      // )
       // Calculate the fraction or percentage of residues that have an O2' atom
       const fractionOfResiduesWithO2Prime =
         Object.values(residueAtomNames).filter((names) => names.includes("O2'")).length /
         Object.values(residueAtomNames).length
-      // console.log('fractionOfResiduesWithO2Prime:', fractionOfResiduesWithO2Prime)
+
       // Determine if "most" residues have an O2' atom, e.g., more than 50%
       const mostResiduesHaveO2Prime = fractionOfResiduesWithO2Prime > 0.5
 
@@ -240,7 +237,6 @@ const UploadForm = ({ setStepIsValid }) => {
           if (typeof reader.result === 'string') {
             setFieldValue('pdb_file.src', reader.result)
           }
-          // console.log('read file.... I think')
           setFieldValue('pdb_file.name', file.name)
           setFieldValue('pdb_file.file', file)
         }
@@ -280,34 +276,46 @@ const UploadForm = ({ setStepIsValid }) => {
           </HeaderBox>
 
           <Paper sx={{ p: 1 }}>
-            <Typography variant="h4" sx={{ m: 1 }}>
-              Select a PDB file to upload
-            </Typography>
-            <Typography sx={{ m: 1 }}>
-              <b>BilboMD</b> uses{' '}
-              <Link
-                href="https://academiccharmm.org/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                CHARMM
-              </Link>{' '}
-              to generate an ensemble of molecular models. In order for the Molecular
-              Dynamics steps to run successfully you must define the rigid and flexible
-              regions of your molecule using proper CHARMM{' '}
-              <Link
-                href="https://academiccharmm.org/documentation/version/c47b2/select"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                atom selection
-              </Link>{' '}
-              syntax.
-            </Typography>
+            <Box>
+              <Typography sx={{ m: 1 }}>
+                <b>BilboMD</b> uses{' '}
+                <Link
+                  href="https://academiccharmm.org/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  CHARMM
+                </Link>{' '}
+                to generate an ensemble of molecular models. In order for the Molecular
+                Dynamics steps to run successfully you must define the rigid and flexible
+                regions of your molecule using proper CHARMM{' '}
+                <Link
+                  href="https://academiccharmm.org/documentation/version/c47b2/select"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  atom selection
+                </Link>{' '}
+                syntax. This Jiffy will help you construct a valid{' '}
+                <b>
+                  <code>const.inp</code>{' '}
+                </b>{' '}
+                file: .
+              </Typography>
+              <ul>
+                <li>
+                  <Typography>
+                    The <b>Inp Jiffy</b>
+                    {'\u2122'} will only work with PDB files that have a chain ID.
+                  </Typography>
+                </li>
+              </ul>
+            </Box>
+
             <Accordion sx={{ backgroundColor: '#f5f5f5' }}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography sx={{ m: 1 }}>
-                  Example{' '}
+                  Example of a{' '}
                   <b>
                     <code>const.inp</code>{' '}
                   </b>{' '}
