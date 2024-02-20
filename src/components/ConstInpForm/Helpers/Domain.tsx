@@ -1,18 +1,54 @@
-import { Fragment } from 'react'
+import { Fragment, FC } from 'react'
 import { Field, useFormikContext, ErrorMessage } from 'formik'
-import { Grid, TextField, Typography, Chip, Alert, MenuItem } from '@mui/material'
+import {
+  Grid,
+  TextField,
+  Typography,
+  Chip,
+  Alert,
+  MenuItem,
+  AlertProps
+} from '@mui/material'
 import { Box } from '@mui/system'
-import * as PropTypes from 'prop-types'
+import { Chain, RigidBody, RigidDomain } from 'types/interfaces'
 
-const Domain = ({ rigidBodyIndex: rbidx, domain, domainIndex: didx }) => {
-  // const [field, meta, helper] = useField('pdb_file')
-  // const { touched, error } = meta
-  // const { value } = field
-  // const { values, handleChange, handleBlur, errors } = useFormikContext<FormikValues>()
-  const { values, handleChange, handleBlur, errors } = useFormikContext()
+interface DomainProps {
+  rigidBodyIndex: number
+  domain: RigidDomain
+  domainIndex: number
+}
+interface FormValues {
+  pdb_file: {
+    chains: Chain[]
+    rigid_bodies: RigidBody[]
+  }
+}
+type FormErrors = Partial<{
+  pdb_file: {
+    chains: Partial<Chain>[] | string
+    rigid_bodies: Partial<RigidBody>[] | string
+  }
+}>
+
+interface FormikErrorAlertProps extends AlertProps {
+  message: string
+}
+
+const FormikErrorAlert: FC<FormikErrorAlertProps> = ({ message, ...alertProps }) => {
+  return <Alert {...alertProps}>{message}</Alert>
+}
+
+const Domain: FC<DomainProps> = ({
+  rigidBodyIndex: rbidx,
+  domain,
+  domainIndex: didx
+}) => {
+  const { values, handleChange, handleBlur, errors } = useFormikContext<
+    FormValues & { errors: FormErrors }
+  >()
+
   const typedErrors = errors
-  // console.log(rigidBodyIndex, domain, domainIndex, domainArrayHelpers)
-  // console.log(rigidBodyIndex)
+  // const typedErrors = errors?.pdb_file?.rigid_bodies ?? []
 
   const content = (
     <Fragment key={didx}>
@@ -23,10 +59,8 @@ const Domain = ({ rigidBodyIndex: rbidx, domain, domainIndex: didx }) => {
             display: 'flex',
             flexDirection: 'row',
             flex: '0 3 auto',
-
             p: 1,
             m: 1
-            // backgroundColor: '#eaff8f' // for layout debugging
           }}
         >
           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -47,22 +81,22 @@ const Domain = ({ rigidBodyIndex: rbidx, domain, domainIndex: didx }) => {
                   : ''
               }
               sx={{ flex: '0 0 auto' }}
-              FormHelperTextProps={
-                errors.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.chainid
-                  ? {
-                      style: { backgroundColor: 'transparent' }
-                    }
-                  : {
-                      style: { backgroundColor: 'transparent', color: 'black' }
-                    }
-              }
+              // FormHelperTextProps={
+              //   typedErrors.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.chainid
+              //     ? {
+              //         style: { backgroundColor: 'transparent' }
+              //       }
+              //     : {
+              //         style: { backgroundColor: 'transparent', color: 'black' }
+              //       }
+              // }
               InputLabelProps={{
                 style: { backgroundColor: 'transparent', color: 'black' }
               }}
               InputProps={{ style: { color: 'black' } }}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={typedErrors?.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.chainid}
+              error={!!typedErrors.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.chainid}
               helperText="Chain ID"
             >
               {values.pdb_file.chains.map((item, index) => (
@@ -79,24 +113,22 @@ const Domain = ({ rigidBodyIndex: rbidx, domain, domainIndex: didx }) => {
               type="text"
               as={TextField}
               helperText="Starting residue"
-              FormHelperTextProps={
-                typedErrors?.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.start
-                  ? {
-                      style: { backgroundColor: 'transparent' }
-                    }
-                  : {
-                      style: { backgroundColor: 'transparent', color: 'black' }
-                    }
-              }
+              // FormHelperTextProps={
+              //   typedErrors?.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.start
+              //     ? {
+              //         style: { backgroundColor: 'transparent' }
+              //       }
+              //     : {
+              //         style: { backgroundColor: 'transparent', color: 'black' }
+              //       }
+              // }
               InputLabelProps={{
                 style: { backgroundColor: 'transparent', color: 'black' }
               }}
               InputProps={{ style: { color: 'black' } }}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={Boolean(
-                typedErrors?.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.start
-              )}
+              error={!!typedErrors?.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.start}
               sx={{ mx: 1, color: 'black' }}
             />
 
@@ -107,22 +139,22 @@ const Domain = ({ rigidBodyIndex: rbidx, domain, domainIndex: didx }) => {
               type="text"
               as={TextField}
               helperText="Ending residue"
-              FormHelperTextProps={
-                errors.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.end
-                  ? {
-                      style: { backgroundColor: 'transparent' }
-                    }
-                  : {
-                      style: { backgroundColor: 'transparent', color: 'black' }
-                    }
-              }
+              // FormHelperTextProps={
+              //   typedErrors.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.end
+              //     ? {
+              //         style: { backgroundColor: 'transparent' }
+              //       }
+              //     : {
+              //         style: { backgroundColor: 'transparent', color: 'black' }
+              //       }
+              // }
               InputLabelProps={{
                 style: { backgroundColor: 'transparent', color: 'black' }
               }}
               InputProps={{ style: { color: 'black' } }}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={errors.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.end}
+              error={!!typedErrors?.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.end}
               sx={{ mx: 1 }}
             />
             <Box
@@ -145,7 +177,7 @@ const Domain = ({ rigidBodyIndex: rbidx, domain, domainIndex: didx }) => {
                   color: 'black'
                 }}
               >
-                {domain.chainid} rigid{didx + 1}:
+                {domain.chainid} - Rigid Domain #{didx + 1}:
               </Typography>
               <Chip
                 label={`${domain.start} - ${domain.end}`}
@@ -157,48 +189,20 @@ const Domain = ({ rigidBodyIndex: rbidx, domain, domainIndex: didx }) => {
         </Grid>
         {/* ERROR GRID CODE HERE */}
         <Grid item sx={{ flex: '0 1 auto', mb: 1 }}>
-          {errors.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.chainid ? (
-            <ErrorMessage
-              component={Alert}
-              severity="error"
-              name={`pdb_file.rigid_bodies[${rbidx}].domains[${didx}].chainid`}
-            ></ErrorMessage>
-          ) : (
-            ''
-          )}
-          {errors.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.start ? (
-            <ErrorMessage
-              component={Alert}
-              severity="error"
-              name={`pdb_file.rigid_bodies[${rbidx}].domains[${didx}].start`}
-            ></ErrorMessage>
-          ) : (
-            ''
-          )}
-          {errors.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.end ? (
-            <ErrorMessage
-              component={Alert}
-              severity="error"
-              name={`pdb_file.rigid_bodies[${rbidx}].domains[${didx}].end`}
-            ></ErrorMessage>
-          ) : (
-            ''
-          )}
+          <ErrorMessage name={`pdb_file.rigid_bodies[${rbidx}].domains[${didx}].chainid`}>
+            {(msg) => <FormikErrorAlert message={msg} severity="error" />}
+          </ErrorMessage>
+          <ErrorMessage name={`pdb_file.rigid_bodies[${rbidx}].domains[${didx}].start`}>
+            {(msg) => <FormikErrorAlert message={msg} severity="error" />}
+          </ErrorMessage>
+          <ErrorMessage name={`pdb_file.rigid_bodies[${rbidx}].domains[${didx}].end`}>
+            {(msg) => <FormikErrorAlert message={msg} severity="error" />}
+          </ErrorMessage>
         </Grid>
       </Grid>
     </Fragment>
   )
   return content
-}
-
-Domain.propTypes = {
-  rigidBodyIndex: PropTypes.number.isRequired,
-  domain: PropTypes.shape({
-    chainid: PropTypes.string.isRequired,
-    start: PropTypes.number.isRequired,
-    end: PropTypes.number.isRequired
-  }).isRequired,
-  domainIndex: PropTypes.number.isRequired
 }
 
 export default Domain

@@ -1,20 +1,36 @@
 import { useEffect, useState, useRef, Fragment } from 'react'
 import { useFormikContext, FieldArray, FormikValues } from 'formik'
 import { Typography, Grid, Button, Chip } from '@mui/material'
-// import { useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import * as PropTypes from 'prop-types'
 import Paper from '@mui/material/Paper'
 import AddIcon from '@mui/icons-material/Add'
 import useTitle from 'hooks/useTitle'
 import HeaderBox from 'components/HeaderBox'
 import RigidBody from '../Helpers/RigidBody'
+import { Chain } from 'types/interfaces'
 
 const DomainForm = ({ setStepIsValid }) => {
   useTitle('BilboMD: Define domains')
-  // const theme = useTheme()
+  const theme = useTheme()
   const { values, isValid } = useFormikContext<FormikValues>()
   const [rigidBodyIndex, setRigidBodyIndex] = useState(1)
   const effectRan = useRef(false)
+
+  // Define background colors for different chain types
+  const customColors = {
+    Protein: theme.palette.mode === 'light' ? '#E6A8A8' : '#b76e79',
+    DNA: theme.palette.mode === 'light' ? '#E9D8A6' : '#b3a272',
+    RNA: theme.palette.mode === 'light' ? '#B5E3D8' : '#6daba4',
+    Carbohydrate: theme.palette.mode === 'light' ? '#A8CCE6' : '#6b95b8',
+    Other: theme.palette.mode === 'light' ? '#D1A8E6' : '#9773b9'
+  }
+
+  // Select the background color based on the chain type
+  // const chipBackgroundColor =
+  //   customColors[values.pdb_file.chains.type] || theme.palette.grey[400]
+  // Dynamically calculate the contrasting text color for accessibility
+  // const chipHeaderColor = theme.palette.getContrastText(chipBackgroundColor)
 
   const incrementRigidBodyIndex = () => {
     setRigidBodyIndex(rigidBodyIndex + 1)
@@ -32,7 +48,7 @@ const DomainForm = ({ setStepIsValid }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid])
-
+  const macroMolecules = ['Protein', 'DNA', 'RNA', 'Carbohydrate', 'Other']
   return (
     <>
       <Grid container spacing={2}>
@@ -49,9 +65,9 @@ const DomainForm = ({ setStepIsValid }) => {
               are to remain rigid during the Molecular Dynamics steps of a <b>BilboMD</b>{' '}
               run. Please be aware of the following.
               <li>
-                You need at least one Rigid Body (we&apos;ll call this your Primary RB).
-                The Rigid Domains defined inside your Primary RB will remain absolutley
-                fixed.
+                You need at least one Rigid Body (we&apos;ll call this your <b>PRIMARY</b>{' '}
+                Rigid Body). The Rigid Domains defined inside your Primary RB will remain
+                absolutley fixed.
               </li>
               <li>
                 No overlapping regions either within <b>or</b> between Rigid Bodies.
@@ -68,12 +84,33 @@ const DomainForm = ({ setStepIsValid }) => {
             <Typography>Define Rigid Bodies</Typography>
           </HeaderBox>
           <Paper sx={{ p: 1 }}>
-            <Typography>Available Chains: </Typography>
-            {values.pdb_file.chains.map((chain, index) => (
+            <Grid item>
+              {macroMolecules.map((chain: string, index: number) => (
+                <Chip
+                  key={index}
+                  label={`${chain}`}
+                  sx={{
+                    mr: 1,
+                    mb: 1,
+                    backgroundColor: customColors[chain] || '#9773b9',
+                    color: theme.palette.getContrastText(customColors[chain])
+                  }}
+                />
+              ))}
+            </Grid>
+            <Typography variant="h4" sx={{ py: 1, ml: 1 }}>
+              Available Chains:{' '}
+            </Typography>
+            {values.pdb_file.chains.map((chain: Chain, index: number) => (
               <Chip
                 key={index}
                 label={`${chain.id} : ${chain.first_res}-${chain.last_res}`}
-                sx={{ mr: 1, mb: 1 }}
+                sx={{
+                  mr: 1,
+                  mb: 1,
+                  backgroundColor: customColors[chain.type] || '#9773b9',
+                  color: theme.palette.getContrastText(customColors[chain.type])
+                }}
               />
             ))}
 
@@ -100,8 +137,9 @@ const DomainForm = ({ setStepIsValid }) => {
                               </Typography>
                               {values.pdb_file.rigid_bodies[index]?.id === 'PRIMARY' ? (
                                 <Typography sx={{ ml: 3 }}>
-                                  <b>note:</b> Residues in <b>PRIMARY</b> will remain
-                                  absolutely fixed during the Molecular Dynamics steps.
+                                  <b>note:</b> Residues in the <b>PRIMARY</b> Rigid Body
+                                  will remain absolutely fixed during the Molecular
+                                  Dynamics steps.
                                 </Typography>
                               ) : (
                                 <Typography sx={{ ml: 1 }}>
@@ -124,7 +162,8 @@ const DomainForm = ({ setStepIsValid }) => {
                                   arrayHelpers.remove(index)
                                 }}
                               >
-                                Delete {values.pdb_file.rigid_bodies[index]?.id}
+                                {/* Delete {values.pdb_file.rigid_bodies[index]?.id} */}
+                                Delete Rigid Body
                               </Button>
                             ) : (
                               ''

@@ -7,7 +7,6 @@ interface ChainSummaryProps {
 }
 
 const ChainSummary = ({ chains }: ChainSummaryProps) => {
-  // console.log('ChainSummary', chains)
   const chainCard = (
     <Grid container spacing={3}>
       {chains.map((chain) => (

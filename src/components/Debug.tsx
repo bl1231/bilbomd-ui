@@ -28,15 +28,22 @@ export const Debug = () => {
       </div>
       <FormikConsumer>
         {({ ...rest }) => {
-          // Optionally omit 'src' from the debug output for brevity
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { src, ...restWithoutSrc } = rest.values.pdb_file
+          // Check if pdb_file exists before attempting to modify it
+          const pdbFileExists = !!rest.values.pdb_file
+          const valuesWithModifiedPdbFile = pdbFileExists
+            ? {
+                ...rest.values,
+                pdb_file: {
+                  // Copy all properties except 'src'
+                  ...rest.values.pdb_file,
+                  src: 'Omitted for brevity' // Replace 'src' with a placeholder
+                }
+              }
+            : rest.values // Use the original values if pdb_file doesn't exist
+
           const displayContent = {
             ...rest,
-            values: {
-              ...rest.values,
-              pdb_file: { ...restWithoutSrc, src: 'Omitted for brevity' }
-            }
+            values: valuesWithModifiedPdbFile
           }
 
           return (

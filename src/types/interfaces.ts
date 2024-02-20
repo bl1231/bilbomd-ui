@@ -8,7 +8,7 @@ export interface Chain {
   domains: { start: number; end: number }[]
 }
 
-interface RigidDomain {
+export interface RigidDomain {
   chainid: string
   start: number
   end: number
