@@ -8,8 +8,7 @@ import {
   Paper,
   Accordion,
   AccordionSummary,
-  AccordionDetails,
-  Link
+  AccordionDetails
 } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
 import { Form, Formik, Field } from 'formik'
@@ -18,7 +17,7 @@ import { useAddNewAutoJobMutation } from '../jobs/jobsApiSlice'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { bilbomdAutoJobSchema } from 'schemas/ValidationSchemas'
+import { bilbomdAutoJobSchema } from 'schemas/bilbomdAutoJobSchema'
 import useAuth from 'hooks/useAuth'
 import { Debug } from 'components/Debug'
 import LinearProgress from '@mui/material/LinearProgress'
@@ -30,8 +29,7 @@ const NewAutoJobForm = () => {
 
   const initialValues = {
     title: '',
-    crd_file: '',
-    psf_file: '',
+    pdb_file: '',
     pae_file: '',
     dat_file: '',
     email: email
@@ -40,8 +38,7 @@ const NewAutoJobForm = () => {
   const onSubmit = async (values, { setStatus }) => {
     const form = new FormData()
     form.append('title', values.title)
-    form.append('psf_file', values.psf_file)
-    form.append('crd_file', values.crd_file)
+    form.append('pdb_file', values.pdb_file)
     form.append('dat_file', values.dat_file)
     form.append('pae_file', values.pae_file)
     form.append('email', values.email)
@@ -49,7 +46,6 @@ const NewAutoJobForm = () => {
 
     try {
       const newJob = await addNewAutoJob(form).unwrap()
-      // setJobid(newJob.jobid)
       setStatus(newJob)
     } catch (error) {
       console.error('rejected', error)
@@ -83,53 +79,33 @@ const NewAutoJobForm = () => {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography sx={{ m: 1 }}>
-                <b>BilboMD</b> uses{' '}
-                <Link
-                  href="https://academiccharmm.org/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  CHARMM
-                </Link>{' '}
-                to generate an ensemble of molecular models. In order for the Molecular
-                Dynamics steps to run successfully it is imperative that you provide
-                compatible input files.
-                <li>
-                  <b>*.crd</b> file (A CHARMM coordinate file)
-                </li>
-                <li>
-                  <b>*.psf</b> file (A CHARMM{' '}
-                  <Link
-                    href="https://academiccharmm.org/documentation/version/c47b2/struct"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    data structure
-                  </Link>{' '}
-                  file)
-                </li>
-                <li>
-                  <b>*.dat</b> file (A 3-column SAXS data file)
-                </li>
-                <li>
-                  <b>pae.json</b> file (PAE output from Alphafold)
-                </li>
-              </Typography>
-              <Typography sx={{ m: 1 }}>
-                Use the <b>PDB Reader</b> tool available from{' '}
-                <Link
-                  href="https://www.charmm-gui.org/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  CHARMM-GUI
-                </Link>{' '}
-                to convert your standard PDB file to a CRD file. If you need help
-                generating a valid <b>const.inp</b> file you can use our little Jiffy
-                (green button below or &ldquo;Jiffy&rdquo; links to the left) to help get
-                you started.
-              </Typography>
+              <Box>
+                <Typography sx={{ m: 1 }}>
+                  Our <b>BilboMD Auto</b> application will take the Predicted Aligned
+                  Error (PAE) file output from Alphafold2 along with the predicted
+                  coordinates (as a PDB file) to automagically generate a
+                  CHARMM-compatible <b>const.inp</b> file
+                </Typography>
+                <ul>
+                  <li>
+                    <Typography>
+                      A <b>*.pdb</b> file (PDB coordinate file. Make sure it matches the
+                      PAE file.)
+                    </Typography>
+                  </li>
+                  <li>
+                    <Typography>
+                      A <b>*.json</b> file (The PAE matrix output from Alphafold in JSON
+                      format.)
+                    </Typography>
+                  </li>
+                  <li>
+                    <Typography>
+                      A <b>*.dat</b> file (A 3-column SAXS data file)
+                    </Typography>
+                  </li>
+                </ul>
+              </Box>
             </AccordionDetails>
           </Accordion>
         </Grid>
@@ -187,35 +163,20 @@ const NewAutoJobForm = () => {
 
                       <Grid item>
                         <Field
-                          name="crd_file"
+                          name="pdb_file"
                           id="crd-file-upload"
                           as={FileSelect}
                           title="Select File"
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
-                          error={errors.crd_file && values.crd_file}
-                          errorMessage={errors.crd_file ? errors.crd_file : ''}
-                          fileType="CHARMM-GUI *.crd"
-                          fileExt=".crd"
+                          error={errors.pdb_file && values.pdb_file}
+                          errorMessage={errors.pdb_file ? errors.pdb_file : ''}
+                          fileType="Alphafold *.pdb"
+                          fileExt=".pdb"
                         />
                       </Grid>
 
-                      <Grid item>
-                        <Field
-                          name="psf_file"
-                          id="psf-file-upload"
-                          as={FileSelect}
-                          title="Select File"
-                          disabled={isSubmitting}
-                          setFieldValue={setFieldValue}
-                          setFieldTouched={setFieldTouched}
-                          error={errors.psf_file && values.psf_file}
-                          errorMessage={errors.psf_file ? errors.psf_file : ''}
-                          fileType="CHARMM-GUI *.psf"
-                          fileExt=".psf"
-                        />
-                      </Grid>
                       <Grid item>
                         <Field
                           name="pae_file"
@@ -258,8 +219,7 @@ const NewAutoJobForm = () => {
                           disabled={
                             !isValid ||
                             values.title === '' ||
-                            values.crd_file === '' ||
-                            values.psf_file === '' ||
+                            values.pdb_file === '' ||
                             values.pae_file === '' ||
                             values.dat_file === ''
                           }
