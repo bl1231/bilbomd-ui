@@ -1,11 +1,11 @@
 const formModel = {
   formId: 'formId',
   formField: {
-    crd_file: {
-      name: 'crd_file',
-      label: 'Please upload a CRD File obtained from CHARMM-GUI:',
-      reviewLabel: 'Your CRD file is still here: ',
-      requiredErrorMsg: 'CRD file is required',
+    pdb_file: {
+      name: 'pdb_file',
+      label: 'Please upload a PDB File',
+      reviewLabel: 'Your PDB file is still here: ',
+      requiredErrorMsg: 'PDB file is required',
       type: 'file',
       rigid_bodies: ''
     },
