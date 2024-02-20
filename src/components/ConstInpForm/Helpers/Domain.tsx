@@ -11,6 +11,7 @@ import {
 } from '@mui/material'
 import { Box } from '@mui/system'
 import { Chain, RigidBody, RigidDomain } from 'types/interfaces'
+import { useTheme } from '@mui/material/styles'
 
 interface DomainProps {
   rigidBodyIndex: number
@@ -46,9 +47,29 @@ const Domain: FC<DomainProps> = ({
   const { values, handleChange, handleBlur, errors } = useFormikContext<
     FormValues & { errors: FormErrors }
   >()
+  const theme = useTheme()
+
+  // Assuming you have a way to access the chain ID from the domain
+  const currentChainId = domain.chainid
+  // Find the chain object that matches the currentChainId
+  const matchingChain = values.pdb_file.chains.find(
+    (chain) => chain.id === currentChainId
+  )
 
   const typedErrors = errors
   // const typedErrors = errors?.pdb_file?.rigid_bodies ?? []
+
+  const customColors = {
+    Protein: theme.palette.mode === 'light' ? '#E6A8A8' : '#b76e79',
+    DNA: theme.palette.mode === 'light' ? '#E9D8A6' : '#b3a272',
+    RNA: theme.palette.mode === 'light' ? '#B5E3D8' : '#6daba4',
+    Carbohydrate: theme.palette.mode === 'light' ? '#A8CCE6' : '#6b95b8',
+    Other: theme.palette.mode === 'light' ? '#D1A8E6' : '#9773b9'
+  }
+  // Determine the background color based on the matching chain's type
+  const cardBackgroundColor = matchingChain
+    ? customColors[matchingChain.type] ?? theme.palette.grey[400]
+    : theme.palette.grey[400]
 
   const content = (
     <Fragment key={didx}>
@@ -81,15 +102,6 @@ const Domain: FC<DomainProps> = ({
                   : ''
               }
               sx={{ flex: '0 0 auto' }}
-              // FormHelperTextProps={
-              //   typedErrors.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.chainid
-              //     ? {
-              //         style: { backgroundColor: 'transparent' }
-              //       }
-              //     : {
-              //         style: { backgroundColor: 'transparent', color: 'black' }
-              //       }
-              // }
               InputLabelProps={{
                 style: { backgroundColor: 'transparent', color: 'black' }
               }}
@@ -113,15 +125,6 @@ const Domain: FC<DomainProps> = ({
               type="text"
               as={TextField}
               helperText="Starting residue"
-              // FormHelperTextProps={
-              //   typedErrors?.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.start
-              //     ? {
-              //         style: { backgroundColor: 'transparent' }
-              //       }
-              //     : {
-              //         style: { backgroundColor: 'transparent', color: 'black' }
-              //       }
-              // }
               InputLabelProps={{
                 style: { backgroundColor: 'transparent', color: 'black' }
               }}
@@ -139,15 +142,6 @@ const Domain: FC<DomainProps> = ({
               type="text"
               as={TextField}
               helperText="Ending residue"
-              // FormHelperTextProps={
-              //   typedErrors.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.end
-              //     ? {
-              //         style: { backgroundColor: 'transparent' }
-              //       }
-              //     : {
-              //         style: { backgroundColor: 'transparent', color: 'black' }
-              //       }
-              // }
               InputLabelProps={{
                 style: { backgroundColor: 'transparent', color: 'black' }
               }}
@@ -163,7 +157,7 @@ const Domain: FC<DomainProps> = ({
                 flexDirection: 'row',
                 border: 1,
                 borderColor: 'grey.400',
-                backgroundColor: '#f6ffed',
+                backgroundColor: cardBackgroundColor || '#f6ffed',
                 borderRadius: 2,
                 ml: 1,
                 px: 1,

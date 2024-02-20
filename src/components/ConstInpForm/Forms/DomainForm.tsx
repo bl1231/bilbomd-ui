@@ -26,12 +26,6 @@ const DomainForm = ({ setStepIsValid }) => {
     Other: theme.palette.mode === 'light' ? '#D1A8E6' : '#9773b9'
   }
 
-  // Select the background color based on the chain type
-  // const chipBackgroundColor =
-  //   customColors[values.pdb_file.chains.type] || theme.palette.grey[400]
-  // Dynamically calculate the contrasting text color for accessibility
-  // const chipHeaderColor = theme.palette.getContrastText(chipBackgroundColor)
-
   const incrementRigidBodyIndex = () => {
     setRigidBodyIndex(rigidBodyIndex + 1)
   }

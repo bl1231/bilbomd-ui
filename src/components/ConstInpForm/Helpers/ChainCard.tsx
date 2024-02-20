@@ -33,7 +33,9 @@ const ChainCard = ({ chain }: ChainCardProps) => {
         }}
       />
       <CardContent>
-        <Typography color="textPrimary">{chain.type}</Typography>
+        <Typography variant="h5" color="textPrimary">
+          {chain.type}
+        </Typography>
         <Typography variant="body1" color="textSecondary">
           Residues: {chain.num_res}
         </Typography>
