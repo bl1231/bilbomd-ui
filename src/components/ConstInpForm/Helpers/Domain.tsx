@@ -1,5 +1,5 @@
 import { Fragment, FC } from 'react'
-import { Field, useFormikContext, ErrorMessage } from 'formik'
+import { Field, useFormikContext, ErrorMessage, getIn } from 'formik'
 import {
   Grid,
   TextField,
@@ -56,9 +56,6 @@ const Domain: FC<DomainProps> = ({
     (chain) => chain.id === currentChainId
   )
 
-  const typedErrors = errors
-  // const typedErrors = errors?.pdb_file?.rigid_bodies ?? []
-
   const customColors = {
     Protein: theme.palette.mode === 'light' ? '#E6A8A8' : '#b76e79',
     DNA: theme.palette.mode === 'light' ? '#E9D8A6' : '#b3a272',
@@ -108,7 +105,9 @@ const Domain: FC<DomainProps> = ({
               InputProps={{ style: { color: 'black' } }}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={!!typedErrors.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.chainid}
+              error={Boolean(
+                getIn(errors, `pdb_file.rigid_bodies[rbidx].domains[didx].chainid`)
+              )}
               helperText="Chain ID"
             >
               {values.pdb_file.chains.map((item, index) => (
@@ -131,7 +130,9 @@ const Domain: FC<DomainProps> = ({
               InputProps={{ style: { color: 'black' } }}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={!!typedErrors?.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.start}
+              error={Boolean(
+                getIn(errors, `pdb_file.rigid_bodies[rbidx].domains[didx].start`)
+              )}
               sx={{ mx: 1, color: 'black' }}
             />
 
@@ -148,7 +149,9 @@ const Domain: FC<DomainProps> = ({
               InputProps={{ style: { color: 'black' } }}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={!!typedErrors?.pdb_file?.rigid_bodies[rbidx]?.domains[didx]?.end}
+              error={Boolean(
+                getIn(errors, `pdb_file.rigid_bodies[rbidx].domains[didx].end`)
+              )}
               sx={{ mx: 1 }}
             />
             <Box
