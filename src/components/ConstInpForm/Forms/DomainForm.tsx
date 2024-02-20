@@ -70,6 +70,11 @@ const DomainForm = ({ setStepIsValid }) => {
                 </li>
                 <li>
                   <Typography>
+                    Rigid Domains in subsequently defined Rigid Bodies will be dynamic.
+                  </Typography>
+                </li>
+                <li>
+                  <Typography>
                     No overlapping regions either within <b>or</b> between Rigid Bodies
                     are allowed.
                   </Typography>
@@ -146,23 +151,15 @@ const DomainForm = ({ setStepIsValid }) => {
                                   Rigid Body: <Chip label={rigid_body.id} />
                                 </Typography>
                                 {values.pdb_file.rigid_bodies[index]?.id === 'PRIMARY' ? (
-                                  <Typography sx={{ ml: 2, verticalAlign: 'center' }}>
-                                    <b>note:</b> Residues in the <b>PRIMARY</b> Rigid Body
-                                    will remain absolutely fixed during the Molecular
+                                  <Typography sx={{ ml: 2 }}>
+                                    <b>note:</b> Rigid Domains in the <b>PRIMARY</b> Rigid
+                                    Body will remain absolutely fixed during the Molecular
                                     Dynamics steps.
                                   </Typography>
                                 ) : (
-                                  <Typography
-                                    sx={{
-                                      ml: 2,
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      height: '100%'
-                                    }}
-                                  >
-                                    <b>note:</b> Residues in this Rigid Body will move
-                                    relative to the <b>PRIMARY</b> Rigid Body.
+                                  <Typography sx={{ ml: 2 }}>
+                                    <b>note:</b> Rigid Domains in <b>{rigid_body.id}</b>{' '}
+                                    will move relative to the <b>PRIMARY</b> Rigid Body.
                                   </Typography>
                                 )}
                               </Grid>
