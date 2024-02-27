@@ -1,3 +1,4 @@
+# -----------------------------------------------------------------------------
 # Build stage
 FROM node:20-alpine AS build-stage
 WORKDIR /app
@@ -6,6 +7,7 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
+# -----------------------------------------------------------------------------
 # Serve stage
 FROM nginx:alpine
 RUN apk add --no-cache bash
