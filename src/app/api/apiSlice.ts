@@ -3,9 +3,11 @@ import { setCredentials } from '../../features/auth/authSlice'
 import type { RootState } from '../store'
 
 // console.log('apiSlice', import.meta.env.MODE)
-const baseURL = import.meta.env.DEV
-  ? `http://localhost:${import.meta.env.VITE_BILBOMD_BACKEND_PORT}/v1`
-  : 'https://bl1231.als.lbl.gov/bilbomd-dev-backend/v1'
+// const baseURL = import.meta.env.DEV
+//   ? `http://localhost:${import.meta.env.VITE_BILBOMD_BACKEND_PORT}/v1`
+//   : 'https://bl1231.als.lbl.gov/bilbomd-dev-backend/v1'
+
+const baseURL = "/api/v1"
 
 const baseQuery = fetchBaseQuery({
   baseUrl: baseURL,
@@ -27,11 +29,11 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions)
 
   if (result?.error?.status === 403) {
-    // console.log('sending refresh token')
+    console.log('sending refresh token')
 
     // send refreshToken to get new accessToken
     const refreshResult = await baseQuery('/auth/refresh', api, extraOptions)
-    // console.log('refreshResult:', refreshResult)
+    console.log('refreshResult:', refreshResult)
     if (refreshResult?.data) {
       // store the new accessToken
       api.dispatch(setCredentials({ ...refreshResult.data }))
