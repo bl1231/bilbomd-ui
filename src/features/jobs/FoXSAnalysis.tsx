@@ -138,7 +138,7 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   })
 
   const foxsData: FoxsData[] = data as FoxsData[]
-  console.log('id:', id, 'foxsData -->', foxsData)
+  // console.log('id:', id, 'foxsData -->', foxsData)
   // Prepare original data to reduce the number of digits after the decimal point
   // and filter out negative values
   const origData = useMemo(() => (foxsData ? prepData(foxsData[0].data) : []), [foxsData])
@@ -187,7 +187,7 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   const origC1 = foxsData[0].c1
   const origC2 = foxsData[0].c2
 
-  console.log(ensembleData)
+  // console.log(ensembleData)
 
   return (
     <Item>
