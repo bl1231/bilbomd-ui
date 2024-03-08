@@ -18,6 +18,11 @@ export default defineConfig({
         target: 'http://localhost:3501',
         changeOrigin: true,
         secure: false
+      },
+        '/admin/bullmq': {
+        target: 'http://localhost:3501',
+        changeOrigin: true,
+        secure: false
       }
     }
   },

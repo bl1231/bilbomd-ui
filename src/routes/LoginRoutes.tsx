@@ -1,57 +1,46 @@
-import Loadable from 'components/Loadable'
-import MinimalLayout from 'layout/MinimalLayout'
-import { lazy } from 'react'
-// render - Home
-const Home = Loadable(lazy(() => import('components/Home')))
+import Loadable from "components/Loadable"
+import MinimalLayout from "layout/MinimalLayout"
+import { lazy } from "react"
 
-// render - login
-// const AuthLogin = Loadable(lazy(() => import('pages/authentication/Login')));
-// const AuthRegister = Loadable(lazy(() => import('pages/authentication/Register')));
-
-// prettier-ignore
-const MagickLink = Loadable(lazy(() => import('features/auth/MagickLink')));
-const Signup = Loadable(lazy(() => import('features/auth/Signup')))
-// prettier-ignore
-const VerifyEmail = Loadable(lazy(() => import('features/auth/VerifyEmail')));
-// prettier-ignore
-const MagickLinkAuth = Loadable(lazy(() => import('features/auth/MagickLinkAuth')));
-const Unauthorized = Loadable(lazy(() => import('components/Unauthorized')))
+const Home = Loadable(lazy(() => import("components/Home")))
+const MagickLink = Loadable(lazy(() => import("features/auth/MagickLink")))
+const Signup = Loadable(lazy(() => import("features/auth/Signup")))
+const VerifyEmail = Loadable(lazy(() => import("features/auth/VerifyEmail")))
+const MagickLinkAuth = Loadable(
+  lazy(() => import("features/auth/MagickLinkAuth")),
+)
 
 // ==============================|| AUTH ROUTING ||============================== //
 
 const LoginRoutes = {
   element: <MinimalLayout />,
-  path: '/',
+  path: "/",
   children: [
     {
       index: true,
-      element: <Home />
+      element: <Home />,
     },
     {
-      path: 'register',
-      element: <Signup />
+      path: "register",
+      element: <Signup />,
     },
     {
-      path: 'verify/:code',
-      element: <VerifyEmail />
+      path: "verify/:code",
+      element: <VerifyEmail />,
     },
     {
-      path: 'magicklink',
-      element: <MagickLink />
+      path: "magicklink",
+      element: <MagickLink />,
     },
     {
-      path: 'auth/:otp',
-      element: <MagickLinkAuth />
+      path: "auth/:otp",
+      element: <MagickLinkAuth />,
     },
     {
-      path: 'login',
-      element: <MagickLink />
+      path: "login",
+      element: <MagickLink />,
     },
-    {
-      path: 'unauthorized',
-      element: <Unauthorized />
-    }
-  ]
+  ],
 }
 
-export default LoginRoutes
+export { LoginRoutes }
