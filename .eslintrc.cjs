@@ -17,7 +17,10 @@ module.exports = {
     sourceType: 'module'
   },
   plugins: ['react', 'react-hooks', 'react-refresh'],
-  rules: { 'react-refresh/only-export-components': 'warn' },
+  rules: {
+    'react-refresh/only-export-components': 'warn',
+    'react/prop-types': 'off'
+  },
   settings: {
     react: {
       version: 'detect' // Automatically detect the react version
