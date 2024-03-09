@@ -54,7 +54,8 @@ const Jobs = () => {
       if (error.status === 404) {
         errorMessage = 'No jobs found. Please run some jobs first.'
       } else {
-        errorMessage = 'error' in error ? error.error : JSON.stringify(error.data)
+        errorMessage =
+          'error' in error ? error.error : JSON.stringify(error.data)
       }
     } else {
       errorMessage = 'Call Scott'
@@ -62,7 +63,7 @@ const Jobs = () => {
 
     content = (
       <Box>
-        <Alert severity="info" variant="outlined">
+        <Alert severity='info' variant='outlined'>
           <AlertTitle>{errorMessage}</AlertTitle>
         </Alert>
       </Box>
@@ -149,7 +150,10 @@ const Jobs = () => {
         sortable: false,
         headerName: 'Manage',
         getActions: (params: GridRowParams) => {
-          if (params.row.status !== 'Submitted' && params.row.status !== 'Running') {
+          if (
+            params.row.status !== 'Submitted' &&
+            params.row.status !== 'Running'
+          ) {
             return [
               <DeleteJob
                 key={params.id}
@@ -157,7 +161,11 @@ const Jobs = () => {
                 title={params.row.title}
                 hide={false}
               />,
-              <JobDetails key={params.id} id={params.row.id} title={params.row.title} />
+              <JobDetails
+                key={params.id}
+                id={params.row.id}
+                title={params.row.title}
+              />
             ]
           } else {
             return [
@@ -167,7 +175,11 @@ const Jobs = () => {
                 title={params.row.title}
                 hide={true}
               />,
-              <JobDetails key={params.id} id={params.row.id} title={params.row.title} />
+              <JobDetails
+                key={params.id}
+                id={params.row.id}
+                title={params.row.title}
+              />
             ]
           }
         }
@@ -232,7 +244,7 @@ const Jobs = () => {
               <HeaderBox>
                 <Typography>Jobs</Typography>
               </HeaderBox>
-              <Alert severity="info" variant="outlined">
+              <Alert severity='info' variant='outlined'>
                 <AlertTitle>No Jobs found.</AlertTitle>Run some jobs first
               </Alert>
             </Grid>
