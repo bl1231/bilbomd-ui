@@ -19,7 +19,7 @@ const NerscStatusList = () => {
     error,
     isLoading
   } = useGetNerscStatusQuery()
-
+  // console.log('nerscStatuses:', nerscStatuses)
   let content: ContentType
   if (isLoading) content = <CircularProgress />
 

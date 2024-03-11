@@ -11,7 +11,7 @@ export default defineConfig({
     visualizer({ gzipSize: true, brotliSize: true, template: 'sunburst' }),
     tsconfigPaths()
   ],
-    server: {
+  server: {
     port: 3002,
     proxy: {
       '/api/v1': {
@@ -19,7 +19,12 @@ export default defineConfig({
         changeOrigin: true,
         secure: false
       },
-        '/admin/bullmq': {
+      '/admin/bullmq': {
+        target: 'http://localhost:3501',
+        changeOrigin: true,
+        secure: false
+      },
+      '/sfapi': {
         target: 'http://localhost:3501',
         changeOrigin: true,
         secure: false
@@ -31,7 +36,11 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            return id.toString().split('node_modules/')[1].split('/')[0].toString()
+            return id
+              .toString()
+              .split('node_modules/')[1]
+              .split('/')[0]
+              .toString()
           }
         }
       }
