@@ -11,7 +11,6 @@ interface NerscSystemStatus {
   updated_at: string
 }
 
-// If you're fetching a list of systems, you might also define a type for the array:
 type NerscSystemStatuses = NerscSystemStatus[]
 
 const nerscAdapter = createEntityAdapter({})
