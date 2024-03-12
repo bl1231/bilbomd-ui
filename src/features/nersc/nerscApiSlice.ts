@@ -11,6 +11,11 @@ interface NerscSystemStatus {
   updated_at: string
 }
 
+interface ProjectHours {
+  hours_given: number
+  hours_used: number
+}
+
 type NerscSystemStatuses = NerscSystemStatus[]
 
 const nerscAdapter = createEntityAdapter({})
@@ -24,9 +29,17 @@ export const nerscApiSlice = superfacilityApiSlice.injectEndpoints({
       query: () => ({
         url: 'status',
         method: 'GET'
-      })
+      }),
+      providesTags: ['Status']
+    }),
+    getProjectHours: builder.query<ProjectHours, void>({
+      query: (projectCode) => ({
+        url: `account/projects/${projectCode}`,
+        method: 'GET'
+      }),
+      providesTags: ['Project']
     })
   })
 })
 
-export const { useGetNerscStatusQuery } = nerscApiSlice
+export const { useGetNerscStatusQuery, useGetProjectHoursQuery } = nerscApiSlice

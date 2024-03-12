@@ -15,7 +15,7 @@ const NerscStatusChip: React.FC<NerscStatusChipProps> = ({ system }) => {
 
   return (
     <Grid sx={{ m: 0.5, display: 'flex', alignItems: 'center' }}>
-      <Chip label={`${system.full_name}: ${system.status}`} color={color} />
+      <Chip label={`${system.full_name}`} color={color} />
     </Grid>
   )
 }
