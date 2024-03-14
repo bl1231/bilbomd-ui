@@ -18,6 +18,7 @@ import { styled } from '@mui/material/styles'
 import DeleteJob from './DeleteJob'
 import JobDetails from './JobDetails'
 import BullMQSummary from '../bullmq/BullMQSummary'
+import NerscStatus from '../nersc/NerscStatus'
 import HeaderBox from 'components/HeaderBox'
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -192,6 +193,9 @@ const Jobs = () => {
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <BullMQSummary />
+          </Grid>
+          <Grid item xs={12}>
+            <NerscStatus />
           </Grid>
           {rows.length !== 0 ? (
             <Grid item xs={12}>
