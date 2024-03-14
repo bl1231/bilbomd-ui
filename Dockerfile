@@ -1,15 +1,16 @@
 # -----------------------------------------------------------------------------
 # Build stage
 FROM node:20-alpine AS build-stage
+RUN npm install -g npm@10.5.0
 WORKDIR /app
-COPY package*.json ./
-RUN npm ci
+COPY package*.json .
+RUN npm ci --verbose
 COPY . .
 RUN npm run build
 
 # -----------------------------------------------------------------------------
 # Serve stage
-FROM nginx:alpine
+FROM docker.io/nginx:alpine
 RUN apk add --no-cache bash
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 # Ensure the directory exists and copy the nginx.conf.template file
