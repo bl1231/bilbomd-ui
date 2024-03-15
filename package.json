@@ -25,7 +25,7 @@
     "@types/node": "^20.11.25",
     "axios": "^1.6.7",
     "clsx": "^2.1.0",
-    "date-fns": "^3.3.1",
+    "date-fns": "^3.5.0",
     "form-data": "^4.0.0",
     "formik": "^2.4.5",
     "jwt-decode": "^4.0.0",
