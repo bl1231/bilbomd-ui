@@ -21,9 +21,9 @@ const NerscStatusList = () => {
           <Grid item sx={{ display: 'flex' }}>
             <SystemStatuses />
           </Grid>
-          <Grid item sx={{ display: 'flex' }}>
+          {/* <Grid item sx={{ display: 'flex' }}>
             <ProjectHours projectCode={'m4521'} />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Item>
     </>

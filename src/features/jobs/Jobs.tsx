@@ -194,9 +194,11 @@ const Jobs = () => {
           <Grid item xs={12}>
             <BullMQSummary />
           </Grid>
+
           <Grid item xs={12}>
             <NerscStatus />
           </Grid>
+
           {rows.length !== 0 ? (
             <Grid item xs={12}>
               <HeaderBox>

@@ -1,5 +1,5 @@
 import { useGetNerscStatusQuery } from './nerscApiSlice'
-import { CircularProgress, Alert } from '@mui/material'
+import { CircularProgress, Alert, AlertTitle } from '@mui/material'
 import NerscStatusChip from './NerscStatusChip'
 type ContentType = React.ReactNode | string
 const SystemStatuses = () => {
@@ -14,7 +14,12 @@ const SystemStatuses = () => {
 
   if (error) {
     console.log('err:', error)
-    content = <Alert>Error loading NERSC Status.{error.toString()}</Alert>
+    content = (
+      <Alert>
+        <AlertTitle>Error loading NERSC Status.</AlertTitle>
+        {JSON.stringify(error)}
+      </Alert>
+    )
   }
   const systemsOfInterest = [
     'perlmutter',
