@@ -50,6 +50,9 @@ The production instance is served from an `ngnix` [Docker container](https://hub
 
 ## Version History
 
+- 1.8.0
+  - Mainly changes to allow building and deploying on local laptop and NERSC SPIN.
+  - Added new Admin panel with view of BullMQ queues
 - 1.7.3
   - INP Jiffy now accepts only `PDB` files instead of CRD.
 - 1.7.2

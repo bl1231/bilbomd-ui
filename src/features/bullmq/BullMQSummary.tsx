@@ -1,7 +1,13 @@
-import { Grid, Typography, Paper, Chip, CircularProgress, Alert } from '@mui/material'
+import {
+  Grid,
+  Typography,
+  Paper,
+  Chip,
+  CircularProgress,
+  Alert
+} from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { useGetQueueStateQuery } from 'features/bullmq/bullmqApiSlice'
-// import ApiError <----- not sure where this is. ChatGPT suggests I use this type
 import HeaderBox from 'components/HeaderBox'
 import { styled } from '@mui/material/styles'
 const Item = styled(Paper)(({ theme }) => ({
@@ -64,8 +70,8 @@ const BullMQSummary = () => {
         <Item sx={{ p: 1 }}>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Divider textAlign="left" variant="fullWidth">
-                <Chip label="BilboMD Queue" />
+              <Divider textAlign='left' variant='fullWidth'>
+                <Chip label='BilboMD Queue' />
               </Divider>
               <Grid sx={{ m: 1, display: 'flex', alignItems: 'center' }}>
                 <Typography>
@@ -107,8 +113,8 @@ const BullMQSummary = () => {
             </Grid>
 
             <Grid item xs={6}>
-              <Divider textAlign="left" variant="fullWidth">
-                <Chip label="Scoper Queue" />
+              <Divider textAlign='left' variant='fullWidth'>
+                <Chip label='Scoper Queue' />
               </Divider>
               <Grid sx={{ m: 1, display: 'flex', alignItems: 'center' }}>
                 <Typography>

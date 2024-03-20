@@ -4,9 +4,11 @@ import axios, {
   isAxiosError as baseIsAxiosError
 } from 'axios'
 
-const baseURL = import.meta.env.DEV
-  ? `http://localhost:${import.meta.env.VITE_BILBOMD_BACKEND_PORT}/v1`
-  : 'https://bl1231.als.lbl.gov/bilbomd-dev-backend/v1'
+// const baseURL = import.meta.env.DEV
+//   ? `http://localhost:${import.meta.env.VITE_BILBOMD_BACKEND_PORT}/v1`
+//   : 'https://bl1231.als.lbl.gov/bilbomd-dev-backend/v1'
+
+  const baseURL = "/api/v1"
 
 const axiosInstance = axios.create({
   baseURL: baseURL,

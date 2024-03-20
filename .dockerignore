@@ -1,0 +1,44 @@
+# Dependency directories
+node_modules/
+npm-debug.log
+
+# Build outputs
+build/
+dist/
+out/
+
+# Version control
+.git/
+.gitignore
+.svn/
+.hg/
+.cvsignore
+
+# Configuration files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE - Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-workspace
+
+# OS - System
+.DS_Store
+Thumbs.db
+
+# Testing - Coverage
+coverage/
+*.log
+
+# Dependency lock files
+# package-lock.json
+yarn.lock
+
+# Optional eslint cache
+.eslintcache
