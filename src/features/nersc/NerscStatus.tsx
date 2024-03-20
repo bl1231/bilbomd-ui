@@ -1,6 +1,6 @@
 import { Grid, Typography, Paper } from '@mui/material'
 import SystemStatuses from './SystemStatuses'
-import ProjectHours from './ProjectHours'
+// import ProjectHours from './ProjectHours'
 
 import HeaderBox from 'components/HeaderBox'
 import { styled } from '@mui/material/styles'
@@ -18,6 +18,9 @@ const NerscStatusList = () => {
       </HeaderBox>
       <Item sx={{ p: 1 }}>
         <Grid container spacing={1} direction='column'>
+          <Grid item>
+            Informational only... Jobs are not being run on NERSC.
+          </Grid>
           <Grid item sx={{ display: 'flex' }}>
             <SystemStatuses />
           </Grid>
