@@ -84,14 +84,14 @@ const ConstInpStepper = () => {
       </Stepper>
       {activeStep === steps.length ? (
         <>
-          <Alert variant="outlined" sx={{ mt: 4 }}>
+          <Alert variant='outlined' sx={{ mt: 4 }}>
             Woot! That&apos;s it. Reset the form if you want to create a new{' '}
             <b>const.inp file.</b>
           </Alert>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', pt: 2 }}>
             <Box sx={{ flex: '0 1 50%', alignItems: 'center' }} />
-            <Button variant="contained" onClick={handleReset}>
+            <Button variant='contained' onClick={handleReset}>
               Reset
             </Button>
           </Box>
@@ -100,10 +100,9 @@ const ConstInpStepper = () => {
         <>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Button
-              color="inherit"
               disabled={activeStep === 0}
               onClick={handleBack}
-              variant="contained"
+              variant='contained'
               sx={{ mr: 1 }}
             >
               Back
@@ -111,12 +110,23 @@ const ConstInpStepper = () => {
 
             <Box sx={{ flex: '1 1 auto' }} />
 
-            <Button onClick={handleNext} disabled={!stepIsValid} variant="contained">
+            <Button
+              onClick={handleNext}
+              disabled={!stepIsValid}
+              variant='contained'
+            >
               {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
             </Button>
           </Box>
 
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2, flex: '0 1 100%' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              pt: 2,
+              flex: '0 1 100%'
+            }}
+          >
             <Formik
               initialValues={initialValues}
               validationSchema={currentValidationSchema}
@@ -145,17 +155,21 @@ const ConstInpStepper = () => {
 
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Button
-              color="inherit"
+              color='inherit'
               disabled={activeStep === 0}
               onClick={handleBack}
-              variant="contained"
+              variant='contained'
               sx={{ mr: 1 }}
             >
               Back
             </Button>
             <Box sx={{ flex: '1 1 auto' }} />
 
-            <Button onClick={handleNext} disabled={!stepIsValid} variant="contained">
+            <Button
+              onClick={handleNext}
+              disabled={!stepIsValid}
+              variant='contained'
+            >
               {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
             </Button>
           </Box>

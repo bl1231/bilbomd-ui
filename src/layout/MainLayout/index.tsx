@@ -23,7 +23,7 @@ import useAuth from 'hooks/useAuth'
 
 import Header from './Header'
 import Footer from './Footer'
-// ==============================|| MAIN LAYOUT ||============================== //
+// ============================|| MAIN LAYOUT ||============================ //
 
 const drawerWidth = 170
 

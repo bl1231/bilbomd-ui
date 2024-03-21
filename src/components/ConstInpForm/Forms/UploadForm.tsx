@@ -56,7 +56,17 @@ const proteinResidues = new Set([
   'TRP',
   'TYR'
 ])
-const dnaResidues = new Set(['DA', 'DC', 'DG', 'DT', 'DU', 'ADE', 'CYT', 'GUA', 'THY']) // Deoxyribonucleotides
+const dnaResidues = new Set([
+  'DA',
+  'DC',
+  'DG',
+  'DT',
+  'DU',
+  'ADE',
+  'CYT',
+  'GUA',
+  'THY'
+]) // Deoxyribonucleotides
 // const rnaResidues = new Set(['A', 'C', 'G', 'U', 'URA']) // Ribonucleotides
 const carbResidues = new Set([
   'AFL',
@@ -90,7 +100,7 @@ const carbResidues = new Set([
 const UploadForm = ({ setStepIsValid }) => {
   useTitle('BilboMD: Upload PDB file')
   const theme = useTheme()
-  const { values, setFieldValue, setFieldError, isValid, errors } =
+  const { values, setFieldValue, setFieldError, isValid, dirty, errors } =
     useFormikContext<MyFormValues>()
   const { name, src, chains, rigid_bodies } = values.pdb_file
 
@@ -106,7 +116,10 @@ const UploadForm = ({ setStepIsValid }) => {
 
       if (!hasValidAtomLines) {
         // Handle invalid file format (e.g., set an error state, show a message)
-        setFieldError('pdb_file.file', 'Invalid PDB file: No ATOM/HETATM records found.')
+        setFieldError(
+          'pdb_file.file',
+          'Invalid PDB file: No ATOM/HETATM records found.'
+        )
         return
       }
       atomLines = src
@@ -146,14 +159,17 @@ const UploadForm = ({ setStepIsValid }) => {
     const charmmChains: Chain[] = []
     const demRigidBodies: RigidBody[] = [{ id: 'PRIMARY', domains: [] }]
 
-    const atomsByChain: AtomsByChain = atoms.reduce((acc: AtomsByChain, atom: Atom) => {
-      const { chainID } = atom
-      if (!acc[chainID]) {
-        acc[chainID] = []
-      }
-      acc[chainID].push(atom)
-      return acc
-    }, {})
+    const atomsByChain: AtomsByChain = atoms.reduce(
+      (acc: AtomsByChain, atom: Atom) => {
+        const { chainID } = atom
+        if (!acc[chainID]) {
+          acc[chainID] = []
+        }
+        acc[chainID].push(atom)
+        return acc
+      },
+      {}
+    )
 
     Object.entries(atomsByChain).forEach(([chainId, atoms]) => {
       // Ensure atoms are sorted by their residue sequence number
@@ -168,12 +184,15 @@ const UploadForm = ({ setStepIsValid }) => {
       const numResidues: number = lastRes - firstRes + 1
 
       // Collect atom names for each residue within the chain
-      const residueAtomNames = atoms.reduce((acc: ResidueAtomNames, atom: Atom) => {
-        const key = `${atom.resName}-${atom.resSeq}`
-        if (!acc[key]) acc[key] = []
-        acc[key].push(atom.name)
-        return acc
-      }, {})
+      const residueAtomNames = atoms.reduce(
+        (acc: ResidueAtomNames, atom: Atom) => {
+          const key = `${atom.resName}-${atom.resSeq}`
+          if (!acc[key]) acc[key] = []
+          acc[key].push(atom.name)
+          return acc
+        },
+        {}
+      )
 
       // Determine chain type
       let chainType = 'Other'
@@ -181,19 +200,25 @@ const UploadForm = ({ setStepIsValid }) => {
 
       // Calculate the fraction or percentage of residues that have an O2' atom
       const fractionOfResiduesWithO2Prime =
-        Object.values(residueAtomNames).filter((names) => names.includes("O2'")).length /
-        Object.values(residueAtomNames).length
+        Object.values(residueAtomNames).filter((names) => names.includes("O2'"))
+          .length / Object.values(residueAtomNames).length
 
       // Determine if "most" residues have an O2' atom, e.g., more than 50%
       const mostResiduesHaveO2Prime = fractionOfResiduesWithO2Prime > 0.5
 
       if (mostResiduesHaveO2Prime) {
         chainType = 'RNA'
-      } else if (Array.from(resNames).some((resName) => proteinResidues.has(resName))) {
+      } else if (
+        Array.from(resNames).some((resName) => proteinResidues.has(resName))
+      ) {
         chainType = 'Protein'
-      } else if (Array.from(resNames).some((resName) => dnaResidues.has(resName))) {
+      } else if (
+        Array.from(resNames).some((resName) => dnaResidues.has(resName))
+      ) {
         chainType = 'DNA'
-      } else if (Array.from(resNames).some((resName) => carbResidues.has(resName))) {
+      } else if (
+        Array.from(resNames).some((resName) => carbResidues.has(resName))
+      ) {
         chainType = 'Carbohydrate'
       }
 
@@ -256,9 +281,10 @@ const UploadForm = ({ setStepIsValid }) => {
   }, [src])
 
   useEffect(() => {
-    setStepIsValid(isValid)
+    setStepIsValid(isValid && dirty)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isValid])
+  }, [isValid, dirty])
+
   const customColors = {
     Protein: theme.palette.mode === 'light' ? '#E6A8A8' : '#b76e79',
     DNA: theme.palette.mode === 'light' ? '#E9D8A6' : '#b3a272',
@@ -280,19 +306,19 @@ const UploadForm = ({ setStepIsValid }) => {
               <Typography sx={{ m: 1 }}>
                 <b>BilboMD</b> uses{' '}
                 <Link
-                  href="https://academiccharmm.org/"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href='https://academiccharmm.org/'
+                  target='_blank'
+                  rel='noopener noreferrer'
                 >
                   CHARMM
                 </Link>{' '}
-                to generate an ensemble of molecular models. In order for the Molecular
-                Dynamics steps to run successfully you must define the rigid and flexible
-                regions of your molecule using proper CHARMM{' '}
+                to generate an ensemble of molecular models. In order for the
+                Molecular Dynamics steps to run successfully you must define the
+                rigid and flexible regions of your molecule using proper CHARMM{' '}
                 <Link
-                  href="https://academiccharmm.org/documentation/version/c47b2/select"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href='https://academiccharmm.org/documentation/version/c47b2/select'
+                  target='_blank'
+                  rel='noopener noreferrer'
                 >
                   atom selection
                 </Link>{' '}
@@ -306,7 +332,8 @@ const UploadForm = ({ setStepIsValid }) => {
                 <li>
                   <Typography>
                     The <b>Inp Jiffy</b>
-                    {'\u2122'} will only work with PDB files that have a chain ID.
+                    {'\u2122'} will only work with PDB files that have a chain
+                    ID.
                   </Typography>
                 </li>
               </ul>
@@ -334,7 +361,7 @@ const UploadForm = ({ setStepIsValid }) => {
                   }}
                 >
                   <Typography
-                    component="pre"
+                    component='pre'
                     sx={{
                       m: 1,
                       fontFamily:
@@ -370,18 +397,20 @@ const UploadForm = ({ setStepIsValid }) => {
             <Typography>File Upload</Typography>
           </HeaderBox>
           <Paper sx={{ p: 1 }}>
-            <Grid container direction="column">
+            <Grid container direction='column'>
               <Grid item xs={6}>
                 <Field
-                  name="pdb_file"
-                  id="pdb_file"
-                  title="Select PDB File"
+                  name='pdb_file'
+                  id='pdb_file'
+                  title='Select PDB File'
                   as={FileField}
                   onChange={onChange}
                   setFieldValue={setFieldValue}
                   isError={Boolean(errors.pdb_file)}
                   errorMessage={
-                    errors.pdb_file ? errors.pdb_file.file || 'Error uploading file' : ''
+                    errors.pdb_file
+                      ? errors.pdb_file.file || 'Error uploading file'
+                      : ''
                   }
                 />
               </Grid>
