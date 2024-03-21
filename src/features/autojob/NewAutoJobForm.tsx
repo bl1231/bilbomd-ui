@@ -8,7 +8,8 @@ import {
   Paper,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
+  Link
 } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
 import { Form, Formik, Field } from 'formik'
@@ -81,27 +82,55 @@ const NewAutoJobForm = () => {
             <AccordionDetails>
               <Box>
                 <Typography sx={{ m: 1 }}>
-                  Our <b>BilboMD Auto</b> application will take the Predicted Aligned
-                  Error (PAE) file output from Alphafold2 along with the predicted
-                  coordinates (as a PDB file) to automagically generate a
-                  CHARMM-compatible <b>const.inp</b> file
+                  <b>BilboMD Auto</b> is intended to be run using the outputs
+                  from{' '}
+                  <Link
+                    href='https://deepmind.google/technologies/alphafold/'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    Alphafold
+                  </Link>
+                  . <b>BilboMD Auto</b> uses the{' '}
+                  <Link
+                    href='https://alphafold.ebi.ac.uk/faq#faq-13'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    Predicted Aligned Error
+                  </Link>{' '}
+                  (PAE) from Alphafold along with the predicted coordinates (as
+                  a PDB file) to automagically generate a CHARMM-compatible
+                  input files. The <b>*.pdb</b> and PAE <b>*.json</b> files must
+                  be the exact ones obtained from Alphafold since we are also
+                  using the{' '}
+                  <Link
+                    href='https://alphafold.ebi.ac.uk/faq#faq-12'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    pLDDT
+                  </Link>{' '}
+                  values stored in the B-factor column to guide the selection of
+                  rigid adn flexible regions.
                 </Typography>
                 <ul>
                   <li>
                     <Typography>
-                      A <b>*.pdb</b> file (PDB coordinate file. Make sure it matches the
-                      PAE file.)
+                      A <b>*.pdb</b> file (PDB coordinate file. Make sure it
+                      matches your PAE file.)
                     </Typography>
                   </li>
                   <li>
                     <Typography>
-                      A <b>*.json</b> file (The PAE matrix output from Alphafold in JSON
-                      format.)
+                      A <b>*.json</b> file (The PAE matrix output from Alphafold
+                      in JSON format.)
                     </Typography>
                   </li>
                   <li>
                     <Typography>
-                      A <b>*.dat</b> file (A 3-column SAXS data file)
+                      A <b>*.dat</b> file (A 3-column experimental SAXS data
+                      file)
                     </Typography>
                   </li>
                 </ul>
@@ -117,11 +146,11 @@ const NewAutoJobForm = () => {
 
           <Paper sx={{ p: 2 }}>
             {isSuccess ? (
-              <Alert severity="success">
+              <Alert severity='success'>
                 <AlertTitle>Woot!</AlertTitle>
                 <Typography>
                   Your job has been submitted. Check out the{' '}
-                  <RouterLink to="../jobs">details</RouterLink>.
+                  <RouterLink to='../jobs'>details</RouterLink>.
                 </Typography>
               </Alert>
             ) : (
@@ -143,68 +172,70 @@ const NewAutoJobForm = () => {
                   setFieldTouched
                 }) => (
                   <Form>
-                    <Grid container direction="column">
+                    <Grid container direction='column'>
                       <Grid item sx={{ my: 2, width: '520px' }}>
                         <Field
                           fullWidth
-                          label="Title"
-                          name="title"
-                          id="title"
-                          type="text"
+                          label='Title'
+                          name='title'
+                          id='title'
+                          type='text'
                           disabled={isSubmitting}
                           as={TextField}
                           onChange={handleChange}
                           onBlur={handleBlur}
                           error={errors.title && touched.title}
-                          helperText={errors.title && touched.title ? errors.title : ''}
+                          helperText={
+                            errors.title && touched.title ? errors.title : ''
+                          }
                           value={values.title || ''}
                         />
                       </Grid>
 
                       <Grid item>
                         <Field
-                          name="pdb_file"
-                          id="crd-file-upload"
+                          name='pdb_file'
+                          id='crd-file-upload'
                           as={FileSelect}
-                          title="Select File"
+                          title='Select File'
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
                           error={errors.pdb_file && values.pdb_file}
                           errorMessage={errors.pdb_file ? errors.pdb_file : ''}
-                          fileType="Alphafold *.pdb"
-                          fileExt=".pdb"
+                          fileType='Alphafold *.pdb'
+                          fileExt='.pdb'
                         />
                       </Grid>
 
                       <Grid item>
                         <Field
-                          name="pae_file"
-                          id="pae-file-upload"
+                          name='pae_file'
+                          id='pae-file-upload'
                           as={FileSelect}
-                          title="Select File"
+                          title='Select File'
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
                           error={errors.pae_file && values.pae_file}
                           errorMessage={errors.pae_file ? errors.pae_file : ''}
-                          fileType="Alphafold PAE *.json"
-                          fileExt=".json"
+                          fileType='Alphafold PAE *.json'
+                          fileExt='.json'
                         />
                       </Grid>
                       <Grid item>
                         <Field
-                          name="dat_file"
-                          id="dat-file-upload"
+                          name='dat_file'
+                          id='dat-file-upload'
                           as={FileSelect}
-                          title="Select File"
+                          title='Select File'
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
                           error={errors.dat_file && values.dat_file}
                           errorMessage={errors.dat_file ? errors.dat_file : ''}
-                          fileType="experimental SAXS data"
-                          fileExt=".dat"
+                          fileType='experimental SAXS data'
+                          fileExt='.dat'
                         />
                       </Grid>
 
@@ -215,7 +246,7 @@ const NewAutoJobForm = () => {
                       )}
                       <Grid item sx={{ mt: 2 }}>
                         <LoadingButton
-                          type="submit"
+                          type='submit'
                           disabled={
                             !isValid ||
                             values.title === '' ||
@@ -225,14 +256,18 @@ const NewAutoJobForm = () => {
                           }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}
-                          loadingPosition="end"
-                          variant="contained"
+                          loadingPosition='end'
+                          variant='contained'
                           sx={{ width: '110px' }}
                         >
                           <span>Submit</span>
                         </LoadingButton>
 
-                        {isSuccess ? <Alert severity="success">{status}</Alert> : ''}
+                        {isSuccess ? (
+                          <Alert severity='success'>{status}</Alert>
+                        ) : (
+                          ''
+                        )}
                       </Grid>
                     </Grid>
                     {process.env.NODE_ENV === 'development' ? <Debug /> : ''}
