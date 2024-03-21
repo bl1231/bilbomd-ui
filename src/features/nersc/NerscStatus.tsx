@@ -1,4 +1,4 @@
-import { Grid, Typography, Paper } from '@mui/material'
+import { Grid, Typography, Paper, Alert } from '@mui/material'
 import SystemStatuses from './SystemStatuses'
 // import ProjectHours from './ProjectHours'
 
@@ -19,7 +19,10 @@ const NerscStatusList = () => {
       <Item sx={{ p: 1 }}>
         <Grid container spacing={1} direction='column'>
           <Grid item>
-            Informational only... Jobs are not being run on NERSC.
+            <Alert severity='warning'>
+              Informational only... Jobs are not currently being run on NERSC
+              systems.
+            </Alert>
           </Grid>
           <Grid item sx={{ display: 'flex' }}>
             <SystemStatuses />
