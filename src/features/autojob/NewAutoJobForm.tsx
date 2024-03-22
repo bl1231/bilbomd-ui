@@ -100,10 +100,10 @@ const NewAutoJobForm = () => {
                     Predicted Aligned Error
                   </Link>{' '}
                   (PAE) from Alphafold along with the predicted coordinates (as
-                  a PDB file) to automagically generate a CHARMM-compatible
-                  input files. The <b>*.pdb</b> and PAE <b>*.json</b> files must
-                  be the exact ones obtained from Alphafold since we are also
-                  using the{' '}
+                  a PDB file) to automagically generate CHARMM-compatible input
+                  files. The <b>*.pdb</b> and PAE <b>*.json</b> files must be
+                  the exact ones obtained from Alphafold since we are also using
+                  the{' '}
                   <Link
                     href='https://alphafold.ebi.ac.uk/faq#faq-12'
                     target='_blank'

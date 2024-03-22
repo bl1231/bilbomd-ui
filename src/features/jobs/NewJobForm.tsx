@@ -32,10 +32,8 @@ import HeaderBox from 'components/HeaderBox'
 
 const NewJobForm = () => {
   const token = useSelector(selectCurrentToken)
-  // const [addNewJob, { isLoading, isSuccess, isError, error }] = useAddNewJobMutation()
   const [addNewJob, { isSuccess }] = useAddNewJobMutation()
   const { email } = useAuth()
-  // const [jobid, setJobid] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const initialValues = {
     title: '',
@@ -122,73 +120,96 @@ const NewJobForm = () => {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography sx={{ m: 1 }}>
-                <b>BilboMD</b> uses{' '}
+              <Typography sx={{ mx: 1, my: 2 }}>
+                <b>BilboMD Classic</b> uses{' '}
                 <Link
-                  href="https://academiccharmm.org/"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href='https://academiccharmm.org/'
+                  target='_blank'
+                  rel='noopener noreferrer'
                 >
                   CHARMM
                 </Link>{' '}
-                to generate an ensemble of molecular models. In order for the Molecular
-                Dynamics steps to run successfully it is imperative that you provide
-                compatible input files.
+                to generate an ensemble of molecular models. In order for the
+                Molecular Dynamics steps to run successfully it is imperative
+                that you provide compatible input files.
+                <br />
+              </Typography>
+              <Typography sx={{ mx: 1, my: 2 }}>
+                Use <b>BilboMD Classic</b> if you want more control over the
+                inputs. For example, if you have DNA, RNA, or other ligands and
+                pot-translational modifications then you should use{' '}
+                <Link
+                  href='https://www.charmm-gui.org/'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  CHARMM-GUI
+                </Link>{' '}
+                to paramaterize your input model. If you have generated your own{' '}
+                <b>const.inp</b> file, either manually or via one of our Jiffys,
+                then you may want to use <b>BilboMD Classic</b>. <br />
+              </Typography>
+              <Typography sx={{ mx: 1, my: 2 }}>
+                These are the required input files:
                 <li>
                   <b>*.crd</b> file (A CHARMM coordinate file)
                 </li>
                 <li>
                   <b>*.psf</b> file (A CHARMM{' '}
                   <Link
-                    href="https://academiccharmm.org/documentation/version/c47b2/struct"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href='https://academiccharmm.org/documentation/version/c47b2/struct'
+                    target='_blank'
+                    rel='noopener noreferrer'
                   >
                     data structure
                   </Link>{' '}
                   file)
                 </li>
                 <li>
-                  <b>*.inp</b> file (defining the rigid domains of your protein. Typically
-                  named <b>const.inp</b> )
+                  <b>*.inp</b> file (defining the rigid domains of your protein.
+                  Typically named <b>const.inp</b> )
                 </li>
                 <li>
                   <b>*.dat</b> file (A 3-column SAXS data file)
                 </li>
               </Typography>
-              <Typography sx={{ m: 1 }}>
+              <Typography sx={{ mx: 1, my: 2 }}>
                 Use the <b>PDB Reader</b> tool available from{' '}
                 <Link
-                  href="https://www.charmm-gui.org/"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href='https://www.charmm-gui.org/'
+                  target='_blank'
+                  rel='noopener noreferrer'
                 >
                   CHARMM-GUI
                 </Link>{' '}
-                to convert your standard PDB file to a CRD file. If you need help
-                generating a valid <b>const.inp</b> file you can use our little Jiffy
-                (green button below or &ldquo;Jiffy&rdquo; links to the left) to help get
-                you started.
+                to convert your standard PDB file to a CRD file. If you need
+                help generating a valid <b>const.inp</b> file you can use our
+                little Jiffy (green button below or &ldquo;Jiffy&rdquo; links to
+                the left) to help get you started.
               </Typography>
-              <Typography sx={{ m: 1 }}>
-                <b>Conformations per Rg</b> - Specify the number of atomic models to be
-                calculated for each Rg Step (Radius of Gyration - explanation below). More
-                models will increase the conformational space sampled at the expense of
-                slightly longer computational times.
+              <Typography sx={{ mx: 1, my: 2 }}>
+                <b>Conformations per Rg</b> - Specify the number of atomic
+                models to be calculated for each Rg Step (Radius of Gyration -
+                explanation below). More models will increase the conformational
+                space sampled at the expense of slightly longer computational
+                times.
               </Typography>
-              <Typography sx={{ m: 1 }}>
-                <b>Rg Steps</b> - Define the Radius of Gyration range (as <b>Rg Min</b>
-                and <b>Rg Max</b>) that will constrain the MD simulations. <b>BilboMD</b>{' '}
-                will calculate 5 equidistant steps bewteen <b>Rg Min</b> and <b>Rg Max</b>{' '}
-                to perform Molecular Dynamics. A good rule-of-thumb for your initial{' '}
-                <b>BilboMD</b> run is to select initial <b>Rg Min</b> and <b>Rg Max</b>{' '}
-                values from -7% to +25% around your experimental Rg respectively. If your
-                experimental Rg is 25-30 &#8491;, the MD simulations can behave eradically
-                if you specify an <b>Rg Min</b> that is too small. This is why we
-                recommend <b>Rg Min</b> to be ~ 7% less than your experimental Rg.
-                However, if your experimental Rg is larger (e.g. &gt;50 &#8491;) then you
-                can probably explore a wider range and pick <b>Rg Min</b> and{' '}
-                <b>Rg Max</b> values that are +/- 25%.
+              <Typography sx={{ mx: 1, my: 2 }}>
+                <b>Rg Steps</b> - Define the Radius of Gyration range (as{' '}
+                <b>Rg Min</b>
+                and <b>Rg Max</b>) that will constrain the MD simulations.{' '}
+                <b>BilboMD</b> will calculate 5 equidistant steps bewteen{' '}
+                <b>Rg Min</b> and <b>Rg Max</b> to perform Molecular Dynamics. A
+                good rule-of-thumb for your initial <b>BilboMD Classic</b> run
+                is to select initial <b>Rg Min</b> and <b>Rg Max</b> values from
+                -7% to +25% around your experimental Rg respectively. If your
+                experimental Rg is 25-30 &#8491;, the MD simulations can behave
+                eradically if you specify an <b>Rg Min</b> that is too small.
+                This is why we recommend <b>Rg Min</b> to be ~ 7% less than your
+                experimental Rg. However, if your experimental Rg is larger
+                (e.g. &gt;50 &#8491;) then you can probably explore a wider
+                range and pick <b>Rg Min</b> and <b>Rg Max</b> values that are
+                +/- 25%.
               </Typography>
             </AccordionDetails>
           </Accordion>
@@ -201,11 +222,11 @@ const NewJobForm = () => {
 
           <Paper sx={{ p: 2 }}>
             {isSuccess ? (
-              <Alert severity="success">
+              <Alert severity='success'>
                 <AlertTitle>Woot!</AlertTitle>
                 <Typography>
                   Your job has been submitted. Check out the{' '}
-                  <RouterLink to="../jobs">details</RouterLink>.
+                  <RouterLink to='../jobs'>details</RouterLink>.
                 </Typography>
               </Alert>
             ) : (
@@ -230,28 +251,30 @@ const NewJobForm = () => {
                     <Grid
                       container
                       columns={12}
-                      direction="column"
+                      direction='column'
                       sx={{ display: 'flex' }}
                     >
                       <Grid item sx={{ my: 2, width: '520px' }}>
                         <Field
                           fullWidth
-                          label="Title"
-                          name="title"
-                          id="title"
-                          type="text"
+                          label='Title'
+                          name='title'
+                          id='title'
+                          type='text'
                           disabled={isSubmitting}
                           as={TextField}
                           onChange={handleChange}
                           onBlur={handleBlur}
                           error={errors.title && touched.title}
-                          helperText={errors.title && touched.title ? errors.title : ''}
+                          helperText={
+                            errors.title && touched.title ? errors.title : ''
+                          }
                           value={values.title || ''}
                         />
                       </Grid>
                       <Grid
                         container
-                        direction="row"
+                        direction='row'
                         sx={{
                           display: 'flex',
                           justifyContent: 'space-between',
@@ -260,23 +283,25 @@ const NewJobForm = () => {
                       >
                         <Grid item>
                           <Field
-                            name="crd_file"
-                            id="crd-file-upload"
+                            name='crd_file'
+                            id='crd-file-upload'
                             as={FileSelect}
-                            title="Select File"
+                            title='Select File'
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
                             error={errors.crd_file && values.crd_file}
-                            errorMessage={errors.crd_file ? errors.crd_file : ''}
-                            fileType="CHARMM-GUI *.crd"
-                            fileExt=".crd"
+                            errorMessage={
+                              errors.crd_file ? errors.crd_file : ''
+                            }
+                            fileType='CHARMM-GUI *.crd'
+                            fileExt='.crd'
                           />
                         </Grid>
                       </Grid>
                       <Grid
                         container
-                        direction="row"
+                        direction='row'
                         sx={{
                           display: 'flex',
                           justifyContent: 'space-between',
@@ -285,23 +310,25 @@ const NewJobForm = () => {
                       >
                         <Grid item>
                           <Field
-                            name="psf_file"
-                            id="psf-file-upload"
+                            name='psf_file'
+                            id='psf-file-upload'
                             as={FileSelect}
-                            title="Select File"
+                            title='Select File'
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
                             error={errors.psf_file && values.psf_file}
-                            errorMessage={errors.psf_file ? errors.psf_file : ''}
-                            fileType="CHARMM-GUI *.psf"
-                            fileExt=".psf"
+                            errorMessage={
+                              errors.psf_file ? errors.psf_file : ''
+                            }
+                            fileType='CHARMM-GUI *.psf'
+                            fileExt='.psf'
                           />
                         </Grid>
                       </Grid>
                       <Grid
                         container
-                        direction="row"
+                        direction='row'
                         sx={{
                           display: 'flex',
                           justifyContent: 'space-between',
@@ -310,24 +337,26 @@ const NewJobForm = () => {
                       >
                         <Grid item>
                           <Field
-                            name="constinp"
-                            id="constinp-file-upload"
+                            name='constinp'
+                            id='constinp-file-upload'
                             as={FileSelect}
-                            title="Select File"
+                            title='Select File'
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
                             error={errors.constinp && values.constinp}
-                            errorMessage={errors.constinp ? errors.constinp : ''}
-                            helperText="Select a const.inp file to upload"
-                            fileType="const.inp"
-                            fileExt=".inp"
+                            errorMessage={
+                              errors.constinp ? errors.constinp : ''
+                            }
+                            helperText='Select a const.inp file to upload'
+                            fileType='const.inp'
+                            fileExt='.inp'
                           />
                         </Grid>
                       </Grid>
                       <Grid
                         container
-                        direction="row"
+                        direction='row'
                         sx={{
                           display: 'flex',
                           justifyContent: 'space-between',
@@ -336,18 +365,18 @@ const NewJobForm = () => {
                       >
                         <Grid item>
                           <Field
-                            name="expdata"
-                            id="expdata-file-upload"
+                            name='expdata'
+                            id='expdata-file-upload'
                             as={FileSelect}
-                            title="Select File"
+                            title='Select File'
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
                             error={errors.expdata && values.expdata}
                             errorMessage={errors.expdata ? errors.expdata : ''}
-                            helperText="Select a const.inp file to upload"
-                            fileType="experimental SAXS data"
-                            fileExt=".dat"
+                            helperText='Select a const.inp file to upload'
+                            fileType='experimental SAXS data'
+                            fileExt='.dat'
                             onFileChange={async (selectedFile) => {
                               const isExpdataValid =
                                 await expdataSchema.isValid(selectedFile)
@@ -363,9 +392,9 @@ const NewJobForm = () => {
                       </Grid>
                       <Grid item sx={{ display: 'flex', width: '520px' }}>
                         <Typography>
-                          <b>Rg Min</b> and <b>Rg Max</b> will be calculated automatically
-                          from the selected SAXS data file. Feel free to change the
-                          suggested values.
+                          <b>Rg Min</b> and <b>Rg Max</b> will be calculated
+                          automatically from the selected SAXS data file. Feel
+                          free to change the suggested values.
                         </Typography>
                       </Grid>
                       {isLoading && (
@@ -373,13 +402,16 @@ const NewJobForm = () => {
                           <LinearProgress />
                         </Box>
                       )}
-                      <Grid item sx={{ my: 2, display: 'flex', width: '520px' }}>
+                      <Grid
+                        item
+                        sx={{ my: 2, display: 'flex', width: '520px' }}
+                      >
                         <Field
-                          label="Rg Min"
+                          label='Rg Min'
                           fullWidth
-                          id="rg_min"
-                          name="rg_min"
-                          type="text"
+                          id='rg_min'
+                          name='rg_min'
+                          type='text'
                           disabled={isSubmitting || isLoading}
                           as={TextField}
                           onChange={handleChange}
@@ -392,13 +424,16 @@ const NewJobForm = () => {
                           }
                         />
                       </Grid>
-                      <Grid item sx={{ my: 2, display: 'flex', width: '520px' }}>
+                      <Grid
+                        item
+                        sx={{ my: 2, display: 'flex', width: '520px' }}
+                      >
                         <Field
-                          label="Rg Max"
+                          label='Rg Max'
                           fullWidth
-                          id="rg_max"
-                          name="rg_max"
-                          type="text"
+                          id='rg_max'
+                          name='rg_max'
+                          type='text'
                           disabled={isSubmitting || isLoading}
                           as={TextField}
                           error={errors.rg_max && touched.rg_max}
@@ -411,14 +446,17 @@ const NewJobForm = () => {
                           onBlur={handleBlur}
                         />
                       </Grid>
-                      <Grid item sx={{ my: 2, display: 'flex', width: '520px' }}>
+                      <Grid
+                        item
+                        sx={{ my: 2, display: 'flex', width: '520px' }}
+                      >
                         <TextField
-                          label="Conformations per Rg"
-                          variant="outlined"
-                          id="num_conf"
-                          name="num_conf"
+                          label='Conformations per Rg'
+                          variant='outlined'
+                          id='num_conf'
+                          name='num_conf'
                           select
-                          defaultValue=""
+                          defaultValue=''
                           sx={{ width: '520px' }}
                           onChange={handleChange}
                           onBlur={handleBlur}
@@ -450,7 +488,7 @@ const NewJobForm = () => {
                       )}
                       <Grid item xs={6} sx={{ my: 2 }}>
                         <LoadingButton
-                          type="submit"
+                          type='submit'
                           disabled={
                             !isValid ||
                             values.crd_file === '' ||
@@ -464,14 +502,18 @@ const NewJobForm = () => {
                           }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}
-                          loadingPosition="end"
-                          variant="contained"
+                          loadingPosition='end'
+                          variant='contained'
                           sx={{ width: '110px' }}
                         >
                           <span>Submit</span>
                         </LoadingButton>
 
-                        {isSuccess ? <Alert severity="success">{status}</Alert> : ''}
+                        {isSuccess ? (
+                          <Alert severity='success'>{status}</Alert>
+                        ) : (
+                          ''
+                        )}
                       </Grid>
                     </Grid>
                     {process.env.NODE_ENV === 'development' ? <Debug /> : ''}
