@@ -22,7 +22,7 @@ interface RefreshErrorData {
 }
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions)
-
+  // console.log('baseQueryWithReauth result:', result)
   if (result?.error?.status === 403) {
     // console.log('sending refresh token')
 
@@ -41,6 +41,21 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       }
       return refreshResult
     }
+  } else if (result?.error?.status === 'PARSING_ERROR') {
+    // Handle the parsing error specifically
+    console.error('Parsing error encountered', result.error)
+    // Reload the entire application
+    // window.location.reload()
+
+    // Optionally, trigger an application-wide action, such as logging out the user,
+    // showing an error message, or even reloading the app (be cautious with this approach).
+    // For example, to log out:
+    // api.dispatch(logOutUser());
+
+    // Or to notify the user somehow, adjust according to your application's state management.
+
+    // Depending on your application's needs, you might return something specific here,
+    // or perhaps adjust `result` to reflect a new state after handling the error.
   }
 
   return result
