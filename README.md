@@ -50,6 +50,9 @@ The production instance is served from an `ngnix` [Docker container](https://hub
 
 ## Version History
 
+- 1.8.1
+  - Improve NERSC status component
+  - Fix bug in INP Jiffy multistep form
 - 1.8.0
   - Mainly changes to allow building and deploying on local laptop and NERSC SPIN.
   - Added new Admin panel with view of BullMQ queues
