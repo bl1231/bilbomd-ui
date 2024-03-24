@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom'
 import { useGetJobByIdQuery } from './jobsApiSlice'
 import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
-import { Button, Grid, Typography, Alert } from '@mui/material'
+import { Button, Grid, Typography, Alert, AlertTitle } from '@mui/material'
 import LinearProgress from '@mui/material/LinearProgress'
 import Paper from '@mui/material/Paper'
 import { styled, useTheme } from '@mui/material/styles'
@@ -42,18 +42,24 @@ const SingleJobPage = () => {
     refetchOnMountOrArgChange: true
   })
 
-  // if (process.env.NODE_ENV === 'development') {
-  //   console.log('SingleJobPage job -->', job)
-  // }
-
   if (isLoading) {
     return <PulseLoader color={'#ffffff'} />
   }
 
   if (isError) {
     return (
-      <Alert severity="error" variant="outlined">
-        Error loading job.
+      <Alert severity='error' variant='outlined'>
+        <AlertTitle>Error loading job.</AlertTitle>
+        <ul>
+          <li>
+            Please try again making sure to include the entire job ID in request
+            URL.
+          </li>
+          <li>
+            It is also possible that the job has been deleted. We keep results
+            for 60 days.
+          </li>
+        </ul>
       </Alert>
     )
   }
@@ -129,7 +135,7 @@ const SingleJobPage = () => {
             <Typography>Job Title</Typography>
           </HeaderBox>
           <Item>
-            <Typography variant="h3" sx={{ ml: 1 }}>
+            <Typography variant='h3' sx={{ ml: 1 }}>
               {job.mongo.title}
             </Typography>
           </Item>
@@ -144,7 +150,7 @@ const SingleJobPage = () => {
               color: statusColors.text
             }}
           >
-            <Typography variant="h3" sx={{ ml: 1 }}>
+            <Typography variant='h3' sx={{ ml: 1 }}>
               {job.mongo.status}
             </Typography>
           </Item>
@@ -156,11 +162,11 @@ const SingleJobPage = () => {
           </HeaderBox>
           <Item sx={{ display: 'flex', alignItems: 'center' }}>
             <LinearProgress
-              variant="determinate"
+              variant='determinate'
               value={parseFloat(job.bullmq?.bullmq?.progress ?? '0')}
               sx={{ flexGrow: 1 }}
             />
-            <Typography variant="h3" sx={{ ml: 1 }}>
+            <Typography variant='h3' sx={{ ml: 1 }}>
               {job.bullmq?.bullmq?.progress ?? 'n/a'} %
             </Typography>
           </Item>
@@ -196,14 +202,16 @@ const SingleJobPage = () => {
           </Grid>
         )}
 
-        {job.mongo.status === 'Completed' && (job.classic || job.auto) && id && (
-          <Grid item xs={12}>
-            <HeaderBox sx={{ py: '6px' }}>
-              <Typography>BilboMD FoXS Analysis</Typography>
-            </HeaderBox>
-            <FoXSAnalysis id={id} />
-          </Grid>
-        )}
+        {job.mongo.status === 'Completed' &&
+          (job.classic || job.auto) &&
+          id && (
+            <Grid item xs={12}>
+              <HeaderBox sx={{ py: '6px' }}>
+                <Typography>BilboMD FoXS Analysis</Typography>
+              </HeaderBox>
+              <FoXSAnalysis id={id} />
+            </Grid>
+          )}
 
         {job.mongo.status === 'Completed' && (
           <Grid item xs={12}>
@@ -221,7 +229,7 @@ const SingleJobPage = () => {
             </HeaderBox>
             <Item>
               <Button
-                variant="contained"
+                variant='contained'
                 onClick={() => {
                   handleDownload(job.mongo.id)
                 }}
@@ -231,10 +239,16 @@ const SingleJobPage = () => {
               </Button>
               <Typography>
                 The{' '}
-                <span style={{ fontWeight: 'bold', fontFamily: 'Courier, monospace' }}>
+                <span
+                  style={{
+                    fontWeight: 'bold',
+                    fontFamily: 'Courier, monospace'
+                  }}
+                >
                   results.tar.gz
                 </span>{' '}
-                will contains your original files plus some output files from Scoper.
+                will contains your original files plus some output files from
+                Scoper.
               </Typography>
             </Item>
           </Grid>
@@ -247,9 +261,10 @@ const SingleJobPage = () => {
             </HeaderBox>
 
             <Item>
-              <Alert severity="error" variant="outlined">
-                Hmmmm... Well something didn&apos;t work. Please try submitting again and
-                if things still don&apos;t work contact Scott or Michal.
+              <Alert severity='error' variant='outlined'>
+                Hmmmm... Well something didn&apos;t work. Please try submitting
+                again and if things still don&apos;t work contact Scott or
+                Michal.
               </Alert>
               <JobError job={job} />
             </Item>

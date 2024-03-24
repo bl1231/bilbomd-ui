@@ -5,7 +5,7 @@ import { useThemeContext } from '../themes/ThemeContextProvider'
 
 const NightModeToggle = () => {
   const { mode, toggleColorMode } = useThemeContext()
-  // console.log('NightModeToggle mode:', mode)
+
   return (
     <Box
       sx={{
@@ -22,7 +22,7 @@ const NightModeToggle = () => {
       }}
     >
       {mode} mode
-      <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color="inherit">
+      <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color='inherit'>
         {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
       </IconButton>
     </Box>

@@ -1,72 +1,71 @@
-import { lazy } from "react"
+import { lazy } from 'react'
 
 // project import
-import Loadable from "components/Loadable"
-import MainLayout from "layout/MainLayout"
+import Loadable from 'components/Loadable'
+import MainLayout from 'layout/MainLayout'
 
 // our Dave Gray redux Authentication wrapper
-import RequireAuth from "features/auth/RequireAuth"
-import PersistLogin from "features/auth/PersistLogin"
-import { ROLES } from "config/roles"
+import RequireAuth from 'features/auth/RequireAuth'
+import PersistLogin from 'features/auth/PersistLogin'
+import { ROLES } from 'config/roles'
 
 // render - dashboard
-//const DashBoard = Loadable(lazy(() => import('features/dashboard/DashBoard')))
-const Prefetch = Loadable(lazy(() => import("features/auth/Prefetch")))
-const NewJob = Loadable(lazy(() => import("features/jobs/NewJob")))
+const Prefetch = Loadable(lazy(() => import('features/auth/Prefetch')))
+const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')))
 const NewAutoJob = Loadable(
-  lazy(() => import("features/autojob/NewAutoJobForm")),
+  lazy(() => import('features/autojob/NewAutoJobForm'))
 )
 const NewScoperJob = Loadable(
-  lazy(() => import("features/scoperjob/NewScoperJobForm")),
+  lazy(() => import('features/scoperjob/NewScoperJobForm'))
 )
 const ConstInpStepper = Loadable(
-  lazy(() => import("components/ConstInpForm/ConstInpStepper")),
+  lazy(() => import('components/ConstInpForm/ConstInpStepper'))
 )
 const AF2PAEJiffy = Loadable(
-  lazy(() => import("features/af2pae/Alphafold2PAEJiffy")),
+  lazy(() => import('features/af2pae/Alphafold2PAEJiffy'))
 )
-const Jobs = Loadable(lazy(() => import("features/jobs/Jobs")))
+const Jobs = Loadable(lazy(() => import('features/jobs/Jobs')))
 const SingleJobPage = Loadable(
-  lazy(() => import("features/jobs/SingleJobPage")),
+  lazy(() => import('features/jobs/SingleJobPage'))
 )
-const Welcome = Loadable(lazy(() => import("features/auth/Welcome")))
-const UsersList = Loadable(lazy(() => import("features/users/UsersList")))
-const EditUser = Loadable(lazy(() => import("features/users/EditUser")))
-const UserAccount = Loadable(lazy(() => import("features/users/UserAccount")))
-const AdminPanel = Loadable(lazy(() => import("features/admin/AdminPanel")))
-const Unauthorized = Loadable(lazy(() => import("components/Unauthorized")))
-const Missing = Loadable(lazy(() => import("components/Missing")))
+const Welcome = Loadable(lazy(() => import('features/auth/Welcome')))
+const UsersList = Loadable(lazy(() => import('features/users/UsersList')))
+const EditUser = Loadable(lazy(() => import('features/users/EditUser')))
+const UserAccount = Loadable(lazy(() => import('features/users/UserAccount')))
+const AdminPanel = Loadable(lazy(() => import('features/admin/AdminPanel')))
+const Unauthorized = Loadable(lazy(() => import('components/Unauthorized')))
+const Missing = Loadable(lazy(() => import('components/Missing')))
 
-// ==============================|| MAIN ROUTING ||============================== //
+// ===========================|| MAIN ROUTING ||============================ //
 
 const ProtectedMainRoutes = {
   element: <PersistLogin />,
   children: [
     {
       element: <MainLayout />,
-      path: "/",
+      path: '/',
       children: [
         {
-          path: "welcome",
-          element: <Welcome />,
+          path: 'welcome',
+          element: <Welcome />
         },
         {
           element: <RequireAuth allowedRoles={[ROLES.Admin]} />,
           children: [
             {
-              path: "admin",
-              element: <AdminPanel />,
-            },
-          ],
+              path: 'admin',
+              element: <AdminPanel />
+            }
+          ]
         },
         {
           element: <RequireAuth allowedRoles={[...Object.values(ROLES)]} />,
           children: [
             {
-              path: "unauthorized",
-              element: <Unauthorized />,
-            },
-          ],
+              path: 'unauthorized',
+              element: <Unauthorized />
+            }
+          ]
         },
         {
           element: <RequireAuth allowedRoles={[...Object.values(ROLES)]} />,
@@ -75,9 +74,9 @@ const ProtectedMainRoutes = {
               element: <Prefetch />,
               children: [
                 {
-                  path: "dashboard",
+                  path: 'dashboard',
                   children: [
-                    { path: "", element: <Welcome /> },
+                    { path: '', element: <Welcome /> },
                     {
                       element: (
                         <RequireAuth
@@ -86,66 +85,66 @@ const ProtectedMainRoutes = {
                       ),
                       children: [
                         {
-                          path: "users",
-                          element: <UsersList />,
+                          path: 'users',
+                          element: <UsersList />
                         },
                         {
-                          path: "users/:id",
-                          element: <EditUser />,
-                        },
-                      ],
+                          path: 'users/:id',
+                          element: <EditUser />
+                        }
+                      ]
                     },
                     {
-                      path: "jobs/*",
+                      path: 'jobs/*',
                       element: <Jobs />,
                       children: [
                         {
                           index: true,
-                          element: <Jobs />,
-                        },
-                      ],
+                          element: <Jobs />
+                        }
+                      ]
                     },
                     {
-                      path: "jobs/:id",
-                      element: <SingleJobPage />,
+                      path: 'jobs/:id',
+                      element: <SingleJobPage />
                     },
                     {
-                      path: "jobs/classic",
-                      element: <NewJob />,
+                      path: 'jobs/classic',
+                      element: <NewJob />
                     },
                     {
-                      path: "jobs/auto",
-                      element: <NewAutoJob />,
+                      path: 'jobs/auto',
+                      element: <NewAutoJob />
                     },
                     {
-                      path: "jobs/scoper",
-                      element: <NewScoperJob />,
+                      path: 'jobs/scoper',
+                      element: <NewScoperJob />
                     },
                     {
-                      path: "jobs/constinp",
-                      element: <ConstInpStepper />,
+                      path: 'jobs/constinp',
+                      element: <ConstInpStepper />
                     },
                     {
-                      path: "af2pae",
-                      element: <AF2PAEJiffy />,
+                      path: 'af2pae',
+                      element: <AF2PAEJiffy />
                     },
                     {
-                      path: "account",
-                      element: <UserAccount />,
-                    },
-                  ],
+                      path: 'account',
+                      element: <UserAccount />
+                    }
+                  ]
                 },
                 {
-                  path: "*",
-                  element: <Missing />,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ],
+                  path: '*',
+                  element: <Missing />
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 
 export { ProtectedMainRoutes }

@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { IconButton, Snackbar, Button } from '@mui/material'
-import ShareIcon from '@mui/icons-material/Share'
+import { Snackbar, Button } from '@mui/material'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 
 const CopyToClipboardButton = ({ text }) => {
@@ -8,22 +7,21 @@ const CopyToClipboardButton = ({ text }) => {
 
   const handleClick = () => {
     setOpen(true)
-    // navigator.clipboard.writeText(window.location.toString())
     navigator.clipboard.writeText(text)
   }
 
   return (
     <>
       <Button
-        variant="outlined"
+        variant='outlined'
         startIcon={<ContentCopyIcon />}
         onClick={handleClick}
-        size="small"
+        size='small'
       >
         Copy
       </Button>
       <Snackbar
-        message="Copied to clipboard"
+        message='Copied to clipboard'
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         autoHideDuration={2000}
         onClose={() => setOpen(false)}

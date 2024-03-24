@@ -73,15 +73,6 @@ const Jobs = () => {
 
   if (isSuccess) {
     let filteredIds
-    // console.log(jobs)
-    // jobs.forEach((job) => {
-    //   console.log(
-    //     job.mongo.title,
-    //     job.bullmq.position,
-    //     job.bullmq.queuePosition,
-    //     job.username
-    //   )
-    // })
 
     if (isManager || isAdmin) {
       filteredIds = [...jobs]
