@@ -122,30 +122,50 @@ const Alphafold2PAEJiffy = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Typography sx={{ mx: 1 }}>
-                The <b>PAE Jiffy</b> will use the Predicted Alignment Error (PAE) file in
-                JSON format from AlphaFold to automagically define the rigid bodies and
-                rigid domains of your PDB file, for input into BilboMD.
+                The <b>PAE Jiffy</b>
+                {'\u2122'} will use the{' '}
+                <Link
+                  href='https://alphafold.ebi.ac.uk/faq#faq-13'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  Predicted Aligned Error
+                </Link>{' '}
+                (PAE) file - in JSON format - from AlphaFold to automagically
+                define the rigid bodies and rigid domains. The <b>*.pdb</b> and
+                PAE <b>*.json</b> files must be the ones obtained from Alphafold
+                since we are also using the{' '}
+                <Link
+                  href='https://alphafold.ebi.ac.uk/faq#faq-12'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  pLDDT
+                </Link>{' '}
+                values stored in the B-factor column to guide the selection of
+                rigid and flexible regions.
               </Typography>
               <Typography component={'span'} variant={'body1'}>
                 <ol>
                   <li>
-                    Obtain the PAE file from AlphaFold. Either from running AlphaFold on
-                    your own in a colabfold notebook or downloaded from pre-predicted
-                    structures available from the{' '}
+                    Obtain the PAE file from AlphaFold. Either from running
+                    AlphaFold on your own in a colabfold notebook or downloaded
+                    from pre-predicted structures available from the{' '}
                     <Link
-                      href="https://alphafold.ebi.ac.uk/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href='https://alphafold.ebi.ac.uk/'
+                      target='_blank'
+                      rel='noopener noreferrer'
                     >
                       AlphaFold
                     </Link>{' '}
                     database hosted at EMBL-EBI.
                   </li>
                   <li>
-                    Upload the files here and our server will create a CHARMM-compatable{' '}
-                    <code>const.inp</code> file for you. After you download your{' '}
-                    <code>const.inp</code> file please check that it makes sense to you
-                    before using it in a <b>BilboMD</b> run.
+                    Upload the files here and our server will create a
+                    CHARMM-compatable <code>const.inp</code> file for you. After
+                    you download your <code>const.inp</code> file please check
+                    that it makes sense to you before using it in a{' '}
+                    <b>BilboMD</b> run.
                   </li>
                 </ol>
               </Typography>
@@ -159,7 +179,7 @@ const Alphafold2PAEJiffy = () => {
           <Paper sx={{ p: 1 }}>
             {success ? (
               <>
-                <Alert severity="success">
+                <Alert severity='success'>
                   <AlertTitle>Success</AlertTitle>
                   Your <code>const.inp</code> file was successfully created!
                   <br />
@@ -177,14 +197,20 @@ const Alphafold2PAEJiffy = () => {
                     color: 'black'
                   }}
                 >
-                  <Typography style={{ whiteSpace: 'pre-line' }}>{constfile}</Typography>
+                  <Typography style={{ whiteSpace: 'pre-line' }}>
+                    {constfile}
+                  </Typography>
                   <Box>
                     <CopyToClipboardButton text={constfile} />
                   </Box>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                   <Download uuid={uuid} />
-                  <Button variant="outlined" type="button" onClick={handleReset}>
+                  <Button
+                    variant='outlined'
+                    type='button'
+                    onClick={handleReset}
+                  >
                     Reset
                   </Button>
                 </Box>
@@ -207,34 +233,34 @@ const Alphafold2PAEJiffy = () => {
                     <Grid
                       container
                       columns={12}
-                      direction="column"
+                      direction='column'
                       sx={{ display: 'flex' }}
                     >
                       <Field
-                        name="pdb_file"
-                        id="pdb-file-upload"
+                        name='pdb_file'
+                        id='pdb-file-upload'
                         as={FileSelect}
-                        title="Select File"
+                        title='Select File'
                         disabled={isSubmitting}
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}
                         error={errors.pdb_file && values.pdb_file}
                         errorMessage={errors.pdb_file ? errors.pdb_file : ''}
-                        fileType="*.pdb"
-                        fileExt=".crd"
+                        fileType='*.pdb'
+                        fileExt='.crd'
                       />
                       <Field
-                        name="pae_file"
-                        id="pae-file-upload"
+                        name='pae_file'
+                        id='pae-file-upload'
                         as={FileSelect}
-                        title="Select File"
+                        title='Select File'
                         disabled={isSubmitting}
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}
                         error={errors.pae_file && values.pae_file}
                         errorMessage={errors.pae_file ? errors.pae_file : ''}
-                        fileType="Alphafold PAE *.json"
-                        fileExt=".json"
+                        fileType='Alphafold PAE *.json'
+                        fileExt='.json'
                       />
                       {isSubmitting && (
                         <Box sx={{ width: '520px' }}>
@@ -243,14 +269,16 @@ const Alphafold2PAEJiffy = () => {
                       )}
                       <Grid item xs={6} sx={{ my: 2 }}>
                         <LoadingButton
-                          type="submit"
+                          type='submit'
                           disabled={
-                            !isValid || values.pdb_file === '' || values.pae_file === ''
+                            !isValid ||
+                            values.pdb_file === '' ||
+                            values.pae_file === ''
                           }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}
-                          loadingPosition="end"
-                          variant="contained"
+                          loadingPosition='end'
+                          variant='contained'
                           sx={{ width: '110px' }}
                         >
                           <span>Submit</span>

@@ -112,7 +112,7 @@ const NewAutoJobForm = () => {
                     pLDDT
                   </Link>{' '}
                   values stored in the B-factor column to guide the selection of
-                  rigid adn flexible regions.
+                  rigid and flexible regions.
                 </Typography>
                 <ul>
                   <li>
