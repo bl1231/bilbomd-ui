@@ -7,6 +7,8 @@ import { store } from 'app/store'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ThemeContextProvider } from 'themes/ThemeContextProvider'
 import { StyledEngineProvider } from '@mui/system'
+import { ErrorBoundary } from 'react-error-boundary'
+import ErrorFallback from 'components/ErrorFallback'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
@@ -16,9 +18,11 @@ root.render(
       <StyledEngineProvider injectFirst>
         <ReduxProvider store={store}>
           <BrowserRouter>
-            <Routes>
-              <Route path="/*" element={<App />} />
-            </Routes>
+            <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {}}>
+              <Routes>
+                <Route path='/*' element={<App />} />
+              </Routes>
+            </ErrorBoundary>
           </BrowserRouter>
         </ReduxProvider>
       </StyledEngineProvider>
