@@ -24,7 +24,8 @@ import { useAddNewJobMutation } from './jobsApiSlice'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { bilbomdJobSchema, expdataSchema } from 'schemas/ValidationSchemas'
+import { expdataSchema } from 'schemas/ValidationSchemas'
+import { BilboMDClassicJobSchema } from 'schemas/BilboMDClassicJobSchema'
 import useAuth from 'hooks/useAuth'
 import { Debug } from 'components/Debug'
 import { axiosInstance } from 'app/api/axios'
@@ -263,7 +264,7 @@ const NewJobForm = () => {
             ) : (
               <Formik
                 initialValues={initialValues}
-                validationSchema={bilbomdJobSchema}
+                validationSchema={BilboMDClassicJobSchema}
                 onSubmit={onSubmit}
               >
                 {({
@@ -285,31 +286,47 @@ const NewJobForm = () => {
                       direction='column'
                       sx={{ display: 'flex' }}
                     >
-                      <Divider textAlign='left'>Job Type</Divider>
-                      <Grid item sx={{ my: 2, width: '520px' }}>
-                        {/* <Typography>Job Type</Typography> */}
-                        <FormGroup sx={{ m: 2 }}>
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={values.bilbomd_mode === 'pdb'}
-                                onChange={handleCheckboxChange(setFieldValue)}
-                                name='pdb_inputs'
-                              />
-                            }
-                            label='PDB inputs'
-                          />
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={values.bilbomd_mode === 'crd_psf'}
-                                onChange={handleCheckboxChange(setFieldValue)}
-                                name='crd_psf_inputs'
-                              />
-                            }
-                            label='CRD/PSF inputs'
-                          />
-                        </FormGroup>
+                      <Divider textAlign='left'>Model Inputs</Divider>
+                      <Grid
+                        container
+                        direction='row'
+                        alignItems='center'
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          width: '520px'
+                        }}
+                      >
+                        <Grid item xs={6}>
+                          <FormGroup sx={{ ml: 1 }}>
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={values.bilbomd_mode === 'pdb'}
+                                  onChange={handleCheckboxChange(setFieldValue)}
+                                  name='pdb_inputs'
+                                />
+                              }
+                              label='PDB file'
+                            />
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={values.bilbomd_mode === 'crd_psf'}
+                                  onChange={handleCheckboxChange(setFieldValue)}
+                                  name='crd_psf_inputs'
+                                />
+                              }
+                              label='CRD/PSF files'
+                            />
+                          </FormGroup>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Alert severity='info'>
+                            If you used CHARMM-GUI to parameterize your inputs
+                            then please select the CRD/PSF option
+                          </Alert>
+                        </Grid>
                       </Grid>
                       <Divider textAlign='left'>Job Form</Divider>
                       <Grid item sx={{ my: 2, width: '520px' }}>
@@ -585,13 +602,16 @@ const NewJobForm = () => {
                           disabled={
                             !isValid ||
                             values.title === '' ||
-                            values.crd_file === '' ||
-                            values.psf_file === '' ||
                             values.constinp === '' ||
                             values.expdata === '' ||
                             values.rg_max === '' ||
                             values.rg_min === '' ||
-                            values.num_conf === ''
+                            values.num_conf === '' ||
+                            (values.bilbomd_mode === 'pdb' &&
+                              values.pdb_file === '') ||
+                            (values.bilbomd_mode === 'crd_psf' &&
+                              (values.psf_file === '' ||
+                                values.crd_file === ''))
                           }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}
