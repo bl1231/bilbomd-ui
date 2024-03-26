@@ -57,9 +57,11 @@ const NewJobForm = () => {
 
   const onSubmit = async (values, { setStatus }) => {
     const form = new FormData()
+    form.append('bilbomd_mode', values.bilbomd_mode)
     form.append('title', values.title)
     form.append('psf_file', values.psf_file)
     form.append('crd_file', values.crd_file)
+    form.append('pdb_file', values.pdb_file)
     form.append('num_conf', values.num_conf)
     form.append('rg_min', values.rg_min)
     form.append('rg_max', values.rg_max)
@@ -286,7 +288,9 @@ const NewJobForm = () => {
                       direction='column'
                       sx={{ display: 'flex' }}
                     >
-                      <Divider textAlign='left'>Model Inputs</Divider>
+                      <Divider textAlign='left' sx={{ my: 1 }}>
+                        Model Inputs
+                      </Divider>
                       <Grid
                         container
                         direction='row'
@@ -328,7 +332,9 @@ const NewJobForm = () => {
                           </Alert>
                         </Grid>
                       </Grid>
-                      <Divider textAlign='left'>Job Form</Divider>
+                      <Divider textAlign='left' sx={{ my: 1 }}>
+                        Job Form
+                      </Divider>
                       <Grid item sx={{ my: 2, width: '520px' }}>
                         <Field
                           fullWidth
