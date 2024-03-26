@@ -1,8 +1,7 @@
 import { mixed, number, object, string } from 'yup'
+import { isCRD, noSpaces, isSaxsData } from './ValidationFunctions'
 
-import { fromCharmmGui, noSpaces, isSaxsData } from './ValidationFunctions'
-
-export const BilboMDClassicJobSchema = object().shape({
+const BilboMDClassicJobSchema = object().shape({
   bilbomd_mode: string().required('Selection is required'),
   title: string()
     .required('Please provide a title for your BilboMD Job.')
@@ -15,7 +14,7 @@ export const BilboMDClassicJobSchema = object().shape({
       mixed()
         .test(
           'required',
-          'PSF file obtained from CHARMM-GUI is required',
+          'PSF file obtained is required',
           (file) => (file ? true : false) // Simplified return statement
         )
         .test('file-size-check', 'Max file size is 30MB', (file) => {
@@ -24,30 +23,15 @@ export const BilboMDClassicJobSchema = object().shape({
           }
           return false
         })
-        .test(
-          'file-type-check',
-          'Only accepts a PSF file obtained from CHARMM-GUI',
-          (file) => {
-            if (
-              file instanceof File &&
-              file.name.split('.').pop()?.toUpperCase() === 'PSF'
-            ) {
-              return true
-            }
-            return false
+        .test('file-type-check', 'Only accepts a PSF file', (file) => {
+          if (
+            file instanceof File &&
+            file.name.split('.').pop()?.toUpperCase() === 'PSF'
+          ) {
+            return true
           }
-        )
-        .test(
-          'charmm-gui-check',
-          'File does not appear to be a PSF file output from CHARMM-GUI',
-          async (file) => {
-            if (file instanceof File) {
-              const fromCharmm = await fromCharmmGui(file)
-              return fromCharmm
-            }
-            return false
-          }
-        )
+          return false
+        })
         .test(
           'check-for-spaces',
           'No spaces allowed in the file name.',
@@ -55,6 +39,16 @@ export const BilboMDClassicJobSchema = object().shape({
             if (file instanceof File) {
               const spaceCheck = await noSpaces(file)
               return spaceCheck
+            }
+            return false
+          }
+        )
+        .test(
+          'filename-length-check',
+          'Filename must be no longer than 30 characters.',
+          (file) => {
+            if (file && (file as File).name.length <= 30) {
+              return true
             }
             return false
           }
@@ -66,14 +60,10 @@ export const BilboMDClassicJobSchema = object().shape({
     is: 'crd_psf',
     then: () =>
       mixed()
-        .test(
-          'required',
-          'CRD file obtained from CHARMM-GUI is required',
-          (file) => {
-            if (file) return true
-            return false
-          }
-        )
+        .test('required', 'CRD file obtained is required', (file) => {
+          if (file) return true
+          return false
+        })
         .test('file-size-check', 'Max file size is 20MB', (file) => {
           if (file && (file as File).size <= 20000000) {
             // console.log(file.size)
@@ -82,30 +72,24 @@ export const BilboMDClassicJobSchema = object().shape({
           // console.log(file.size)
           return false
         })
-        .test(
-          'file-type-check',
-          'Only accepts a CRD file obtained from CHARMM-GUI',
-          (file) => {
-            if (
-              file &&
-              (file as File).name.split('.').pop()?.toUpperCase() === 'CRD'
-            ) {
-              // console.log(file.name.split('.').pop())
-              return true
-            }
-            return false
+        .test('file-type-check', 'Only accepts a CRD file', (file) => {
+          if (
+            file &&
+            (file as File).name.split('.').pop()?.toUpperCase() === 'CRD'
+          ) {
+            // console.log(file.name.split('.').pop())
+            return true
           }
-        )
+          return false
+        })
         .test(
-          'charmm-gui-check',
-          'File does not appear to be a CRD file output from CHARMM-GUI',
+          'crd-check',
+          'File does not appear to be a CRD file',
           async (file) => {
             if (file) {
-              const fromCharmm = await fromCharmmGui(file as File)
-              // console.log('fromCharmm:', fromCharmm)
-              return fromCharmm
+              const crd = await isCRD(file as File)
+              return crd
             }
-            // additional return if test fails for reasons other than NOT being a CHARMM file
             return false
           }
         )
@@ -117,6 +101,16 @@ export const BilboMDClassicJobSchema = object().shape({
               const spaceCheck = await noSpaces(file as File)
               // console.log(spaceCheck)
               return spaceCheck
+            }
+            return false
+          }
+        )
+        .test(
+          'filename-length-check',
+          'Filename must be no longer than 30 characters.',
+          (file) => {
+            if (file && (file as File).name.length <= 30) {
+              return true
             }
             return false
           }
@@ -145,7 +139,29 @@ export const BilboMDClassicJobSchema = object().shape({
           }
           // console.log(file.size)
           return false
-        }),
+        })
+        .test(
+          'check-for-spaces',
+          'Only accept file with no spaces in the name.',
+          async (file) => {
+            if (file) {
+              const spaceCheck = await noSpaces(file as File)
+              // console.log(spaceCheck)
+              return spaceCheck
+            }
+            return false
+          }
+        )
+        .test(
+          'filename-length-check',
+          'Filename must be no longer than 30 characters.',
+          (file) => {
+            if (file && (file as File).name.length <= 30) {
+              return true
+            }
+            return false
+          }
+        ),
     otherwise: () => mixed().notRequired()
   }),
   constinp: mixed()
@@ -179,6 +195,16 @@ export const BilboMDClassicJobSchema = object().shape({
           const spaceCheck = await noSpaces(file as File)
           // console.log(spaceCheck)
           return spaceCheck
+        }
+        return false
+      }
+    )
+    .test(
+      'filename-length-check',
+      'Filename must be no longer than 30 characters.',
+      (file) => {
+        if (file && (file as File).name.length <= 30) {
+          return true
         }
         return false
       }
@@ -230,8 +256,17 @@ export const BilboMDClassicJobSchema = object().shape({
         }
         return false
       }
+    )
+    .test(
+      'filename-length-check',
+      'Filename must be no longer than 30 characters.',
+      (file) => {
+        if (file && (file as File).name.length <= 30) {
+          return true
+        }
+        return false
+      }
     ),
-
   num_conf: number()
     .integer()
     .oneOf([1, 2, 3, 4])
@@ -259,3 +294,5 @@ export const BilboMDClassicJobSchema = object().shape({
       }
     )
 })
+
+export { BilboMDClassicJobSchema }
