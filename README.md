@@ -50,6 +50,11 @@ The production instance is served from an `ngnix` [Docker container](https://hub
 
 ## Version History
 
+- 1.8.2
+  - Changes to allow PDB or CRD/PSF files for BilboMD Classic
+  - Now using createBrowserRouter from react-router-dom
+  - Add global ErrorBoundary
+  - Convert some `*.js` file to `*.ts`
 - 1.8.1
   - Improve NERSC status component
   - Fix bug in INP Jiffy multistep form
