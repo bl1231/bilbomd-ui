@@ -59,6 +59,16 @@ export const expdataSchema = mixed()
       return false
     }
   )
+  .test(
+    'filename-length-check',
+    'Filename must be no longer than 30 characters.',
+    (file) => {
+      if (file && (file as File).name.length <= 30) {
+        return true
+      }
+      return false
+    }
+  )
 
 export const editUserSchema = object().shape({
   active: boolean()

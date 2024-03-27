@@ -14,20 +14,37 @@ export const af2paeJiffySchema = object().shape({
       return false
     })
     .test('file-type-check', 'Only accepts a PDB file', (file) => {
-      if (file && (file as File).name.split('.').pop()?.toUpperCase() === 'PDB') {
+      if (
+        file &&
+        (file as File).name.split('.').pop()?.toUpperCase() === 'PDB'
+      ) {
         // console.log(file.name.split('.').pop())
         return true
       }
       return false
     })
-    .test('check-for-spaces', 'No spaces allowed in filename.', async (file) => {
-      if (file) {
-        const spaceCheck = await noSpaces(file as File)
-        // console.log(spaceCheck)
-        return spaceCheck
+    .test(
+      'check-for-spaces',
+      'No spaces allowed in filename.',
+      async (file) => {
+        if (file) {
+          const spaceCheck = await noSpaces(file as File)
+          // console.log(spaceCheck)
+          return spaceCheck
+        }
+        return false
       }
-      return false
-    }),
+    )
+    .test(
+      'filename-length-check',
+      'Filename must be no longer than 30 characters.',
+      (file) => {
+        if (file && (file as File).name.length <= 30) {
+          return true
+        }
+        return false
+      }
+    ),
   pae_file: mixed()
     .required('PAE file in JSON format is required')
     .test('is-json', 'Invalid JSON format', (file) => {
@@ -61,18 +78,35 @@ export const af2paeJiffySchema = object().shape({
       return false
     })
     .test('file-type-check', 'Only accepts a JSON file', (file) => {
-      if (file && (file as File).name.split('.').pop()?.toUpperCase() === 'JSON') {
+      if (
+        file &&
+        (file as File).name.split('.').pop()?.toUpperCase() === 'JSON'
+      ) {
         // console.log(file.name.split('.').pop())
         return true
       }
       return false
     })
-    .test('check-for-spaces', 'No spaces allowed in filename.', async (file) => {
-      if (file) {
-        const spaceCheck = await noSpaces(file as File)
-        // console.log(spaceCheck)
-        return spaceCheck
+    .test(
+      'check-for-spaces',
+      'No spaces allowed in filename.',
+      async (file) => {
+        if (file) {
+          const spaceCheck = await noSpaces(file as File)
+          // console.log(spaceCheck)
+          return spaceCheck
+        }
+        return false
       }
-      return false
-    })
+    )
+    .test(
+      'filename-length-check',
+      'Filename must be no longer than 30 characters.',
+      (file) => {
+        if (file && (file as File).name.length <= 30) {
+          return true
+        }
+        return false
+      }
+    )
 })
