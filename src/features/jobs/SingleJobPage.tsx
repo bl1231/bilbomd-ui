@@ -51,6 +51,7 @@ const SingleJobPage = () => {
       <Alert severity='error' variant='outlined'>
         <AlertTitle>Error loading job.</AlertTitle>
         <ul>
+          <li>The backend server may be temporarily unavailable.</li>
           <li>
             Please try again making sure to include the entire job ID in request
             URL.
