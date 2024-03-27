@@ -41,7 +41,7 @@ const NewScoperJobForm = () => {
     form.append('pdb_file', values.pdb_file)
     form.append('dat_file', values.dat_file)
     form.append('email', values.email)
-    form.append('job_type', 'BilboMDScoper')
+    form.append('bilbomd_mode', 'scoper')
 
     try {
       const newJob = await addNewScoperJob(form).unwrap()
@@ -80,38 +80,40 @@ const NewScoperJobForm = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Typography sx={{ m: 1 }}>
-                Scoper is a novel data analysis pipeline that uses a combination of
-                classical algorithms and deep-learning techniques to find structures,
-                along with magnesium ion binding sites that fit a given SAXS profile,
-                given an initial structure to work with.
+                Scoper is a novel data analysis pipeline that uses a combination
+                of classical algorithms and deep-learning techniques to find
+                structures, along with magnesium ion binding sites that fit a
+                given SAXS profile, given an initial structure to work with.
               </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
                 <img
-                  src="/scoper/scoper_full_pipeline.png"
-                  alt="Overview of Scoper pipeline"
+                  src='/scoper/scoper_full_pipeline.png'
+                  alt='Overview of Scoper pipeline'
                   style={{ maxWidth: '100%', height: 'auto' }}
                 />
               </Box>
               <Typography sx={{ m: 1 }}>
-                A novel deep neural network was created for this pipeline which we named
-                IonNet. IonNet is used to predict magnesium binding sites for RNA
-                structures. The input for our model is a PDB file of the RNA structure.
+                A novel deep neural network was created for this pipeline which
+                we named IonNet. IonNet is used to predict magnesium binding
+                sites for RNA structures. The input for our model is a PDB file
+                of the RNA structure.
               </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
                 <img
-                  src="/scoper/MGClassifier_Architecture.drawio.png"
-                  alt="Overview of Scoper pipeline"
+                  src='/scoper/MGClassifier_Architecture.drawio.png'
+                  alt='Overview of Scoper pipeline'
                   style={{ maxWidth: '100%', height: 'auto' }}
                 />
               </Box>
               <Typography>
-                Scoper was created by Edan Patt, Dina Schneidman, and Michal Hammel. The
-                web implementation was done by Scott Classen. The source code and trained
-                model for the backend Scoper/IonNet analysis steps comes from the{' '}
+                Scoper was created by Edan Patt, Dina Schneidman, and Michal
+                Hammel. The web implementation was done by Scott Classen. The
+                source code and trained model for the backend Scoper/IonNet
+                analysis steps comes from the{' '}
                 <Link
-                  href="https://github.com/dina-lab3D/IonNet"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href='https://github.com/dina-lab3D/IonNet'
+                  target='_blank'
+                  rel='noopener noreferrer'
                 >
                   IonNet
                 </Link>{' '}
@@ -128,11 +130,11 @@ const NewScoperJobForm = () => {
 
           <Paper sx={{ p: 2 }}>
             {isSuccess ? (
-              <Alert severity="success">
+              <Alert severity='success'>
                 <AlertTitle>Woot!</AlertTitle>
                 <Typography>
                   Your Scoper job has been submitted. Check out the{' '}
-                  <RouterLink to="../jobs">details</RouterLink>.
+                  <RouterLink to='../jobs'>details</RouterLink>.
                 </Typography>
               </Alert>
             ) : (
@@ -154,53 +156,55 @@ const NewScoperJobForm = () => {
                   setFieldTouched
                 }) => (
                   <Form>
-                    <Grid container direction="column">
+                    <Grid container direction='column'>
                       <Grid item sx={{ my: 2, width: '520px' }}>
                         <Field
                           fullWidth
-                          label="Title"
-                          name="title"
-                          id="title"
-                          type="text"
+                          label='Title'
+                          name='title'
+                          id='title'
+                          type='text'
                           disabled={isSubmitting}
                           as={TextField}
                           onChange={handleChange}
                           onBlur={handleBlur}
                           error={errors.title && touched.title}
-                          helperText={errors.title && touched.title ? errors.title : ''}
+                          helperText={
+                            errors.title && touched.title ? errors.title : ''
+                          }
                           value={values.title || ''}
                         />
                       </Grid>
 
                       <Grid item>
                         <Field
-                          name="pdb_file"
-                          id="pdb-file-upload"
+                          name='pdb_file'
+                          id='pdb-file-upload'
                           as={FileSelect}
-                          title="Select File"
+                          title='Select File'
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
                           error={errors.pdb_file && values.pdb_file}
                           errorMessage={errors.pdb_file ? errors.pdb_file : ''}
-                          fileType="RNA *.pdb"
-                          fileExt=".pdb"
+                          fileType='RNA *.pdb'
+                          fileExt='.pdb'
                         />
                       </Grid>
 
                       <Grid item>
                         <Field
-                          name="dat_file"
-                          id="dat-file-upload"
+                          name='dat_file'
+                          id='dat-file-upload'
                           as={FileSelect}
-                          title="Select File"
+                          title='Select File'
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
                           error={errors.dat_file && values.dat_file}
                           errorMessage={errors.dat_file ? errors.dat_file : ''}
-                          fileType="experimental SAXS data"
-                          fileExt=".dat"
+                          fileType='experimental SAXS data'
+                          fileExt='.dat'
                         />
                       </Grid>
 
@@ -211,7 +215,7 @@ const NewScoperJobForm = () => {
                       )}
                       <Grid item sx={{ mt: 2 }}>
                         <LoadingButton
-                          type="submit"
+                          type='submit'
                           disabled={
                             !isValid ||
                             values.title === '' ||
@@ -220,14 +224,18 @@ const NewScoperJobForm = () => {
                           }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}
-                          loadingPosition="end"
-                          variant="contained"
+                          loadingPosition='end'
+                          variant='contained'
                           sx={{ width: '110px' }}
                         >
                           <span>Submit</span>
                         </LoadingButton>
 
-                        {isSuccess ? <Alert severity="success">{status}</Alert> : ''}
+                        {isSuccess ? (
+                          <Alert severity='success'>{status}</Alert>
+                        ) : (
+                          ''
+                        )}
                       </Grid>
                     </Grid>
                     {process.env.NODE_ENV === 'development' ? <Debug /> : ''}

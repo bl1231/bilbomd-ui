@@ -18,7 +18,7 @@ import { useAddNewAutoJobMutation } from '../jobs/jobsApiSlice'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { bilbomdAutoJobSchema } from 'schemas/bilbomdAutoJobSchema'
+import { BilboMDAutoJobSchema } from 'schemas/BilboMDAutoJobSchema'
 import useAuth from 'hooks/useAuth'
 import { Debug } from 'components/Debug'
 import LinearProgress from '@mui/material/LinearProgress'
@@ -43,7 +43,7 @@ const NewAutoJobForm = () => {
     form.append('dat_file', values.dat_file)
     form.append('pae_file', values.pae_file)
     form.append('email', values.email)
-    form.append('job_type', 'BilboMDAuto')
+    form.append('bilbomd_mode', 'auto')
 
     try {
       const newJob = await addNewAutoJob(form).unwrap()
@@ -156,7 +156,7 @@ const NewAutoJobForm = () => {
             ) : (
               <Formik
                 initialValues={initialValues}
-                validationSchema={bilbomdAutoJobSchema}
+                validationSchema={BilboMDAutoJobSchema}
                 onSubmit={onSubmit}
               >
                 {({

@@ -17,6 +17,38 @@ const fromCharmmGui = (file: File): Promise<boolean> => {
   })
 }
 
+const isCRD = (file: File): Promise<boolean> => {
+  return new Promise((resolve) => {
+    const reader = new FileReader()
+    reader.readAsText(file)
+    reader.onloadend = () => {
+      const lines = (reader.result as string).split(/[\r\n]+/)
+      let starLinesCount = 0
+      let foundEndPattern = false
+
+      // Check for lines starting with *
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].startsWith('*')) {
+          starLinesCount++
+          if (starLinesCount > 6) {
+            // More than 6 lines starting with *, not matching the pattern
+            break
+          }
+        } else {
+          // Check if the line immediately after the last *-line matches the specified pattern
+          if (starLinesCount >= 2 && starLinesCount <= 6) {
+            const endPattern = /^\s+\d+\s+EXT$/
+            foundEndPattern = endPattern.test(lines[i])
+          }
+          break // No more lines starting with * consecutively, exit the loop
+        }
+      }
+
+      resolve(foundEndPattern)
+    }
+  })
+}
+
 const noSpaces = (file: File): Promise<boolean> => {
   const spaces = /\s/
   return new Promise((resolve) => {
@@ -52,4 +84,4 @@ const isSaxsData = (file: File): Promise<boolean> => {
   })
 }
 
-export { fromCharmmGui, noSpaces, isSaxsData }
+export { fromCharmmGui, isCRD, noSpaces, isSaxsData }
