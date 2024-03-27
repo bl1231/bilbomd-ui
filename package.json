@@ -26,7 +26,7 @@
     "@mui/lab": "^5.0.0-alpha.169",
     "@mui/material": "^5.15.14",
     "@mui/system": "^5.15.14",
-    "@mui/x-data-grid": "^6.19.8",
+    "@mui/x-data-grid": "^7.0.0",
     "@reduxjs/toolkit": "^2.2.2",
     "@types/node": "^20.11.30",
     "axios": "^1.6.8",
@@ -78,7 +78,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.17.0",
-    "@types/react": "^18.2.72",
+    "@types/react": "^18.2.73",
     "@types/react-dom": "^18.2.22",
     "@types/react-redux": "^7.1.33",
     "@typescript-eslint/eslint-plugin": "^7.4.0",

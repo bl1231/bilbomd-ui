@@ -94,12 +94,12 @@ const Jobs = () => {
         headerName: 'Submitted',
         type: 'dateTime',
         width: 160,
-        valueFormatter: (params) => {
-          if (params?.value) {
-            //console.log(params);
-            return format(parseISO(params?.value), 'MM/dd/yyyy HH:mm:ss')
+        valueFormatter: (value) => {
+          if (value) {
+            // Check if value is not empty or null
+            return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
           } else {
-            return ''
+            return '' // Return empty string if value is empty or null
           }
         }
       },
@@ -108,11 +108,12 @@ const Jobs = () => {
         headerName: 'Completed',
         type: 'dateTime',
         width: 160,
-        valueFormatter: (params) => {
-          if (params?.value) {
-            return format(parseISO(params?.value), 'MM/dd/yyyy HH:mm:ss')
+        valueFormatter: (value) => {
+          if (value) {
+            // Check if value is not empty or null
+            return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
           } else {
-            return ''
+            return '' // Return empty string if value is empty or null
           }
         }
       },
