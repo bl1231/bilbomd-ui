@@ -28,27 +28,46 @@ import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
 import LinearProgress from '@mui/material/LinearProgress'
 import HeaderBox from 'components/HeaderBox'
+import PAESlider from './PAESlider'
+
+interface FileWithDeets extends File {
+  name: string
+}
+
+interface FormValues {
+  pdb_file: FileWithDeets | null
+  pae_file: FileWithDeets | null
+  pae_power: string
+  email: string
+}
 
 const Alphafold2PAEJiffy = () => {
   const token = useSelector(selectCurrentToken)
   const navigate = useNavigate()
   const { email } = useAuth()
+  const [formValues, setFormValues] = useState<FormValues | null>(null)
   const [success, setSuccess] = useState(false)
   const [uuid, setUuid] = useState('')
   const [constfile, setConstfile] = useState('')
 
-  const initialValues = {
-    pdb_file: '',
-    pae_file: '',
+  const initialValues: FormValues = {
+    pdb_file: null,
+    pae_file: null,
+    pae_power: '',
     email: email
   }
 
-  const onSubmit = async (values) => {
-    console.log('submit form')
+  const onSubmit = async (values: FormValues) => {
     const form = new FormData()
-    form.append('pdb_file', values.pdb_file)
-    form.append('pae_file', values.pae_file)
+    if (values.pdb_file) {
+      form.append('pdb_file', values.pdb_file)
+    }
+    if (values.pae_file) {
+      form.append('pae_file', values.pae_file)
+    }
+    form.append('pae_power', values.pae_power)
     form.append('email', values.email)
+    setFormValues(values)
     try {
       const response = await axiosInstance.post('/af2pae', form, {
         headers: {
@@ -57,6 +76,7 @@ const Alphafold2PAEJiffy = () => {
       })
       if (response.status === 200) {
         const data = response.data
+        console.log(data)
         setUuid(data.uuid)
         setSuccess(true)
       } else {
@@ -131,10 +151,10 @@ const Alphafold2PAEJiffy = () => {
                 >
                   Predicted Aligned Error
                 </Link>{' '}
-                (PAE) file - in JSON format - from AlphaFold to automagically
-                define the rigid bodies and rigid domains. The <b>*.pdb</b> and
-                PAE <b>*.json</b> files must be the ones obtained from Alphafold
-                since we are also using the{' '}
+                (PAE) file - in JSON format - from AlphaFold to{' '}
+                <b>automagically*</b> define the rigid bodies and rigid domains.
+                The <b>*.pdb</b> and PAE <b>*.json</b> files must be the ones
+                obtained from Alphafold since we are also using the{' '}
                 <Link
                   href='https://alphafold.ebi.ac.uk/faq#faq-12'
                   target='_blank'
@@ -169,6 +189,27 @@ const Alphafold2PAEJiffy = () => {
                   </li>
                 </ol>
               </Typography>
+              <Typography>
+                *The <b>PAE Jiffy</b>
+                {'\u2122'} uses the{' '}
+                <Link
+                  href='https://igraph.org/r/html/1.3.0/cluster_leiden.html'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  cluster_leiden()
+                </Link>{' '}
+                function from{' '}
+                <Link
+                  href='https://igraph.org/'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  igraph
+                </Link>{' '}
+                to find community structure of a graph using the Leiden
+                algorithm of Traag, van Eck & Waltman.
+              </Typography>
             </AccordionDetails>
           </Accordion>
         </Grid>
@@ -181,8 +222,22 @@ const Alphafold2PAEJiffy = () => {
               <>
                 <Alert severity='success'>
                   <AlertTitle>Success</AlertTitle>
-                  Your <code>const.inp</code> file was successfully created!
+                  Your CHARMM-compatible <code>const.inp</code> file was
+                  successfully created!
                   <br />
+                  {formValues && (
+                    <>
+                      <Typography>
+                        <b>PDB File:</b> {formValues.pdb_file?.name}
+                      </Typography>
+                      <Typography>
+                        <b>PAE File:</b> {formValues.pae_file?.name}
+                      </Typography>
+                      <Typography>
+                        <b>PAE Power:</b> {formValues.pae_power}
+                      </Typography>
+                    </>
+                  )}
                 </Alert>
                 <Box
                   sx={{
@@ -262,8 +317,14 @@ const Alphafold2PAEJiffy = () => {
                         fileType='Alphafold PAE *.json'
                         fileExt='.json'
                       />
+                      <Field
+                        name='pae_power'
+                        id='pae-power-slider'
+                        as={PAESlider}
+                        setFieldValue={setFieldValue}
+                      />
                       {isSubmitting && (
-                        <Box sx={{ width: '520px' }}>
+                        <Box sx={{ mt: 1, width: '520px' }}>
                           <LinearProgress />
                         </Box>
                       )}
@@ -272,8 +333,8 @@ const Alphafold2PAEJiffy = () => {
                           type='submit'
                           disabled={
                             !isValid ||
-                            values.pdb_file === '' ||
-                            values.pae_file === ''
+                            values.pdb_file === null ||
+                            values.pae_file === null
                           }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}
