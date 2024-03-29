@@ -49,6 +49,7 @@ const Alphafold2PAEJiffy = () => {
   const [success, setSuccess] = useState(false)
   const [uuid, setUuid] = useState('')
   const [constfile, setConstfile] = useState('')
+  const [shapeCount, setShapeCount] = useState(0)
 
   const initialValues: FormValues = {
     pdb_file: null,
@@ -112,7 +113,8 @@ const Alphafold2PAEJiffy = () => {
 
         const blob = response.data
         const text = await new Response(blob).text()
-
+        const shapeCount = (text.match(/shape/g) || []).length
+        setShapeCount(shapeCount)
         setConstfile(text)
       } catch (error) {
         console.error('Error fetching file content:', error)
@@ -220,10 +222,15 @@ const Alphafold2PAEJiffy = () => {
           <Paper sx={{ p: 1 }}>
             {success ? (
               <>
-                <Alert severity='success'>
-                  <AlertTitle>Success</AlertTitle>
+                <Alert severity={shapeCount >= 20 ? 'error' : 'success'}>
+                  <AlertTitle>
+                    {shapeCount >= 20 ? 'Error' : 'Success'}
+                  </AlertTitle>
                   Your CHARMM-compatible <code>const.inp</code> file was
-                  successfully created!
+                  successfully created!{' '}
+                  {formValues && shapeCount >= 20
+                    ? `But with Clustering Weight = ${parseFloat(formValues.pae_power).toFixed(1)} there are ${shapeCount} rigid bodies which is too many for CHARMM to handle.`
+                    : ''}
                   <br />
                   {formValues && (
                     <>
@@ -236,6 +243,9 @@ const Alphafold2PAEJiffy = () => {
                       <Typography>
                         <b>Clustering Weight:</b>{' '}
                         {parseFloat(formValues.pae_power).toFixed(1)}
+                      </Typography>
+                      <Typography>
+                        <b>shapes (max 20):</b> {shapeCount}
                       </Typography>
                     </>
                   )}
