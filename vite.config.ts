@@ -2,32 +2,16 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { visualizer } from 'rollup-plugin-visualizer'
-import fs from 'fs'
 
+console.log('Starting Vite configuration...')
+console.log(process.env)
 export default defineConfig({
   plugins: [
     react({
       include: '**/*.tsx'
     }),
     visualizer({ gzipSize: true, brotliSize: true, template: 'sunburst' }),
-    tsconfigPaths(),
-    {
-      name: 'inject-git-hash',
-      config: () => {
-        let gitHash
-        try {
-          gitHash = fs.readFileSync('public/git-hash.txt', 'utf-8').trim()
-          console.log('Git hash read successfully:', gitHash)
-        } catch (error) {
-          console.error('Error reading git-hash.txt:', error)
-        }
-        return {
-          define: {
-            'import.meta.env.VITE_GIT_HASH': JSON.stringify(gitHash)
-          }
-        }
-      }
-    }
+    tsconfigPaths()
   ],
   server: {
     host: 'localhost',
@@ -49,6 +33,9 @@ export default defineConfig({
         secure: false
       }
     }
+  },
+  define: {
+    'import.meta.env.VITE_GIT_HASH': JSON.stringify(process.env.GIT_HASH || '')
   },
   build: {
     rollupOptions: {
