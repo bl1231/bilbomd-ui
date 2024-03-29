@@ -234,7 +234,8 @@ const Alphafold2PAEJiffy = () => {
                         <b>PAE File:</b> {formValues.pae_file?.name}
                       </Typography>
                       <Typography>
-                        <b>Clustering weight:</b> {formValues.pae_power}
+                        <b>Clustering Weight:</b>{' '}
+                        {parseFloat(formValues.pae_power).toFixed(1)}
                       </Typography>
                     </>
                   )}
