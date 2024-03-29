@@ -14,13 +14,6 @@ RUN npm ci --verbose
 # Copy your project files
 COPY . .
 
-# Use an ARG to accept the USE_NERSC variable at build time
-ARG USE_NERSC=false
-
-# Create or modify the .env file with the USE_NERSC variable
-# Note: Ensure this runs before `npm run build`
-RUN echo "VITE_USE_NERSC=$USE_NERSC" > .env.local
-
 # Now, run the build command
 RUN npm run build
 
