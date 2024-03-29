@@ -19,7 +19,7 @@
     "@ant-design/colors": "^7.0.2",
     "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/styled": "^11.11.5",
     "@fvilers/disable-react-devtools": "^1.3.0",
     "@mui/icons-material": "^5.15.14",
     "@mui/joy": "^5.0.0-beta.32",
@@ -52,9 +52,9 @@
     "yup": "^1.4.0"
   },
   "scripts": {
-    "dev": "node src/update-git-hash.js && vite",
+    "dev": "GIT_HASH=$(git rev-parse --short HEAD) vite",
     "prebuild": "tsc",
-    "build": "GIT_HASH=$(git rev-parse --short HEAD) vite build",
+    "build": "GIT_HASH=$GIT_HASH vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "optimize": "vite optimize"
@@ -91,7 +91,7 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "prettier": "^3.2.5",
     "typescript": "^5.4.3",
-    "vite": "^5.2.6",
+    "vite": "^5.2.7",
     "vite-tsconfig-paths": "^4.3.2"
   }
 }

@@ -14,6 +14,10 @@ RUN npm ci --verbose
 # Copy your project files
 COPY . .
 
+
+ARG GIT_HASH
+ENV GIT_HASH=$GIT_HASH
+
 # Now, run the build command
 RUN npm run build
 
