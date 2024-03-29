@@ -234,7 +234,7 @@ const Alphafold2PAEJiffy = () => {
                         <b>PAE File:</b> {formValues.pae_file?.name}
                       </Typography>
                       <Typography>
-                        <b>PAE Power:</b> {formValues.pae_power}
+                        <b>Clustering weight:</b> {formValues.pae_power}
                       </Typography>
                     </>
                   )}
@@ -324,7 +324,7 @@ const Alphafold2PAEJiffy = () => {
                         setFieldValue={setFieldValue}
                       />
                       {isSubmitting && (
-                        <Box sx={{ mt: 1, width: '520px' }}>
+                        <Box sx={{ mt: 1, width: '420px' }}>
                           <LinearProgress />
                         </Box>
                       )}

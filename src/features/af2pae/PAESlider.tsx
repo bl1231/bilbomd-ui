@@ -36,9 +36,9 @@ export default function PAESlider({ setFieldValue }) {
     setFieldValue('pae_power', 2.0)
   }, [setFieldValue])
   return (
-    <Box sx={{ width: 400, mt: 2 }}>
+    <Box sx={{ width: 420, mt: 2 }}>
       <Typography sx={{ mb: 1 }}>
-        Select Leiden Clustering weight value (default is 2.0)
+        Select Leiden <b>Clustering Weight</b> (default is 2.0)
       </Typography>
       <Slider
         aria-label='Restricted values'
@@ -53,8 +53,12 @@ export default function PAESlider({ setFieldValue }) {
         onChange={handleChange}
       />
       <Alert severity='info'>
-        Smaller values will result in fewer clusters.
-        <br /> Larger values will result in more clusters.
+        A smaller weight will result in fewer clusters (i.e. rigid shapes).
+        <br />A larger weight will result in more clusters.
+        <br />
+        CHARMM allows a maximum of 20 <code>shape</code> definitions.
+        <br /> If <b>PAE Jiffy</b>
+        {'\u2122'} produces more than 20 please re-run with a lower weight.
       </Alert>
     </Box>
   )
