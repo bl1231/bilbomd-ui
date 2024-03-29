@@ -16,7 +16,7 @@ export default defineConfig({
       config: () => {
         let gitHash
         try {
-          gitHash = fs.readFileSync('src/git-hash.txt', 'utf-8').trim()
+          gitHash = fs.readFileSync('public/git-hash.txt', 'utf-8').trim()
           console.log('Git hash read successfully:', gitHash)
         } catch (error) {
           console.error('Error reading git-hash.txt:', error)
