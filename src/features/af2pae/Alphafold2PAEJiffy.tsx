@@ -8,8 +8,14 @@ import {
   Link,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow
 } from '@mui/material'
+
 import { Form, Formik, Field } from 'formik'
 import useAuth from 'hooks/useAuth'
 import { useState, useEffect } from 'react'
@@ -209,7 +215,7 @@ const Alphafold2PAEJiffy = () => {
                 >
                   igraph
                 </Link>{' '}
-                to find community structure of a graph using the Leiden
+                to find the community structure of a graph using the Leiden
                 algorithm of Traag, van Eck & Waltman.
               </Typography>
             </AccordionDetails>
@@ -234,19 +240,52 @@ const Alphafold2PAEJiffy = () => {
                   <br />
                   {formValues && (
                     <>
-                      <Typography>
-                        <b>PDB File:</b> {formValues.pdb_file?.name}
-                      </Typography>
-                      <Typography>
-                        <b>PAE File:</b> {formValues.pae_file?.name}
-                      </Typography>
-                      <Typography>
-                        <b>Clustering Weight:</b>{' '}
-                        {parseFloat(formValues.pae_power).toFixed(1)}
-                      </Typography>
-                      <Typography>
-                        <b>shapes (max 20):</b> {shapeCount}
-                      </Typography>
+                      <TableContainer sx={{ width: '400px' }}>
+                        <Table aria-label='simple table'>
+                          {/* <TableHead>
+                            <TableRow>
+                              <TableCell>
+                                <b>Field</b>
+                              </TableCell>
+                              <TableCell align='right'>
+                                <b>Value</b>
+                              </TableCell>
+                            </TableRow>
+                          </TableHead> */}
+                          <TableBody>
+                            <TableRow>
+                              <TableCell>
+                                <b>PDB File</b>
+                              </TableCell>
+                              <TableCell align='right'>
+                                {formValues.pdb_file?.name}
+                              </TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell>
+                                <b>PAE File</b>
+                              </TableCell>
+                              <TableCell align='right'>
+                                {formValues.pae_file?.name}
+                              </TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell>
+                                <b>Clustering Weight</b>
+                              </TableCell>
+                              <TableCell align='right'>
+                                {parseFloat(formValues.pae_power).toFixed(1)}
+                              </TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell>
+                                <b>CHARMM shapes (max 20)</b>
+                              </TableCell>
+                              <TableCell align='right'>{shapeCount}</TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
                     </>
                   )}
                 </Alert>
