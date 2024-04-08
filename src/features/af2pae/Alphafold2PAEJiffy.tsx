@@ -8,8 +8,14 @@ import {
   Link,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow
 } from '@mui/material'
+
 import { Form, Formik, Field } from 'formik'
 import useAuth from 'hooks/useAuth'
 import { useState, useEffect } from 'react'
@@ -28,27 +34,47 @@ import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
 import LinearProgress from '@mui/material/LinearProgress'
 import HeaderBox from 'components/HeaderBox'
+import PAESlider from './PAESlider'
+
+interface FileWithDeets extends File {
+  name: string
+}
+
+interface FormValues {
+  pdb_file: FileWithDeets | null
+  pae_file: FileWithDeets | null
+  pae_power: string
+  email: string
+}
 
 const Alphafold2PAEJiffy = () => {
   const token = useSelector(selectCurrentToken)
   const navigate = useNavigate()
   const { email } = useAuth()
+  const [formValues, setFormValues] = useState<FormValues | null>(null)
   const [success, setSuccess] = useState(false)
   const [uuid, setUuid] = useState('')
   const [constfile, setConstfile] = useState('')
+  const [shapeCount, setShapeCount] = useState(0)
 
-  const initialValues = {
-    pdb_file: '',
-    pae_file: '',
+  const initialValues: FormValues = {
+    pdb_file: null,
+    pae_file: null,
+    pae_power: '',
     email: email
   }
 
-  const onSubmit = async (values) => {
-    console.log('submit form')
+  const onSubmit = async (values: FormValues) => {
     const form = new FormData()
-    form.append('pdb_file', values.pdb_file)
-    form.append('pae_file', values.pae_file)
+    if (values.pdb_file) {
+      form.append('pdb_file', values.pdb_file)
+    }
+    if (values.pae_file) {
+      form.append('pae_file', values.pae_file)
+    }
+    form.append('pae_power', values.pae_power)
     form.append('email', values.email)
+    setFormValues(values)
     try {
       const response = await axiosInstance.post('/af2pae', form, {
         headers: {
@@ -57,6 +83,7 @@ const Alphafold2PAEJiffy = () => {
       })
       if (response.status === 200) {
         const data = response.data
+        console.log(data)
         setUuid(data.uuid)
         setSuccess(true)
       } else {
@@ -92,7 +119,8 @@ const Alphafold2PAEJiffy = () => {
 
         const blob = response.data
         const text = await new Response(blob).text()
-
+        const shapeCount = (text.match(/shape/g) || []).length
+        setShapeCount(shapeCount)
         setConstfile(text)
       } catch (error) {
         console.error('Error fetching file content:', error)
@@ -131,10 +159,10 @@ const Alphafold2PAEJiffy = () => {
                 >
                   Predicted Aligned Error
                 </Link>{' '}
-                (PAE) file - in JSON format - from AlphaFold to automagically
-                define the rigid bodies and rigid domains. The <b>*.pdb</b> and
-                PAE <b>*.json</b> files must be the ones obtained from Alphafold
-                since we are also using the{' '}
+                (PAE) file - in JSON format - from AlphaFold to{' '}
+                <b>automagically*</b> define the rigid bodies and rigid domains.
+                The <b>*.pdb</b> and PAE <b>*.json</b> files must be the ones
+                obtained from Alphafold since we are also using the{' '}
                 <Link
                   href='https://alphafold.ebi.ac.uk/faq#faq-12'
                   target='_blank'
@@ -169,6 +197,27 @@ const Alphafold2PAEJiffy = () => {
                   </li>
                 </ol>
               </Typography>
+              <Typography>
+                *The <b>PAE Jiffy</b>
+                {'\u2122'} uses the{' '}
+                <Link
+                  href='https://igraph.org/r/html/1.3.0/cluster_leiden.html'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  cluster_leiden()
+                </Link>{' '}
+                function from{' '}
+                <Link
+                  href='https://igraph.org/'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  igraph
+                </Link>{' '}
+                to find the community structure of a graph using the Leiden
+                algorithm of Traag, van Eck & Waltman.
+              </Typography>
             </AccordionDetails>
           </Accordion>
         </Grid>
@@ -179,10 +228,66 @@ const Alphafold2PAEJiffy = () => {
           <Paper sx={{ p: 1 }}>
             {success ? (
               <>
-                <Alert severity='success'>
-                  <AlertTitle>Success</AlertTitle>
-                  Your <code>const.inp</code> file was successfully created!
+                <Alert severity={shapeCount >= 20 ? 'error' : 'success'}>
+                  <AlertTitle>
+                    {shapeCount >= 20 ? 'Error' : 'Success'}
+                  </AlertTitle>
+                  Your CHARMM-compatible <code>const.inp</code> file was
+                  successfully created!{' '}
+                  {formValues && shapeCount >= 20
+                    ? `But with Clustering Weight = ${parseFloat(formValues.pae_power).toFixed(1)} there are ${shapeCount} rigid bodies which is too many for CHARMM to handle.`
+                    : ''}
                   <br />
+                  {formValues && (
+                    <>
+                      <TableContainer sx={{ width: '400px' }}>
+                        <Table aria-label='simple table'>
+                          {/* <TableHead>
+                            <TableRow>
+                              <TableCell>
+                                <b>Field</b>
+                              </TableCell>
+                              <TableCell align='right'>
+                                <b>Value</b>
+                              </TableCell>
+                            </TableRow>
+                          </TableHead> */}
+                          <TableBody>
+                            <TableRow>
+                              <TableCell>
+                                <b>PDB File</b>
+                              </TableCell>
+                              <TableCell align='right'>
+                                {formValues.pdb_file?.name}
+                              </TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell>
+                                <b>PAE File</b>
+                              </TableCell>
+                              <TableCell align='right'>
+                                {formValues.pae_file?.name}
+                              </TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell>
+                                <b>Clustering Weight</b>
+                              </TableCell>
+                              <TableCell align='right'>
+                                {parseFloat(formValues.pae_power).toFixed(1)}
+                              </TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell>
+                                <b>CHARMM shapes (max 20)</b>
+                              </TableCell>
+                              <TableCell align='right'>{shapeCount}</TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </>
+                  )}
                 </Alert>
                 <Box
                   sx={{
@@ -262,8 +367,14 @@ const Alphafold2PAEJiffy = () => {
                         fileType='Alphafold PAE *.json'
                         fileExt='.json'
                       />
+                      <Field
+                        name='pae_power'
+                        id='pae-power-slider'
+                        as={PAESlider}
+                        setFieldValue={setFieldValue}
+                      />
                       {isSubmitting && (
-                        <Box sx={{ width: '520px' }}>
+                        <Box sx={{ mt: 1, width: '420px' }}>
                           <LinearProgress />
                         </Box>
                       )}
@@ -272,8 +383,8 @@ const Alphafold2PAEJiffy = () => {
                           type='submit'
                           disabled={
                             !isValid ||
-                            values.pdb_file === '' ||
-                            values.pae_file === ''
+                            values.pdb_file === null ||
+                            values.pae_file === null
                           }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}
