@@ -48,8 +48,15 @@ Pre-bundle dependencies.
 
 The production instance is served from an `ngnix` [Docker container](https://hub.docker.com/_/nginx). Have a look at the `Dockerfile` for details of the docker build. The entire production ecosystem is deployed as a single Docker compose setup. Details are in the [bilbomd](https://github.com/bl1231/bilbomd) repo.
 
+## Authors
+
+- Scott Classen sclassen at lbl dot gov
+- Michal Hammel mhammel at lbl dot gov
+
 ## Version History
 
+- 1.8.3
+  - Add a slider to control the weight value used by `igraph` `cluster_leiden()` function.
 - 1.8.2
   - Changes to allow PDB or CRD/PSF files for BilboMD Classic
   - Now using createBrowserRouter from react-router-dom
