@@ -17,6 +17,7 @@ const Preview = () => {
   const [constFileBlob, setConstFileBlob] = useState<Blob | null>(null)
   const { values } = useFormikContext<FormikValues>()
   const rigid_bodies = values.pdb_file.rigid_bodies as RigidBody[]
+  // const chains = values.pdb_file.chains
 
   const prepareConstInputFile = (rigidBodies: RigidBody[]) => {
     const contentArray: string[] = []
@@ -69,7 +70,10 @@ const Preview = () => {
         rigid_domains.pop()
         rigid_domains.push('end')
         contentArray.push(
-          'shape desc dock' + dockCount + ' rigid sele ' + rigid_domains.join(' ')
+          'shape desc dock' +
+            dockCount +
+            ' rigid sele ' +
+            rigid_domains.join(' ')
         )
         contentArray.push(' ')
         dockCount++
@@ -97,11 +101,15 @@ const Preview = () => {
             <Typography>Preview</Typography>
           </HeaderBox>
           <Paper sx={{ p: 1 }}>
-            <Typography sx={{ my: 3 }}>
-              This is the <code>const.inp</code> definition file with your Rigid Bodies
-              and defined in a format that CHARMM will understand. You can either copy and
-              paste the file shown below or, if you prefer, you can use the Download
-              button.
+            <Typography sx={{ m: 2 }}>
+              This is the <code>const.inp</code> definition file with your Rigid
+              Bodies and defined in a format that CHARMM will understand. You
+              can either copy and paste the file shown below or, if you prefer,
+              you can use the Download button.
+            </Typography>
+            <Typography sx={{ m: 2 }}>
+              The <code>segid</code> values have been modified to ensure
+              compatability with CHARMM.
             </Typography>
             <Box sx={{ display: 'flex' }}>
               <Grid
