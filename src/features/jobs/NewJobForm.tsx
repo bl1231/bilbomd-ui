@@ -478,6 +478,31 @@ const NewJobForm = () => {
                           width: '520px'
                         }}
                       >
+                        <Alert severity='info'>
+                          <Typography component='div'>
+                            Make sure that the chain identifiers in your{' '}
+                            <span style={{ fontWeight: 'bold' }}>
+                              const.inp
+                            </span>{' '}
+                            match what is in your{' '}
+                            <span style={{ fontWeight: 'bold' }}>
+                              {values.bilbomd_mode === 'pdb'
+                                ? `*.pdb`
+                                : `*.crd`}
+                            </span>{' '}
+                            file
+                          </Typography>
+                        </Alert>
+                      </Grid>
+                      <Grid
+                        container
+                        direction='row'
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          width: '520px'
+                        }}
+                      >
                         <Grid item>
                           <Field
                             name='expdata'

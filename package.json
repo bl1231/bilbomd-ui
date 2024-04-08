@@ -52,8 +52,9 @@
     "yup": "^1.4.0"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "GIT_HASH=$(git rev-parse --short HEAD) vite",
+    "prebuild": "tsc",
+    "build": "GIT_HASH=$GIT_HASH vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "optimize": "vite optimize"

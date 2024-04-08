@@ -4,6 +4,9 @@ import { version } from '../../../../package.json'
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
+  const gitHash = import.meta.env.VITE_GIT_HASH
+  console.log(import.meta.env)
+  console.log('gitHash is: ', gitHash)
   return (
     <Paper
       sx={{
@@ -14,7 +17,7 @@ const Footer = () => {
       }}
       // component="footer"
       square
-      variant="outlined"
+      variant='outlined'
     >
       <Container fixed>
         <Box
@@ -34,8 +37,9 @@ const Footer = () => {
             mb: 2
           }}
         >
-          <Typography variant="caption">
-            Copyright ©{currentYear}. SIBYLS Beamline - BilboMD v{version}
+          <Typography variant='caption'>
+            Copyright ©{currentYear}. SIBYLS Beamline - BilboMD v{version}-
+            {gitHash}
           </Typography>
         </Box>
       </Container>
