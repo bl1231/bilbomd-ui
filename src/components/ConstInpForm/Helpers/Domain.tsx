@@ -35,7 +35,10 @@ interface FormikErrorAlertProps extends AlertProps {
   message: string
 }
 
-const FormikErrorAlert: FC<FormikErrorAlertProps> = ({ message, ...alertProps }) => {
+const FormikErrorAlert: FC<FormikErrorAlertProps> = ({
+  message,
+  ...alertProps
+}) => {
   return <Alert {...alertProps}>{message}</Alert>
 }
 
@@ -57,10 +60,10 @@ const Domain: FC<DomainProps> = ({
   )
 
   const customColors = {
-    Protein: theme.palette.mode === 'light' ? '#E6A8A8' : '#b76e79',
+    PRO: theme.palette.mode === 'light' ? '#E6A8A8' : '#b76e79',
     DNA: theme.palette.mode === 'light' ? '#E9D8A6' : '#b3a272',
     RNA: theme.palette.mode === 'light' ? '#B5E3D8' : '#6daba4',
-    Carbohydrate: theme.palette.mode === 'light' ? '#A8CCE6' : '#6b95b8',
+    CAR: theme.palette.mode === 'light' ? '#A8CCE6' : '#6b95b8',
     Other: theme.palette.mode === 'light' ? '#D1A8E6' : '#9773b9'
   }
   // Determine the background color based on the matching chain's type
@@ -81,11 +84,13 @@ const Domain: FC<DomainProps> = ({
             m: 1
           }}
         >
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          <Box
+            sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+          >
             <TextField
-              label="Chain"
-              variant="outlined"
-              id="chainid"
+              label='Chain'
+              variant='outlined'
+              id='chainid'
               name={`pdb_file.rigid_bodies[${rbidx}].domains[${didx}].chainid`}
               select
               defaultValue={
@@ -106,9 +111,12 @@ const Domain: FC<DomainProps> = ({
               onChange={handleChange}
               onBlur={handleBlur}
               error={Boolean(
-                getIn(errors, `pdb_file.rigid_bodies[rbidx].domains[didx].chainid`)
+                getIn(
+                  errors,
+                  `pdb_file.rigid_bodies[rbidx].domains[didx].chainid`
+                )
               )}
-              helperText="Chain ID"
+              helperText='Chain ID'
             >
               {values.pdb_file.chains.map((item, index) => (
                 <MenuItem key={index} value={item.id}>
@@ -118,12 +126,12 @@ const Domain: FC<DomainProps> = ({
             </TextField>
 
             <Field
-              label="Start"
-              id="start"
+              label='Start'
+              id='start'
               name={`pdb_file.rigid_bodies[${rbidx}].domains[${didx}].start`}
-              type="text"
+              type='text'
               as={TextField}
-              helperText="Starting residue"
+              helperText='Starting residue'
               InputLabelProps={{
                 style: { backgroundColor: 'transparent', color: 'black' }
               }}
@@ -131,18 +139,21 @@ const Domain: FC<DomainProps> = ({
               onChange={handleChange}
               onBlur={handleBlur}
               error={Boolean(
-                getIn(errors, `pdb_file.rigid_bodies[rbidx].domains[didx].start`)
+                getIn(
+                  errors,
+                  `pdb_file.rigid_bodies[rbidx].domains[didx].start`
+                )
               )}
               sx={{ mx: 1, color: 'black' }}
             />
 
             <Field
-              label="End"
-              id="end"
+              label='End'
+              id='end'
               name={`pdb_file.rigid_bodies[${rbidx}].domains[${didx}].end`}
-              type="text"
+              type='text'
               as={TextField}
-              helperText="Ending residue"
+              helperText='Ending residue'
               InputLabelProps={{
                 style: { backgroundColor: 'transparent', color: 'black' }
               }}
@@ -168,7 +179,7 @@ const Domain: FC<DomainProps> = ({
               }}
             >
               <Typography
-                variant="h5"
+                variant='h5'
                 sx={{
                   mx: 2,
                   color: 'black'
@@ -178,7 +189,7 @@ const Domain: FC<DomainProps> = ({
               </Typography>
               <Chip
                 label={`${domain.start} - ${domain.end}`}
-                variant="outlined"
+                variant='outlined'
                 sx={{ backgroundColor: '#a0d919', color: 'black' }}
               />
             </Box>
@@ -186,14 +197,20 @@ const Domain: FC<DomainProps> = ({
         </Grid>
         {/* ERROR GRID CODE HERE */}
         <Grid item sx={{ flex: '0 1 auto', mb: 1 }}>
-          <ErrorMessage name={`pdb_file.rigid_bodies[${rbidx}].domains[${didx}].chainid`}>
-            {(msg) => <FormikErrorAlert message={msg} severity="error" />}
+          <ErrorMessage
+            name={`pdb_file.rigid_bodies[${rbidx}].domains[${didx}].chainid`}
+          >
+            {(msg) => <FormikErrorAlert message={msg} severity='error' />}
           </ErrorMessage>
-          <ErrorMessage name={`pdb_file.rigid_bodies[${rbidx}].domains[${didx}].start`}>
-            {(msg) => <FormikErrorAlert message={msg} severity="error" />}
+          <ErrorMessage
+            name={`pdb_file.rigid_bodies[${rbidx}].domains[${didx}].start`}
+          >
+            {(msg) => <FormikErrorAlert message={msg} severity='error' />}
           </ErrorMessage>
-          <ErrorMessage name={`pdb_file.rigid_bodies[${rbidx}].domains[${didx}].end`}>
-            {(msg) => <FormikErrorAlert message={msg} severity="error" />}
+          <ErrorMessage
+            name={`pdb_file.rigid_bodies[${rbidx}].domains[${didx}].end`}
+          >
+            {(msg) => <FormikErrorAlert message={msg} severity='error' />}
           </ErrorMessage>
         </Grid>
       </Grid>

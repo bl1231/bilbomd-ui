@@ -1,5 +1,12 @@
 import { useState, ChangeEvent } from 'react'
-import { Button, FormControl, FormControlProps, Input, Grid, Alert } from '@mui/material'
+import {
+  Button,
+  FormControl,
+  FormControlProps,
+  Input,
+  Grid,
+  Alert
+} from '@mui/material'
 
 interface FileFieldProps extends FormControlProps {
   id: string
@@ -38,21 +45,21 @@ const FileField = ({
   return (
     <FormControl error={isError}>
       {/* <FormLabel>test</FormLabel> */}
-      <Grid container spacing={2} alignItems="center">
+      <Grid container spacing={2} alignItems='center'>
         <Grid item>
           <Input
             style={{ display: 'none' }}
             id={id}
             name={name}
-            type="file"
+            type='file'
             onChange={handleFileChange}
           />
           <label htmlFor={id}>
             <Button
-              variant="contained"
-              component="span"
+              variant='contained'
+              component='span'
               sx={{
-                height: '55px',
+                height: '40px',
                 width: '160px',
                 fontSize: '1.1rem',
                 alignItems: 'center'
@@ -65,8 +72,8 @@ const FileField = ({
         <Grid item>
           {fileName && !errorMessage ? (
             <Alert
-              variant="outlined"
-              severity="success"
+              variant='outlined'
+              severity='success'
               sx={{
                 height: '55px',
                 fontSize: '1.1rem',
@@ -78,7 +85,7 @@ const FileField = ({
           ) : null}
           {isError ? (
             <Alert
-              severity="error"
+              severity='error'
               sx={{
                 height: '55px',
                 fontSize: '1.1rem',

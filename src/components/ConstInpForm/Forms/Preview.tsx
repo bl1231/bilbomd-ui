@@ -7,7 +7,7 @@ import useTitle from 'hooks/useTitle'
 import { Box } from '@mui/system'
 import CopyToClipboardButton from 'components/Common/CopyToClipboardButton'
 import Download from '../Helpers/Download'
-import { RigidBody } from 'types/interfaces'
+import { RigidBody, Chain } from 'types/interfaces'
 import HeaderBox from 'components/HeaderBox'
 
 const Preview = () => {
@@ -17,9 +17,9 @@ const Preview = () => {
   const [constFileBlob, setConstFileBlob] = useState<Blob | null>(null)
   const { values } = useFormikContext<FormikValues>()
   const rigid_bodies = values.pdb_file.rigid_bodies as RigidBody[]
-  // const chains = values.pdb_file.chains
+  const chains = values.pdb_file.chains
 
-  const prepareConstInputFile = (rigidBodies: RigidBody[]) => {
+  const prepareConstInputFile = (rigidBodies: RigidBody[], chains: Chain[]) => {
     const contentArray: string[] = []
     let dockCount = 1
     let rigidCount = 1
@@ -28,7 +28,8 @@ const Preview = () => {
         const rigid_domains: string[] = []
         rb.domains.map(({ chainid, start, end }, d_index) => {
           const rd_index = d_index + 1
-
+          const chain = chains.find((c) => c.id === chainid)
+          const chainType = chain ? chain.type : '' // Get chain type
           const line =
             'define fixed' +
             rd_index +
@@ -37,6 +38,7 @@ const Preview = () => {
             ':' +
             end +
             ' .and. segid ' +
+            chainType +
             chainid +
             ' ) ' +
             'end'
@@ -51,7 +53,8 @@ const Preview = () => {
       } else {
         const rigid_domains: string[] = []
         rb.domains.map(({ chainid, start, end }) => {
-          // const rd_index = d_index + rigidCount
+          const chain = chains.find((c) => c.id === chainid)
+          const chainType = chain ? chain.type : '' // Get chain type
           const line =
             'define rigid' +
             rigidCount +
@@ -60,6 +63,7 @@ const Preview = () => {
             ':' +
             end +
             ' .and. segid ' +
+            chainType +
             chainid +
             ' ) ' +
             'end'
@@ -88,7 +92,7 @@ const Preview = () => {
 
   useEffect(() => {
     if (values) {
-      prepareConstInputFile(rigid_bodies)
+      prepareConstInputFile(rigid_bodies, chains)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values])
