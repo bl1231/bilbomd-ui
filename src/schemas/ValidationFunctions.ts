@@ -60,6 +60,25 @@ const noSpaces = (file: File): Promise<boolean> => {
   })
 }
 
+// Let's break down the regex `/-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?/g`:
+
+// 1. `/`: Delimiter for the start of the regular expression.
+// 2. `-?`: Matches an optional hyphen `-`, which indicates a negative number.
+// 3. `\d+`: Matches one or more digits (`\d` is a shorthand for digit characters `[0-9]`).
+// 4. `(?:\.\d*)?`: This is a non-capturing group `(?: ... )?` that matches an optional decimal part of the number. It consists of:
+//    - `\.`: Matches a dot character `.`.
+//    - `\d*`: Matches zero or more digits after the decimal point.
+// 5. `(?:[eE][+-]?\d+)?`: Another non-capturing group that matches an optional exponent part of the number. It consists of:
+//    - `[eE]`: Matches either `e` or `E`, indicating the start of the exponent.
+//    - `[+-]?`: Matches an optional sign (`+` or `-`) for the exponent.
+//    - `\d+`: Matches one or more digits for the exponent.
+// 6. `/`: Delimiter for the end of the regular expression.
+// 7. `g`: Flags at the end of the regex indicating the global search, meaning it finds all matches rather than stopping after the first match.
+
+// In summary, this regex pattern matches numbers in scientific notation format,
+//  including optional negative sign, decimal part, and exponent part.
+//  Examples of matches include `123`, `-123.45`, `1.23e4`, `-1.23e-4`, etc.
+
 const isSaxsData = (file: File): Promise<boolean> => {
   const sciNotation = /-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?/g
   return new Promise((resolve) => {
@@ -67,13 +86,9 @@ const isSaxsData = (file: File): Promise<boolean> => {
     reader.readAsText(file)
     reader.onloadend = () => {
       const lines = (reader.result as string).split(/[\r\n]+/g)
-      for (let line = 0; line < 5; line++) {
-        // console.log(charmmGui.test(lines[line]), 'line', line, lines[line])
+      for (let line = 0; line < 7; line++) {
         if (sciNotation.test(lines[line])) {
-          // console.log('LINE: ', lines[line])
           const arr = lines[line].match(sciNotation)
-          // console.log(arr)
-          // console.log(arr.length)
           if (arr && arr.length === 3) {
             resolve(true)
           }
