@@ -211,7 +211,7 @@ const UploadForm = ({ setStepIsValid }) => {
       } else if (
         Array.from(resNames).some((resName) => proteinResidues.has(resName))
       ) {
-        chainType = 'Protein'
+        chainType = 'PRO'
       } else if (
         Array.from(resNames).some((resName) => dnaResidues.has(resName))
       ) {
@@ -219,7 +219,7 @@ const UploadForm = ({ setStepIsValid }) => {
       } else if (
         Array.from(resNames).some((resName) => carbResidues.has(resName))
       ) {
-        chainType = 'Carbohydrate'
+        chainType = 'CAR'
       }
 
       const charmmChain: Chain = {
@@ -286,13 +286,13 @@ const UploadForm = ({ setStepIsValid }) => {
   }, [isValid, dirty])
 
   const customColors = {
-    Protein: theme.palette.mode === 'light' ? '#E6A8A8' : '#b76e79',
+    PRO: theme.palette.mode === 'light' ? '#E6A8A8' : '#b76e79',
     DNA: theme.palette.mode === 'light' ? '#E9D8A6' : '#b3a272',
     RNA: theme.palette.mode === 'light' ? '#B5E3D8' : '#6daba4',
-    Carbohydrate: theme.palette.mode === 'light' ? '#A8CCE6' : '#6b95b8',
+    CAR: theme.palette.mode === 'light' ? '#A8CCE6' : '#6b95b8',
     Other: theme.palette.mode === 'light' ? '#D1A8E6' : '#9773b9'
   }
-  const macroMolecules = ['Protein', 'DNA', 'RNA', 'Carbohydrate', 'Other']
+  const macroMolecules = ['PRO', 'DNA', 'RNA', 'CAR', 'Other']
   return (
     <>
       <Grid container spacing={3}>

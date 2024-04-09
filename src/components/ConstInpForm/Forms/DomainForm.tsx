@@ -19,10 +19,10 @@ const DomainForm = ({ setStepIsValid }) => {
 
   // Define background colors for different chain types
   const customColors = {
-    Protein: theme.palette.mode === 'light' ? '#E6A8A8' : '#b76e79',
+    PRO: theme.palette.mode === 'light' ? '#E6A8A8' : '#b76e79',
     DNA: theme.palette.mode === 'light' ? '#E9D8A6' : '#b3a272',
     RNA: theme.palette.mode === 'light' ? '#B5E3D8' : '#6daba4',
-    Carbohydrate: theme.palette.mode === 'light' ? '#A8CCE6' : '#6b95b8',
+    CAR: theme.palette.mode === 'light' ? '#A8CCE6' : '#6b95b8',
     Other: theme.palette.mode === 'light' ? '#D1A8E6' : '#9773b9'
   }
 
@@ -42,7 +42,7 @@ const DomainForm = ({ setStepIsValid }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid])
-  const macroMolecules = ['Protein', 'DNA', 'RNA', 'Carbohydrate', 'Other']
+  const macroMolecules = ['PRO', 'DNA', 'RNA', 'CAR', 'Other']
   return (
     <>
       <Grid container spacing={2}>
@@ -52,37 +52,38 @@ const DomainForm = ({ setStepIsValid }) => {
           </HeaderBox>
           <Paper sx={{ p: 1 }}>
             <Box>
-              <Typography variant="h4" sx={{ m: 1 }}>
+              <Typography variant='h4' sx={{ m: 1 }}>
                 Define your Rigid Bodies & Rigid Domains
               </Typography>
               <Typography sx={{ m: 1 }}>
-                This is pretty straight forward. You need to define which ranges of
-                residues are to remain rigid during the Molecular Dynamics steps of a{' '}
-                <b>BilboMD</b> run. Please be aware of the following.
+                This is pretty straight forward. You need to define which ranges
+                of residues are to remain rigid during the Molecular Dynamics
+                steps of a <b>BilboMD</b> run. Please be aware of the following.
               </Typography>
               <ul>
                 <li>
                   <Typography>
                     You need at least one Rigid Body (we&apos;ll call this your{' '}
-                    <b>PRIMARY</b> Rigid Body). The Rigid Domains defined as part of your
-                    Primary Rigid Body will remain fixed.
+                    <b>PRIMARY</b> Rigid Body). The Rigid Domains defined as
+                    part of your Primary Rigid Body will remain fixed.
                   </Typography>
                 </li>
                 <li>
                   <Typography>
-                    Rigid Domains in subsequently defined Rigid Bodies will be dynamic.
+                    Rigid Domains in subsequently defined Rigid Bodies will be
+                    dynamic.
                   </Typography>
                 </li>
                 <li>
                   <Typography>
-                    No overlapping regions either within <b>or</b> between Rigid Bodies
-                    are allowed.
+                    No overlapping regions either within <b>or</b> between Rigid
+                    Bodies are allowed.
                   </Typography>
                 </li>
                 <li>
                   <Typography>
-                    Leave at least <b>one residue</b> between Rigid Domains to allow for
-                    efficient conformational sampling.
+                    Leave at least <b>one residue</b> between Rigid Domains to
+                    allow for efficient conformational sampling.
                   </Typography>
                 </li>
               </ul>
@@ -96,7 +97,7 @@ const DomainForm = ({ setStepIsValid }) => {
           <Paper sx={{ p: 1 }}>
             <Grid container>
               <Grid item sx={{ width: '100%' }}>
-                <Typography variant="h5" sx={{ py: 1, ml: 1 }}>
+                <Typography variant='h5' sx={{ py: 1, ml: 1 }}>
                   Macromolecule types:
                 </Typography>
                 {macroMolecules.map((chain: string, index: number) => (
@@ -113,7 +114,7 @@ const DomainForm = ({ setStepIsValid }) => {
                 ))}
               </Grid>
               <Grid item sx={{ width: '100%' }}>
-                <Typography variant="h5" sx={{ py: 1, ml: 1 }}>
+                <Typography variant='h5' sx={{ py: 1, ml: 1 }}>
                   Available Chains (and residue range):
                 </Typography>
                 {values.pdb_file.chains.map((chain: Chain, index: number) => (
@@ -124,70 +125,78 @@ const DomainForm = ({ setStepIsValid }) => {
                       mr: 1,
                       mb: 1,
                       backgroundColor: customColors[chain.type] || '#9773b9',
-                      color: theme.palette.getContrastText(customColors[chain.type])
+                      color: theme.palette.getContrastText(
+                        customColors[chain.type]
+                      )
                     }}
                   />
                 ))}
               </Grid>
               <Grid item sx={{ my: 3 }}>
-                <FieldArray name="pdb_file.rigid_bodies">
+                <FieldArray name='pdb_file.rigid_bodies'>
                   {(arrayHelpers) => (
                     <>
                       {values.pdb_file.rigid_bodies.length > 0 &&
-                        values.pdb_file.rigid_bodies.map((rigid_body, index) => (
-                          <Fragment key={index}>
-                            <Grid item sx={{ mb: 4, py: 1 }}>
-                              <Grid
-                                item
-                                sx={{
-                                  display: 'flex',
-                                  flexDirection: 'row',
-                                  ml: 1,
-                                  mb: 1,
-                                  alignContent: 'baseline'
-                                }}
-                              >
-                                <Typography variant="h4">
-                                  Rigid Body: <Chip label={rigid_body.id} />
-                                </Typography>
-                                {values.pdb_file.rigid_bodies[index]?.id === 'PRIMARY' ? (
-                                  <Typography sx={{ ml: 2 }}>
-                                    <b>note:</b> Rigid Domains in the <b>PRIMARY</b> Rigid
-                                    Body will remain absolutely fixed during the Molecular
-                                    Dynamics steps.
-                                  </Typography>
-                                ) : (
-                                  <Typography sx={{ ml: 2 }}>
-                                    <b>note:</b> Rigid Domains in <b>{rigid_body.id}</b>{' '}
-                                    will move relative to the <b>PRIMARY</b> Rigid Body.
-                                  </Typography>
-                                )}
-                              </Grid>
-                              <RigidBody
-                                rigidBodyIndex={index}
-                                // rigidBodiesArrayHelpers={arrayHelpers}
-                              />
-                              {/* DO NOT SHOW DELETE BUTTON FOR PRIMARY */}
-                              {values.pdb_file.rigid_bodies[index]?.id !== 'PRIMARY' ? (
-                                <Button
-                                  variant="contained"
-                                  color="error"
-                                  onClick={() => {
-                                    decrementRigidBodyIndex()
-                                    arrayHelpers.remove(index)
+                        values.pdb_file.rigid_bodies.map(
+                          (rigid_body, index) => (
+                            <Fragment key={index}>
+                              <Grid item sx={{ mb: 4, py: 1 }}>
+                                <Grid
+                                  item
+                                  sx={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    ml: 1,
+                                    mb: 1,
+                                    alignContent: 'baseline'
                                   }}
                                 >
-                                  {/* Delete {values.pdb_file.rigid_bodies[index]?.id} */}
-                                  Delete Rigid Body
-                                </Button>
-                              ) : (
-                                ''
-                              )}
-                            </Grid>
-                          </Fragment>
-                        ))}
+                                  <Typography variant='h4'>
+                                    Rigid Body: <Chip label={rigid_body.id} />
+                                  </Typography>
+                                  {values.pdb_file.rigid_bodies[index]?.id ===
+                                  'PRIMARY' ? (
+                                    <Typography sx={{ ml: 2 }}>
+                                      <b>note:</b> Rigid Domains in the{' '}
+                                      <b>PRIMARY</b> Rigid Body will remain
+                                      absolutely fixed during the Molecular
+                                      Dynamics steps.
+                                    </Typography>
+                                  ) : (
+                                    <Typography sx={{ ml: 2 }}>
+                                      <b>note:</b> Rigid Domains in{' '}
+                                      <b>{rigid_body.id}</b> will move relative
+                                      to the <b>PRIMARY</b> Rigid Body.
+                                    </Typography>
+                                  )}
+                                </Grid>
+                                <RigidBody
+                                  rigidBodyIndex={index}
+                                  // rigidBodiesArrayHelpers={arrayHelpers}
+                                />
+                                {/* DO NOT SHOW DELETE BUTTON FOR PRIMARY */}
+                                {values.pdb_file.rigid_bodies[index]?.id !==
+                                'PRIMARY' ? (
+                                  <Button
+                                    variant='contained'
+                                    color='error'
+                                    onClick={() => {
+                                      decrementRigidBodyIndex()
+                                      arrayHelpers.remove(index)
+                                    }}
+                                  >
+                                    {/* Delete {values.pdb_file.rigid_bodies[index]?.id} */}
+                                    Delete Rigid Body
+                                  </Button>
+                                ) : (
+                                  ''
+                                )}
+                              </Grid>
+                            </Fragment>
+                          )
+                        )}
                       <Button
-                        variant="contained"
+                        variant='contained'
                         onClick={() => {
                           incrementRigidBodyIndex()
                           const new_rigid_body = {
