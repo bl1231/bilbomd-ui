@@ -55,6 +55,9 @@ The production instance is served from an `ngnix` [Docker container](https://hub
 
 ## Version History
 
+- 1.8.4
+  - Adjust INP Jiffy to procude inp files with CHARMM-specific segid naming.
+  - Update summary information on the unauthenticated home page.
 - 1.8.3
   - Add a slider to control the weight value used by `igraph` `cluster_leiden()` function.
 - 1.8.2
