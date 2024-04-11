@@ -15,7 +15,13 @@ import {
   ResponsiveContainer,
   ReferenceLine
 } from 'recharts'
-import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow
+} from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -73,32 +79,34 @@ const combineFoxsData = (foxsDataArray: FoxsData[]): CombinedFoxsData[] => {
   }
 
   // Initially map over the base data to calculate model intensities and residuals
-  let baseData: CombinedFoxsData[] = foxsDataArray[0].data.map((point, index) => {
-    const q = parseFloat(point.q.toFixed(4))
-    const exp_intensity = parseFloat(point.exp_intensity.toFixed(4))
-    const error = Math.max(parseFloat(point.error.toFixed(4)), 0)
+  let baseData: CombinedFoxsData[] = foxsDataArray[0].data.map(
+    (point, index) => {
+      const q = parseFloat(point.q.toFixed(4))
+      const exp_intensity = parseFloat(point.exp_intensity.toFixed(4))
+      const error = Math.max(parseFloat(point.error.toFixed(4)), 0)
 
-    const combinedData: CombinedFoxsData = { q, exp_intensity, error }
+      const combinedData: CombinedFoxsData = { q, exp_intensity, error }
 
-    foxsDataArray.slice(1).forEach((foxsData, dataIndex) => {
-      const modelIntensityKey = `model_intensity_${dataIndex + 1}`
-      const residualKey = `residual_${dataIndex + 1}`
-      const currentPoint = foxsData.data[index]
+      foxsDataArray.slice(1).forEach((foxsData, dataIndex) => {
+        const modelIntensityKey = `model_intensity_${dataIndex + 1}`
+        const residualKey = `residual_${dataIndex + 1}`
+        const currentPoint = foxsData.data[index]
 
-      if (currentPoint) {
-        const model_intensity = Math.max(
-          parseFloat(currentPoint.model_intensity.toFixed(4)),
-          0
-        )
-        combinedData[modelIntensityKey] = model_intensity
-        combinedData[residualKey] = parseFloat(
-          ((exp_intensity - model_intensity) / error).toFixed(4)
-        )
-      }
-    })
+        if (currentPoint) {
+          const model_intensity = Math.max(
+            parseFloat(currentPoint.model_intensity.toFixed(4)),
+            0
+          )
+          combinedData[modelIntensityKey] = model_intensity
+          combinedData[residualKey] = parseFloat(
+            ((exp_intensity - model_intensity) / error).toFixed(4)
+          )
+        }
+      })
 
-    return combinedData
-  })
+      return combinedData
+    }
+  )
 
   // Filter the baseData array to exclude any data points with negative exp_intensity values
   baseData = baseData.filter((dataPoint) => dataPoint.exp_intensity > 0)
@@ -109,7 +117,9 @@ const combineFoxsData = (foxsDataArray: FoxsData[]): CombinedFoxsData[] => {
 const calculateResiduals = (dataPoints: FoxsDataPoint[]) => {
   return dataPoints.map((item) => ({
     q: parseFloat(item.q.toFixed(4)),
-    res: parseFloat(((item.exp_intensity - item.model_intensity) / item.error).toFixed(4))
+    res: parseFloat(
+      ((item.exp_intensity - item.model_intensity) / item.error).toFixed(4)
+    )
   }))
 }
 
@@ -132,7 +142,7 @@ const getUniqueColor = (index) => {
 
 const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   const { data, isLoading, isError } = useGetFoxsAnalysisByIdQuery(id, {
-    pollingInterval: 30000,
+    pollingInterval: 0,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
   })
@@ -141,7 +151,10 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   // console.log('id:', id, 'foxsData -->', foxsData)
   // Prepare original data to reduce the number of digits after the decimal point
   // and filter out negative values
-  const origData = useMemo(() => (foxsData ? prepData(foxsData[0].data) : []), [foxsData])
+  const origData = useMemo(
+    () => (foxsData ? prepData(foxsData[0].data) : []),
+    [foxsData]
+  )
   const ensembleData = useMemo(
     () => (foxsData ? combineFoxsData(foxsData) : []),
     [foxsData]
@@ -176,7 +189,7 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
 
   if (isError || !data)
     return (
-      <Alert severity="info" variant="outlined">
+      <Alert severity='info' variant='outlined'>
         <AlertTitle>FoXS data is unavailable for this job.</AlertTitle>
       </Alert>
     )
@@ -205,34 +218,41 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <Typography sx={{ pl: 2, m: 1 }}>{`Ensemble Models - I vs. q`}</Typography>
-          <ResponsiveContainer width="100%" height={300}>
+          <Typography
+            sx={{ pl: 2, m: 1 }}
+          >{`Ensemble Models - I vs. q`}</Typography>
+          <ResponsiveContainer width='100%' height={300}>
             <LineChart data={ensembleData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="q" scale="linear" type="number" />
-              <YAxis yAxisId="left" scale="log" type="number" domain={['auto', 'auto']} />
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis dataKey='q' scale='linear' type='number' />
+              <YAxis
+                yAxisId='left'
+                scale='log'
+                type='number'
+                domain={['auto', 'auto']}
+              />
               <Tooltip />
               <Legend
-                iconType="line"
-                verticalAlign="bottom"
+                iconType='line'
+                verticalAlign='bottom'
                 height={30}
-                layout="horizontal"
-                align="center"
+                layout='horizontal'
+                align='center'
               />
               <Line
-                yAxisId="left"
-                type="monotone"
-                dataKey="exp_intensity"
-                name="Exp Intensity"
-                stroke="#8884d8"
+                yAxisId='left'
+                type='monotone'
+                dataKey='exp_intensity'
+                name='Exp Intensity'
+                stroke='#8884d8'
                 activeDot={{ r: 8 }}
                 dot={{ strokeWidth: 1 }}
               />
               {data.slice(1).map((_, index) => (
                 <Fragment key={index}>
                   <Line
-                    yAxisId="left"
-                    type="monotone"
+                    yAxisId='left'
+                    type='monotone'
                     dataKey={`model_intensity_${index + 1}`}
                     name={`Ens. Size ${index + 1}`}
                     stroke={getUniqueColor(index + 1)}
@@ -245,41 +265,43 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
           <Typography sx={{ pl: 2, m: 1, mt: 3 }}>
             Ensemble Models - Chi^2 residuals
           </Typography>
-          <ResponsiveContainer width="100%" height={200}>
+          <ResponsiveContainer width='100%' height={200}>
             <LineChart data={ensembleData}>
-              <XAxis dataKey="q" scale="linear" type="number" />
+              <XAxis dataKey='q' scale='linear' type='number' />
               <YAxis domain={[minYAxis, maxYAxis]} />
               <Tooltip />
               <Legend
-                iconType="line"
-                verticalAlign="bottom"
+                iconType='line'
+                verticalAlign='bottom'
                 height={30}
-                layout="horizontal"
-                align="center"
+                layout='horizontal'
+                align='center'
               />
               {data.slice(1).map((_, index) => (
                 <Fragment key={index}>
                   <Line
-                    type="monotone"
+                    type='monotone'
                     dataKey={`residual_${index + 1}`}
                     name={`Ens. Size ${index + 1}`}
                     stroke={getUniqueColor(index + 1)}
                   />
                 </Fragment>
               ))}
-              <ReferenceLine y={0} stroke="black" />
+              <ReferenceLine y={0} stroke='black' />
             </LineChart>
           </ResponsiveContainer>
         </Grid>
-        <Grid item xs={12} container justifyContent="flex-end">
+        <Grid item xs={12} container justifyContent='flex-end'>
           <Grid item xs={6} sx={{ pl: 6 }}>
             {/* <TableContainer component={Paper}> */}
             <TableContainer>
-              <Table size="small" aria-label="simple table">
+              <Table size='small' aria-label='simple table'>
                 <TableHead>
                   <TableRow>
                     <TableCell style={{ fontSize: '1rem' }}>Filename</TableCell>
-                    <TableCell style={{ fontSize: '1rem' }}>Chi^2 Value</TableCell>
+                    <TableCell style={{ fontSize: '1rem' }}>
+                      Chi^2 Value
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -288,7 +310,9 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
                       key={index}
                       style={{ backgroundColor: getUniqueColor(index) }}
                     >
-                      <TableCell style={{ fontSize: '1rem' }}>{model.filename}</TableCell>
+                      <TableCell style={{ fontSize: '1rem' }}>
+                        {model.filename}
+                      </TableCell>
                       <TableCell style={{ fontSize: '1rem' }}>
                         {model.chisq.toFixed(2)}
                       </TableCell>
