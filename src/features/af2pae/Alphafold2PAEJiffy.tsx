@@ -134,7 +134,7 @@ const Alphafold2PAEJiffy = () => {
     <>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Accordion defaultExpanded={true}>
+          <Accordion defaultExpanded={false}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
               sx={{
