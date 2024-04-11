@@ -5,8 +5,8 @@ import { version } from '../../../../package.json'
 const Footer = () => {
   const currentYear = new Date().getFullYear()
   const gitHash = import.meta.env.VITE_GIT_HASH
-  console.log(import.meta.env)
-  console.log('gitHash is: ', gitHash)
+  // console.log(import.meta.env)
+  // console.log('gitHash is: ', gitHash)
   return (
     <Paper
       sx={{
