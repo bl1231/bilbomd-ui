@@ -234,7 +234,7 @@ const NewAutoJobForm = () => {
                           setFieldTouched={setFieldTouched}
                           error={errors.dat_file && values.dat_file}
                           errorMessage={errors.dat_file ? errors.dat_file : ''}
-                          fileType='experimental SAXS data'
+                          fileType='experimental SAXS data *.dat'
                           fileExt='.dat'
                         />
                       </Grid>

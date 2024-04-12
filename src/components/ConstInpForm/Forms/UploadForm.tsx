@@ -412,6 +412,7 @@ const UploadForm = ({ setStepIsValid }) => {
                       ? errors.pdb_file.file || 'Error uploading file'
                       : ''
                   }
+                  fileExt='.pdb'
                 />
               </Grid>
             </Grid>

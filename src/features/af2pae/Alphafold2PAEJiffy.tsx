@@ -352,7 +352,7 @@ const Alphafold2PAEJiffy = () => {
                         error={errors.pdb_file && values.pdb_file}
                         errorMessage={errors.pdb_file ? errors.pdb_file : ''}
                         fileType='Alphafold PDB *.pdb'
-                        fileExt='.crd'
+                        fileExt='.pdb'
                       />
                       <Field
                         name='pae_file'

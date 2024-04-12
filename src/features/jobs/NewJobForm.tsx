@@ -480,17 +480,18 @@ const NewJobForm = () => {
                       >
                         <Alert severity='info'>
                           <Typography component='div'>
-                            Make sure that the chain identifiers in your{' '}
+                            Be sure to verify that the chain identifiers and
+                            residue numbering in your{' '}
                             <span style={{ fontWeight: 'bold' }}>
                               const.inp
                             </span>{' '}
-                            match what is in your{' '}
+                            are consistent with your{' '}
                             <span style={{ fontWeight: 'bold' }}>
                               {values.bilbomd_mode === 'pdb'
                                 ? `*.pdb`
                                 : `*.crd`}
                             </span>{' '}
-                            file
+                            file.
                           </Typography>
                         </Alert>
                       </Grid>

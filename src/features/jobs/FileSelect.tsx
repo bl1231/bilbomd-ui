@@ -38,33 +38,38 @@ const FileSelect = (props: FileSelectProps) => {
   }
 
   return (
-    <FormControl margin="normal">
+    <FormControl margin='normal'>
       <FormLabel sx={{ marginBottom: '0.6em' }}>
         Upload your <b>{props.fileType}</b> file
       </FormLabel>
-      <Grid container spacing={2} alignItems="center">
+      <Grid container spacing={2} alignItems='center'>
         <Grid item>
           <Input
             style={{ display: 'none' }}
             id={props.id}
             name={props.name}
-            type="file"
+            type='file'
             onChange={handleFileChange}
+            inputProps={{ accept: props.fileExt }}
           />
           <label htmlFor={props.id}>
-            <Button variant="contained" component="span" sx={{ width: '110px' }}>
+            <Button
+              variant='contained'
+              component='span'
+              sx={{ width: '110px' }}
+            >
               {props.title}
             </Button>
           </label>
         </Grid>
         <Grid item>
           {fileName && !props.errorMessage ? (
-            <Alert variant="outlined" severity="success" sx={{ py: 0 }}>
+            <Alert variant='outlined' severity='success' sx={{ py: 0 }}>
               {fileName}
             </Alert>
           ) : null}
           {props.error ? (
-            <Alert severity="error" sx={{ py: 0 }}>
+            <Alert severity='error' sx={{ py: 0 }}>
               {props.errorMessage}
             </Alert>
           ) : null}

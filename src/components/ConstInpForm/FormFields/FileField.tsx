@@ -15,6 +15,7 @@ interface FileFieldProps extends FormControlProps {
   title: string
   isError: boolean
   errorMessage: string
+  fileExt: string
   setFieldValue: (field: string, value: File, shouldValidate?: boolean) => void
 }
 
@@ -24,6 +25,7 @@ const FileField = ({
   title,
   isError,
   errorMessage,
+  fileExt,
   setFieldValue,
   onChange
 }: FileFieldProps) => {
@@ -53,6 +55,7 @@ const FileField = ({
             name={name}
             type='file'
             onChange={handleFileChange}
+            inputProps={{ accept: fileExt }}
           />
           <label htmlFor={id}>
             <Button
