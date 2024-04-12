@@ -351,7 +351,7 @@ const Alphafold2PAEJiffy = () => {
                         setFieldTouched={setFieldTouched}
                         error={errors.pdb_file && values.pdb_file}
                         errorMessage={errors.pdb_file ? errors.pdb_file : ''}
-                        fileType='*.pdb'
+                        fileType='Alphafold PDB *.pdb'
                         fileExt='.crd'
                       />
                       <Field
