@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useFormikContext, FormikValues } from 'formik'
 import { Grid, Typography } from '@mui/material'
-// import { useTheme } from '@mui/material/styles'
 import Paper from '@mui/material/Paper'
 import useTitle from 'hooks/useTitle'
 import { Box } from '@mui/system'
@@ -12,7 +11,6 @@ import HeaderBox from 'components/HeaderBox'
 
 const Preview = () => {
   useTitle('BilboMD: Preview const.inp file')
-  // const theme = useTheme()
   const [constFilePreview, setConstFilePreview] = useState('')
   const [constFileBlob, setConstFileBlob] = useState<Blob | null>(null)
   const { values } = useFormikContext<FormikValues>()
@@ -23,10 +21,11 @@ const Preview = () => {
     const contentArray: string[] = []
     let dockCount = 1
     let rigidCount = 1
-    rigidBodies.map((rb) => {
+
+    rigidBodies.forEach((rb) => {
       if (rb.id === 'PRIMARY') {
         const rigid_domains: string[] = []
-        rb.domains.map(({ chainid, start, end }, d_index) => {
+        rb.domains.forEach(({ chainid, start, end }, d_index) => {
           const rd_index = d_index + 1
           const chain = chains.find((c) => c.id === chainid)
           let chainType = chain ? chain.type : '' // Get chain type
@@ -52,17 +51,23 @@ const Preview = () => {
             chainid +
             ' ) ' +
             'end'
-          contentArray.push(line)
+
+          // Push the line with line wrapping
+          pushWrappedLine(contentArray, line)
           rigid_domains.push('fixed' + rd_index, '.or.')
         })
 
         rigid_domains.pop()
         rigid_domains.push('end')
-        contentArray.push('cons fix sele ' + rigid_domains.join(' '))
+        const consFixSeleString = 'cons fix sele ' + rigid_domains.join(' ')
+
+        // Push the line with line wrapping
+        pushWrappedLine(contentArray, consFixSeleString)
+
         contentArray.push(' ')
       } else {
         const rigid_domains: string[] = []
-        rb.domains.map(({ chainid, start, end }) => {
+        rb.domains.forEach(({ chainid, start, end }) => {
           const chain = chains.find((c) => c.id === chainid)
           let chainType = chain ? chain.type : '' // Get chain type
           chainType = chainType.toUpperCase() // Ensure chainType is uppercase
@@ -87,27 +92,60 @@ const Preview = () => {
             chainid +
             ' ) ' +
             'end'
-          contentArray.push(line)
+
+          // Push the line with line wrapping
+          pushWrappedLine(contentArray, line)
           rigid_domains.push('rigid' + rigidCount, '.or.')
           rigidCount++
         })
+
         rigid_domains.pop()
         rigid_domains.push('end')
-        contentArray.push(
+        const shapeDescLine =
           'shape desc dock' +
-            dockCount +
-            ' rigid sele ' +
-            rigid_domains.join(' ')
-        )
+          dockCount +
+          ' rigid sele ' +
+          rigid_domains.join(' ')
+
+        // Push the line with line wrapping
+        pushWrappedLine(contentArray, shapeDescLine)
+
         contentArray.push(' ')
         dockCount++
       }
     })
+
     contentArray.push('return')
     const content = contentArray.join('\n')
     setConstFilePreview(content)
     const file = new Blob([content], { type: 'text/plain' })
     setConstFileBlob(file)
+  }
+
+  const pushWrappedLine = (contentArray: string[], line: string) => {
+    const maxLength = 77
+    let currentLine = ''
+    let numCharacters = 0
+
+    for (let i = 0; i < line.length; i++) {
+      const char = line.charAt(i)
+      if (numCharacters + 1 > maxLength) {
+        // Check if adding the next character exceeds max length
+        contentArray.push(currentLine) // Push the current line to contentArray
+        currentLine = '' // Reset current line
+        numCharacters = 0 // Reset character count
+      }
+      currentLine += char // Add the character to current line
+      numCharacters++ // Increment character count
+
+      // Add a hyphen at the end of lines that continue to the next
+      if (numCharacters === maxLength && i !== line.length - 1) {
+        currentLine += '-'
+        numCharacters++ // Increment character count for hyphen
+      }
+    }
+
+    contentArray.push(currentLine) // Push the last line
   }
 
   useEffect(() => {
