@@ -64,7 +64,17 @@ const Preview = () => {
         const rigid_domains: string[] = []
         rb.domains.map(({ chainid, start, end }) => {
           const chain = chains.find((c) => c.id === chainid)
-          const chainType = chain ? chain.type : '' // Get chain type
+          let chainType = chain ? chain.type : '' // Get chain type
+          chainType = chainType.toUpperCase() // Ensure chainType is uppercase
+
+          // Check if chainid is lowercase
+          if (chainid.toLowerCase() === chainid) {
+            // Replace the last character of chainType with 'L'
+            chainType = chainType.slice(0, -1) + 'L'
+            // Append the uppercase version of chainid
+            chainid = chainid.toUpperCase()
+          }
+
           const line =
             'define rigid' +
             rigidCount +
