@@ -117,14 +117,14 @@ const NewAutoJobForm = () => {
                 <ul>
                   <li>
                     <Typography>
-                      A <b>*.pdb</b> file (PDB coordinate file. Make sure it
-                      matches your PAE file.)
+                      An Alphafold PDB <b>*.pdb</b> file (PDB coordinate file.
+                      Make sure it matches your PAE file.)
                     </Typography>
                   </li>
                   <li>
                     <Typography>
-                      A <b>*.json</b> file (The PAE matrix output from Alphafold
-                      in JSON format.)
+                      An Alphafold PAE <b>*.json</b> file (The PAE matrix output
+                      from Alphafold in JSON format.)
                     </Typography>
                   </li>
                   <li>

@@ -130,7 +130,7 @@ const NewJobForm = () => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Accordion>
+          <Accordion defaultExpanded>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
               sx={{
@@ -163,8 +163,8 @@ const NewJobForm = () => {
                   CHARMM
                 </Link>{' '}
                 to generate an ensemble of molecular models. In order for the
-                Molecular Dynamics steps to run successfully it is imperative
-                that you provide compatible input files.
+                Molecular Dynamics steps to run successfully you must provide
+                compatible input files.
                 <br />
               </Typography>
               <Typography sx={{ mx: 1, my: 2 }}>
@@ -182,8 +182,11 @@ const NewJobForm = () => {
                 <b>const.inp</b> file, either manually or via one of our Jiffys,
                 then you may want to use <b>BilboMD Classic</b>. <br />
               </Typography>
+              <Divider textAlign='left' sx={{ my: 1 }}>
+                CRD/PSF Inputs
+              </Divider>
               <Typography sx={{ mx: 1, my: 2 }}>
-                These are the required input files:
+                Required input files if you select the <b>CRD/PSF option</b>:
                 <li>
                   <b>*.crd</b> file (A CHARMM coordinate file)
                 </li>
@@ -216,10 +219,61 @@ const NewJobForm = () => {
                   CHARMM-GUI
                 </Link>{' '}
                 to convert your standard PDB file to a CRD file. If you need
-                help generating a valid <b>const.inp</b> file you can use our
-                little Jiffy (green button below or &ldquo;Jiffy&rdquo; links to
-                the left) to help get you started.
+                help generating a valid <b>const.inp</b> file you can use our{' '}
+                <Link href='/dashboard/jobs/constinp'>
+                  <b>inp Jiffy{'\u2122'}</b>
+                </Link>{' '}
+                to help get you started.
               </Typography>
+              <Alert severity='warning'>
+                <AlertTitle>
+                  Warning about Chain ID and segid naming conventions
+                </AlertTitle>
+                <Typography sx={{ mx: 1, my: 2 }}>
+                  If using CRD/PSF files from CHARMM-GUI you will need to use
+                  the <b>PDB file</b> output from CHARMM-GUI as the input to{' '}
+                  <b>inp Jiffy{'\u2122'}</b>. This is because CHARMM-GUI uses
+                  internal segid formats PRO[A-Z] (protein), DNA[A-Z] (DNA),
+                  RNA[A-Z] (RNA), and HET[A-Z] (ligands), instead of PDB chain
+                  id, and will rename the first protein chain in your PDB file
+                  as segid <b>PROA</b> and the second protein chain as segid{' '}
+                  <b>PROB</b> even if the original chain IDs were something
+                  other than A and B.
+                </Typography>
+              </Alert>
+              <Divider textAlign='left' sx={{ my: 1 }}>
+                PDB Inputs
+              </Divider>
+              <Typography sx={{ mx: 1, my: 2 }}>
+                Required input files if you select the <b>PDB option</b>:
+                <li>
+                  <b>*.pdb</b> file (A PDB coordinate file)
+                </li>
+                <li>
+                  <b>*.inp</b> file (defining the rigid domains of your protein.
+                  Typically named <b>const.inp</b> )
+                </li>
+                <li>
+                  <b>*.dat</b> file (A 3-column SAXS data file)
+                </li>
+              </Typography>
+              <Typography sx={{ mx: 1, my: 2 }}>
+                <b>BilboMD Classic</b> will convert your PDB file to the
+                required CRD and PSF files. However, we do this slightly
+                differently than CHARMM-GUI. The main difference is the way we
+                rename the chains for input to CHARMM. Essentially we retain
+                your original chain IDs wheras CHARMM-GUI renames the first
+                Protein chain as segid <b>PROA</b>, the second Protein chain as
+                segid <b>PROB</b>,{' '}
+                <span style={{ fontStyle: 'italic' }}>etc</span>. (see the notes
+                above). For that reason we strongly recommend that you use our{' '}
+                <b>inp Jiffy{'\u2122'}</b> to create your <b>const.inp</b> file.
+                Feel free to manually edit it, but pay attention to segid
+                values.
+              </Typography>
+              <Divider textAlign='left' sx={{ my: 1 }}>
+                Other settings
+              </Divider>
               <Typography sx={{ mx: 1, my: 2 }}>
                 <b>Conformations per Rg</b> - Specify the number of atomic
                 models to be calculated for each Rg Step (Radius of Gyration -
@@ -480,8 +534,8 @@ const NewJobForm = () => {
                       >
                         <Alert severity='info'>
                           <Typography component='div'>
-                            Be sure to verify that the chain identifiers and
-                            residue numbering in your{' '}
+                            Be sure to verify that the chain identifiers (
+                            <b>segid</b>) and residue numbering in your{' '}
                             <span style={{ fontWeight: 'bold' }}>
                               const.inp
                             </span>{' '}
@@ -491,7 +545,9 @@ const NewJobForm = () => {
                                 ? `*.pdb`
                                 : `*.crd`}
                             </span>{' '}
-                            file.
+                            file. For example, Protein Chain ID <b>A</b> will be
+                            converted to segid <b>PROA</b> and DNA Chain ID{' '}
+                            <b>G</b> will be converted to segid <b>DNAG</b>
                           </Typography>
                         </Alert>
                       </Grid>

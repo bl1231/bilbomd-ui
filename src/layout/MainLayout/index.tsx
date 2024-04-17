@@ -64,14 +64,14 @@ export default function ClippedDrawer() {
       roles: ['user', 'manager']
     },
     {
-      text: 'inp Jiffy',
+      text: 'inp Jiffy™',
       icon: <AutoAwesome />,
       path: '/dashboard/jobs/constinp',
       onclick: () => navigate('dashboard/jobs/constinp'),
       roles: ['user', 'manager']
     },
     {
-      text: 'PAE Jiffy',
+      text: 'PAE Jiffy™',
       icon: <AutoAwesome />,
       path: '/dashboard/af2pae',
       onclick: () => navigate('dashboard/af2pae'),

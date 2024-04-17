@@ -322,7 +322,8 @@ const UploadForm = ({ setStepIsValid }) => {
                 >
                   atom selection
                 </Link>{' '}
-                syntax. This Jiffy will help you construct a valid{' '}
+                syntax. The <b>inp Jiffy{'\u2122'}</b> will help you construct a
+                valid{' '}
                 <b>
                   <code>const.inp</code>{' '}
                 </b>{' '}
@@ -331,9 +332,19 @@ const UploadForm = ({ setStepIsValid }) => {
               <ul>
                 <li>
                   <Typography>
-                    The <b>Inp Jiffy</b>
-                    {'\u2122'} will only work with PDB files that have a chain
-                    ID.
+                    The <b>Inp Jiffy{'\u2122'}</b> will only work with PDB files
+                    that have a chain ID (i.e. a single character in column 22
+                    ).
+                  </Typography>
+                </li>
+                <li>
+                  <Typography>
+                    The <b>Inp Jiffy{'\u2122'}</b> will produce a{' '}
+                    <b>
+                      <code>const.inp</code>{' '}
+                    </b>{' '}
+                    file with segid names that are compatible with{' '}
+                    <b>BilboMD Classic</b>.
                   </Typography>
                 </li>
               </ul>
