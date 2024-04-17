@@ -75,18 +75,27 @@ const SingleJobPage = () => {
       })
 
       if (response.data) {
+        const contentDisposition = response.headers['content-disposition']
+        let filename = 'download.tar.gz' // Default filename if not specified
+        if (contentDisposition) {
+          const matches = /filename="?([^"]+)"?/.exec(contentDisposition)
+          if (matches && matches.length > 1) {
+            filename = matches[1]
+          }
+        }
+
         const url = window.URL.createObjectURL(response.data)
         const link = document.createElement('a')
         link.href = url
-        link.setAttribute('download', 'results.tar.gz')
+        link.setAttribute('download', filename) // Use dynamic filename
         document.body.appendChild(link)
         link.click()
         link.parentNode?.removeChild(link)
       } else {
-        console.error('No data')
+        console.error('No data to download')
       }
     } catch (error) {
-      console.error('Download results.tar.gz error:', error)
+      console.error('Download results error:', error)
     }
   }
 
