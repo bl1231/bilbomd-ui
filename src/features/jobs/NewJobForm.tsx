@@ -536,18 +536,25 @@ const NewJobForm = () => {
                           <Typography component='div'>
                             Be sure to verify that the chain identifiers (
                             <b>segid</b>) and residue numbering in your{' '}
-                            <span style={{ fontWeight: 'bold' }}>
-                              const.inp
-                            </span>{' '}
-                            are consistent with your{' '}
-                            <span style={{ fontWeight: 'bold' }}>
+                            <b>const.inp</b> are consistent with your{' '}
+                            <b>
                               {values.bilbomd_mode === 'pdb'
                                 ? `*.pdb`
                                 : `*.crd`}
-                            </span>{' '}
-                            file. For example, Protein Chain ID <b>A</b> will be
-                            converted to segid <b>PROA</b> and DNA Chain ID{' '}
-                            <b>G</b> will be converted to segid <b>DNAG</b>
+                            </b>{' '}
+                            file.
+                            {values.bilbomd_mode === 'pdb' ? (
+                              <>
+                                For example, Protein Chain ID <b>A</b> will be
+                                converted to segid <b>PROA</b> and DNA Chain ID{' '}
+                                <b>G</b> will be converted to segid <b>DNAG</b>
+                              </>
+                            ) : (
+                              <>
+                                Keeping in mind that CHARMM-GUI creates segid
+                                names in a unique way.
+                              </>
+                            )}
                           </Typography>
                         </Alert>
                       </Grid>
