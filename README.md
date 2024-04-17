@@ -55,6 +55,10 @@ The production instance is served from an `ngnix` [Docker container](https://hub
 
 ## Version History
 
+- 1.9.0
+  - Using Content-Disposition headers for more precise results downloading
+  - Fix to `inp Jiffy` to handle PDB files with more than `A-Z` ChainIDs.
+  - All File Select input elements now enforce specific file suffixes.
 - 1.8.4
   - Adjust INP Jiffy to procude inp files with CHARMM-specific segid naming.
   - Update summary information on the unauthenticated home page.
