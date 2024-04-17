@@ -99,4 +99,85 @@ const isSaxsData = (file: File): Promise<boolean> => {
   })
 }
 
-export { fromCharmmGui, isCRD, noSpaces, isSaxsData }
+const containsChainId = (file: File): Promise<boolean> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      if (e.target && e.target.result) {
+        const text = e.target.result as string
+        const lines = text.split('\n')
+        const isValid = lines.some((line) => {
+          return (
+            (line.startsWith('ATOM') || line.startsWith('HETATM')) &&
+            /^[A-Za-z]$/.test(line[21])
+          )
+        })
+        resolve(isValid)
+      } else {
+        reject(new Error('File load error: Event target or result is null'))
+      }
+    }
+    reader.onerror = (e) => reject(new Error('Error reading file: ' + e))
+    reader.readAsText(file)
+  })
+}
+
+const isValidConstInpFile = (file: File): Promise<string | true> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      if (!e.target || !e.target.result) {
+        reject(new Error('File load error: Event target or result is null'))
+        return
+      }
+
+      const text = e.target.result as string
+      const lines = text.split('\n').filter((line) => line.trim() !== '') // Filter out empty lines
+
+      // Check if the last non-empty line is exactly 'return'
+      if (lines.length === 0 || lines[lines.length - 1].trim() !== 'return') {
+        resolve('The last non-empty line must be exactly "return".')
+        return
+      }
+
+      // Check for at least one 'define' and one 'cons fix sele' line
+      const hasDefine = lines.some((line) => line.startsWith('define'))
+      if (!hasDefine) {
+        resolve('At least one line must start with "define".')
+        return
+      }
+
+      const hasConsFixSele = lines.some((line) =>
+        line.startsWith('cons fix sele')
+      )
+      if (!hasConsFixSele) {
+        resolve('At least one line must start with "cons fix sele".')
+        return
+      }
+
+      // Check 'define' lines for 'segid' followed by the correct format
+      const segidRegex = /segid\s+((PRO|DNA|RNA|CAR|CAL)[A-Z])\b/
+      const validSegid = lines
+        .filter((line) => line.startsWith('define'))
+        .every((line) => segidRegex.test(line))
+      if (!validSegid) {
+        resolve('segid must be: PRO[A-Z], DNA[A-Z], RNA[A-Z], etc.')
+        return
+      }
+
+      resolve(true) // All checks passed
+    }
+
+    reader.onerror = () => reject(new Error('Error reading file'))
+    reader.readAsText(file)
+  })
+}
+
+export {
+  fromCharmmGui,
+  isCRD,
+  noSpaces,
+  isSaxsData,
+  containsChainId,
+  isValidConstInpFile
+}
