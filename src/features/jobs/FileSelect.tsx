@@ -15,9 +15,17 @@ interface FileSelectProps extends FormControlProps {
   id: string
   name: string
   title: string
+  error: boolean
   errorMessage?: string
   setFieldValue: (field: string, value: File, shouldValidate?: boolean) => void
   onFileChange: (file: File) => void
+  setFieldTouched: (
+    field: string,
+    isTouched: boolean,
+    shouldValidate?: boolean
+  ) => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  handleBlur: (event: React.FocusEvent<any>) => void
 }
 
 const FileSelect = (props: FileSelectProps) => {
@@ -25,16 +33,33 @@ const FileSelect = (props: FileSelectProps) => {
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
-    const reader = new FileReader()
     const file = event.target.files?.[0]
     if (file) {
-      reader.onloadend = () => setFileName(file.name)
-      reader.readAsDataURL(file)
-      props.setFieldValue(props.name, file)
-      if (props.onFileChange) {
-        props.onFileChange(file)
+      const reader = new FileReader()
+
+      reader.onload = () => {
+        setFileName(file.name)
+        props.setFieldValue(props.name, file, true)
+        props.setFieldTouched(props.name, true, false)
+        // Needed for example to trigger AutoRg calculations when saxs data
+        // file is selected for upload.
+        if (props.onFileChange) {
+          props.onFileChange(file)
+        }
+        // console.log('New fileName:', file.name)
       }
+
+      reader.onerror = () => {
+        console.error('Error reading file:', reader.error)
+      }
+
+      reader.readAsDataURL(file) // Start reading the file as Data URL
     }
+  }
+
+  const handleBlur = () => {
+    console.log('onBlur triggered')
+    props.setFieldTouched(props.name, true)
   }
 
   return (
@@ -50,6 +75,7 @@ const FileSelect = (props: FileSelectProps) => {
             name={props.name}
             type='file'
             onChange={handleFileChange}
+            onBlur={handleBlur}
             inputProps={{ accept: props.fileExt }}
           />
           <label htmlFor={props.id}>

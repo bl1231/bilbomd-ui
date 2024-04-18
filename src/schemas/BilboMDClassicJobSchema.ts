@@ -20,7 +20,7 @@ const BilboMDClassicJobSchema = object().shape({
       mixed()
         .test(
           'required',
-          'PSF file obtained is required',
+          'PSF file is required',
           (file) => (file ? true : false) // Simplified return statement
         )
         .test('file-size-check', 'Max file size is 30MB', (file) => {
@@ -65,7 +65,7 @@ const BilboMDClassicJobSchema = object().shape({
     is: 'crd_psf',
     then: () =>
       mixed()
-        .test('required', 'CRD file obtained is required', (file) => {
+        .test('required', 'CRD file is required', (file) => {
           if (file) return true
           return false
         })
@@ -185,10 +185,14 @@ const BilboMDClassicJobSchema = object().shape({
     .test(
       'const-inp-file-check',
       '', // Default error message, not used because we handle errors manually
-      async function (file) {
+      async function (file, ctx) {
+        const bilbomd_mode = ctx?.options?.context?.bilbomd_mode
         // Use a regular function instead of an arrow function to keep 'this' context
         if (file) {
-          const validationResult = await isValidConstInpFile(file as File)
+          const validationResult = await isValidConstInpFile(
+            file as File,
+            bilbomd_mode
+          )
           if (validationResult === true) {
             return true
           }

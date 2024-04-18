@@ -122,7 +122,10 @@ const containsChainId = (file: File): Promise<boolean> => {
   })
 }
 
-const isValidConstInpFile = (file: File): Promise<string | true> => {
+const isValidConstInpFile = (
+  file: File,
+  mode: string
+): Promise<string | true> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = (e) => {
@@ -136,7 +139,7 @@ const isValidConstInpFile = (file: File): Promise<string | true> => {
 
       // Check if the last non-empty line is exactly 'return'
       if (lines.length === 0 || lines[lines.length - 1].trim() !== 'return') {
-        resolve('The last non-empty line must be exactly "return".')
+        resolve('The last line must be "return".')
         return
       }
 
@@ -156,13 +159,17 @@ const isValidConstInpFile = (file: File): Promise<string | true> => {
       }
 
       // Check 'define' lines for 'segid' followed by the correct format
-      const segidRegex = /segid\s+((PRO|DNA|RNA|CAR|CAL)[A-Z])\b/
-      const validSegid = lines
-        .filter((line) => line.startsWith('define'))
-        .every((line) => segidRegex.test(line))
-      if (!validSegid) {
-        resolve('segid must be: PRO[A-Z], DNA[A-Z], RNA[A-Z], etc.')
-        return
+      // console.log('isValidConstInpFile mode: ', mode)
+      if (mode === 'pdb') {
+        const segidRegex = /segid\s+((PRO|DNA|RNA|CAR|CAL)[A-Z])\b/
+        const validSegid = lines
+          .filter((line) => line.startsWith('define'))
+          .every((line) => segidRegex.test(line))
+        console.log(file.name, ' valid segid is ', validSegid)
+        if (!validSegid) {
+          resolve('segid must be: PRO[A-Z], DNA[A-Z], RNA[A-Z], etc.')
+          return
+        }
       }
 
       resolve(true) // All checks passed
