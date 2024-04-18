@@ -80,21 +80,35 @@ const noSpaces = (file: File): Promise<boolean> => {
 //  Examples of matches include `123`, `-123.45`, `1.23e4`, `-1.23e-4`, etc.
 
 const isSaxsData = (file: File): Promise<boolean> => {
-  const sciNotation = /-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?/g
+  const sciNotation = /-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?/g // Regular expression to match scientific notation
+
   return new Promise((resolve) => {
     const reader = new FileReader()
     reader.readAsText(file)
     reader.onloadend = () => {
-      const lines = (reader.result as string).split(/[\r\n]+/g)
-      for (let line = 0; line < 7; line++) {
-        if (sciNotation.test(lines[line])) {
-          const arr = lines[line].match(sciNotation)
+      const lines = (reader.result as string).split(/[\r\n]+/g) // Split the text into lines
+      let dataLineCount = 0 // Counter for the number of data lines checked
+
+      for (const line of lines) {
+        if (line.startsWith('#')) {
+          continue // Skip lines starting with '#'
+        }
+
+        if (sciNotation.test(line)) {
+          const arr = line.match(sciNotation)
           if (arr && arr.length === 3) {
-            resolve(true)
+            resolve(true) // Resolve true if a line with exactly three scientific notations is found
+            return // Exit the function once a match is found
           }
         }
+
+        dataLineCount++ // Increment the data line counter
+        if (dataLineCount >= 7) {
+          break // Stop checking after 7 data lines
+        }
       }
-      resolve(false)
+
+      resolve(false) // Resolve false if no valid line is found within the first 7 data lines
     }
   })
 }
