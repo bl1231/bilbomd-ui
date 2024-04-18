@@ -114,10 +114,7 @@ const BilboMDAutoJobSchema = object().shape({
       }
     ),
   dat_file: mixed()
-    .test('required', 'Experimental SAXS data is required', (file) => {
-      if (file) return true
-      return false
-    })
+    .required('Experimental SAXS data is required')
     .test('file-size-check', 'Max file size is 2MB', (file) => {
       if (file && (file as File).size <= 2000000) {
         // console.log(file.size)
