@@ -184,6 +184,16 @@ const isValidConstInpFile = (
           resolve('segid must be: PRO[A-Z], DNA[A-Z], RNA[A-Z], etc.')
           return
         }
+      } else if (mode === 'crd_psf') {
+        const segidRegex = /segid\s+([A-Z]{4})\b/
+        const validSegid = lines
+          .filter((line) => line.startsWith('define'))
+          .every((line) => segidRegex.test(line))
+        console.log(file.name, ' valid segid is ', validSegid)
+        if (!validSegid) {
+          resolve('segid must contain 4 uppercase letters [A-Z]')
+          return
+        }
       }
 
       resolve(true) // All checks passed
