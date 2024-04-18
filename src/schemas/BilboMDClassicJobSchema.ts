@@ -1,12 +1,18 @@
 import { mixed, number, object, string } from 'yup'
-import { isCRD, noSpaces, isSaxsData } from './ValidationFunctions'
+import {
+  isCRD,
+  noSpaces,
+  isSaxsData,
+  containsChainId,
+  isValidConstInpFile
+} from './ValidationFunctions'
 
 const BilboMDClassicJobSchema = object().shape({
   bilbomd_mode: string().required('Selection is required'),
   title: string()
     .required('Please provide a title for your BilboMD Job.')
     .min(4, 'Title must contain at least 4 characters.')
-    .max(20, 'Title must contain less than 20 characters.')
+    .max(24, 'Title must contain less than 20 characters.')
     .matches(/^[\w\s-]+$/, 'no special characters allowed'),
   psf_file: mixed().when('bilbomd_mode', {
     is: 'crd_psf',
@@ -14,7 +20,7 @@ const BilboMDClassicJobSchema = object().shape({
       mixed()
         .test(
           'required',
-          'PSF file obtained is required',
+          'PSF file is required',
           (file) => (file ? true : false) // Simplified return statement
         )
         .test('file-size-check', 'Max file size is 30MB', (file) => {
@@ -55,12 +61,11 @@ const BilboMDClassicJobSchema = object().shape({
         ),
     otherwise: () => mixed().notRequired()
   }),
-
   crd_file: mixed().when('bilbomd_mode', {
     is: 'crd_psf',
     then: () =>
       mixed()
-        .test('required', 'CRD file obtained is required', (file) => {
+        .test('required', 'CRD file is required', (file) => {
           if (file) return true
           return false
         })
@@ -122,6 +127,17 @@ const BilboMDClassicJobSchema = object().shape({
     then: () =>
       mixed()
         .required('gotta supply a PDB file')
+        .test(
+          'pdb-chainid-check',
+          'File must contain Chain IDs in column 22',
+          async (file) => {
+            if (file) {
+              const chainIDs = await containsChainId(file as File)
+              return chainIDs
+            }
+            return false
+          }
+        )
         .test('file-type-check', 'Only accepts a PDB file.', (file) => {
           if (
             file &&
@@ -165,10 +181,29 @@ const BilboMDClassicJobSchema = object().shape({
     otherwise: () => mixed().notRequired()
   }),
   constinp: mixed()
-    .test('required', 'A const.inp file is required', (file) => {
-      if (file) return true
-      return false
-    })
+    .required('A const.inp file is required')
+    .test(
+      'const-inp-file-check',
+      '', // Default error message, not used because we handle errors manually
+      async function (file, ctx) {
+        const bilbomd_mode = ctx?.options?.context?.bilbomd_mode
+        // Use a regular function instead of an arrow function to keep 'this' context
+        if (file) {
+          const validationResult = await isValidConstInpFile(
+            file as File,
+            bilbomd_mode
+          )
+          if (validationResult === true) {
+            return true
+          }
+          // Set the validation error message specifically
+          return this.createError({ message: validationResult })
+        }
+        return this.createError({
+          message: 'Yup Validation went bonkers. Call Scott'
+        })
+      }
+    )
     .test('file-size-check', 'Max file size is 2MB', (file) => {
       if (file && (file as File).size <= 2000000) {
         // console.log(file.size)

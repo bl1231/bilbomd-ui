@@ -1,4 +1,3 @@
-// import { useState } from 'react'
 import {
   Box,
   Checkbox,
@@ -103,27 +102,35 @@ const NewJobForm = () => {
   }
 
   const handleCheckboxChange =
-    (
-      setFieldValue: (
-        field: string,
-        value: string,
-        shouldValidate?: boolean
-      ) => void
-    ) =>
-    (
-      event: React.ChangeEvent<HTMLInputElement>
-      // checked: boolean // Include this parameter to match the expected signature
-    ) => {
+    (resetForm, values, validateForm, touched) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       const newBilboMDMode =
         event.target.name === 'pdb_inputs' ? 'pdb' : 'crd_psf'
-      setFieldValue('bilbomd_mode', newBilboMDMode)
-      // reset other value to empty
+
       if (newBilboMDMode === 'pdb') {
-        setFieldValue('psf_file', '')
-        setFieldValue('crd_file', '')
+        console.log('reset to PDB mode')
+        resetForm({
+          values: {
+            ...values,
+            crd_file: '',
+            psf_file: '',
+            bilbomd_mode: 'pdb'
+          },
+          errors: {},
+          touched: { ...touched }
+        })
       } else {
-        setFieldValue('pdb_file', '')
+        console.log('reset to CRD/PSF mode')
+        resetForm({
+          values: { ...values, pdb_file: '', bilbomd_mode: 'crd_psf' },
+          errors: {},
+          touched: { ...touched }
+        })
       }
+      // Delay validation to ensure form state has been updated
+      setTimeout(() => {
+        validateForm()
+      }, 0) // You can adjust the timeout, but even a 0ms timeout can be enough to push to the next event loop
     }
 
   const content = (
@@ -268,8 +275,7 @@ const NewJobForm = () => {
                 <span style={{ fontStyle: 'italic' }}>etc</span>. (see the notes
                 above). For that reason we strongly recommend that you use our{' '}
                 <b>inp Jiffy{'\u2122'}</b> to create your <b>const.inp</b> file.
-                Feel free to manually edit it, but pay attention to segid
-                values.
+                Feel free to manually edit it, but pay attention to segid names.
               </Typography>
               <Divider textAlign='left' sx={{ my: 1 }}>
                 Other settings
@@ -332,7 +338,9 @@ const NewJobForm = () => {
                   handleBlur,
                   status,
                   setFieldValue,
-                  setFieldTouched
+                  setFieldTouched,
+                  resetForm,
+                  validateForm
                 }) => (
                   <Form>
                     <Grid
@@ -360,7 +368,12 @@ const NewJobForm = () => {
                               control={
                                 <Checkbox
                                   checked={values.bilbomd_mode === 'pdb'}
-                                  onChange={handleCheckboxChange(setFieldValue)}
+                                  onChange={handleCheckboxChange(
+                                    resetForm,
+                                    values,
+                                    validateForm,
+                                    touched
+                                  )}
                                   name='pdb_inputs'
                                 />
                               }
@@ -370,7 +383,12 @@ const NewJobForm = () => {
                               control={
                                 <Checkbox
                                   checked={values.bilbomd_mode === 'crd_psf'}
-                                  onChange={handleCheckboxChange(setFieldValue)}
+                                  onChange={handleCheckboxChange(
+                                    resetForm,
+                                    values,
+                                    validateForm,
+                                    touched
+                                  )}
                                   name='crd_psf_inputs'
                                 />
                               }
@@ -513,7 +531,8 @@ const NewJobForm = () => {
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
-                            error={errors.constinp && values.constinp}
+                            onBlur={handleBlur}
+                            error={!!errors.constinp && touched.constinp}
                             errorMessage={
                               errors.constinp ? errors.constinp : ''
                             }
@@ -536,18 +555,25 @@ const NewJobForm = () => {
                           <Typography component='div'>
                             Be sure to verify that the chain identifiers (
                             <b>segid</b>) and residue numbering in your{' '}
-                            <span style={{ fontWeight: 'bold' }}>
-                              const.inp
-                            </span>{' '}
-                            are consistent with your{' '}
-                            <span style={{ fontWeight: 'bold' }}>
+                            <b>const.inp</b> are consistent with your{' '}
+                            <b>
                               {values.bilbomd_mode === 'pdb'
                                 ? `*.pdb`
                                 : `*.crd`}
-                            </span>{' '}
-                            file. For example, Protein Chain ID <b>A</b> will be
-                            converted to segid <b>PROA</b> and DNA Chain ID{' '}
-                            <b>G</b> will be converted to segid <b>DNAG</b>
+                            </b>{' '}
+                            file.
+                            {values.bilbomd_mode === 'pdb' ? (
+                              <>
+                                For example, Protein Chain ID <b>A</b> will be
+                                converted to segid <b>PROA</b> and DNA Chain ID{' '}
+                                <b>G</b> will be converted to segid <b>DNAG</b>
+                              </>
+                            ) : (
+                              <>
+                                Keeping in mind that CHARMM-GUI creates segid
+                                names in a unique way.
+                              </>
+                            )}
                           </Typography>
                         </Alert>
                       </Grid>
