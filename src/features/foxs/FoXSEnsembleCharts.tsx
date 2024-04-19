@@ -1,5 +1,5 @@
 import { useState, Fragment } from 'react'
-import { Checkbox, TableHead, Typography } from '@mui/material'
+import { Checkbox, Grid, Paper, TableHead, Typography } from '@mui/material'
 import {
   Table,
   TableBody,
@@ -140,41 +140,45 @@ const FoXSEnsembleCharts = ({
           <ReferenceLine y={0} stroke='black' />
         </LineChart>
       </ResponsiveContainer>
-      <TableContainer>
-        <Table size='small' aria-label='simple table'>
-          <TableHead>
-            <TableRow>
-              <TableCell style={{ fontSize: '1rem' }}>Show</TableCell>
-              <TableCell style={{ fontSize: '1rem' }}>Filename</TableCell>
-              <TableCell style={{ fontSize: '1rem' }}>Chi^2 Value</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {foxsData.slice(0).map(
-              (model, index) =>
-                index !== 0 && (
-                  <TableRow
-                    key={index}
-                    style={{ backgroundColor: getUniqueColor(index) }}
-                  >
-                    <TableCell>
-                      <Checkbox
-                        checked={visibility[index]}
-                        onChange={() => handleCheckboxChange(index)}
-                      />
-                    </TableCell>
-                    <TableCell style={{ fontSize: '1rem' }}>
-                      {model.filename}
-                    </TableCell>
-                    <TableCell style={{ fontSize: '1rem' }}>
-                      {model.chisq.toFixed(2)}
-                    </TableCell>
-                  </TableRow>
-                )
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Grid item sx={{ ml: 8 }}>
+        <TableContainer component={Paper}>
+          <Table size='small' aria-label='bilbomd multifoxs ensemble results'>
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ fontSize: '' }}>Show</TableCell>
+                <TableCell style={{ fontSize: '' }}>Filename</TableCell>
+                <TableCell style={{ fontSize: '' }}>Chi&sup2; Value</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {foxsData.slice(0).map(
+                (model, index) =>
+                  index !== 0 && (
+                    <TableRow
+                      key={index}
+                      style={{ backgroundColor: getUniqueColor(index) }}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell sx={{ p: 0 }}>
+                        <Checkbox
+                          checked={visibility[index]}
+                          onChange={() => handleCheckboxChange(index)}
+                          color='default'
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Typography>{model.filename}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography>{model.chisq.toFixed(2)}</Typography>
+                      </TableCell>
+                    </TableRow>
+                  )
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
     </>
   )
 }
