@@ -201,7 +201,7 @@ const NewAutoJobForm = () => {
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
-                          error={errors.pdb_file && values.pdb_file}
+                          error={errors.pdb_file && touched.pdb_file}
                           errorMessage={errors.pdb_file ? errors.pdb_file : ''}
                           fileType='Alphafold *.pdb'
                           fileExt='.pdb'
@@ -217,7 +217,7 @@ const NewAutoJobForm = () => {
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
-                          error={errors.pae_file && values.pae_file}
+                          error={errors.pae_file && touched.pae_file}
                           errorMessage={errors.pae_file ? errors.pae_file : ''}
                           fileType='Alphafold PAE *.json'
                           fileExt='.json'
@@ -232,7 +232,7 @@ const NewAutoJobForm = () => {
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
-                          error={errors.dat_file && values.dat_file}
+                          error={errors.dat_file && touched.dat_file}
                           errorMessage={errors.dat_file ? errors.dat_file : ''}
                           fileType='experimental SAXS data *.dat'
                           fileExt='.dat'
