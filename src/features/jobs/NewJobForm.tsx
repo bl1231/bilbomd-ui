@@ -444,7 +444,7 @@ const NewJobForm = () => {
                                 disabled={isSubmitting}
                                 setFieldValue={setFieldValue}
                                 setFieldTouched={setFieldTouched}
-                                error={errors.crd_file && values.crd_file}
+                                error={errors.crd_file && touched.crd_file}
                                 errorMessage={
                                   errors.crd_file ? errors.crd_file : ''
                                 }
@@ -471,7 +471,7 @@ const NewJobForm = () => {
                                 disabled={isSubmitting}
                                 setFieldValue={setFieldValue}
                                 setFieldTouched={setFieldTouched}
-                                error={errors.psf_file && values.psf_file}
+                                error={errors.psf_file && touched.psf_file}
                                 errorMessage={
                                   errors.psf_file ? errors.psf_file : ''
                                 }
@@ -502,7 +502,7 @@ const NewJobForm = () => {
                                 disabled={isSubmitting}
                                 setFieldValue={setFieldValue}
                                 setFieldTouched={setFieldTouched}
-                                error={errors.pdb_file && values.pdb_file}
+                                error={errors.pdb_file && touched.pdb_file}
                                 errorMessage={
                                   errors.pdb_file ? errors.pdb_file : ''
                                 }
@@ -532,11 +532,10 @@ const NewJobForm = () => {
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
                             onBlur={handleBlur}
-                            error={!!errors.constinp && touched.constinp}
+                            error={errors.constinp && touched.constinp}
                             errorMessage={
                               errors.constinp ? errors.constinp : ''
                             }
-                            helperText='Select a const.inp file to upload'
                             fileType='const.inp'
                             fileExt='.inp'
                           />
@@ -595,9 +594,8 @@ const NewJobForm = () => {
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
-                            error={errors.expdata && values.expdata}
+                            error={errors.expdata && touched.expdata}
                             errorMessage={errors.expdata ? errors.expdata : ''}
-                            helperText='Select a const.inp file to upload'
                             fileType='experimental SAXS data'
                             fileExt='.dat'
                             onFileChange={async (selectedFile) => {

@@ -328,6 +328,7 @@ const Alphafold2PAEJiffy = () => {
               >
                 {({
                   values,
+                  touched,
                   errors,
                   isValid,
                   isSubmitting,
@@ -349,7 +350,7 @@ const Alphafold2PAEJiffy = () => {
                         disabled={isSubmitting}
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}
-                        error={errors.pdb_file && values.pdb_file}
+                        error={errors.pdb_file && touched.pdb_file}
                         errorMessage={errors.pdb_file ? errors.pdb_file : ''}
                         fileType='Alphafold PDB *.pdb'
                         fileExt='.pdb'
@@ -362,7 +363,7 @@ const Alphafold2PAEJiffy = () => {
                         disabled={isSubmitting}
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}
-                        error={errors.pae_file && values.pae_file}
+                        error={errors.pae_file && touched.pae_file}
                         errorMessage={errors.pae_file ? errors.pae_file : ''}
                         fileType='Alphafold PAE *.json'
                         fileExt='.json'

@@ -185,7 +185,7 @@ const NewScoperJobForm = () => {
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
-                          error={errors.pdb_file && values.pdb_file}
+                          error={errors.pdb_file && touched.pdb_file}
                           errorMessage={errors.pdb_file ? errors.pdb_file : ''}
                           fileType='RNA *.pdb'
                           fileExt='.pdb'
@@ -201,7 +201,7 @@ const NewScoperJobForm = () => {
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
-                          error={errors.dat_file && values.dat_file}
+                          error={errors.dat_file && touched.dat_file}
                           errorMessage={errors.dat_file ? errors.dat_file : ''}
                           fileType='experimental SAXS data *.dat'
                           fileExt='.dat'
