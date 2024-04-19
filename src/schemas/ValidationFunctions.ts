@@ -72,15 +72,18 @@ const isPsfData = (file: File): Promise<boolean> => {
       }
 
       // Find the line containing !NATOM and capture the preceding number
-      const natomMatch = lines.find((line) => /\d+\s+!NATOM/.test(line))
-      if (!natomMatch) {
+      const natomLineIndex = lines.findIndex((line) =>
+        /\d+\s+!NATOM/.test(line)
+      )
+      if (natomLineIndex === -1) {
+        console.log('!NATOM line not found')
         resolve(false)
         return
       }
 
-      const natomResult = natomMatch.match(/(\d+)\s+!NATOM/)
-      // console.log('natomResult = ', natomResult)
+      const natomResult = lines[natomLineIndex].match(/(\d+)\s+!NATOM/)
       if (!natomResult) {
+        console.log('Failed to capture number of atoms')
         resolve(false)
         return
       }
@@ -88,15 +91,6 @@ const isPsfData = (file: File): Promise<boolean> => {
       const natom = parseInt(natomResult[1], 10)
       console.log('natom expected = ', natom)
       if (isNaN(natom)) {
-        resolve(false)
-        return
-      }
-
-      const natomLineIndex = lines.findIndex((line) =>
-        /\d+\s+!NATOM/.test(line)
-      )
-      // console.log('natomLineIndex =', natomLineIndex)
-      if (natomLineIndex === -1) {
         resolve(false)
         return
       }
@@ -125,6 +119,7 @@ const isPsfData = (file: File): Promise<boolean> => {
     }
 
     reader.onerror = () => {
+      console.log('Error reading the file')
       resolve(false)
     }
   })

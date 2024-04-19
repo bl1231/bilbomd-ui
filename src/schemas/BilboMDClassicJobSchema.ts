@@ -62,7 +62,7 @@ const BilboMDClassicJobSchema = object().shape({
         )
         .test(
           'psf-data-check',
-          'File does not appear to be valid PSF data',
+          'If you are sure this is a valid PSF file contact Scott',
           async (file) => {
             if (file instanceof File) {
               const isPsf = await isPsfData(file)
