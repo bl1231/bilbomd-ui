@@ -41,6 +41,7 @@ interface CustomChartLabelProps {
   x: number
   y: number
 }
+
 const ChiSquaredChartLabel = ({
   chisq,
   c1,
@@ -90,7 +91,9 @@ const FoXSChart = ({
 
   return (
     <>
-      <Typography sx={{ pl: 2, m: 1 }}>{title} - I vs. q</Typography>
+      <Typography variant='h5' sx={{ pl: 2, m: 1 }}>
+        {title} - I vs. q
+      </Typography>
       <ResponsiveContainer width='100%' height={300}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray='3 3' />
@@ -125,8 +128,8 @@ const FoXSChart = ({
           />
         </LineChart>
       </ResponsiveContainer>
-      <Typography sx={{ pl: 2, m: 1, mt: 3 }}>
-        {title} - Chi^2 residuals
+      <Typography variant='h5' sx={{ pl: 2, m: 1, mt: 3 }}>
+        {title} - Chi&sup2; residuals
       </Typography>
       <ResponsiveContainer width='100%' height={200}>
         <LineChart data={residualsData}>
