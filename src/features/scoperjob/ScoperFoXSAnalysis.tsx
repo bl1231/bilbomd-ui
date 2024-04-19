@@ -43,7 +43,9 @@ const prepData = (data: FoxsDataPoint[]): FoxsDataPoint[] =>
 const calculateResiduals = (dataPoints: FoxsDataPoint[]) => {
   return dataPoints.map((item) => ({
     q: parseFloat(item.q.toFixed(4)),
-    res: parseFloat(((item.exp_intensity - item.model_intensity) / item.error).toFixed(4))
+    res: parseFloat(
+      ((item.exp_intensity - item.model_intensity) / item.error).toFixed(4)
+    )
   }))
 }
 
@@ -58,8 +60,14 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
 
   // Prepare original data to reduce the number of digits after the decimal point
   // and filter out negative values
-  const origData = useMemo(() => (foxsData ? prepData(foxsData[0].data) : []), [foxsData])
-  const scopData = useMemo(() => (foxsData ? prepData(foxsData[1].data) : []), [foxsData])
+  const origData = useMemo(
+    () => (foxsData ? prepData(foxsData[0].data) : []),
+    [foxsData]
+  )
+  const scopData = useMemo(
+    () => (foxsData ? prepData(foxsData[1].data) : []),
+    [foxsData]
+  )
 
   // Calculate residual values for both datasets
   const origResiduals = useMemo(
@@ -81,7 +89,7 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   if (isLoading) return <div>Loading...</div>
   if (isError || !data)
     return (
-      <Alert severity="info" variant="outlined">
+      <Alert severity='info' variant='outlined'>
         <AlertTitle>FoXS data is unavailable for this job.</AlertTitle>
       </Alert>
     )

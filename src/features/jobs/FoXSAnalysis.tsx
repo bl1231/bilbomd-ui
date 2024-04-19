@@ -1,66 +1,17 @@
-import { useMemo, Fragment } from 'react'
+import { useMemo } from 'react'
 import FoXSChart from 'features/scoperjob/FoXSChart'
-import { Alert, AlertTitle, Grid, TableHead, Typography } from '@mui/material'
+import { Alert, AlertTitle, Grid } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import { useGetFoxsAnalysisByIdQuery } from 'features/jobs/jobsApiSlice'
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  ReferenceLine
-} from 'recharts'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow
-} from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
+import FoXSEnsembleCharts from 'features/foxs/FoXSEnsembleCharts'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   borderTopLeftRadius: 0,
   borderTopRightRadius: 0
 }))
-
-interface FoxsDataPoint {
-  q: number
-  exp_intensity: number
-  model_intensity: number
-  error: number
-}
-
-// interface ResidualDataPoints {
-//   q: number
-//   [key: `res_${number}`]: number
-// }
-
-interface FoxsData {
-  filename: string
-  chisq: number
-  c1: number
-  c2: number
-  data: FoxsDataPoint[]
-}
-
-interface CombinedFoxsData {
-  q: number
-  exp_intensity: number
-  error: number
-  [key: `model_intensity_${number}`]: number
-  [key: `residual_${number}`]: number
-}
-
-interface ScoperFoXSAnalysisProps {
-  id: string
-}
 
 const prepData = (data: FoxsDataPoint[]): FoxsDataPoint[] =>
   data
@@ -123,23 +74,6 @@ const calculateResiduals = (dataPoints: FoxsDataPoint[]) => {
   }))
 }
 
-const colors = [
-  '#4e79a7', // muted blue
-  '#f28e2b', // muted safety orange
-  '#59a14f', // muted asparagus green
-  '#e15759', // muted brick red
-  '#b07aa1', // muted purple
-  '#9c755f', // muted chestnut brown
-  '#f1b7b1', // muted raspberry yogurt pink
-  '#bab0ac', // muted middle gray
-  '#bdbf20', // muted curry yellow-green
-  '#76b7b2' // muted blue-teal
-]
-
-const getUniqueColor = (index) => {
-  return colors[index % colors.length]
-}
-
 const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   const { data, isLoading, isError } = useGetFoxsAnalysisByIdQuery(id, {
     pollingInterval: 0,
@@ -148,7 +82,7 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   })
 
   const foxsData: FoxsData[] = data as FoxsData[]
-  // console.log('id:', id, 'foxsData -->', foxsData)
+  // console.log('id:', id, '\n', 'foxsData -->', foxsData)
   // Prepare original data to reduce the number of digits after the decimal point
   // and filter out negative values
   const origData = useMemo(
@@ -200,7 +134,7 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   const origC1 = foxsData[0].c1
   const origC2 = foxsData[0].c2
 
-  // console.log(ensembleData)
+  // console.log('data:', data)
 
   return (
     <Item>
@@ -218,110 +152,12 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <Typography
-            sx={{ pl: 2, m: 1 }}
-          >{`Ensemble Models - I vs. q`}</Typography>
-          <ResponsiveContainer width='100%' height={300}>
-            <LineChart data={ensembleData}>
-              <CartesianGrid strokeDasharray='3 3' />
-              <XAxis dataKey='q' scale='linear' type='number' />
-              <YAxis
-                yAxisId='left'
-                scale='log'
-                type='number'
-                domain={['auto', 'auto']}
-              />
-              <Tooltip />
-              <Legend
-                iconType='line'
-                verticalAlign='bottom'
-                height={30}
-                layout='horizontal'
-                align='center'
-              />
-              <Line
-                yAxisId='left'
-                type='monotone'
-                dataKey='exp_intensity'
-                name='Exp Intensity'
-                stroke='#8884d8'
-                activeDot={{ r: 8 }}
-                dot={{ strokeWidth: 1 }}
-              />
-              {data.slice(1).map((_, index) => (
-                <Fragment key={index}>
-                  <Line
-                    yAxisId='left'
-                    type='monotone'
-                    dataKey={`model_intensity_${index + 1}`}
-                    name={`Ens. Size ${index + 1}`}
-                    stroke={getUniqueColor(index + 1)}
-                    dot={{ strokeWidth: 1 }}
-                  />
-                </Fragment>
-              ))}
-            </LineChart>
-          </ResponsiveContainer>
-          <Typography sx={{ pl: 2, m: 1, mt: 3 }}>
-            Ensemble Models - Chi^2 residuals
-          </Typography>
-          <ResponsiveContainer width='100%' height={200}>
-            <LineChart data={ensembleData}>
-              <XAxis dataKey='q' scale='linear' type='number' />
-              <YAxis domain={[minYAxis, maxYAxis]} />
-              <Tooltip />
-              <Legend
-                iconType='line'
-                verticalAlign='bottom'
-                height={30}
-                layout='horizontal'
-                align='center'
-              />
-              {data.slice(1).map((_, index) => (
-                <Fragment key={index}>
-                  <Line
-                    type='monotone'
-                    dataKey={`residual_${index + 1}`}
-                    name={`Ens. Size ${index + 1}`}
-                    stroke={getUniqueColor(index + 1)}
-                  />
-                </Fragment>
-              ))}
-              <ReferenceLine y={0} stroke='black' />
-            </LineChart>
-          </ResponsiveContainer>
-        </Grid>
-        <Grid item xs={12} container justifyContent='flex-end'>
-          <Grid item xs={6} sx={{ pl: 6 }}>
-            {/* <TableContainer component={Paper}> */}
-            <TableContainer>
-              <Table size='small' aria-label='simple table'>
-                <TableHead>
-                  <TableRow>
-                    <TableCell style={{ fontSize: '1rem' }}>Filename</TableCell>
-                    <TableCell style={{ fontSize: '1rem' }}>
-                      Chi^2 Value
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {foxsData.map((model, index) => (
-                    <TableRow
-                      key={index}
-                      style={{ backgroundColor: getUniqueColor(index) }}
-                    >
-                      <TableCell style={{ fontSize: '1rem' }}>
-                        {model.filename}
-                      </TableCell>
-                      <TableCell style={{ fontSize: '1rem' }}>
-                        {model.chisq.toFixed(2)}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Grid>
+          <FoXSEnsembleCharts
+            combinedData={ensembleData}
+            foxsData={foxsData}
+            minYAxis={minYAxis}
+            maxYAxis={maxYAxis}
+          />
         </Grid>
       </Grid>
     </Item>
