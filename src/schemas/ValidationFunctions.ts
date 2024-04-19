@@ -51,7 +51,7 @@ const isCRD = (file: File): Promise<boolean> => {
 
 const isPsfData = (file: File): Promise<boolean> => {
   return new Promise((resolve) => {
-    console.log(`validate if ${file.name} isPsfData`)
+    // console.log(`validate if ${file.name} isPsfData`)
     const reader = new FileReader()
     reader.readAsText(file)
     reader.onloadend = () => {
@@ -60,36 +60,35 @@ const isPsfData = (file: File): Promise<boolean> => {
         /^\s*\d+\s+[A-Z]{4}\s+\d+\s+[A-Z]{3}\s+[a-zA-Z0-9_']+\s+[a-zA-Z0-9_']+\s+-?\d+\.\d+(?:[eE][+-]?\d+)?\s+\d+\.\d{4,}(?:[eE][+-]?\d+)?\s+\d+.*$/
 
       if (!lines[0].includes('PSF')) {
-        console.log('first line does not contain PSF')
+        // console.log('first line does not contain PSF')
         resolve(false)
         return
       }
 
       if (!lines.some((line) => line.trim().endsWith('!NTITLE'))) {
-        console.log('NTITLE missing')
+        // console.log('NTITLE missing')
         resolve(false)
         return
       }
 
-      // Find the line containing !NATOM and capture the preceding number
       const natomLineIndex = lines.findIndex((line) =>
         /\d+\s+!NATOM/.test(line)
       )
       if (natomLineIndex === -1) {
-        console.log('!NATOM line not found')
+        // console.log('!NATOM line not found')
         resolve(false)
         return
       }
 
       const natomResult = lines[natomLineIndex].match(/(\d+)\s+!NATOM/)
       if (!natomResult) {
-        console.log('Failed to capture number of atoms')
+        // console.log('Failed to capture number of atoms')
         resolve(false)
         return
       }
 
       const natom = parseInt(natomResult[1], 10)
-      console.log('natom expected = ', natom)
+      // console.log('natom expected = ', natom)
       if (isNaN(natom)) {
         resolve(false)
         return
@@ -100,26 +99,25 @@ const isPsfData = (file: File): Promise<boolean> => {
         natomLineIndex + 1,
         natomLineIndex + 1 + natom
       )
-      console.log('num atom lines = ', atomLines.length)
+      // console.log('num atom lines = ', atomLines.length)
       if (atomLines.length !== natom) {
+        // console.log('Incorrect number of atom lines')
         resolve(false)
         return
       }
 
       // Verify each atom line against the regex
-      for (const line of atomLines) {
-        if (!atomRegex.test(line)) {
-          console.log('Failed atom regex:', line)
-          resolve(false)
-          return
-        }
+      if (!atomLines.every((line) => atomRegex.test(line))) {
+        // console.log('One or more atom lines failed validation')
+        resolve(false)
+        return
       }
 
       resolve(true)
     }
 
     reader.onerror = () => {
-      console.log('Error reading the file')
+      // console.log('Error reading the file')
       resolve(false)
     }
   })
