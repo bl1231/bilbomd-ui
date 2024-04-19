@@ -1,6 +1,7 @@
 import { mixed, number, object, string } from 'yup'
 import {
   isCRD,
+  isPsfData,
   noSpaces,
   isSaxsData,
   containsChainId,
@@ -55,6 +56,17 @@ const BilboMDClassicJobSchema = object().shape({
           (file) => {
             if (file && (file as File).name.length <= 30) {
               return true
+            }
+            return false
+          }
+        )
+        .test(
+          'psf-data-check',
+          'File does not appear to be valid PSF data',
+          async (file) => {
+            if (file instanceof File) {
+              const isPsf = await isPsfData(file)
+              return isPsf
             }
             return false
           }

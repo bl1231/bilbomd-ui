@@ -49,6 +49,87 @@ const isCRD = (file: File): Promise<boolean> => {
   })
 }
 
+const isPsfData = (file: File): Promise<boolean> => {
+  return new Promise((resolve) => {
+    console.log(`validate if ${file.name} isPsfData`)
+    const reader = new FileReader()
+    reader.readAsText(file)
+    reader.onloadend = () => {
+      const lines = (reader.result as string).split(/[\r\n]+/g)
+      const atomRegex =
+        /^\s*\d+\s+[A-Z]{4}\s+\d+\s+[A-Z]{3}\s+[a-zA-Z0-9_']+\s+[a-zA-Z0-9_']+\s+-?\d+\.\d+(?:[eE][+-]?\d+)?\s+\d+\.\d{4,}(?:[eE][+-]?\d+)?\s+\d+.*$/
+
+      if (!lines[0].includes('PSF')) {
+        console.log('first line does not contain PSF')
+        resolve(false)
+        return
+      }
+
+      if (!lines.some((line) => line.trim().endsWith('!NTITLE'))) {
+        console.log('NTITLE missing')
+        resolve(false)
+        return
+      }
+
+      // Find the line containing !NATOM and capture the preceding number
+      const natomMatch = lines.find((line) => /\d+\s+!NATOM/.test(line))
+      if (!natomMatch) {
+        resolve(false)
+        return
+      }
+
+      const natomResult = natomMatch.match(/(\d+)\s+!NATOM/)
+      // console.log('natomResult = ', natomResult)
+      if (!natomResult) {
+        resolve(false)
+        return
+      }
+
+      const natom = parseInt(natomResult[1], 10)
+      console.log('natom expected = ', natom)
+      if (isNaN(natom)) {
+        resolve(false)
+        return
+      }
+
+      const natomLineIndex = lines.findIndex((line) =>
+        /\d+\s+!NATOM/.test(line)
+      )
+      // console.log('natomLineIndex =', natomLineIndex)
+      if (natomLineIndex === -1) {
+        resolve(false)
+        return
+      }
+
+      // Check for atom lines directly following the !NATOM line
+      const atomLines = lines.slice(
+        natomLineIndex + 1,
+        natomLineIndex + 1 + natom
+      )
+      console.log('num atom lines = ', atomLines.length)
+      if (atomLines.length !== natom) {
+        resolve(false)
+        return
+      }
+
+      // Verify each atom line against the regex
+      for (const line of atomLines) {
+        if (!atomRegex.test(line)) {
+          console.log('Failed atom regex:', line)
+          resolve(false)
+          return
+        }
+      }
+
+      resolve(true)
+    }
+
+    reader.onerror = () => {
+      resolve(false)
+    }
+  })
+}
+
 const noSpaces = (file: File): Promise<boolean> => {
   const spaces = /\s/
   return new Promise((resolve) => {
@@ -207,6 +288,7 @@ const isValidConstInpFile = (
 export {
   fromCharmmGui,
   isCRD,
+  isPsfData,
   noSpaces,
   isSaxsData,
   containsChainId,
