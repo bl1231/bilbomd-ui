@@ -145,9 +145,9 @@ const FoXSEnsembleCharts = ({
           <Table size='small' aria-label='bilbomd multifoxs ensemble results'>
             <TableHead>
               <TableRow>
-                <TableCell style={{ fontSize: '' }}>Show</TableCell>
-                <TableCell style={{ fontSize: '' }}>Filename</TableCell>
-                <TableCell style={{ fontSize: '' }}>Chi&sup2; Value</TableCell>
+                <TableCell>Show</TableCell>
+                <TableCell>Ensemble Filename</TableCell>
+                <TableCell>Chi&sup2;</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -157,7 +157,6 @@ const FoXSEnsembleCharts = ({
                     <TableRow
                       key={index}
                       style={{ backgroundColor: getUniqueColor(index) }}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
                       <TableCell sx={{ p: 0 }}>
                         <Checkbox
