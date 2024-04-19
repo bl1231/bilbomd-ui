@@ -187,97 +187,109 @@ const NewJobForm = () => {
                 </Link>{' '}
                 to paramaterize your input model. If you have generated your own{' '}
                 <b>const.inp</b> file, either manually or via one of our Jiffys,
-                then you may want to use <b>BilboMD Classic</b>. <br />
+                then you maybe <b>BilboMD Classic</b> is right for you. <br />
               </Typography>
-              <Divider textAlign='left' sx={{ my: 1 }}>
-                CRD/PSF Inputs
-              </Divider>
-              <Typography sx={{ mx: 1, my: 2 }}>
-                Required input files if you select the <b>CRD/PSF option</b>:
-                <li>
-                  <b>*.crd</b> file (A CHARMM coordinate file)
-                </li>
-                <li>
-                  <b>*.psf</b> file (A CHARMM{' '}
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon sx={{ color: '#000' }} />}
+                  sx={{ backgroundColor: '#f5f5f5' }}
+                >
+                  CRD/PSF Inputs
+                </AccordionSummary>
+                <Typography sx={{ mx: 1, my: 2 }}>
+                  Required input files if you select the <b>CRD/PSF option</b>:
+                  <li>
+                    <b>*.crd</b> file (A CHARMM coordinate file)
+                  </li>
+                  <li>
+                    <b>*.psf</b> file (A CHARMM{' '}
+                    <Link
+                      href='https://academiccharmm.org/documentation/version/c47b2/struct'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      data structure
+                    </Link>{' '}
+                    file)
+                  </li>
+                  <li>
+                    <b>*.inp</b> file (defining the rigid domains of your
+                    protein. Typically named <b>const.inp</b> )
+                  </li>
+                  <li>
+                    <b>*.dat</b> file (A 3-column SAXS data file)
+                  </li>
+                </Typography>
+                <Typography sx={{ mx: 1, my: 2 }}>
+                  Use the <b>PDB Reader</b> tool available from{' '}
                   <Link
-                    href='https://academiccharmm.org/documentation/version/c47b2/struct'
+                    href='https://www.charmm-gui.org/'
                     target='_blank'
                     rel='noopener noreferrer'
                   >
-                    data structure
+                    CHARMM-GUI
                   </Link>{' '}
-                  file)
-                </li>
-                <li>
-                  <b>*.inp</b> file (defining the rigid domains of your protein.
-                  Typically named <b>const.inp</b> )
-                </li>
-                <li>
-                  <b>*.dat</b> file (A 3-column SAXS data file)
-                </li>
-              </Typography>
-              <Typography sx={{ mx: 1, my: 2 }}>
-                Use the <b>PDB Reader</b> tool available from{' '}
-                <Link
-                  href='https://www.charmm-gui.org/'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                >
-                  CHARMM-GUI
-                </Link>{' '}
-                to convert your standard PDB file to a CRD file. If you need
-                help generating a valid <b>const.inp</b> file you can use our{' '}
-                <Link href='/dashboard/jobs/constinp'>
-                  <b>inp Jiffy{'\u2122'}</b>
-                </Link>{' '}
-                to help get you started.
-              </Typography>
-              <Alert severity='warning'>
-                <AlertTitle>
-                  Warning about Chain ID and segid naming conventions
-                </AlertTitle>
-                <Typography sx={{ mx: 1, my: 2 }}>
-                  If using CRD/PSF files from CHARMM-GUI you will need to use
-                  the <b>PDB file</b> output from CHARMM-GUI as the input to{' '}
-                  <b>inp Jiffy{'\u2122'}</b>. This is because CHARMM-GUI uses
-                  internal segid formats PRO[A-Z] (protein), DNA[A-Z] (DNA),
-                  RNA[A-Z] (RNA), and HET[A-Z] (ligands), instead of PDB chain
-                  id, and will rename the first protein chain in your PDB file
-                  as segid <b>PROA</b> and the second protein chain as segid{' '}
-                  <b>PROB</b> even if the original chain IDs were something
-                  other than A and B.
+                  to convert your standard PDB file to a CRD file. If you need
+                  help generating a valid <b>const.inp</b> file you can use our{' '}
+                  <Link href='/dashboard/jobs/constinp'>
+                    <b>inp Jiffy{'\u2122'}</b>
+                  </Link>{' '}
+                  to help get you started.
                 </Typography>
-              </Alert>
-              <Divider textAlign='left' sx={{ my: 1 }}>
-                PDB Inputs
-              </Divider>
-              <Typography sx={{ mx: 1, my: 2 }}>
-                Required input files if you select the <b>PDB option</b>:
-                <li>
-                  <b>*.pdb</b> file (A PDB coordinate file)
-                </li>
-                <li>
-                  <b>*.inp</b> file (defining the rigid domains of your protein.
-                  Typically named <b>const.inp</b> )
-                </li>
-                <li>
-                  <b>*.dat</b> file (A 3-column SAXS data file)
-                </li>
-              </Typography>
-              <Typography sx={{ mx: 1, my: 2 }}>
-                <b>BilboMD Classic</b> will convert your PDB file to the
-                required CRD and PSF files. However, we do this slightly
-                differently than CHARMM-GUI. The main difference is the way we
-                rename the chains for input to CHARMM. Essentially we retain
-                your original chain IDs wheras CHARMM-GUI renames the first
-                Protein chain as segid <b>PROA</b>, the second Protein chain as
-                segid <b>PROB</b>,{' '}
-                <span style={{ fontStyle: 'italic' }}>etc</span>. (see the notes
-                above). For that reason we strongly recommend that you use our{' '}
-                <b>inp Jiffy{'\u2122'}</b> to create your <b>const.inp</b> file.
-                Feel free to manually edit it, but pay attention to segid names.
-              </Typography>
-              <Divider textAlign='left' sx={{ my: 1 }}>
+                <Alert severity='warning'>
+                  <AlertTitle>
+                    Warning about Chain ID and segid naming conventions
+                  </AlertTitle>
+                  <Typography sx={{ mx: 1, my: 2 }}>
+                    If using CRD/PSF files coming from CHARMM-GUI make sure that
+                    the <b>segid</b> names in your CRD file match the{' '}
+                    <b>segid</b> names in you <b>const.inp</b> file. This is
+                    because CHARMM-GUI uses <b>segid</b> formats PRO[A-Z]
+                    (protein), DNA[A-Z] (DNA), RNA[A-Z] (RNA), and HET[A-Z]
+                    (ligands), instead of your original PDB chain id, and will
+                    rename the first protein chain in your PDB file as segid{' '}
+                    <b>PROA</b> and the second protein chain as segid{' '}
+                    <b>PROB</b> etc. even if the original chain IDs were
+                    something other than A and B.
+                  </Typography>
+                </Alert>
+              </Accordion>
+              <Accordion sx={{ mt: 2 }}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon sx={{ color: '#000' }} />}
+                  sx={{ backgroundColor: '#f5f5f5' }}
+                >
+                  PDB Inputs
+                </AccordionSummary>
+                <Typography sx={{ mx: 1, my: 2 }}>
+                  Required input files if you select the <b>PDB option</b>:
+                  <li>
+                    <b>*.pdb</b> file (A PDB coordinate file)
+                  </li>
+                  <li>
+                    <b>*.inp</b> file (defining the rigid domains of your
+                    protein. Typically named <b>const.inp</b> )
+                  </li>
+                  <li>
+                    <b>*.dat</b> file (A 3-column SAXS data file)
+                  </li>
+                </Typography>
+                <Typography sx={{ mx: 1, my: 2 }}>
+                  <b>BilboMD Classic</b> will convert your PDB file to the
+                  required CRD and PSF files. However, we do this slightly
+                  differently than CHARMM-GUI. The main difference is the way we
+                  rename the chains for input to CHARMM. Essentially we retain
+                  your original chain IDs wheras CHARMM-GUI renames the first
+                  Protein chain as segid <b>PROA</b>, the second Protein chain
+                  as segid <b>PROB</b>,{' '}
+                  <span style={{ fontStyle: 'italic' }}>etc</span>. (see the
+                  notes above). For that reason we strongly recommend that you
+                  use our <b>inp Jiffy{'\u2122'}</b> to create your{' '}
+                  <b>const.inp</b> file. Feel free to manually edit it, but pay
+                  attention to segid names.
+                </Typography>
+              </Accordion>
+              <Divider textAlign='left' sx={{ my: 1, mt: 2 }}>
                 Other settings
               </Divider>
               <Typography sx={{ mx: 1, my: 2 }}>
