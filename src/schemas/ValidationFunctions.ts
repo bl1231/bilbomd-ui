@@ -57,7 +57,7 @@ const isPsfData = (file: File): Promise<boolean> => {
     reader.onloadend = () => {
       const lines = (reader.result as string).split(/[\r\n]+/g)
       const atomRegex =
-        /^\s*\d+\s+[A-Z]{4}\s+\d+\s+[A-Z]{3}\s+[a-zA-Z0-9_']+\s+[a-zA-Z0-9_']+\s+-?\d+\.\d+(?:[eE][+-]?\d+)?\s+\d+\.\d{4,}(?:[eE][+-]?\d+)?\s+\d+.*$/
+        /^\s*\d+\s+[A-Z]{4}\s+\d+\s+[A-Z]{3,}\s+[a-zA-Z0-9_']+\s+[a-zA-Z0-9_']+\s+-?\d+\.\d+(?:[eE][+-]?\d+)?\s+\d+\.\d+(?:[eE][+-]?\d+)?\s+\d+/
 
       if (!lines[0].includes('PSF')) {
         // console.log('first line does not contain PSF')
@@ -99,18 +99,19 @@ const isPsfData = (file: File): Promise<boolean> => {
         natomLineIndex + 1,
         natomLineIndex + 1 + natom
       )
-      // console.log('num atom lines = ', atomLines.length)
+      console.log('num atom lines = ', atomLines.length)
       if (atomLines.length !== natom) {
         // console.log('Incorrect number of atom lines')
         resolve(false)
         return
       }
 
-      // Verify each atom line against the regex
-      if (!atomLines.every((line) => atomRegex.test(line))) {
-        // console.log('One or more atom lines failed validation')
-        resolve(false)
-        return
+      for (const line of atomLines) {
+        if (!atomRegex.test(line)) {
+          // console.log('Failed atom regex:', line)
+          resolve(false)
+          return
+        }
       }
 
       resolve(true)
