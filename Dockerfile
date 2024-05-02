@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 # Build stage
 FROM node:20-alpine AS build-stage
-RUN npm install -g npm@10.5.0
+RUN npm install -g npm@10.7.0
 
 WORKDIR /app
 
@@ -13,7 +13,6 @@ RUN npm ci --verbose
 
 # Copy your project files
 COPY . .
-
 
 ARG GIT_HASH
 ENV GIT_HASH=$GIT_HASH
