@@ -11,7 +11,10 @@ const RigidBody = ({ rigidBodyIndex }) => {
 
   return (
     <>
-      <Grid container sx={{ my: 1, backgroundColor: '#bae0ff', borderRadius: 2 }}>
+      <Grid
+        container
+        sx={{ my: 1, backgroundColor: '#bae0ff', borderRadius: 2 }}
+      >
         <Box
           sx={{
             display: 'flex',
@@ -21,7 +24,9 @@ const RigidBody = ({ rigidBodyIndex }) => {
           }}
         >
           <>
-            <FieldArray name={`pdb_file.rigid_bodies[${rigidBodyIndex}].domains`}>
+            <FieldArray
+              name={`pdb_file.rigid_bodies[${rigidBodyIndex}].domains`}
+            >
               {(arrayHelpers) => (
                 <>
                   {values.pdb_file.rigid_bodies[rigidBodyIndex].domains.map(
@@ -48,8 +53,8 @@ const RigidBody = ({ rigidBodyIndex }) => {
                           />
 
                           <Button
-                            variant="contained"
-                            color="error"
+                            variant='contained'
+                            color='error'
                             onClick={() => arrayHelpers.remove(index)}
                             // sx={{ alignItems: 'flex-end' }}
                           >
@@ -61,9 +66,9 @@ const RigidBody = ({ rigidBodyIndex }) => {
                   )}
                   <Grid item sx={{ flex: '1 1 auto', alignItems: 'center' }}>
                     <Box sx={{ justifyContent: 'flex-end', m: 1 }}>
-                      <Grid container justifyContent="flex-end">
+                      <Grid container justifyContent='flex-end'>
                         <Button
-                          variant="contained"
+                          variant='contained'
                           // onClick={handleAddNewRigidDomain}
                           onClick={() => {
                             console.log('Add Rigid Domain')
@@ -76,6 +81,7 @@ const RigidBody = ({ rigidBodyIndex }) => {
                             arrayHelpers.push(new_domain)
                           }}
                           startIcon={<AddIcon />}
+                          size='small'
                         >
                           Add Rigid Domain
                         </Button>
