@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, Fragment } from 'react'
 import { useFormikContext, FieldArray, FormikValues } from 'formik'
-import { Typography, Grid, Button, Chip, Box } from '@mui/material'
+import { Typography, Grid, Button, Chip, Box, Alert } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import * as PropTypes from 'prop-types'
 import Paper from '@mui/material/Paper'
@@ -42,7 +42,9 @@ const DomainForm = ({ setStepIsValid }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid])
+
   const macroMolecules = ['PRO', 'DNA', 'RNA', 'CAR', 'Other']
+
   return (
     <>
       <Grid container spacing={2}>
@@ -156,18 +158,23 @@ const DomainForm = ({ setStepIsValid }) => {
                                   </Typography>
                                   {values.pdb_file.rigid_bodies[index]?.id ===
                                   'PRIMARY' ? (
-                                    <Typography sx={{ ml: 2 }}>
-                                      <b>note:</b> Rigid Domains in the{' '}
-                                      <b>PRIMARY</b> Rigid Body will remain
-                                      absolutely fixed during the Molecular
-                                      Dynamics steps.
-                                    </Typography>
+                                    <Alert
+                                      severity='warning'
+                                      sx={{ ml: 2, width: '70%' }}
+                                    >
+                                      Rigid Domains in the <b>PRIMARY</b> Rigid
+                                      Body will remain absolutely fixed during
+                                      the Molecular Dynamics steps.
+                                    </Alert>
                                   ) : (
-                                    <Typography sx={{ ml: 2 }}>
-                                      <b>note:</b> Rigid Domains in{' '}
-                                      <b>{rigid_body.id}</b> will move relative
-                                      to the <b>PRIMARY</b> Rigid Body.
-                                    </Typography>
+                                    <Alert
+                                      severity='warning'
+                                      sx={{ ml: 2, width: '70%' }}
+                                    >
+                                      Rigid Domains in <b>{rigid_body.id}</b>{' '}
+                                      will move relative to the <b>PRIMARY</b>{' '}
+                                      Rigid Body.
+                                    </Alert>
                                   )}
                                 </Grid>
                                 <RigidBody
@@ -184,6 +191,7 @@ const DomainForm = ({ setStepIsValid }) => {
                                       decrementRigidBodyIndex()
                                       arrayHelpers.remove(index)
                                     }}
+                                    size='small'
                                   >
                                     {/* Delete {values.pdb_file.rigid_bodies[index]?.id} */}
                                     Delete Rigid Body
@@ -195,26 +203,34 @@ const DomainForm = ({ setStepIsValid }) => {
                             </Fragment>
                           )
                         )}
-                      <Button
-                        variant='contained'
-                        onClick={() => {
-                          incrementRigidBodyIndex()
-                          const new_rigid_body = {
-                            id: 'RIGID ' + rigidBodyIndex,
-                            domains: [
-                              {
-                                chainid: values.pdb_file.chains[0].id,
-                                start: values.pdb_file.chains[0].first_res,
-                                end: values.pdb_file.chains[0].last_res
-                              }
-                            ]
-                          }
-                          arrayHelpers.push(new_rigid_body)
-                        }}
-                        startIcon={<AddIcon />}
+                      <Grid
+                        item
+                        xs={12}
+                        sx={{ display: 'flex', justifyContent: 'flex-end' }}
                       >
-                        Add Rigid Body
-                      </Button>
+                        <Button
+                          variant='contained'
+                          onClick={() => {
+                            incrementRigidBodyIndex()
+                            const new_rigid_body = {
+                              id: 'RIGID ' + rigidBodyIndex,
+                              domains: [
+                                {
+                                  chainid: values.pdb_file.chains[0].id,
+                                  start: values.pdb_file.chains[0].first_res,
+                                  end: values.pdb_file.chains[0].last_res
+                                }
+                              ]
+                            }
+                            arrayHelpers.push(new_rigid_body)
+                          }}
+                          startIcon={<AddIcon />}
+                          size='large'
+                          sx={{}}
+                        >
+                          Add Rigid Body
+                        </Button>
+                      </Grid>
                     </>
                   )}
                 </FieldArray>
