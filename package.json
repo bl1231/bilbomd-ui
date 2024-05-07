@@ -28,7 +28,7 @@
     "@mui/system": "^5.15.15",
     "@mui/x-data-grid": "^7.3.2",
     "@reduxjs/toolkit": "^2.2.3",
-    "@types/node": "^20.12.8",
+    "@types/node": "^20.12.10",
     "axios": "^1.6.8",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
