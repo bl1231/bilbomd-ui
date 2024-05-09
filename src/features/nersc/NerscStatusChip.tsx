@@ -1,4 +1,4 @@
-import { Chip, Grid } from '@mui/material'
+import { Chip, Grid, Tooltip } from '@mui/material'
 
 interface NerscStatusChipProps {
   system: {
@@ -7,15 +7,22 @@ interface NerscStatusChipProps {
     system_type: string
     status: string
     updated_at: string
+    notes: string[]
   }
 }
 
 const NerscStatusChip: React.FC<NerscStatusChipProps> = ({ system }) => {
   const color = system.status === 'active' ? 'success' : 'warning'
-
+  // console.log(system.notes[0])
+  let toolTipMessage = 'OK'
+  if (system.notes[0]) {
+    toolTipMessage = system.notes[0]
+  }
   return (
     <Grid sx={{ m: 0.5, display: 'flex', alignItems: 'center' }}>
-      <Chip label={`${system.full_name}`} color={color} />
+      <Tooltip title={toolTipMessage} arrow>
+        <Chip label={`${system.full_name}`} color={color} />
+      </Tooltip>
     </Grid>
   )
 }
