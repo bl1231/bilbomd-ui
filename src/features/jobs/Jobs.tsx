@@ -21,6 +21,8 @@ import BullMQSummary from '../bullmq/BullMQSummary'
 import NerscStatus from '../nersc/NerscStatus'
 import HeaderBox from 'components/HeaderBox'
 
+const useNersc = import.meta.env.VITE_USE_NERSC === 'true'
+
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   borderTopLeftRadius: 0,
@@ -187,9 +189,11 @@ const Jobs = () => {
             <BullMQSummary />
           </Grid>
 
-          <Grid item xs={12}>
-            <NerscStatus />
-          </Grid>
+          {useNersc === true && (
+            <Grid item xs={12}>
+              <NerscStatus />
+            </Grid>
+          )}
 
           {rows.length !== 0 ? (
             <Grid item xs={12}>

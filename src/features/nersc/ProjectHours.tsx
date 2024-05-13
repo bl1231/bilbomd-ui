@@ -23,7 +23,9 @@ const ProjectHours = ({ projectCode }) => {
         <Typography sx={{ m: 1 }}>
           Hours Given: {project.hours_given}
         </Typography>
-        <Typography sx={{ m: 1 }}>Hours Used: {project.hours_used}</Typography>
+        <Typography sx={{ m: 1 }}>
+          Hours Used: {project.hours_used.toFixed(2)}
+        </Typography>
       </Grid>
     )
   }
