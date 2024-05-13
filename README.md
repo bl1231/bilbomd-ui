@@ -65,6 +65,8 @@ Then make sure the proxy settings in `vite.config.ts` point to `localhost:5432` 
 
 ## Version History
 
+- 1.9.1
+  - Changes for NERSC deployment
 - 1.9.0
   - Using Content-Disposition headers for more precise results downloading
   - Fix to `inp Jiffy` to handle PDB files with more than `A-Z` ChainIDs.
