@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 # Build stage
 FROM node:20-alpine AS build-stage
-RUN npm install -g npm@10.7.0
+RUN npm install -g npm@10.8.0
 
 WORKDIR /app
 

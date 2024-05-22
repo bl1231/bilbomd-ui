@@ -4,7 +4,7 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 import { visualizer } from 'rollup-plugin-visualizer'
 
 console.log('Starting Vite configuration...')
-console.log(process.env)
+// console.log(process.env)
 export default defineConfig({
   plugins: [
     react({
