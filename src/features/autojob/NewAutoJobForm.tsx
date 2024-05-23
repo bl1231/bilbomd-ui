@@ -89,7 +89,7 @@ const NewAutoJobForm = () => {
                     target='_blank'
                     rel='noopener noreferrer'
                   >
-                    Alphafold2
+                    AlphaFold2 & AlphaFold-Multimer
                   </Link>
                   . <b>BilboMD Auto</b> uses the{' '}
                   <Link
@@ -99,10 +99,10 @@ const NewAutoJobForm = () => {
                   >
                     Predicted Aligned Error
                   </Link>{' '}
-                  (PAE) from Alphafold along with the predicted coordinates (as
+                  (PAE) from AlphaFold along with the predicted coordinates (as
                   a PDB file) to automagically generate CHARMM-compatible input
                   files. The <b>*.pdb</b> and PAE <b>*.json</b> files must be
-                  the exact ones obtained from Alphafold since we are also using
+                  the exact ones obtained from AlphaFold since we are also using
                   the{' '}
                   <Link
                     href='https://alphafold.ebi.ac.uk/faq#faq-12'
@@ -117,14 +117,14 @@ const NewAutoJobForm = () => {
                 <ul>
                   <li>
                     <Typography>
-                      An Alphafold PDB <b>*.pdb</b> file (PDB coordinate file.
+                      An AlphaFold PDB <b>*.pdb</b> file (PDB coordinate file.
                       Make sure it matches your PAE file.)
                     </Typography>
                   </li>
                   <li>
                     <Typography>
-                      An Alphafold PAE <b>*.json</b> file (The PAE matrix output
-                      from Alphafold in JSON format.)
+                      An AlphaFold PAE <b>*.json</b> file (The PAE matrix output
+                      from AlphaFold in JSON format.)
                     </Typography>
                   </li>
                   <li>
@@ -145,7 +145,7 @@ const NewAutoJobForm = () => {
           </HeaderBox>
           <Alert severity='warning'>
             <b>BilboMD Auto</b> does not yet work with the outputs from{' '}
-            <b>Alphafold3</b>
+            <b>AlphaFold3</b>
           </Alert>
           <Paper sx={{ p: 2 }}>
             {isSuccess ? (
@@ -206,7 +206,7 @@ const NewAutoJobForm = () => {
                           setFieldTouched={setFieldTouched}
                           error={errors.pdb_file && touched.pdb_file}
                           errorMessage={errors.pdb_file ? errors.pdb_file : ''}
-                          fileType='Alphafold2 *.pdb'
+                          fileType='AlphaFold2 *.pdb'
                           fileExt='.pdb'
                         />
                       </Grid>
@@ -222,7 +222,7 @@ const NewAutoJobForm = () => {
                           setFieldTouched={setFieldTouched}
                           error={errors.pae_file && touched.pae_file}
                           errorMessage={errors.pae_file ? errors.pae_file : ''}
-                          fileType='Alphafold2 PAE *.json'
+                          fileType='AlphaFold2 PAE *.json'
                           fileExt='.json'
                         />
                       </Grid>
