@@ -89,7 +89,7 @@ const NewAutoJobForm = () => {
                     target='_blank'
                     rel='noopener noreferrer'
                   >
-                    Alphafold
+                    Alphafold2
                   </Link>
                   . <b>BilboMD Auto</b> uses the{' '}
                   <Link
@@ -143,7 +143,10 @@ const NewAutoJobForm = () => {
           <HeaderBox>
             <Typography>BilboMD Auto Job Form</Typography>
           </HeaderBox>
-
+          <Alert severity='warning'>
+            <b>BilboMD Auto</b> does not yet work with the outputs from{' '}
+            <b>Alphafold3</b>
+          </Alert>
           <Paper sx={{ p: 2 }}>
             {isSuccess ? (
               <Alert severity='success'>
@@ -203,7 +206,7 @@ const NewAutoJobForm = () => {
                           setFieldTouched={setFieldTouched}
                           error={errors.pdb_file && touched.pdb_file}
                           errorMessage={errors.pdb_file ? errors.pdb_file : ''}
-                          fileType='Alphafold *.pdb'
+                          fileType='Alphafold2 *.pdb'
                           fileExt='.pdb'
                         />
                       </Grid>
@@ -219,7 +222,7 @@ const NewAutoJobForm = () => {
                           setFieldTouched={setFieldTouched}
                           error={errors.pae_file && touched.pae_file}
                           errorMessage={errors.pae_file ? errors.pae_file : ''}
-                          fileType='Alphafold PAE *.json'
+                          fileType='Alphafold2 PAE *.json'
                           fileExt='.json'
                         />
                       </Grid>
