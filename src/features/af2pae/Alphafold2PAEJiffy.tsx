@@ -162,7 +162,7 @@ const Alphafold2PAEJiffy = () => {
                 (PAE) file - in JSON format - from AlphaFold to{' '}
                 <b>automagically*</b> define the rigid bodies and rigid domains.
                 The <b>*.pdb</b> and PAE <b>*.json</b> files must be the ones
-                obtained from Alphafold since we are also using the{' '}
+                obtained from AlphaFold since we are also using the{' '}
                 <Link
                   href='https://alphafold.ebi.ac.uk/faq#faq-12'
                   target='_blank'
@@ -216,14 +216,23 @@ const Alphafold2PAEJiffy = () => {
                   igraph
                 </Link>{' '}
                 to find the community structure of a graph using the Leiden
-                algorithm of Traag, van Eck & Waltman.
+                algorithm of{' '}
+                <Link
+                  href='https://doi.org/10.1038/s41598-019-41695-z'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  {' '}
+                  Traag, van Eck & Waltman
+                </Link>
+                .
               </Typography>
             </AccordionDetails>
           </Accordion>
         </Grid>
         <Grid item xs={12}>
           <HeaderBox>
-            <Typography>Create const.inp from Alphafold PAE</Typography>
+            <Typography>Create const.inp from AlphaFold PAE</Typography>
           </HeaderBox>
           <Paper sx={{ p: 1 }}>
             {success ? (
@@ -352,7 +361,7 @@ const Alphafold2PAEJiffy = () => {
                         setFieldTouched={setFieldTouched}
                         error={errors.pdb_file && touched.pdb_file}
                         errorMessage={errors.pdb_file ? errors.pdb_file : ''}
-                        fileType='Alphafold PDB *.pdb'
+                        fileType='AlphaFold2 PDB *.pdb'
                         fileExt='.pdb'
                       />
                       <Field
@@ -365,7 +374,7 @@ const Alphafold2PAEJiffy = () => {
                         setFieldTouched={setFieldTouched}
                         error={errors.pae_file && touched.pae_file}
                         errorMessage={errors.pae_file ? errors.pae_file : ''}
-                        fileType='Alphafold PAE *.json'
+                        fileType='AlphaFold2 PAE *.json'
                         fileExt='.json'
                       />
                       <Field
