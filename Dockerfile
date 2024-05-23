@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 # Build stage
 FROM node:20-alpine AS build-stage
-RUN npm install -g npm@10.7.0
+RUN npm install -g npm@10.8.0
 
 WORKDIR /app
 
@@ -13,16 +13,16 @@ RUN npm ci --verbose
 
 # Copy your project files
 COPY . .
+# COPY .env .
 
-ARG GIT_HASH
-ENV GIT_HASH=$GIT_HASH
-
+# RUN ls -la
+RUN cat .env
 # Now, run the build command
 RUN npm run build
 
 # -----------------------------------------------------------------------------
 # Serve stage
-FROM docker.io/nginx:alpine
+FROM nginx:alpine
 RUN apk add --no-cache bash
 
 # Copy the built app to nginx serving directory

@@ -34,9 +34,6 @@ export default defineConfig({
       }
     }
   },
-  define: {
-    'import.meta.env.VITE_GIT_HASH': JSON.stringify(process.env.GIT_HASH || '')
-  },
   build: {
     rollupOptions: {
       output: {

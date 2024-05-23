@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid'
 import { format, parseISO } from 'date-fns'
 import { useGetJobsQuery } from './jobsApiSlice'
@@ -44,6 +45,15 @@ const Jobs = () => {
     pollingInterval: 60000,
     refetchOnFocus: true
   })
+
+  useEffect(() => {
+    const logEnvVariables = () => {
+      Object.keys(import.meta.env).forEach((key) => {
+        console.log(`${key}: ${import.meta.env[key]}`)
+      })
+    }
+    logEnvVariables()
+  }, [])
 
   let content
 
