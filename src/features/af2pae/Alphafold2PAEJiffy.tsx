@@ -176,9 +176,10 @@ const Alphafold2PAEJiffy = () => {
               <Typography component={'span'} variant={'body1'}>
                 <ol>
                   <li>
-                    Obtain the PAE file from AlphaFold. Either from running
-                    AlphaFold on your own in a colabfold notebook or downloaded
-                    from pre-predicted structures available from the{' '}
+                    Obtain the PAE file from AlphaFold2 or AlphaFold-Multimer.
+                    Either from running AlphaFold on your own in a colabfold
+                    notebook or downloaded from pre-predicted structures
+                    available from the{' '}
                     <Link
                       href='https://alphafold.ebi.ac.uk/'
                       target='_blank'
