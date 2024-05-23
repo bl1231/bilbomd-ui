@@ -46,6 +46,15 @@ const Jobs = () => {
     refetchOnFocus: true
   })
 
+  useEffect(() => {
+    const logEnvVariables = () => {
+      Object.keys(import.meta.env).forEach((key) => {
+        console.log(`${key}: ${import.meta.env[key]}`)
+      })
+    }
+    logEnvVariables()
+  }, [])
+
   let content
 
   if (isLoading) content = <CircularProgress />
@@ -181,16 +190,6 @@ const Jobs = () => {
         }
       }
     ]
-
-    useEffect(() => {
-      const logEnvVariables = () => {
-        Object.keys(import.meta.env).forEach((key) => {
-          console.log(`${key}: ${import.meta.env[key]}`)
-        })
-      }
-
-      logEnvVariables()
-    }, [])
 
     content = (
       <>
