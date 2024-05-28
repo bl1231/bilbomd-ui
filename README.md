@@ -65,6 +65,10 @@ Then make sure the proxy settings in `vite.config.ts` point to `localhost:5432` 
 
 ## Version History
 
+- 1.9.2
+  - Use `.env` to toggle NERSC-specific UI elements.
+  - Add clarification to some instructions
+  - Remove pm2 dependency
 - 1.9.1
   - Changes for NERSC deployment
 - 1.9.0
