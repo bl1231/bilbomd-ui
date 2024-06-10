@@ -11,6 +11,7 @@ import MissingJob from 'components/MissingJob'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
 import BilboMDSteps from './BilboMDSteps'
+import BilboMDNerscSteps from './BilboMDNerscSteps'
 import { BilboMDScoperSteps } from './BilboMDScoperSteps'
 import HeaderBox from 'components/HeaderBox'
 import JobError from './JobError'
@@ -19,6 +20,8 @@ import MolstarViewer from 'features/molstar/Viewer'
 import { BilboMDScoperTable } from '../scoperjob/BilboMDScoperTable'
 import ScoperFoXSAnalysis from 'features/scoperjob/ScoperFoXSAnalysis'
 import FoXSAnalysis from './FoXSAnalysis'
+
+const useNersc = import.meta.env.VITE_USE_NERSC === 'true'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -41,6 +44,7 @@ const SingleJobPage = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
   })
+  console.log('job data --> ', job)
 
   if (isLoading) {
     return <PulseLoader color={'#ffffff'} />
@@ -182,12 +186,21 @@ const SingleJobPage = () => {
           </Item>
         </Grid>
 
-        {job.bullmq ? (
+        {job.bullmq && !useNersc && (
           <Grid item xs={12}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Steps</Typography>
             </HeaderBox>
             <BilboMDSteps job={job} />
+          </Grid>
+        )}
+
+        {job.mongo.steps ? (
+          <Grid item xs={12}>
+            <HeaderBox sx={{ py: '6px' }}>
+              <Typography>NERSC Steps</Typography>
+            </HeaderBox>
+            <BilboMDNerscSteps job={job} />
           </Grid>
         ) : null}
 

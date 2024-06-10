@@ -50,6 +50,30 @@ export interface BullMQJob {
   failedReason?: string
 }
 
+interface IStepStatus {
+  status: string
+  message: string
+}
+
+interface IBilboMDSteps {
+  pdb2crd: IStepStatus
+  pae: IStepStatus
+  autorg: IStepStatus
+  minimize: IStepStatus
+  initfoxs: IStepStatus
+  heat: IStepStatus
+  md: IStepStatus
+  dcd2pdb: IStepStatus
+  foxs: IStepStatus
+  multifoxs: IStepStatus
+  results: IStepStatus
+  email: IStepStatus
+  nersc_prepare_slurm_batch?: IStepStatus
+  nersc_submit_slurm_batch?: IStepStatus
+  nersc_job_status?: IStepStatus
+  nersc_copy_results_to_cfs?: IStepStatus
+}
+
 export interface Job {
   id: string
   _id: string
@@ -71,6 +95,7 @@ export interface Job {
   updatedAt: string
   user: string
   uuid: string
+  steps: IBilboMDSteps
 }
 
 export interface Queue {
