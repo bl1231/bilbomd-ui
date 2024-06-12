@@ -8,7 +8,7 @@ const initialState = jobsAdapter.getInitialState()
 
 export const jobsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getJobs: builder.query<BilboMDJob[], undefined>({
+    getJobs: builder.query({
       query: () => ({
         url: '/jobs',
         method: 'GET'
