@@ -36,27 +36,21 @@ Will transpile the Typescript code using `tsc` then optimize for production. Out
 
 I haven't played with this much. I do most linting in VSCode
 
-### `npm run preview`
-
-Locally preview the production build. Do not use this as a production server as it's not designed for it.
-
-### `npm run optimize`
-
-Pre-bundle dependencies.
-
 ## Deploy production
 
 The production instance is served from an `ngnix` [Docker container](https://hub.docker.com/_/nginx). Have a look at the `Dockerfile` for details of the docker build. The entire production ecosystem is deployed as a single Docker compose setup. Details are in the [bilbomd](https://github.com/bl1231/bilbomd) repo.
 
 ## NERSC Notes
 
-When deployed to NERSC/SPIN it is not possible to develop the frontend with a simple `npm run dev`. But we can expose a loadbalancing port from the Rancher K8 control plane and then use SSH tunnels.
+When deployed to NERSC/SPIN it is not possible to develop the frontend with a simple `npm run dev` unless you forward the backend proxy. We can expose a loadbalancing port from the Rancher K8 control plane and then use SSH tunnels.
 
 ```bash
 ssh -L 5432:backend-loadbalancer.bilbomd.development.svc.spin.nersc.org:5432 perlmutter
 ```
 
-Then make sure the proxy settings in `vite.config.ts` point to `localhost:5432` instead of `localhost:3501`
+Make sure the proxy settings in `vite.config.ts` point to `localhost:5432` (SPIN) instead of `localhost:3501` (local Docker)
+
+Then you should be able to start a local development instance of `bilbomd-ui` with `npm run dev` and point your browser to `localhost:3002` and you should be connected to the development backend service running on SPIN.
 
 ## Authors
 
