@@ -49,7 +49,20 @@ When deployed to NERSC/SPIN it is not possible to develop the frontend with a si
 ssh -L 5432:backend-loadbalancer.bilbomd.development.svc.spin.nersc.org:5432 perlmutter
 ```
 
-Make sure the proxy settings in `vite.config.ts` point to `localhost:5432` (SPIN) instead of `localhost:3501` (local Docker)
+Make sure the proxy settings in `vite.config.ts` point to `localhost:5432` (SPIN) instead of `localhost:3501` (local Docker).
+
+Make sure that the ENV variable `VITE_USE_NERSC=true` in `.env` is set to `true`
+
+```bash
+# --------------------------------------------------------------------------- #
+# WARNING - DO NOT PUT SENSITIVE INFORMATION IN THIS FILE                     #
+# --------------------------------------------------------------------------- #
+# This files is needed by Vite during `npm run build` to bake these variables #
+# into the frontend React code.                                               #
+# --------------------------------------------------------------------------- #
+VITE_USE_NERSC=true
+VITE_NERSC_PROJ=m4659
+```
 
 Then you should be able to start a local development instance of `bilbomd-ui` with `npm run dev` and point your browser to `localhost:3002` and you should be connected to the development backend service running on SPIN.
 
