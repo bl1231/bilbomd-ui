@@ -195,14 +195,11 @@ const SingleJobPage = () => {
           </Grid>
         )}
 
-        {job.mongo.steps ? (
+        {job.mongo.steps && useNersc && (
           <Grid item xs={12}>
-            <HeaderBox sx={{ py: '6px' }}>
-              <Typography>NERSC Steps</Typography>
-            </HeaderBox>
             <BilboMDNerscSteps job={job} />
           </Grid>
-        ) : null}
+        )}
 
         {job.scoper && (
           <Grid item xs={12}>
@@ -214,7 +211,9 @@ const SingleJobPage = () => {
           </Grid>
         )}
 
-        <JobDBDetails job={job} />
+        <Grid item xs={12}>
+          <JobDBDetails job={job} />
+        </Grid>
 
         {job.mongo.status === 'Completed' && job.scoper && id && (
           <Grid item xs={12}>

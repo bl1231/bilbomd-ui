@@ -1,15 +1,18 @@
+import { ReactNode } from 'react'
 import {
   Grid,
   Typography,
   Paper,
   Chip,
   CircularProgress,
-  Alert
+  Alert,
+  AlertTitle
 } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { useGetQueueStateQuery } from 'features/bullmq/bullmqApiSlice'
 import HeaderBox from 'components/HeaderBox'
 import { styled } from '@mui/material/styles'
+
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   borderTopLeftRadius: 0,
@@ -28,8 +31,6 @@ interface QueueStatus {
     worker_count: number
   }
 }
-
-type ContentType = React.ReactNode | string
 
 const BullMQSummary = () => {
   const {
@@ -51,20 +52,34 @@ const BullMQSummary = () => {
   }
   // console.log('queue data', queueStatus)
 
-  let content: ContentType
+  let content: ReactNode
 
   if (isLoading) content = <CircularProgress />
 
   if (isError) {
-    console.log('err:', error)
-    content = <Alert>Error loading BullMQ Queue Status.</Alert>
+    let errorMessage: string = 'An unknown error occurred'
+
+    if (error && typeof error === 'object' && 'message' in error) {
+      errorMessage = error.message
+    } else if (typeof error === 'string') {
+      errorMessage = error
+    }
+
+    console.log('BullMQSummary error:', error)
+
+    content = (
+      <Alert severity='error'>
+        <AlertTitle>Error</AlertTitle>
+        Error loading BullMQ Queue Status. {errorMessage}
+      </Alert>
+    )
   }
 
   if (isSuccess) {
     content = (
       <>
         <HeaderBox>
-          <Typography>Status of Backend Server</Typography>
+          <Typography>BullMQ Status</Typography>
         </HeaderBox>
 
         <Item sx={{ p: 1 }}>
