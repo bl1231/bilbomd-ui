@@ -1,58 +1,86 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDeleteJobMutation } from './jobsApiSlice'
-// import { Job } from 'types/interfaces'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
-import { Button, IconButton, Tooltip } from '@mui/material'
+import { Button, Tooltip, IconButton } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
+import LinearProgress from '@mui/material/LinearProgress'
 
 interface DeleteJobProps {
   id: string
   title: string
+  hide: boolean
 }
 
-const DeleteJob = ({ id, title }: DeleteJobProps) => {
-  // const { title, id } = job
-  const [open, setOpen] = useState(false)
-  const [isDeleted, setDeleted] = useState(false)
-  // const [deleteJob, { isSuccess, isError, error }] = useDeleteJobMutation()
-  const [deleteJob] = useDeleteJobMutation()
-
+const DeleteJob = ({ id, title, hide }: DeleteJobProps) => {
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteJob, { isSuccess, isError, error }] = useDeleteJobMutation()
+  // console.log('title:', title, 'hide:', hide)
   const onClickDelete = async () => {
-    setOpen(false)
-    //console.log(JSON.stringify(params.row, null, 4))
+    setDeleting(true) // Start deletion process
+    // const start = Date.now()
+    // console.log('onClickDelete start', start)
     await deleteJob({ id })
-    setDeleted(true) // Set success state to true after deletion
-    setTimeout(() => {
-      setDeleted(false) // Reset success state after a delay
-    }, 3000) // Change the delay as per your requirement
+    // const end = Date.now()
+    // console.log('onClickDelete end', end)
+    // const duration = end - start
+    // console.log(`Deletion took ${duration} milliseconds.`)
+    setDeleting(false) // End deletion process
   }
 
-  const handleClickOpen = () => {
-    setOpen(true)
+  const handleCloseDialog = () => {
+    setConfirmOpen(false)
+    if (deleting) {
+      // If the dialog is closed while deleting, stop hideing the progress
+      setDeleting(false)
+    }
   }
 
-  const handleClose = () => {
-    setOpen(false)
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      console.log('DeleteJob isSuccess:', isSuccess, 'error:', error)
+    }
+    if (isError) {
+      console.log('DeleteJob isError:', isError, 'error:', error)
+    }
+  }, [isSuccess, isError, error])
 
   return (
     <>
-      {isDeleted && <p>Job deleted successfully!</p>}
-      <Tooltip title={`Delete ${title}`} arrow>
-        <IconButton onClick={handleClickOpen}>
-          <DeleteIcon />
-        </IconButton>
+      <Tooltip
+        title={
+          deleting || hide
+            ? 'Cannot delete a Running or Submitted job'
+            : `Delete ${title}`
+        }
+        arrow
+      >
+        <span>
+          <IconButton onClick={() => setConfirmOpen(true)} disabled={deleting || hide}>
+            <DeleteIcon />
+          </IconButton>
+        </span>
       </Tooltip>
-      <Dialog open={open} onClose={handleClose}>
+
+      <Dialog
+        open={confirmOpen}
+        onClose={handleCloseDialog}
+        sx={{ '& .MuiDialog-paper': { minWidth: '400px' } }}
+      >
         <DialogContent>
-          <DialogContentText>{`Delete ${title} ?`}</DialogContentText>
+          {deleting && <LinearProgress />}
+          <DialogContentText>
+            {deleting ? `Deleting...` : `Are you sure you want to delete ${title}?`}
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={onClickDelete} autoFocus>
+          <Button onClick={handleCloseDialog} disabled={deleting}>
+            Cancel
+          </Button>
+          <Button onClick={onClickDelete} autoFocus disabled={deleting}>
             Delete
           </Button>
         </DialogActions>

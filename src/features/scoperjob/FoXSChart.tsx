@@ -41,30 +41,35 @@ interface CustomChartLabelProps {
   x: number
   y: number
 }
-const ChiSquaredChartLabel = ({ chisq, c1, c2, x, y }: CustomChartLabelProps) => {
+
+const ChiSquaredChartLabel = ({
+  chisq,
+  c1,
+  c2,
+  x,
+  y
+}: CustomChartLabelProps) => {
   return (
     <>
-      <text x={x} y={y} fill="black" fontSize={14}>
+      <text x={x} y={y} fill='black' fontSize={16}>
         Chi²: {chisq.toFixed(2)}
       </text>
-      <text x={x} y={y + 18} fill="black" fontSize={14}>
+      <text x={x + 80} y={y} fill='black' fontSize={16}>
         C
-        <tspan dy="3" fontSize={10}>
+        <tspan dy='3' fontSize={10}>
           1
         </tspan>
-        :{' '}
-        <tspan dy="-3" fontSize={14}>
-          {c1}
+        <tspan dy='-3' fontSize={14}>
+          : {c1}
         </tspan>
       </text>
-      <text x={x} y={y + 36} fill="black" fontSize={14}>
+      <text x={x + 140} y={y} fill='black' fontSize={16}>
         C
-        <tspan dy="3" fontSize={10}>
+        <tspan dy='3' fontSize={10}>
           2
         </tspan>
-        :{' '}
-        <tspan dy="-3" fontSize={14}>
-          {c2}
+        <tspan dy='-3' fontSize={14}>
+          : {c2}
         </tspan>
       </text>
     </>
@@ -86,42 +91,67 @@ const FoXSChart = ({
 
   return (
     <>
-      <Typography sx={{ m: 1 }}>{title}</Typography>
-      <ResponsiveContainer width="100%" height={300}>
+      <Typography variant='h5' sx={{ pl: 2, m: 1 }}>
+        {title} - I vs. q
+      </Typography>
+      <ResponsiveContainer width='100%' height={300}>
         <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="q" scale="linear" type="number" />
-          <YAxis yAxisId="left" scale="log" type="number" domain={['auto', 'auto']} />
+          <CartesianGrid strokeDasharray='3 3' />
+          <XAxis dataKey='q' scale='linear' type='number' />
+          <YAxis
+            yAxisId='left'
+            scale='log'
+            type='number'
+            domain={['auto', 'auto']}
+          />
           <Tooltip />
-          <Legend />
+          <Legend
+            iconType='line'
+            verticalAlign='bottom'
+            height={30}
+            layout='horizontal'
+          />
           <Line
-            yAxisId="left"
-            type="monotone"
-            dataKey="exp_intensity"
-            name="Exp Intensity"
-            stroke="#8884d8"
+            yAxisId='left'
+            type='monotone'
+            dataKey='exp_intensity'
+            name='Exp Intensity'
+            stroke='#8884d8'
             activeDot={{ r: 8 }}
           />
           <Line
-            yAxisId="left"
-            type="monotone"
-            dataKey="model_intensity"
-            name="Model Intensity"
-            stroke="#82ca9d"
+            yAxisId='left'
+            type='monotone'
+            dataKey='model_intensity'
+            name='Model Intensity'
+            stroke='#82ca9d'
           />
         </LineChart>
       </ResponsiveContainer>
-      <Typography sx={{ m: 1, mt: 3 }}>{title} - residuals</Typography>
-      <ResponsiveContainer width="100%" height={200}>
+      <Typography variant='h5' sx={{ pl: 2, m: 1, mt: 3 }}>
+        {title} - Chi&sup2; residuals
+      </Typography>
+      <ResponsiveContainer width='100%' height={200}>
         <LineChart data={residualsData}>
-          <XAxis dataKey="q" scale="linear" type="number" />
+          <XAxis dataKey='q' scale='linear' type='number' />
           <YAxis domain={[minYAxis, maxYAxis]} />
           <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="res" name="Residuals" stroke="#82ca9d" />
+          <Legend
+            iconType='line'
+            verticalAlign='bottom'
+            height={30}
+            layout='horizontal'
+            align='center'
+          />
+          <Line
+            type='monotone'
+            dataKey='res'
+            name='Residuals'
+            stroke='#82ca9d'
+          />
           <ReferenceLine
             y={0}
-            stroke="black"
+            stroke='black'
             label={
               <ChiSquaredChartLabel
                 chisq={chisq}

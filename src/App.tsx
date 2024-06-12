@@ -4,7 +4,6 @@ import { useThemeContext } from 'themes/ThemeContextProvider'
 
 function App() {
   const { theme } = useThemeContext()
-  // console.log('App theme', theme.palette.mode)
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

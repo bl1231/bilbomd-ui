@@ -7,7 +7,10 @@ import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
 import { BilboMDJob } from 'types/interfaces'
 import { createPluginUI } from 'molstar/lib/mol-plugin-ui'
-import { DefaultPluginUISpec, PluginUISpec } from 'molstar/lib/mol-plugin-ui/spec'
+import {
+  DefaultPluginUISpec,
+  PluginUISpec
+} from 'molstar/lib/mol-plugin-ui/spec'
 import { PluginLayoutControlsDisplay } from 'molstar/lib/mol-plugin/layout'
 import { ObjectKeys } from 'molstar/lib/mol-util/type-helpers'
 import { PluginConfig } from 'molstar/lib/mol-plugin/config'
@@ -40,7 +43,6 @@ type LoadParams = {
   assemblyId: number
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type PDBsToLoad = LoadParams[]
 
 const DefaultViewerOptions = {
@@ -56,10 +58,12 @@ const DefaultViewerOptions = {
   viewportShowExpand: PluginConfig.Viewport.ShowExpand.defaultValue,
   viewportShowControls: PluginConfig.Viewport.ShowControls.defaultValue,
   viewportShowSettings: PluginConfig.Viewport.ShowSettings.defaultValue,
-  viewportShowSelectionMode: PluginConfig.Viewport.ShowSelectionMode.defaultValue,
+  viewportShowSelectionMode:
+    PluginConfig.Viewport.ShowSelectionMode.defaultValue,
   viewportShowAnimation: PluginConfig.Viewport.ShowAnimation.defaultValue,
   pluginStateServer: PluginConfig.State.DefaultServer.defaultValue,
-  volumeStreamingServer: PluginConfig.VolumeStreaming.DefaultServer.defaultValue,
+  volumeStreamingServer:
+    PluginConfig.VolumeStreaming.DefaultServer.defaultValue,
   pdbProvider: PluginConfig.Download.DefaultPdbProvider.defaultValue,
   emdbProvider: PluginConfig.Download.DefaultEmdbProvider.defaultValue
 }
@@ -71,7 +75,9 @@ interface MolstarViewerProps {
 const MolstarViewer = ({ job }: MolstarViewerProps) => {
   const token = useSelector(selectCurrentToken)
 
-  const createLoadParamsArray = async (job: BilboMDJob): Promise<PDBsToLoad[]> => {
+  const createLoadParamsArray = async (
+    job: BilboMDJob
+  ): Promise<PDBsToLoad[]> => {
     const loadParamsMap = new Map<string, LoadParams[]>()
 
     // Helper function to add LoadParams to the Map
@@ -94,7 +100,12 @@ const MolstarViewer = ({ job }: MolstarViewerProps) => {
     }
 
     // Adding LoadParams based on job type and number of ensembles
-    if (job.mongo.__t === 'BilboMd' && job.classic?.numEnsembles) {
+    if (
+      (job.mongo.__t === 'BilboMd' ||
+        job.mongo.__t === 'BilboMdPDB' ||
+        job.mongo.__t === 'BilboMdCRD') &&
+      job.classic?.numEnsembles
+    ) {
       for (let i = 1; i <= job.classic.numEnsembles; i++) {
         const fileName = `ensemble_size_${i}_model.pdb`
         addFilesToLoadParams(fileName, i)
@@ -167,7 +178,9 @@ const MolstarViewer = ({ job }: MolstarViewerProps) => {
           PluginSpec.Behavior(PluginBehaviors.Representation.HighlightLoci, {
             mark: false
           }),
-          PluginSpec.Behavior(PluginBehaviors.Representation.DefaultLociLabelProvider),
+          PluginSpec.Behavior(
+            PluginBehaviors.Representation.DefaultLociLabelProvider
+          ),
           PluginSpec.Behavior(PluginBehaviors.Camera.FocusLoci),
 
           PluginSpec.Behavior(PluginBehaviors.CustomProps.StructureInfo),
@@ -200,7 +213,10 @@ const MolstarViewer = ({ job }: MolstarViewerProps) => {
           [PluginConfig.Viewport.ShowExpand, o.viewportShowExpand],
           [PluginConfig.Viewport.ShowControls, o.viewportShowControls],
           [PluginConfig.Viewport.ShowSettings, o.viewportShowSettings],
-          [PluginConfig.Viewport.ShowSelectionMode, o.viewportShowSelectionMode],
+          [
+            PluginConfig.Viewport.ShowSelectionMode,
+            o.viewportShowSelectionMode
+          ],
           [PluginConfig.Viewport.ShowAnimation, o.viewportShowAnimation],
           [PluginConfig.State.DefaultServer, o.pluginStateServer],
           [PluginConfig.State.CurrentServer, o.pluginStateServer],
@@ -229,16 +245,21 @@ const MolstarViewer = ({ job }: MolstarViewerProps) => {
             data: pdbData,
             label: fileName
           })
-          const trajectory = await window.molstar.builders.structure.parseTrajectory(
-            data,
-            format
-          )
+          const trajectory =
+            await window.molstar.builders.structure.parseTrajectory(
+              data,
+              format
+            )
           // console.log('traj: ', trajectory)
           // console.log('create model for assemblyId:', assemblyId)
-          const model = await window.molstar.builders.structure.createModel(trajectory, {
-            modelIndex: assemblyId
-          })
-          const struct = await window.molstar.builders.structure.createStructure(model)
+          const model = await window.molstar.builders.structure.createModel(
+            trajectory,
+            {
+              modelIndex: assemblyId
+            }
+          )
+          const struct =
+            await window.molstar.builders.structure.createStructure(model)
           // console.log('struct: ', struct)
           await window.molstar.builders.structure.representation.addRepresentation(
             struct,

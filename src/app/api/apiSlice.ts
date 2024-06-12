@@ -2,10 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { setCredentials } from '../../features/auth/authSlice'
 import type { RootState } from '../store'
 
-// console.log('apiSlice', import.meta.env.MODE)
-const baseURL = import.meta.env.DEV
-  ? `http://localhost:${import.meta.env.VITE_BILBOMD_BACKEND_PORT}/v1`
-  : 'https://bl1231.als.lbl.gov/bilbomd-dev-backend/v1'
+const baseURL = '/api/v1'
 
 const baseQuery = fetchBaseQuery({
   baseUrl: baseURL,
@@ -25,7 +22,7 @@ interface RefreshErrorData {
 }
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions)
-
+  // console.log('baseQueryWithReauth result:', result)
   if (result?.error?.status === 403) {
     // console.log('sending refresh token')
 
@@ -44,6 +41,21 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       }
       return refreshResult
     }
+  } else if (result?.error?.status === 'PARSING_ERROR') {
+    // Handle the parsing error specifically
+    console.error('Parsing error encountered', result.error)
+    // Reload the entire application
+    // window.location.reload()
+
+    // Optionally, trigger an application-wide action, such as logging out the user,
+    // showing an error message, or even reloading the app (be cautious with this approach).
+    // For example, to log out:
+    // api.dispatch(logOutUser());
+
+    // Or to notify the user somehow, adjust according to your application's state management.
+
+    // Depending on your application's needs, you might return something specific here,
+    // or perhaps adjust `result` to reflect a new state after handling the error.
   }
 
   return result

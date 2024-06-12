@@ -1,23 +1,16 @@
 import Loadable from 'components/Loadable'
 import MinimalLayout from 'layout/MinimalLayout'
 import { lazy } from 'react'
-// render - Home
+
 const Home = Loadable(lazy(() => import('components/Home')))
-
-// render - login
-// const AuthLogin = Loadable(lazy(() => import('pages/authentication/Login')));
-// const AuthRegister = Loadable(lazy(() => import('pages/authentication/Register')));
-
-// prettier-ignore
-const MagickLink = Loadable(lazy(() => import('features/auth/MagickLink')));
+const MagickLink = Loadable(lazy(() => import('features/auth/MagickLink')))
 const Signup = Loadable(lazy(() => import('features/auth/Signup')))
-// prettier-ignore
-const VerifyEmail = Loadable(lazy(() => import('features/auth/VerifyEmail')));
-// prettier-ignore
-const MagickLinkAuth = Loadable(lazy(() => import('features/auth/MagickLinkAuth')));
-const Unauthorized = Loadable(lazy(() => import('components/Unauthorized')))
+const VerifyEmail = Loadable(lazy(() => import('features/auth/VerifyEmail')))
+const MagickLinkAuth = Loadable(
+  lazy(() => import('features/auth/MagickLinkAuth'))
+)
 
-// ==============================|| AUTH ROUTING ||============================== //
+// ===========================|| AUTH ROUTING ||============================ //
 
 const LoginRoutes = {
   element: <MinimalLayout />,
@@ -46,12 +39,8 @@ const LoginRoutes = {
     {
       path: 'login',
       element: <MagickLink />
-    },
-    {
-      path: 'unauthorized',
-      element: <Unauthorized />
     }
   ]
 }
 
-export default LoginRoutes
+export { LoginRoutes }

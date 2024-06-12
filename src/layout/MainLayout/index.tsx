@@ -15,7 +15,7 @@ import {
   SubjectOutlined,
   AutoAwesome
 } from '@mui/icons-material'
-
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import { useNavigate } from 'react-router-dom'
 import { Outlet, useLocation } from 'react-router-dom'
 
@@ -23,17 +23,18 @@ import useAuth from 'hooks/useAuth'
 
 import Header from './Header'
 import Footer from './Footer'
-// ==============================|| MAIN LAYOUT ||============================== //
+// ============================|| MAIN LAYOUT ||============================ //
 
 const drawerWidth = 170
 
 export default function ClippedDrawer() {
   const { isAdmin } = useAuth()
+  const useNersc = import.meta.env.VITE_USE_NERSC === 'true'
   const navigate = useNavigate()
   const location = useLocation()
   const theme = useTheme()
 
-  const menuItems = [
+  let menuItems = [
     {
       text: 'Jobs',
       icon: <SubjectOutlined />,
@@ -63,14 +64,14 @@ export default function ClippedDrawer() {
       roles: ['user', 'manager']
     },
     {
-      text: 'inp Jiffy',
+      text: 'inp Jiffy™',
       icon: <AutoAwesome />,
       path: '/dashboard/jobs/constinp',
       onclick: () => navigate('dashboard/jobs/constinp'),
       roles: ['user', 'manager']
     },
     {
-      text: 'PAE Jiffy',
+      text: 'PAE Jiffy™',
       icon: <AutoAwesome />,
       path: '/dashboard/af2pae',
       onclick: () => navigate('dashboard/af2pae'),
@@ -82,8 +83,19 @@ export default function ClippedDrawer() {
       path: '/dashboard/users',
       onclick: () => navigate('dashboard/users'),
       roles: ['admin']
+    },
+    {
+      text: 'Admin',
+      icon: <AdminPanelSettingsIcon />,
+      path: '/admin',
+      onclick: () => navigate('admin'),
+      roles: ['admin']
     }
   ]
+
+  if (useNersc) {
+    menuItems = menuItems.filter((item) => item.text !== 'Scoper')
+  }
 
   const buttonContent = (
     <>
@@ -98,7 +110,8 @@ export default function ClippedDrawer() {
                     ? theme.palette.grey[200]
                     : theme.palette.grey[600]
                   : null,
-              display: item.roles.includes('admin') && !isAdmin ? 'none' : 'flex'
+              display:
+                item.roles.includes('admin') && !isAdmin ? 'none' : 'flex'
             }}
           >
             <ListItemIcon>{item.icon}</ListItemIcon>
@@ -117,7 +130,7 @@ export default function ClippedDrawer() {
 
       <Box sx={{ display: 'flex' }}>
         <Drawer
-          variant="permanent"
+          variant='permanent'
           sx={{
             width: drawerWidth,
             flexShrink: 0,
@@ -135,7 +148,7 @@ export default function ClippedDrawer() {
           </Box>
         </Drawer>
 
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
           <Outlet />
           <Toolbar />
         </Box>

@@ -3,7 +3,8 @@ import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { visualizer } from 'rollup-plugin-visualizer'
 
-// https://vitejs.dev/config/
+console.log('Starting Vite configuration...')
+// console.log(process.env)
 export default defineConfig({
   plugins: [
     react({
@@ -12,13 +13,37 @@ export default defineConfig({
     visualizer({ gzipSize: true, brotliSize: true, template: 'sunburst' }),
     tsconfigPaths()
   ],
-  server: { port: 3002 },
+  server: {
+    host: 'localhost',
+    port: 3002,
+    proxy: {
+      '/api/v1': {
+        target: 'http://localhost:5432',
+        changeOrigin: true,
+        secure: false
+      },
+      '/admin/bullmq': {
+        target: 'http://localhost:5432',
+        changeOrigin: true,
+        secure: false
+      },
+      '/sfapi': {
+        target: 'http://localhost:5432',
+        changeOrigin: true,
+        secure: false
+      }
+    }
+  },
   build: {
     rollupOptions: {
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            return id.toString().split('node_modules/')[1].split('/')[0].toString()
+            return id
+              .toString()
+              .split('node_modules/')[1]
+              .split('/')[0]
+              .toString()
           }
         }
       }

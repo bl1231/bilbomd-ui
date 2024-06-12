@@ -22,7 +22,7 @@ const PersistLogin = () => {
       // console.log('verifying refresh token')
       try {
         //const response =
-        await refresh()
+        await refresh({})
         //const { accessToken } = response.data
         // needed to differentiate the isSuccess from refresh
         setTrueSuccess(true)

@@ -9,7 +9,7 @@ import componentsOverride from './overrides'
 // import Palette from './palette'
 
 const getDesignTokens = (mode: PaletteMode) => {
-  console.log(mode)
+  // console.log(mode)
   // const theme = Palette(mode)
   const themeTypography = Typography(`'Quicksand'`)
   // const themeCustomShadows = useMemo(() => CustomShadows(theme), [theme])

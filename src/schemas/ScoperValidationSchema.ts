@@ -20,7 +20,10 @@ export const bilbomdScoperJobSchema = object().shape({
       return false
     })
     .test('file-type-check', 'Please select a PDB file', (file) => {
-      if (file && (file as File).name.split('.').pop()?.toUpperCase() === 'PDB') {
+      if (
+        file &&
+        (file as File).name.split('.').pop()?.toUpperCase() === 'PDB'
+      ) {
         return true
       }
       return false
@@ -32,6 +35,16 @@ export const bilbomdScoperJobSchema = object().shape({
         if (file) {
           const spaceCheck = await noSpaces(file as File)
           return spaceCheck
+        }
+        return false
+      }
+    )
+    .test(
+      'filename-length-check',
+      'Filename must be no longer than 30 characters.',
+      (file) => {
+        if (file && (file as File).name.length <= 30) {
+          return true
         }
         return false
       }
@@ -47,21 +60,32 @@ export const bilbomdScoperJobSchema = object().shape({
       }
       return false
     })
-    .test('file-type-check', 'Please select a SAXS *.dat data file.', (file) => {
-      if (file && (file as File).name.split('.').pop()?.toUpperCase() === 'DAT') {
-        return true
+    .test(
+      'file-type-check',
+      'Please select a SAXS *.dat data file.',
+      (file) => {
+        if (
+          file &&
+          (file as File).name.split('.').pop()?.toUpperCase() === 'DAT'
+        ) {
+          return true
+        }
+        return false
       }
-      return false
-    })
-    .test('saxs-data-check', 'File does not appear to be SAXS data', async (file) => {
-      if (file) {
-        const saxsData = await isSaxsData(file as File)
-        // console.log('saxsData:', saxsData)
-        return saxsData
+    )
+    .test(
+      'saxs-data-check',
+      'File does not appear to be SAXS data',
+      async (file) => {
+        if (file) {
+          const saxsData = await isSaxsData(file as File)
+          // console.log('saxsData:', saxsData)
+          return saxsData
+        }
+        // additional return if test fails for reasons other than NOT being SAXS data
+        return false
       }
-      // additional return if test fails for reasons other than NOT being SAXS data
-      return false
-    })
+    )
     .test(
       'check-for-spaces',
       'Only accept file with no spaces in the name.',
@@ -70,6 +94,16 @@ export const bilbomdScoperJobSchema = object().shape({
           const spaceCheck = await noSpaces(file as File)
           // console.log(spaceCheck)
           return spaceCheck
+        }
+        return false
+      }
+    )
+    .test(
+      'filename-length-check',
+      'Filename must be no longer than 30 characters.',
+      (file) => {
+        if (file && (file as File).name.length <= 30) {
+          return true
         }
         return false
       }

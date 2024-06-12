@@ -13,7 +13,6 @@ import { useState, useEffect } from 'react'
 import { Box } from '@mui/system'
 import useAuth from 'hooks/useAuth'
 import LogOut from 'features/auth/LogOut'
-// import FortIcon from '@mui/icons-material/Fort'
 import NightModeToggle from 'components/NightModeToggle'
 import PersonIcon from '@mui/icons-material/Person'
 import { useNavigate } from 'react-router'
@@ -41,13 +40,6 @@ const Header = () => {
 
   const { username, status } = useAuth()
   const [anchorElUser, setAnchorElUser] = useState(null)
-
-  // const date = new Date()
-
-  // const today = new Intl.DateTimeFormat('en-US', {
-  //   dateStyle: 'full',
-  //   timeStyle: 'short'
-  // }).format(date)
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget)
@@ -87,28 +79,36 @@ const Header = () => {
       <CssBaseline />
       <Box sx={{ flexGrow: 1 }}>
         <AppBar
-          position="fixed"
+          position='fixed'
           elevation={0}
           sx={{ height: '70px', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         >
           <Toolbar sx={{ m: 0 }}>
-            <Link to="/welcome" style={linkStyles}>
+            <Link to='/welcome' style={linkStyles}>
               BilboMD
             </Link>
 
-            <Typography variant="h5" sx={{ display: { xs: 'none', sm: 'flex' }, ml: 8 }}>
+            <Typography
+              variant='h5'
+              sx={{ display: { xs: 'none', sm: 'flex' }, ml: 8 }}
+            >
               {time}
             </Typography>
 
             <Typography
-              variant="h5"
-              sx={{ display: 'flex', flexGrow: '8', justifyContent: 'flex-end', mx: 2 }}
+              variant='h5'
+              sx={{
+                display: 'flex',
+                flexGrow: '8',
+                justifyContent: 'flex-end',
+                mx: 2
+              }}
             >
               {status}: {username}
             </Typography>
 
             <Tooltip
-              title="Open settings"
+              title='Open settings'
               sx={{ flexGrow: 1, justifyContent: 'flex-end' }}
             >
               <IconButton
@@ -122,7 +122,7 @@ const Header = () => {
             </Tooltip>
             <Menu
               sx={{ mt: '45px' }}
-              id="menu-appbar"
+              id='menu-appbar'
               anchorEl={anchorElUser}
               anchorOrigin={{
                 vertical: 'top',
@@ -138,7 +138,7 @@ const Header = () => {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting.text} onClick={setting.onclick}>
-                  <Typography textAlign="center">{setting.text}</Typography>
+                  <Typography textAlign='center'>{setting.text}</Typography>
                 </MenuItem>
               ))}
               <MenuItem>

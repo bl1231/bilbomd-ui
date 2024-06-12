@@ -10,24 +10,33 @@ import PersistLogin from 'features/auth/PersistLogin'
 import { ROLES } from 'config/roles'
 
 // render - dashboard
-//const DashBoard = Loadable(lazy(() => import('features/dashboard/DashBoard')))
 const Prefetch = Loadable(lazy(() => import('features/auth/Prefetch')))
 const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')))
-const NewAutoJob = Loadable(lazy(() => import('features/autojob/NewAutoJobForm')))
-const NewScoperJob = Loadable(lazy(() => import('features/scoperjob/NewScoperJobForm')))
+const NewAutoJob = Loadable(
+  lazy(() => import('features/autojob/NewAutoJobForm'))
+)
+const NewScoperJob = Loadable(
+  lazy(() => import('features/scoperjob/NewScoperJobForm'))
+)
 const ConstInpStepper = Loadable(
   lazy(() => import('components/ConstInpForm/ConstInpStepper'))
 )
-const AF2PAEJiffy = Loadable(lazy(() => import('features/af2pae/Alphafold2PAEJiffy')))
+const AF2PAEJiffy = Loadable(
+  lazy(() => import('features/af2pae/Alphafold2PAEJiffy'))
+)
 const Jobs = Loadable(lazy(() => import('features/jobs/Jobs')))
-const SingleJobPage = Loadable(lazy(() => import('features/jobs/SingleJobPage')))
+const SingleJobPage = Loadable(
+  lazy(() => import('features/jobs/SingleJobPage'))
+)
 const Welcome = Loadable(lazy(() => import('features/auth/Welcome')))
 const UsersList = Loadable(lazy(() => import('features/users/UsersList')))
 const EditUser = Loadable(lazy(() => import('features/users/EditUser')))
 const UserAccount = Loadable(lazy(() => import('features/users/UserAccount')))
+const AdminPanel = Loadable(lazy(() => import('features/admin/AdminPanel')))
+const Unauthorized = Loadable(lazy(() => import('components/Unauthorized')))
 const Missing = Loadable(lazy(() => import('components/Missing')))
 
-// ==============================|| MAIN ROUTING ||============================== //
+// ===========================|| MAIN ROUTING ||============================ //
 
 const ProtectedMainRoutes = {
   element: <PersistLogin />,
@@ -41,6 +50,24 @@ const ProtectedMainRoutes = {
           element: <Welcome />
         },
         {
+          element: <RequireAuth allowedRoles={[ROLES.Admin]} />,
+          children: [
+            {
+              path: 'admin',
+              element: <AdminPanel />
+            }
+          ]
+        },
+        {
+          element: <RequireAuth allowedRoles={[...Object.values(ROLES)]} />,
+          children: [
+            {
+              path: 'unauthorized',
+              element: <Unauthorized />
+            }
+          ]
+        },
+        {
           element: <RequireAuth allowedRoles={[...Object.values(ROLES)]} />,
           children: [
             {
@@ -52,7 +79,9 @@ const ProtectedMainRoutes = {
                     { path: '', element: <Welcome /> },
                     {
                       element: (
-                        <RequireAuth allowedRoles={[ROLES.Manager, ROLES.Admin]} />
+                        <RequireAuth
+                          allowedRoles={[ROLES.Manager, ROLES.Admin]}
+                        />
                       ),
                       children: [
                         {

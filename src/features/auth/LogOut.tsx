@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import { useSendLogoutMutation } from 'features/auth/authApiSlice'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-import { Button, Typography } from '@mui/material'
-import { useNavigate } from 'react-router'
+import { useState } from "react"
+import { useSendLogoutMutation } from "features/auth/authApiSlice"
+import Dialog from "@mui/material/Dialog"
+import DialogActions from "@mui/material/DialogActions"
+import DialogContent from "@mui/material/DialogContent"
+import DialogContentText from "@mui/material/DialogContentText"
+import { Button, Typography } from "@mui/material"
+import { useNavigate } from "react-router"
 
 const LogOut = () => {
   const [open, setOpen] = useState(false)
@@ -15,7 +15,7 @@ const LogOut = () => {
   const onClickLogout = async () => {
     setOpen(false)
     await sendLogout({})
-    navigate('.')
+    navigate("/")
   }
 
   const handleClickOpen = () => {
@@ -32,7 +32,7 @@ const LogOut = () => {
 
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
-          <DialogContentText sx={{ color: 'black' }}>
+          <DialogContentText sx={{ color: "black" }}>
             Do you want to Logout?
           </DialogContentText>
           <DialogContentText>

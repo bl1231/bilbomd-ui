@@ -15,20 +15,18 @@ export const authApiSlice = apiSlice.injectEndpoints({
         url: '/auth/logout',
         method: 'POST'
       }),
-      async onQueryStarted(arg, { dispatch }) {
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
-          // const { data } = await queryFulfilled
-          // console.log(data)
+          const { data } = await queryFulfilled
           dispatch(logOut())
-          setTimeout(() => {
-            dispatch(apiSlice.util.resetApiState())
-          }, 500)
+          dispatch(apiSlice.util.resetApiState())
+          console.log('Logout succeeded with response:', data);
         } catch (err) {
           console.log(err)
         }
       }
     }),
-    refresh: builder.mutation<any, void>({
+    refresh: builder.mutation({
       query: () => ({
         url: '/auth/refresh',
         method: 'GET'

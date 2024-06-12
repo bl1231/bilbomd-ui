@@ -18,7 +18,7 @@ import { useAddNewAutoJobMutation } from '../jobs/jobsApiSlice'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { bilbomdAutoJobSchema } from 'schemas/ValidationSchemas'
+import { BilboMDAutoJobSchema } from 'schemas/BilboMDAutoJobSchema'
 import useAuth from 'hooks/useAuth'
 import { Debug } from 'components/Debug'
 import LinearProgress from '@mui/material/LinearProgress'
@@ -30,8 +30,7 @@ const NewAutoJobForm = () => {
 
   const initialValues = {
     title: '',
-    crd_file: '',
-    psf_file: '',
+    pdb_file: '',
     pae_file: '',
     dat_file: '',
     email: email
@@ -40,16 +39,14 @@ const NewAutoJobForm = () => {
   const onSubmit = async (values, { setStatus }) => {
     const form = new FormData()
     form.append('title', values.title)
-    form.append('psf_file', values.psf_file)
-    form.append('crd_file', values.crd_file)
+    form.append('pdb_file', values.pdb_file)
     form.append('dat_file', values.dat_file)
     form.append('pae_file', values.pae_file)
     form.append('email', values.email)
-    form.append('job_type', 'BilboMDAuto')
+    form.append('bilbomd_mode', 'auto')
 
     try {
       const newJob = await addNewAutoJob(form).unwrap()
-      // setJobid(newJob.jobid)
       setStatus(newJob)
     } catch (error) {
       console.error('rejected', error)
@@ -83,53 +80,61 @@ const NewAutoJobForm = () => {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography sx={{ m: 1 }}>
-                <b>BilboMD</b> uses{' '}
-                <Link
-                  href="https://academiccharmm.org/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  CHARMM
-                </Link>{' '}
-                to generate an ensemble of molecular models. In order for the Molecular
-                Dynamics steps to run successfully it is imperative that you provide
-                compatible input files.
-                <li>
-                  <b>*.crd</b> file (A CHARMM coordinate file)
-                </li>
-                <li>
-                  <b>*.psf</b> file (A CHARMM{' '}
+              <Box>
+                <Typography sx={{ m: 1 }}>
+                  <b>BilboMD Auto</b> is intended to be run using the outputs
+                  from{' '}
                   <Link
-                    href="https://academiccharmm.org/documentation/version/c47b2/struct"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href='https://deepmind.google/technologies/alphafold/'
+                    target='_blank'
+                    rel='noopener noreferrer'
                   >
-                    data structure
+                    AlphaFold2 & AlphaFold-Multimer
+                  </Link>
+                  . <b>BilboMD Auto</b> uses the{' '}
+                  <Link
+                    href='https://alphafold.ebi.ac.uk/faq#faq-13'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    Predicted Aligned Error
                   </Link>{' '}
-                  file)
-                </li>
-                <li>
-                  <b>*.dat</b> file (A 3-column SAXS data file)
-                </li>
-                <li>
-                  <b>pae.json</b> file (PAE output from Alphafold)
-                </li>
-              </Typography>
-              <Typography sx={{ m: 1 }}>
-                Use the <b>PDB Reader</b> tool available from{' '}
-                <Link
-                  href="https://www.charmm-gui.org/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  CHARMM-GUI
-                </Link>{' '}
-                to convert your standard PDB file to a CRD file. If you need help
-                generating a valid <b>const.inp</b> file you can use our little Jiffy
-                (green button below or &ldquo;Jiffy&rdquo; links to the left) to help get
-                you started.
-              </Typography>
+                  (PAE) from AlphaFold along with the predicted coordinates (as
+                  a PDB file) to automagically generate CHARMM-compatible input
+                  files. The <b>*.pdb</b> and PAE <b>*.json</b> files must be
+                  the exact ones obtained from AlphaFold since we are also using
+                  the{' '}
+                  <Link
+                    href='https://alphafold.ebi.ac.uk/faq#faq-12'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    pLDDT
+                  </Link>{' '}
+                  values stored in the B-factor column to guide the selection of
+                  rigid and flexible regions.
+                </Typography>
+                <ul>
+                  <li>
+                    <Typography>
+                      An AlphaFold PDB <b>*.pdb</b> file (PDB coordinate file.
+                      Make sure it matches your PAE file.)
+                    </Typography>
+                  </li>
+                  <li>
+                    <Typography>
+                      An AlphaFold PAE <b>*.json</b> file (The PAE matrix output
+                      from AlphaFold in JSON format.)
+                    </Typography>
+                  </li>
+                  <li>
+                    <Typography>
+                      A <b>*.dat</b> file (A 3-column experimental SAXS data
+                      file)
+                    </Typography>
+                  </li>
+                </ul>
+              </Box>
             </AccordionDetails>
           </Accordion>
         </Grid>
@@ -138,20 +143,23 @@ const NewAutoJobForm = () => {
           <HeaderBox>
             <Typography>BilboMD Auto Job Form</Typography>
           </HeaderBox>
-
+          <Alert severity='warning'>
+            <b>BilboMD Auto</b> does not yet work with the outputs from{' '}
+            <b>AlphaFold3</b>
+          </Alert>
           <Paper sx={{ p: 2 }}>
             {isSuccess ? (
-              <Alert severity="success">
+              <Alert severity='success'>
                 <AlertTitle>Woot!</AlertTitle>
                 <Typography>
                   Your job has been submitted. Check out the{' '}
-                  <RouterLink to="../jobs">details</RouterLink>.
+                  <RouterLink to='../jobs'>details</RouterLink>.
                 </Typography>
               </Alert>
             ) : (
               <Formik
                 initialValues={initialValues}
-                validationSchema={bilbomdAutoJobSchema}
+                validationSchema={BilboMDAutoJobSchema}
                 onSubmit={onSubmit}
               >
                 {({
@@ -167,83 +175,70 @@ const NewAutoJobForm = () => {
                   setFieldTouched
                 }) => (
                   <Form>
-                    <Grid container direction="column">
+                    <Grid container direction='column'>
                       <Grid item sx={{ my: 2, width: '520px' }}>
                         <Field
                           fullWidth
-                          label="Title"
-                          name="title"
-                          id="title"
-                          type="text"
+                          label='Title'
+                          name='title'
+                          id='title'
+                          type='text'
                           disabled={isSubmitting}
                           as={TextField}
                           onChange={handleChange}
                           onBlur={handleBlur}
                           error={errors.title && touched.title}
-                          helperText={errors.title && touched.title ? errors.title : ''}
+                          helperText={
+                            errors.title && touched.title ? errors.title : ''
+                          }
                           value={values.title || ''}
                         />
                       </Grid>
 
                       <Grid item>
                         <Field
-                          name="crd_file"
-                          id="crd-file-upload"
+                          name='pdb_file'
+                          id='crd-file-upload'
                           as={FileSelect}
-                          title="Select File"
+                          title='Select File'
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
-                          error={errors.crd_file && values.crd_file}
-                          errorMessage={errors.crd_file ? errors.crd_file : ''}
-                          fileType="CHARMM-GUI *.crd"
-                          fileExt=".crd"
+                          error={errors.pdb_file && touched.pdb_file}
+                          errorMessage={errors.pdb_file ? errors.pdb_file : ''}
+                          fileType='AlphaFold2 *.pdb'
+                          fileExt='.pdb'
                         />
                       </Grid>
 
                       <Grid item>
                         <Field
-                          name="psf_file"
-                          id="psf-file-upload"
+                          name='pae_file'
+                          id='pae-file-upload'
                           as={FileSelect}
-                          title="Select File"
+                          title='Select File'
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
-                          error={errors.psf_file && values.psf_file}
-                          errorMessage={errors.psf_file ? errors.psf_file : ''}
-                          fileType="CHARMM-GUI *.psf"
-                          fileExt=".psf"
-                        />
-                      </Grid>
-                      <Grid item>
-                        <Field
-                          name="pae_file"
-                          id="pae-file-upload"
-                          as={FileSelect}
-                          title="Select File"
-                          disabled={isSubmitting}
-                          setFieldValue={setFieldValue}
-                          setFieldTouched={setFieldTouched}
-                          error={errors.pae_file && values.pae_file}
+                          error={errors.pae_file && touched.pae_file}
                           errorMessage={errors.pae_file ? errors.pae_file : ''}
-                          fileType="Alphafold PAE *.json"
-                          fileExt=".json"
+                          fileType='AlphaFold2 PAE *.json'
+                          fileExt='.json'
                         />
                       </Grid>
                       <Grid item>
                         <Field
-                          name="dat_file"
-                          id="dat-file-upload"
+                          name='dat_file'
+                          id='dat-file-upload'
                           as={FileSelect}
-                          title="Select File"
+                          title='Select File'
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
-                          error={errors.dat_file && values.dat_file}
+                          error={errors.dat_file && touched.dat_file}
                           errorMessage={errors.dat_file ? errors.dat_file : ''}
-                          fileType="experimental SAXS data"
-                          fileExt=".dat"
+                          fileType='experimental SAXS data *.dat'
+                          fileExt='.dat'
                         />
                       </Grid>
 
@@ -254,25 +249,28 @@ const NewAutoJobForm = () => {
                       )}
                       <Grid item sx={{ mt: 2 }}>
                         <LoadingButton
-                          type="submit"
+                          type='submit'
                           disabled={
                             !isValid ||
                             values.title === '' ||
-                            values.crd_file === '' ||
-                            values.psf_file === '' ||
+                            values.pdb_file === '' ||
                             values.pae_file === '' ||
                             values.dat_file === ''
                           }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}
-                          loadingPosition="end"
-                          variant="contained"
+                          loadingPosition='end'
+                          variant='contained'
                           sx={{ width: '110px' }}
                         >
                           <span>Submit</span>
                         </LoadingButton>
 
-                        {isSuccess ? <Alert severity="success">{status}</Alert> : ''}
+                        {isSuccess ? (
+                          <Alert severity='success'>{status}</Alert>
+                        ) : (
+                          ''
+                        )}
                       </Grid>
                     </Grid>
                     {process.env.NODE_ENV === 'development' ? <Debug /> : ''}

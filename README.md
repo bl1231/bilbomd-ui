@@ -1,10 +1,10 @@
 # bilbomd-ui
 
-`bilbomd-ui` is the frontend GUI for BilboMD. It is a Single Page Application [SPA](https://developer.mozilla.org/en-US/docs/Glossary/SPA). The deploy [instructions](https://github.com/bl1231/bilbomd#2-deploy-the-bilbomd-front-end-ui) are outlined in more detail the [bilbomd](https://github.com/bl1231/bilbomd) repo, and give instructions for using [PM2](https://pm2.keymetrics.io/docs/usage/quick-start/) to deploy a production instance to `https://bilbomd.bl1231.als.lbl.gov`, but if you want to start a development version you can just check this code out and fire it up interactively.
+`bilbomd-ui` is the frontend GUI for BilboMD. It is a Single Page Application [SPA](https://developer.mozilla.org/en-US/docs/Glossary/SPA). The deploy [instructions](https://github.com/bl1231/bilbomd#2-deploy-the-bilbomd-front-end-ui) are outlined in more detail the [bilbomd](https://github.com/bl1231/bilbomd) repo, and give instructions for deploying a production instance to `https://bilbomd.bl1231.als.lbl.gov`, but if you want to start a development version you can just check this code out and fire it up interactively.
 
-## Getting Started with Create React App
+## Getting Started with Vite
 
-This project was initially bootstrapped with [Create React App](https://github.com/facebook/create-react-app), but since CRA seems is no longer maintained I switched to using [Vite](https://vitejs.dev/)
+Although this project was initially bootstrapped with [Create React App](https://github.com/facebook/create-react-app), CRA is no longer maintained and we switched to using [Vite](https://vitejs.dev/). Have a look at the Vite documentation to see why we use it.
 
 ## Available Scripts
 
@@ -17,15 +17,16 @@ There are a number of scripts defined in the `package.json` file:
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "optimize": "vite optimize"
+  }
 ```
 
 ### `npm run dev`
 
-Runs the app in the development mode, and will serve on port 3003.\
-Open [http://localhost:3003](http://localhost:3003) to view it in the browser.
+Runs the app in the development mode, and will serve on port 3002.\
 
-The page will automagically refresh if you make edits.\
-You will also see any lint errors in the console.
+Open [http://localhost:3002](http://localhost:3002) to view the developemnt instance in the browser.
+
+The page will automagically refresh if you make edits. You will also see any linting errors in the console.
 
 ### `npm run build`
 
@@ -45,12 +46,60 @@ Pre-bundle dependencies.
 
 ## Deploy production
 
+The production instance is served from an `ngnix` [Docker container](https://hub.docker.com/_/nginx). Have a look at the `Dockerfile` for details of the docker build. The entire production ecosystem is deployed as a single Docker compose setup. Details are in the [bilbomd](https://github.com/bl1231/bilbomd) repo.
+
+## NERSC Notes
+
+When deployed to NERSC/SPIN it is not possible to develop the frontend with a simple `npm run dev`. But we can expose a loadbalancing port from the Rancher K8 control plane and then use SSH tunnels.
+
 ```bash
-pm2 deploy ecosystem.config.cjs production update
+ssh -L 5432:backend-loadbalancer.bilbomd.development.svc.spin.nersc.org:5432 perlmutter
 ```
+
+Then make sure the proxy settings in `vite.config.ts` point to `localhost:5432` instead of `localhost:3501`
+
+## Authors
+
+- Scott Classen sclassen at lbl dot gov
+- Michal Hammel mhammel at lbl dot gov
 
 ## Version History
 
+- 1.9.2
+  - Use `.env` to toggle NERSC-specific UI elements.
+  - Add clarification to some instructions
+  - Remove pm2 dependency
+- 1.9.1
+  - Changes for NERSC deployment
+- 1.9.0
+  - Using Content-Disposition headers for more precise results downloading
+  - Fix to `inp Jiffy` to handle PDB files with more than `A-Z` ChainIDs.
+  - All File Select input elements now enforce specific file suffixes.
+- 1.8.4
+  - Adjust INP Jiffy to procude inp files with CHARMM-specific segid naming.
+  - Update summary information on the unauthenticated home page.
+- 1.8.3
+  - Add a slider to control the weight value used by `igraph` `cluster_leiden()` function.
+- 1.8.2
+  - Changes to allow PDB or CRD/PSF files for BilboMD Classic
+  - Now using createBrowserRouter from react-router-dom
+  - Add global ErrorBoundary
+  - Convert some `*.js` file to `*.ts`
+- 1.8.1
+  - Improve NERSC status component
+  - Fix bug in INP Jiffy multistep form
+- 1.8.0
+  - Mainly changes to allow building and deploying on local laptop and NERSC SPIN.
+  - Added new Admin panel with view of BullMQ queues
+- 1.7.3
+  - INP Jiffy now accepts only `PDB` files instead of CRD.
+- 1.7.2
+  - PAE Jiffy now accepts only `PDB` files instead of CRD.
+- 1.7.1
+  - Hide delete button for jobs that are "Submitted" or "Running"
+  - Comment out some verbose unneeded console logs
+- 1.7.0
+  - Add components for displaying `FoXS` analysis for BilboMD classic/auto jobs.
 - 1.6.2
   - Fix bug when `rg_min` and `rg_max` are too close.
 - 1.6.1
@@ -65,7 +114,7 @@ pm2 deploy ecosystem.config.cjs production update
 - 1.4.2
   - Improvements to the Molstar viewer.
 - 1.4.1
-  - Forgot to merge the feature brnach... oops.
+  - Forgot to merge the feature branch... oops.
   - Now we should have a Molstar viewer.
 - 1.4.0
   - Add [Molstar][Molstar] viewer for Scoper Job detail page.
@@ -78,7 +127,7 @@ pm2 deploy ecosystem.config.cjs production update
   - Upgrade redux and redux toolkit
 - 1.2.3
   - Some improvements to the Job details component
-  - Changes to allow Docker deployment
+  - Changes to allow Docker deployment for UI
   - update Vite from 4.5.0 to 5.0.0
 - 1.2.2
   - Add better information about number of MD runs and conformation to Job details

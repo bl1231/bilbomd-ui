@@ -11,7 +11,10 @@ const RigidBody = ({ rigidBodyIndex }) => {
 
   return (
     <>
-      <Grid container sx={{ my: 1, backgroundColor: '#bae0ff', borderRadius: 2 }}>
+      <Grid
+        container
+        sx={{ my: 1, backgroundColor: '#bae0ff', borderRadius: 2 }}
+      >
         <Box
           sx={{
             display: 'flex',
@@ -21,10 +24,12 @@ const RigidBody = ({ rigidBodyIndex }) => {
           }}
         >
           <>
-            <FieldArray name={`crd_file.rigid_bodies[${rigidBodyIndex}].domains`}>
+            <FieldArray
+              name={`pdb_file.rigid_bodies[${rigidBodyIndex}].domains`}
+            >
               {(arrayHelpers) => (
                 <>
-                  {values.crd_file.rigid_bodies[rigidBodyIndex].domains.map(
+                  {values.pdb_file.rigid_bodies[rigidBodyIndex].domains.map(
                     (domain, index) => (
                       <Fragment key={index}>
                         <Grid
@@ -48,8 +53,8 @@ const RigidBody = ({ rigidBodyIndex }) => {
                           />
 
                           <Button
-                            variant="contained"
-                            color="error"
+                            variant='contained'
+                            color='error'
                             onClick={() => arrayHelpers.remove(index)}
                             // sx={{ alignItems: 'flex-end' }}
                           >
@@ -61,21 +66,22 @@ const RigidBody = ({ rigidBodyIndex }) => {
                   )}
                   <Grid item sx={{ flex: '1 1 auto', alignItems: 'center' }}>
                     <Box sx={{ justifyContent: 'flex-end', m: 1 }}>
-                      <Grid container justifyContent="flex-end">
+                      <Grid container justifyContent='flex-end'>
                         <Button
-                          variant="contained"
+                          variant='contained'
                           // onClick={handleAddNewRigidDomain}
                           onClick={() => {
                             console.log('Add Rigid Domain')
 
                             const new_domain = {
-                              chainid: '',
-                              start: '',
-                              end: ''
+                              chainid: values.pdb_file.chains[0].id,
+                              start: values.pdb_file.chains[0].first_res,
+                              end: values.pdb_file.chains[0].last_res
                             }
                             arrayHelpers.push(new_domain)
                           }}
                           startIcon={<AddIcon />}
+                          size='small'
                         >
                           Add Rigid Domain
                         </Button>

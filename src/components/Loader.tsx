@@ -14,11 +14,11 @@ const LoaderWrapper = styled('div')(({ theme }) => ({
   }
 }))
 
-// ==============================|| Loader ||============================== //
+// ==============================|| Loader ||=============================== //
 
 const Loader = () => (
   <LoaderWrapper>
-    <LinearProgress color="primary" />
+    <LinearProgress color='primary' />
   </LoaderWrapper>
 )
 

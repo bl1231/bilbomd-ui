@@ -1,4 +1,5 @@
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { useEffect } from 'react'
+import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid'
 import { format, parseISO } from 'date-fns'
 import { useGetJobsQuery } from './jobsApiSlice'
 import useTitle from 'hooks/useTitle'
@@ -18,7 +19,10 @@ import { styled } from '@mui/material/styles'
 import DeleteJob from './DeleteJob'
 import JobDetails from './JobDetails'
 import BullMQSummary from '../bullmq/BullMQSummary'
+import NerscStatus from '../nersc/NerscStatus'
 import HeaderBox from 'components/HeaderBox'
+
+const useNersc = import.meta.env.VITE_USE_NERSC === 'true'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -39,9 +43,17 @@ const Jobs = () => {
     error
   } = useGetJobsQuery('jobsList', {
     pollingInterval: 60000,
-    refetchOnFocus: true,
-    refetchOnMountOrArgChange: true
+    refetchOnFocus: true
   })
+
+  useEffect(() => {
+    const logEnvVariables = () => {
+      Object.keys(import.meta.env).forEach((key) => {
+        console.log(`${key}: ${import.meta.env[key]}`)
+      })
+    }
+    logEnvVariables()
+  }, [])
 
   let content
 
@@ -55,7 +67,8 @@ const Jobs = () => {
       if (error.status === 404) {
         errorMessage = 'No jobs found. Please run some jobs first.'
       } else {
-        errorMessage = 'error' in error ? error.error : JSON.stringify(error.data)
+        errorMessage =
+          'error' in error ? error.error : JSON.stringify(error.data)
       }
     } else {
       errorMessage = 'Call Scott'
@@ -63,7 +76,7 @@ const Jobs = () => {
 
     content = (
       <Box>
-        <Alert severity="info" variant="outlined">
+        <Alert severity='info' variant='outlined'>
           <AlertTitle>{errorMessage}</AlertTitle>
         </Alert>
       </Box>
@@ -72,15 +85,6 @@ const Jobs = () => {
 
   if (isSuccess) {
     let filteredIds
-    // console.log(jobs)
-    // jobs.forEach((job) => {
-    //   console.log(
-    //     job.mongo.title,
-    //     job.bullmq.position,
-    //     job.bullmq.queuePosition,
-    //     job.username
-    //   )
-    // })
 
     if (isManager || isAdmin) {
       filteredIds = [...jobs]
@@ -102,12 +106,12 @@ const Jobs = () => {
         headerName: 'Submitted',
         type: 'dateTime',
         width: 160,
-        valueFormatter: (params) => {
-          if (params?.value) {
-            //console.log(params);
-            return format(parseISO(params?.value), 'MM/dd/yyyy HH:mm:ss')
+        valueFormatter: (value) => {
+          if (value) {
+            // Check if value is not empty or null
+            return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
           } else {
-            return ''
+            return '' // Return empty string if value is empty or null
           }
         }
       },
@@ -116,11 +120,12 @@ const Jobs = () => {
         headerName: 'Completed',
         type: 'dateTime',
         width: 160,
-        valueFormatter: (params) => {
-          if (params?.value) {
-            return format(parseISO(params?.value), 'MM/dd/yyyy HH:mm:ss')
+        valueFormatter: (value) => {
+          if (value) {
+            // Check if value is not empty or null
+            return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
           } else {
-            return ''
+            return '' // Return empty string if value is empty or null
           }
         }
       },
@@ -149,12 +154,40 @@ const Jobs = () => {
         type: 'actions',
         sortable: false,
         headerName: 'Manage',
-        getActions: (params) => [
-          // <DeleteJob key={params.id} job={params.row} />,
-          // <JobDetails key={params.id} job={params.row} />
-          <DeleteJob key={params.id} id={params.row.id} title={params.row.title} />,
-          <JobDetails key={params.id} id={params.row.id} title={params.row.title} />
-        ]
+        getActions: (params: GridRowParams) => {
+          if (
+            params.row.status !== 'Submitted' &&
+            params.row.status !== 'Running'
+          ) {
+            return [
+              <DeleteJob
+                key={params.id}
+                id={params.row.id}
+                title={params.row.title}
+                hide={false}
+              />,
+              <JobDetails
+                key={params.id}
+                id={params.row.id}
+                title={params.row.title}
+              />
+            ]
+          } else {
+            return [
+              <DeleteJob
+                key={params.id}
+                id={params.row.id}
+                title={params.row.title}
+                hide={true}
+              />,
+              <JobDetails
+                key={params.id}
+                id={params.row.id}
+                title={params.row.title}
+              />
+            ]
+          }
+        }
       }
     ]
 
@@ -165,6 +198,13 @@ const Jobs = () => {
           <Grid item xs={12}>
             <BullMQSummary />
           </Grid>
+
+          {useNersc === true && (
+            <Grid item xs={12}>
+              <NerscStatus />
+            </Grid>
+          )}
+
           {rows.length !== 0 ? (
             <Grid item xs={12}>
               <HeaderBox>
@@ -216,7 +256,7 @@ const Jobs = () => {
               <HeaderBox>
                 <Typography>Jobs</Typography>
               </HeaderBox>
-              <Alert severity="info" variant="outlined">
+              <Alert severity='info' variant='outlined'>
                 <AlertTitle>No Jobs found.</AlertTitle>Run some jobs first
               </Alert>
             </Grid>
