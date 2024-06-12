@@ -13,16 +13,16 @@ RUN npm ci --verbose
 
 # Copy your project files
 COPY . .
-# COPY .env .
 
-# RUN ls -la
+# For debugging
 RUN cat .env
+
 # Now, run the build command
 RUN npm run build
 
 # -----------------------------------------------------------------------------
 # Serve stage
-FROM nginx:alpine
+FROM docker.io/nginx:alpine
 RUN apk add --no-cache bash
 
 # Copy the built app to nginx serving directory
