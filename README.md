@@ -12,8 +12,9 @@ There are a number of scripts defined in the `package.json` file:
 
 ```json
   "scripts": {
-    "dev": "vite --host",
-    "build": "tsc && vite build",
+    "dev": "GIT_HASH=$(git rev-parse --short HEAD) vite",
+    "prebuild": "tsc",
+    "build": "vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "optimize": "vite optimize"
