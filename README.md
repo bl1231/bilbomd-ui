@@ -73,6 +73,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.9.3
+  - Add new NERSC step status component
+  - Fix the unresponsive footer
 - 1.9.2
   - Use `.env` to toggle NERSC-specific UI elements.
   - Add clarification to some instructions
