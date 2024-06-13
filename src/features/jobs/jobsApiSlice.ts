@@ -11,10 +11,10 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
     getJobs: builder.query({
       query: () => ({
         url: '/jobs',
-        method: 'GET',
-        validateStatus: (response, result) => {
-          return response.status === 200 && !result.isError
-        }
+        method: 'GET'
+        // validateStatus: (response, result) => {
+        //   return response.status === 200 && !result.isError
+        // }
       }),
       transformResponse: (responseData: BilboMDJob[]) => {
         const loadedJobs = responseData.map((job) => {
@@ -29,7 +29,7 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
         result
           ? [
               { type: 'Job', id: 'LIST' },
-              ...(result as BilboMDJob[]).map((job) => ({
+              ...result.map((job) => ({
                 type: 'Job' as const,
                 id: job.mongo.id
               }))
@@ -39,10 +39,10 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
     getJobById: builder.query({
       query: (id) => ({
         url: `/jobs/${id}`,
-        method: 'GET',
-        validateStatus: (response, result) => {
-          return response.status === 200 && !result.isError
-        }
+        method: 'GET'
+        // validateStatus: (response, result) => {
+        //   return response.status === 200 && !result.isError
+        // }
       }),
       transformResponse: (responseData: BilboMDJob) => {
         responseData.mongo.id = responseData.mongo._id
@@ -54,10 +54,10 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
     getFoxsAnalysisById: builder.query({
       query: (id) => ({
         url: `/jobs/${id}/results/foxs`,
-        method: 'GET',
-        validateStatus: (response, result) => {
-          return response.status === 200 && !result.isError
-        }
+        method: 'GET'
+        // validateStatus: (response, result) => {
+        //   return response.status === 200 && !result.isError
+        // }
       }),
       providesTags: (result, error, id) => [{ type: 'FoxsAnalysis', id }]
     }),
@@ -118,7 +118,8 @@ export const {
 } = jobsApiSlice
 
 // returns the query result object
-export const selectJobsResult = jobsApiSlice.endpoints.getJobs.select({})
+// export const selectJobsResult = jobsApiSlice.endpoints.getJobs.select({})
+// export const selectJobsResult = jobsApiSlice.endpoints.getJobs.select()
 
 // creates memoized selector
 // const selectJobsData = createSelector(

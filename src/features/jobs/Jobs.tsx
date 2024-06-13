@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, ReactNode } from 'react'
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid'
 import { format, parseISO } from 'date-fns'
 import { useGetJobsQuery } from './jobsApiSlice'
@@ -21,6 +21,7 @@ import JobDetails from './JobDetails'
 import BullMQSummary from '../bullmq/BullMQSummary'
 import NerscStatus from '../nersc/NerscStatus'
 import HeaderBox from 'components/HeaderBox'
+import { BilboMDJob } from 'types/interfaces'
 
 const useNersc = import.meta.env.VITE_USE_NERSC === 'true'
 
@@ -41,9 +42,10 @@ const Jobs = () => {
     isSuccess,
     isError,
     error
-  } = useGetJobsQuery('jobsList', {
+  } = useGetJobsQuery(undefined, {
     pollingInterval: 60000,
-    refetchOnFocus: true
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true
   })
 
   useEffect(() => {
@@ -55,7 +57,7 @@ const Jobs = () => {
     logEnvVariables()
   }, [])
 
-  let content
+  let content: ReactNode
 
   if (isLoading) content = <CircularProgress />
 
@@ -84,7 +86,7 @@ const Jobs = () => {
   }
 
   if (isSuccess) {
-    let filteredIds
+    let filteredIds: BilboMDJob[]
 
     if (isManager || isAdmin) {
       filteredIds = [...jobs]
@@ -199,7 +201,7 @@ const Jobs = () => {
             <BullMQSummary />
           </Grid>
 
-          {useNersc === true && (
+          {useNersc && (
             <Grid item xs={12}>
               <NerscStatus />
             </Grid>
