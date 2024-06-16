@@ -15,7 +15,7 @@ RUN npm ci
 COPY . .
 
 # For debugging
-RUN cat .env.local
+#RUN cat .env.local
 
 # Now, run the build command
 RUN npm run build
