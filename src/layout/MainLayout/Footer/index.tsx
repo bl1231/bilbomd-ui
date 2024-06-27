@@ -38,7 +38,8 @@ const Footer = () => {
           }}
         >
           <Typography variant='caption' sx={{ wordBreak: 'break-all' }}>
-            Copyright ©{currentYear}. SIBYLS Beamline - BilboMD v{version}-{gitHash}
+            Copyright ©{currentYear}. SIBYLS Beamline - BilboMD v{version}{' '}
+            {gitHash}
           </Typography>
         </Box>
       </Container>
