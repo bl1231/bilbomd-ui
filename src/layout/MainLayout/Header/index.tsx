@@ -85,7 +85,7 @@ const Header = () => {
         >
           <Toolbar sx={{ m: 0 }}>
             <Link to='/welcome' style={linkStyles}>
-              BilboMDdev
+              BilboMD
             </Link>
 
             <Typography
