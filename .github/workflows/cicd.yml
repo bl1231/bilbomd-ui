@@ -3,7 +3,7 @@ name: Build and Push Docker Image to GitHub Container Registry
 on:
   push:
     branches:
-      - 561-incorrect-trigger-configuration-for-docker-cicd-workflow
+      - 561-incorrect-trigger-configuration-for-docker-cicd-workflow # change if you want to trigger workflow for the current branch
       - main
   pull_request:
     branches:
