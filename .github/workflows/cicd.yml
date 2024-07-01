@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 534-test-cicd-react-bilbomd-ui
+      - main
   pull_request:
     branches:
       - main
