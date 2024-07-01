@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - 534-test-cicd-react-bilbomd-ui
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build-and-push-image:
