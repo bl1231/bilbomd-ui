@@ -36,7 +36,7 @@
     "form-data": "^4.0.0",
     "formik": "^2.4.6",
     "jwt-decode": "^4.0.0",
-    "molstar": "^4.3.0",
+    "molstar": "^4.4.1",
     "nodemon": "^3.1.4",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
