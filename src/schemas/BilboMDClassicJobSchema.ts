@@ -281,15 +281,22 @@ const BilboMDClassicJobSchema = object().shape({
     })
     .test(
       'saxs-data-check',
-      'File does not appear to be SAXS data',
-      async (file) => {
+      'File does not appear to be SAXS data', // Default error message
+      async function (file) {
+        // Use regular function to keep 'this' context for Yup
         if (file) {
-          const saxsData = await isSaxsData(file as File)
-          // console.log('saxsData:', saxsData)
-          return saxsData
+          const result = await isSaxsData(file as File)
+          // Check the 'valid' property and use 'message' for custom errors
+          if (result.valid) {
+            return true
+          } else {
+            return this.createError({ message: result.message })
+          }
         }
-        // additional return if test fails for reasons other than NOT being SAXS data
-        return false
+        // Fallback error message if no file is provided
+        return this.createError({
+          message: 'File is required but not provided.'
+        })
       }
     )
     .test(
