@@ -154,36 +154,51 @@ const noSpaces = (file: File): Promise<boolean> => {
 //  including optional negative sign, decimal part, and exponent part.
 //  Examples of matches include `123`, `-123.45`, `1.23e4`, `-1.23e-4`, etc.
 
-const isSaxsData = (file: File): Promise<boolean> => {
-  const sciNotation = /-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?/g // Regular expression to match scientific notation
+const isSaxsData = (
+  file: File
+): Promise<{ valid: boolean; message?: string }> => {
+  const sciNotation = /-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?/g
 
   return new Promise((resolve) => {
     const reader = new FileReader()
     reader.readAsText(file)
     reader.onloadend = () => {
-      const lines = (reader.result as string).split(/[\r\n]+/g) // Split the text into lines
-      let dataLineCount = 0 // Counter for the number of data lines checked
+      const lines = (reader.result as string).split(/[\r\n]+/g)
+      let dataLineCount = 0
 
       for (const line of lines) {
-        if (line.startsWith('#')) {
-          continue // Skip lines starting with '#'
+        if (line.startsWith('#') || line.trim() === '') {
+          continue
         }
 
-        if (sciNotation.test(line)) {
-          const arr = line.match(sciNotation)
-          if (arr && arr.length === 3) {
-            resolve(true) // Resolve true if a line with exactly three scientific notations is found
-            return // Exit the function once a match is found
+        const numbers = line.match(sciNotation)
+        if (numbers && numbers.length === 3) {
+          const qValue = parseFloat(numbers[0])
+          if (qValue < 0.005 || qValue > 0.02) {
+            resolve({
+              valid: false,
+              message: `Q values should be in inverse Angstroms between 0.005 and 0.02. Found: ${qValue}`
+            })
+            return
           }
+          resolve({ valid: true })
+          return
         }
 
-        dataLineCount++ // Increment the data line counter
+        dataLineCount++
         if (dataLineCount >= 7) {
-          break // Stop checking after 7 data lines
+          break
         }
       }
 
-      resolve(false) // Resolve false if no valid line is found within the first 7 data lines
+      resolve({
+        valid: false,
+        message: 'No valid data line found within the first 7 lines'
+      })
+    }
+
+    reader.onerror = () => {
+      resolve({ valid: false, message: 'Error reading the file' })
     }
   })
 }
