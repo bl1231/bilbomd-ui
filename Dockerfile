@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 # Build stage
 FROM node:20-alpine AS build-stage
-RUN npm install -g npm@10.8.0
+RUN npm install -g npm@10.8.1
 
 WORKDIR /app
 
@@ -9,13 +9,13 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --verbose
+RUN npm ci
 
 # Copy your project files
 COPY . .
 
 # For debugging
-RUN cat .env
+#RUN cat .env.local
 
 # Now, run the build command
 RUN npm run build
