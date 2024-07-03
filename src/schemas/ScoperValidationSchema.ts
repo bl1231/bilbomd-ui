@@ -1,5 +1,5 @@
 import { mixed, object, string } from 'yup'
-import { noSpaces, isSaxsData } from './ValidationFunctions'
+import { noSpaces, isSaxsData, isRNA } from './ValidationFunctions'
 
 export const bilbomdScoperJobSchema = object().shape({
   title: string()
@@ -9,10 +9,7 @@ export const bilbomdScoperJobSchema = object().shape({
     .matches(/^[\w\s-]+$/, 'no special characters allowed'),
 
   pdb_file: mixed()
-    .test('required', 'PDB file is required', (file) => {
-      if (file) return true
-      return false
-    })
+    .required('An RNA PDB file is required')
     .test('file-size-check', 'Max file size is 20MB', (file) => {
       if (file && (file as File).size <= 20000000) {
         return true
@@ -48,12 +45,23 @@ export const bilbomdScoperJobSchema = object().shape({
         }
         return false
       }
+    )
+    .test(
+      'rna-data-check',
+      'File does not meet RNA data requirements',
+      async (file, { createError }) => {
+        // destructuring the context from the test method arguments
+        if (file) {
+          const result = await isRNA(file as File)
+          return result.valid ? true : createError({ message: result.message })
+        }
+        return createError({
+          message: 'File is required but not provided.'
+        })
+      }
     ),
   dat_file: mixed()
-    .test('required', 'Experimental SAXS data is required', (file) => {
-      if (file) return true
-      return false
-    })
+    .required('Experimental SAXS data is required')
     .test('file-size-check', 'Max file size is 3MB', (file) => {
       if (file && (file as File).size <= 3000000) {
         return true
@@ -76,7 +84,7 @@ export const bilbomdScoperJobSchema = object().shape({
     .test(
       'saxs-data-check',
       'File does not appear to be SAXS data', // Default error message
-      async function (file) {
+      async (file, { createError }) => {
         // Use regular function to keep 'this' context for Yup
         if (file) {
           const result = await isSaxsData(file as File)
@@ -84,11 +92,11 @@ export const bilbomdScoperJobSchema = object().shape({
           if (result.valid) {
             return true
           } else {
-            return this.createError({ message: result.message })
+            return createError({ message: result.message })
           }
         }
         // Fallback error message if no file is provided
-        return this.createError({
+        return createError({
           message: 'File is required but not provided.'
         })
       }

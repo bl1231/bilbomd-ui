@@ -193,7 +193,7 @@ const isSaxsData = (
 
       resolve({
         valid: false,
-        message: 'No valid data line found within the first 7 lines'
+        message: 'No valid SAXS data found within the first 7 lines'
       })
     }
 
@@ -223,6 +223,46 @@ const containsChainId = (file: File): Promise<boolean> => {
     }
     reader.onerror = (e) => reject(new Error('Error reading file: ' + e))
     reader.readAsText(file)
+  })
+}
+
+const isRNA = (file: File): Promise<{ valid: boolean; message?: string }> => {
+  return new Promise((resolve) => {
+    const reader = new FileReader()
+    reader.readAsText(file)
+    reader.onloadend = () => {
+      const lines = (reader.result as string).split(/\r?\n/)
+      const validNucleotides = new Set(['A', 'C', 'G', 'U'])
+
+      for (const line of lines) {
+        if (line.startsWith('HETATM')) {
+          resolve({
+            valid: false,
+            message: 'File contains HETATM lines which are not allowed.'
+          })
+          return
+        }
+
+        if (line.startsWith('ATOM')) {
+          const parts = line.split(/\s+/)
+          const residueName = parts[3]
+
+          if (residueName.length !== 1 || !validNucleotides.has(residueName)) {
+            resolve({
+              valid: false,
+              message: `Invalid residue name '${residueName}'. Expected A, C, G, U.`
+            })
+            return
+          }
+        }
+      }
+
+      resolve({ valid: true }) // File passes all checks
+    }
+
+    reader.onerror = () => {
+      resolve({ valid: false, message: 'Error reading the file.' })
+    }
   })
 }
 
@@ -300,6 +340,7 @@ export {
   isPsfData,
   noSpaces,
   isSaxsData,
+  isRNA,
   containsChainId,
   isValidConstInpFile
 }
