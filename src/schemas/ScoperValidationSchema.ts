@@ -49,10 +49,10 @@ export const bilbomdScoperJobSchema = object().shape({
     .test(
       'rna-data-check',
       'File does not meet RNA data requirements',
-      async (value, { createError }) => {
+      async (file, { createError }) => {
         // destructuring the context from the test method arguments
-        if (value) {
-          const result = await isRNA(value as File)
+        if (file) {
+          const result = await isRNA(file as File)
           return result.valid ? true : createError({ message: result.message })
         }
         return createError({
