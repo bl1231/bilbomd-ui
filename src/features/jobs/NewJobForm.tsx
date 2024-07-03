@@ -177,7 +177,7 @@ const NewJobForm = () => {
               <Typography sx={{ mx: 1, my: 2 }}>
                 Use <b>BilboMD Classic</b> if you want more control over the
                 inputs. For example, if you have DNA, RNA, or other ligands and
-                pot-translational modifications then you should use{' '}
+                post-translational modifications then you should use{' '}
                 <Link
                   href='https://www.charmm-gui.org/'
                   target='_blank'
@@ -187,7 +187,7 @@ const NewJobForm = () => {
                 </Link>{' '}
                 to paramaterize your input model. If you have generated your own{' '}
                 <b>const.inp</b> file, either manually or via one of our Jiffys,
-                then you maybe <b>BilboMD Classic</b> is right for you. <br />
+                then maybe <b>BilboMD Classic</b> is right for you. <br />
               </Typography>
               <Accordion>
                 <AccordionSummary
