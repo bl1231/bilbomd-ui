@@ -143,10 +143,10 @@ const NewAutoJobForm = () => {
           <HeaderBox>
             <Typography>BilboMD Auto Job Form</Typography>
           </HeaderBox>
-          <Alert severity='warning'>
+          {/* <Alert severity='warning'>
             <b>BilboMD Auto</b> does not yet work with the outputs from{' '}
             <b>AlphaFold3</b>
-          </Alert>
+          </Alert> */}
           <Paper sx={{ p: 2 }}>
             {isSuccess ? (
               <Alert severity='success'>
