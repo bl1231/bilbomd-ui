@@ -23,7 +23,7 @@
     "@fvilers/disable-react-devtools": "^1.3.0",
     "@mui/icons-material": "^5.15.21",
     "@mui/joy": "^5.0.0-beta.36",
-    "@mui/lab": "^5.0.0-alpha.170",
+    "@mui/lab": "^5.0.0-alpha.173",
     "@mui/material": "^5.15.21",
     "@mui/system": "^5.15.20",
     "@mui/x-data-grid": "^7.8.0",
