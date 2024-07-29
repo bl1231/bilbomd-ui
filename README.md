@@ -46,7 +46,7 @@ The production instance is served from an `ngnix` [Docker container](https://hub
 When deployed to NERSC/SPIN it is not possible to develop the frontend with a simple `npm run dev` unless you forward the backend proxy. We can expose a loadbalancing port from the Rancher K8 control plane and then use SSH tunnels.
 
 ```bash
-ssh -L 5432:backend-loadbalancer.bilbomd.development.svc.spin.nersc.org:5432 perlmutter
+ssh -L 3501:backend-loadbalancer.bilbomd.development.svc.spin.nersc.org:5432 perlmutter
 ```
 
 Make sure the proxy settings in `vite.config.ts` point to `localhost:5432` (SPIN) instead of `localhost:3501` (local Docker).
