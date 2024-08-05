@@ -16,7 +16,9 @@ export default [
     rules: {
       'react/react-in-jsx-scope': 'off',
       'react-refresh/only-export-components': 'warn',
-      'react/prop-types': 'off'
+      'react/prop-types': 'off',
+      'react/jsx-uses-react': 'error',
+      'react/jsx-uses-vars': 'error',
     }
   },
   {
@@ -29,7 +31,8 @@ export default [
   {
     plugins: {
       'react-hooks': pluginReactHooks,
-      'react-refresh': reactRefresh
+      'react-refresh': reactRefresh,
+      'react': pluginReact
     }
   }
 ]
