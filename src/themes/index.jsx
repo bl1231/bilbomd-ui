@@ -16,7 +16,7 @@ import componentsOverride from './overrides'
 export default function ThemeCustomization({ children }) {
   const theme = Palette('light', 'default')
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   const themeTypography = Typography(`'Quicksand'`)
   const themeCustomShadows = useMemo(() => CustomShadows(theme), [theme])
 

@@ -277,12 +277,12 @@ const UploadForm = ({ setStepIsValid }) => {
     if (src) {
       parsePdbFile()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [src])
 
   useEffect(() => {
     setStepIsValid(isValid && dirty)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [isValid, dirty])
 
   const customColors = {

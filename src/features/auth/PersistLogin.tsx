@@ -37,7 +37,7 @@ const PersistLogin = () => {
       if (!token && persist) verifyRefreshToken()
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [])
 
   let content

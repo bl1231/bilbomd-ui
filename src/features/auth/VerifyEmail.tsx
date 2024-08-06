@@ -44,7 +44,7 @@ const VerifyEmail = () => {
       verify()
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [])
 
   return (
