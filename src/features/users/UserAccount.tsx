@@ -3,14 +3,17 @@ import { Grid, Typography, Button, Box } from '@mui/material';
 import EditProfileForm from './EditProfileForm';
 import ForgotPasswordForm from './../auth/ForgotPasswordForm';
 import ResetPasswordForm from './../auth/ResetPasswordForm';
+import useAuth from 'hooks/useAuth';
 
 const UserAccount = () => {
   const [accountView, setAccountView] = useState('profile'); // 'profile', 'forgotPassword', 'resetPassword'
-  const [user, setUser] = useState({
-    email: 'user@example.com',
-    username: 'johndoe',
-  });
+  
+  const { username, isManager, isAdmin,email } = useAuth()
 
+  const [user, setUser] = useState({
+    email: email,
+    username:username,
+  });
   const handleForgotPasswordSubmit = (email) => {
     console.log('Requesting password reset for email:', email);
   };
