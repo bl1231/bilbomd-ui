@@ -73,6 +73,12 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.9.4
+  - Add CI/CD GitHub action workflow to build docker images on push to main
+  - Add validation function for SAXS data files
+  - Add validation function for RNA
+  - Improvements to Instructions
+  - Many dependency updates including to eslint 9.x
 - 1.9.3
   - Add new NERSC step status component
   - Fix the unresponsive footer
