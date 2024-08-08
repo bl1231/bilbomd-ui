@@ -174,10 +174,10 @@ const isSaxsData = (
         const numbers = line.match(sciNotation)
         if (numbers && numbers.length === 3) {
           const qValue = parseFloat(numbers[0])
-          if (qValue < 0.005 || qValue > 0.02) {
+          if (qValue < 0.005 || qValue > 0.04) {
             resolve({
               valid: false,
-              message: `Q values should be in inverse Angstroms between 0.005 and 0.02. Found: ${qValue}`
+              message: `Q values should be in inverse Angstroms between 0.005 and 0.04. Found: ${qValue}`
             })
             return
           }
