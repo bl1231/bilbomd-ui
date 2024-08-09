@@ -9,8 +9,14 @@ const TokenExpirationChip = () => {
   const [now, setNow] = useState(new Date())
   const { data, error, isLoading } = useGetConfigsQuery({})
 
-  // console.log('Component Rendered')
-  // console.log('Raw Expiration Date String:', expirationDateStr)
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>Error loading configuration data</div>
+
+  // Check if data is undefined
+  if (!data) return <div>No configuration data available</div>
+
+  console.log('Component Rendered')
+  console.log('Data:', data)
 
   const expirationDate = new Date(data?.tokenExpires)
   // console.log('Parsed Expiration Date:', expirationDate)
