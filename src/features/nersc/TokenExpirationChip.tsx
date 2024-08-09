@@ -71,6 +71,9 @@ const TokenExpirationChip = () => {
         label={chipLabel}
         style={{ backgroundColor: chipColor, color: 'white' }}
       />
+      <Typography>
+        <b>Expires</b>: {expirationDate.toLocaleString()}
+      </Typography>
     </Grid>
   )
 }
