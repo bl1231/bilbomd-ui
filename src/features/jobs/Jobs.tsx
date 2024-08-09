@@ -197,9 +197,11 @@ const Jobs = () => {
       <>
         {/* {console.log('ROWS--->', rows)} */}
         <Grid container spacing={4}>
-          <Grid item xs={12}>
-            <BullMQSummary />
-          </Grid>
+          {!useNersc && (
+            <Grid item xs={12}>
+              <BullMQSummary />
+            </Grid>
+          )}
 
           {useNersc && (
             <Grid item xs={12}>

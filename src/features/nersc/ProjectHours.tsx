@@ -16,7 +16,7 @@ const ProjectHours = ({ projectCode }) => {
     content = <Alert>Error loading NERSC Status.{error.toString()}</Alert>
   }
   if (!project) return <div>No data available</div>
-  console.log('project:', project)
+  // console.log('project:', project)
   if (isSuccess) {
     content = (
       <Grid sx={{ display: 'flex', alignItems: 'center' }}>
