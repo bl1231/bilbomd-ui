@@ -7,6 +7,7 @@ import { styled } from '@mui/material/styles'
 
 const useNersc = import.meta.env.VITE_USE_NERSC === 'true'
 const nerscProjCode = import.meta.env.VITE_NERSC_PROJ || ''
+// const nerscProjCode = 'm4659'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -29,10 +30,10 @@ const NerscStatusList = () => {
           </Grid>
           {useNersc && (
             <>
-              <Grid item sx={{ m: 0.5, display: 'flex' }}>
+              <Grid item sx={{ mx: 0.5, display: 'flex' }}>
                 <TokenExpirationChip />
               </Grid>
-              <Grid item sx={{ display: 'flex' }}>
+              <Grid item sx={{ mx: 0.5, display: 'flex' }}>
                 <ProjectHours projectCode={nerscProjCode} />
               </Grid>
             </>
