@@ -3,16 +3,16 @@ import Chip from '@mui/material/Chip'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import { formatDistanceToNow, isBefore, subDays, subWeeks } from 'date-fns'
+import { useGetConfigsQuery } from './configsApiSlice'
 
 const TokenExpirationChip = () => {
   const [now, setNow] = useState(new Date())
-  const expirationDateStr =
-    import.meta.env.VITE_SFAPI_TOKEN_EXPIRES || '2000-08-13 23:30'
+  const { data, error, isLoading } = useGetConfigsQuery({})
 
   // console.log('Component Rendered')
   // console.log('Raw Expiration Date String:', expirationDateStr)
 
-  const expirationDate = new Date(expirationDateStr)
+  const expirationDate = new Date(data?.tokenExpires)
   // console.log('Parsed Expiration Date:', expirationDate)
   // console.log('Current Date:', now)
 
