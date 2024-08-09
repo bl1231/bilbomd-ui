@@ -7,7 +7,7 @@ import { formatDistanceToNow, isBefore, subDays, subWeeks } from 'date-fns'
 const TokenExpirationChip = () => {
   const [now, setNow] = useState(new Date())
   const expirationDateStr =
-    import.meta.env.VITE_SFAPI_TOKEN_EXPIRES || '2024-08-16 23:30'
+    import.meta.env.VITE_SFAPI_TOKEN_EXPIRES || '2000-08-13 23:30'
 
   // console.log('Component Rendered')
   // console.log('Raw Expiration Date String:', expirationDateStr)
@@ -19,8 +19,8 @@ const TokenExpirationChip = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(new Date())
-      // console.log('Updated Current Date:', new Date())
-    }, 1000 * 10) // Update every minute
+      console.log('Updated Current Date:', new Date())
+    }, 1000 * 60) // Update every minute
 
     return () => clearInterval(interval) // Cleanup interval on component unmount
   }, [])
