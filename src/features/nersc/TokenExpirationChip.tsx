@@ -15,21 +15,21 @@ const TokenExpirationChip = () => {
   // Check if data is undefined
   if (!data) return <div>No configuration data available</div>
 
-  console.log('Component Rendered')
-  console.log('Data:', data)
+  // console.log('Component Rendered')
+  // console.log('Data:', data)
 
   const expirationDate = new Date(data?.tokenExpires)
   // console.log('Parsed Expiration Date:', expirationDate)
   // console.log('Current Date:', now)
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date())
-      console.log('Updated Current Date:', new Date())
-    }, 1000 * 60) // Update every minute
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setNow(new Date())
+  //     console.log('Updated Current Date:', new Date())
+  //   }, 1000 * 10) // Update every minute
 
-    return () => clearInterval(interval) // Cleanup interval on component unmount
-  }, [])
+  //   return () => clearInterval(interval) // Cleanup interval on component unmount
+  // }, [])
 
   let chipColor = 'green'
   let chipLabel = `Expires in ${formatDistanceToNow(expirationDate)}`
