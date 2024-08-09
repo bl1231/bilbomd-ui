@@ -16,16 +16,38 @@ const ProjectHours = ({ projectCode }) => {
     content = <Alert>Error loading NERSC Status.{error.toString()}</Alert>
   }
   if (!project) return <div>No data available</div>
+  // console.log('project:', project)
   if (isSuccess) {
     content = (
-      <Grid sx={{ m: 0.5, display: 'flex', alignItems: 'center' }}>
-        <Chip label={`BilboMD is using: ${projectCode}`} />
-        <Typography sx={{ m: 1 }}>
-          Hours Given: {project.hours_given}
+      <Grid sx={{ display: 'flex', alignItems: 'center' }}>
+        <Typography sx={{ mx: 0 }}>
+          <b>BilboMD is using:</b>
         </Typography>
-        <Typography sx={{ m: 1 }}>
-          Hours Used: {project.hours_used.toFixed(2)}
+
+        <Chip
+          label={projectCode}
+          sx={{ mx: 0.5, fontSize: '0.9rem', fontWeight: 'bold' }}
+          variant='outlined'
+          style={{ backgroundColor: 'black', color: '#bae637' }}
+        />
+        <Typography sx={{ mx: 1 }}>
+          <b>Hours Available:</b>
         </Typography>
+        <Chip
+          label={project.hours_given}
+          sx={{ mx: 0.5, fontSize: '0.9rem', fontWeight: 'bold' }}
+          variant='outlined'
+          style={{ backgroundColor: 'black', color: '#bae637' }}
+        />
+        <Typography sx={{ mx: 1 }}>
+          <b>Hours Used:</b>
+        </Typography>
+        <Chip
+          label={project.hours_used.toFixed(2)}
+          sx={{ mx: 0.5, fontSize: '0.9rem', fontWeight: 'bold' }}
+          variant='outlined'
+          style={{ backgroundColor: 'black', color: '#bae637' }}
+        />
       </Grid>
     )
   }
