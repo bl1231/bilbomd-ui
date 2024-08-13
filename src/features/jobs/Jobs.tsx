@@ -94,12 +94,20 @@ const Jobs = () => {
       filteredIds = jobs.filter((job) => job.username === username)
     }
 
-    // const rows = filteredIds.map((job) => job.mongo)
-    const rows = filteredIds.map((job) => ({
-      ...job.mongo,
-      position: job.bullmq?.queuePosition ?? '',
-      username: job.username
-    }))
+    const rows = filteredIds.map((job) => {
+      const nerscJobidMessage =
+        job.mongo.steps?.nersc_submit_slurm_batch?.message || ''
+      const nerscJobid = nerscJobidMessage.replace('NERSC JobID ', '')
+
+      return {
+        ...job.mongo,
+        position: job.bullmq?.queuePosition ?? '',
+        username: job.username,
+        nerscJobid: nerscJobid
+      }
+    })
+
+    // console.log('ROWS--->', rows)
 
     const columns: GridColDef[] = [
       { field: 'title', headerName: 'Title', width: 180 },
@@ -107,7 +115,7 @@ const Jobs = () => {
         field: 'time_submitted',
         headerName: 'Submitted',
         type: 'dateTime',
-        width: 160,
+        width: 150,
         valueFormatter: (value) => {
           if (value) {
             // Check if value is not empty or null
@@ -121,7 +129,7 @@ const Jobs = () => {
         field: 'time_completed',
         headerName: 'Completed',
         type: 'dateTime',
-        width: 160,
+        width: 150,
         valueFormatter: (value) => {
           if (value) {
             // Check if value is not empty or null
@@ -136,7 +144,7 @@ const Jobs = () => {
       {
         field: 'status',
         headerName: 'Status',
-        width: 100,
+        width: 90,
         cellClassName: (params) => {
           if (params.value == null) {
             return ''
@@ -149,7 +157,16 @@ const Jobs = () => {
           })
         }
       },
-      { field: 'position', headerName: 'Queue Position' },
+      {
+        field: 'position',
+        headerName: 'Position',
+        width: 150
+      },
+      {
+        field: 'nerscJobid',
+        headerName: 'NERSC JobID',
+        width: 150
+      },
 
       {
         field: 'actions',
@@ -247,6 +264,12 @@ const Jobs = () => {
                       pagination: {
                         paginationModel: {
                           pageSize: 10
+                        }
+                      },
+                      columns: {
+                        columnVisibilityModel: {
+                          position: !useNersc,
+                          nerscJobid: useNersc
                         }
                       }
                     }}
