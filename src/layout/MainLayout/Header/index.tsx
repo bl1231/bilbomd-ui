@@ -17,6 +17,7 @@ import NightModeToggle from 'components/NightModeToggle'
 import PersonIcon from '@mui/icons-material/Person'
 import { useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
+import nerscLogo from 'assets/nersc-logo.png'
 
 const useNersc = import.meta.env.VITE_USE_NERSC === 'true'
 const mode = import.meta.env.MODE
@@ -101,7 +102,7 @@ const Header = () => {
                 }}
               >
                 <img
-                  src='/public/nersc-logo.png'
+                  src={nerscLogo}
                   alt='NERSC Logo'
                   style={{ height: '30px' }}
                 />
