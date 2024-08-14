@@ -89,25 +89,33 @@ const Header = () => {
           <Toolbar sx={{ m: 0 }}>
             <Link to='/welcome' style={linkStyles}>
               BilboMD
-              {useNersc && (
-                <Typography
-                  variant='h6'
-                  component='span'
-                  sx={{ ml: 1, color: 'inherit' }}
-                >
-                  NERSC
-                </Typography>
-              )}
-              {mode === 'development' && (
-                <Typography
-                  variant='h6'
-                  component='span'
-                  sx={{ ml: 1, color: 'yellow' }}
-                >
-                  DEVELOPMENT
-                </Typography>
-              )}
             </Link>
+
+            {useNersc && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'flex-end', // Align the image to the bottom of the Box
+                  height: '100%', // Ensure the Box takes the full height of the parent
+                  p: 1
+                }}
+              >
+                <img
+                  src='/public/nersc-logo.png'
+                  alt='NERSC Logo'
+                  style={{ height: '30px' }}
+                />
+                {mode === 'development' && (
+                  <Typography
+                    variant='h5'
+                    component='span'
+                    sx={{ ml: 1, pb: 0.2, color: 'yellow' }}
+                  >
+                    DEVELOPMENT
+                  </Typography>
+                )}
+              </Box>
+            )}
 
             <Typography
               variant='h5'

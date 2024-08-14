@@ -1,5 +1,5 @@
 import { createEntityAdapter } from '@reduxjs/toolkit'
-import { superfacilityApiSlice } from '../../app/api/sfapiSlice'
+import { superfacilityApiSlice } from 'app/api/sfapiSlice'
 
 interface NerscSystemStatus {
   name: string
