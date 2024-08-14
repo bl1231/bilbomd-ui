@@ -63,7 +63,7 @@ const TokenExpirationChip = () => {
   // console.log('Final Chip Label:', chipLabel)
 
   return (
-    <Grid sx={{ m: 0, display: 'flex', alignItems: 'center' }}>
+    <Grid sx={{ m: 1, display: 'flex', alignItems: 'center' }}>
       <Typography>
         <b>Superfacility API Token</b>:
       </Typography>

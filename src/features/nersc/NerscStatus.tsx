@@ -24,8 +24,7 @@ const NerscStatusList = () => {
       </HeaderBox>
       <Item sx={{ p: 1 }}>
         <Grid container spacing={1} direction='column'>
-          <Grid item></Grid>
-          <Grid item sx={{ display: 'flex' }}>
+          <Grid item sx={{ m: 1, display: 'flex' }}>
             <SystemStatuses />
           </Grid>
           {useNersc && (

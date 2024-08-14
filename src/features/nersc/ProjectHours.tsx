@@ -46,7 +46,7 @@ const ProjectHours = ({ projectCode }) => {
         </Grid>
 
         {/* Top Row: CPU Hours */}
-        <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
+        <Grid item sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
           <Typography sx={{ mx: 1 }}>
             <b>CPU Hours Available:</b>
           </Typography>
@@ -65,10 +65,9 @@ const ProjectHours = ({ projectCode }) => {
             variant='outlined'
             style={{ backgroundColor: 'black', color: '#bae637' }}
           />
-        </Grid>
-        {/* CPU Usage Meter */}
-        <Grid item sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography sx={{ minWidth: '150px', mx: 1 }}>
+
+          {/* CPU Usage Meter */}
+          <Typography sx={{ mx: 1 }}>
             <b>CPU Usage:</b>
           </Typography>
           <LinearProgress
@@ -76,19 +75,25 @@ const ProjectHours = ({ projectCode }) => {
             value={cpuUsagePercent}
             sx={{
               flexGrow: 1,
-              height: 10,
-              borderRadius: 5,
-              backgroundColor: '#ddd'
+              height: 12,
+              borderRadius: 1,
+              backgroundColor: '#ddd',
+              '& .MuiLinearProgress-bar': {
+                backgroundColor: 'green',
+                borderRadius: 1
+              }
             }}
           />
           <Typography sx={{ ml: 1 }}>{cpuUsagePercent.toFixed(2)}%</Typography>
         </Grid>
+
         {/* Bottom Row: GPU Hours */}
         <Grid
           item
           sx={{
             display: 'flex',
-            alignItems: 'center'
+            alignItems: 'center',
+            my: 1
           }}
         >
           <Typography sx={{ mx: 1 }}>
@@ -109,18 +114,9 @@ const ProjectHours = ({ projectCode }) => {
             variant='outlined'
             style={{ backgroundColor: 'black', color: '#bae637' }}
           />
-        </Grid>
-        {/* GPU Usage Meter */}
-        <Grid
-          item
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            gap: 1
-          }}
-        >
-          <Typography sx={{ minWidth: '150px', mx: 1 }}>
+
+          {/* GPU Usage Meter */}
+          <Typography sx={{ mx: 1 }}>
             <b>GPU Usage:</b>
           </Typography>
           <LinearProgress
@@ -128,9 +124,13 @@ const ProjectHours = ({ projectCode }) => {
             value={gpuUsagePercent}
             sx={{
               flexGrow: 1,
-              height: 10,
-              borderRadius: 5,
-              backgroundColor: '#ddd'
+              height: 12,
+              borderRadius: 1,
+              backgroundColor: '#ddd',
+              '& .MuiLinearProgress-bar': {
+                backgroundColor: 'green',
+                borderRadius: 1
+              }
             }}
           />
           <Typography sx={{ ml: 1 }}>{gpuUsagePercent.toFixed(2)}%</Typography>
