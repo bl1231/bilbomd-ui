@@ -18,6 +18,9 @@ import PersonIcon from '@mui/icons-material/Person'
 import { useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
 
+const useNersc = import.meta.env.VITE_USE_NERSC === 'true'
+const mode = import.meta.env.MODE
+
 const Header = () => {
   const [time, setTime] = useState('')
   const navigate = useNavigate()
@@ -86,6 +89,24 @@ const Header = () => {
           <Toolbar sx={{ m: 0 }}>
             <Link to='/welcome' style={linkStyles}>
               BilboMD
+              {useNersc && (
+                <Typography
+                  variant='h6'
+                  component='span'
+                  sx={{ ml: 1, color: 'inherit' }}
+                >
+                  NERSC
+                </Typography>
+              )}
+              {mode === 'development' && (
+                <Typography
+                  variant='h6'
+                  component='span'
+                  sx={{ ml: 1, color: 'yellow' }}
+                >
+                  DEVELOPMENT
+                </Typography>
+              )}
             </Link>
 
             <Typography
