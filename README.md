@@ -74,10 +74,10 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 ## Version History
 
 - 1.9.5
-  - Improvements to teh NERSC Status component
+  - Improvements to the NERSC Status component
   - Add conditional visibility to some columns in Jobs table
   - Add NERSC logo to header when deployed to SPIN
-  - Increase maximum allowed file size for uploadede PAEJ json files
+  - Increase maximum allowed file size for uploaded PAE json files
 - 1.9.4
   - Add CI/CD GitHub action workflow to build docker images on push to main
   - Add validation function for SAXS data files
