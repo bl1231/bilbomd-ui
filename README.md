@@ -73,6 +73,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.9.6
+  - Implement separate "latest" and "versioned" GitHub Actions for building Docker images
 - 1.9.5
   - Improvements to the NERSC Status component
   - Add conditional visibility to some columns in Jobs table
