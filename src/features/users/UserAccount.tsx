@@ -1,66 +1,164 @@
-import * as React from 'react'
-import { useState } from 'react'
+import * as React from 'react';
+import { useState } from 'react';
 import {
   Typography,
   Button,
   Box,
   TextField,
   Card,
-  CardContent
-} from '@mui/material'
-import useAuth from 'hooks/useAuth'
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import useAuth from 'hooks/useAuth';
 
 interface User {
-  id: string
-  email: string
-  username: string
-  roles: string[]
+  id: string;
+  email: string;
+  username: string;
+  roles: string[];
 }
 
 const UserAccount: React.FC = () => {
-  const { username, email, roles } = useAuth() as User
-  const [newEmail, setNewEmail] = useState('')
-  const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false)
+  const { username, email, roles } = useAuth() as User;
+  const [newEmail, setNewEmail] = useState('');
+  const [otp, setOtp] = useState('');
+  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
+  const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
 
   const handleNewEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewEmail(e.target.value)
-  }
+    setNewEmail(e.target.value);
+  };
+
+  const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOtp(e.target.value);
+  };
 
   const handleUpdateEmail = async () => {
-    console.log('Updating email to:', newEmail)
-  }
+    try {
+      console.log('Updating email to:', newEmail);
+      const response = await fetch('/api/v1/users/change-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+          currentEmail: email,
+          newEmail: newEmail,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log(data.message);
+        setOtpSent(true);
+        setIsOtpModalOpen(true); // Open OTP modal
+      } else {
+        console.error('Error updating email:', data.message);
+      }
+    } catch (error) {
+      console.error('Error updating email:', error);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    // Log the OTP that is being verified
+    console.log('Verifying OTP:', otp);
+  
+    try {
+      // Make the API call to verify the OTP
+      const response = await fetch('/api/v1/users/verify-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+          currentEmail: email,
+          newEmail: newEmail,
+          otp: otp,
+        }),
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        console.log(data.message); // "Email address updated successfully"
+        alert('Email address updated successfully');
+        setIsOtpModalOpen(false); // Close OTP modal after successful verification
+      } else {
+        console.error('Error verifying OTP:', data.message);
+      }
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+    }
+  };
+  
+
+  const handleResendOtp = async () => {
+    // Clear the OTP input field
+    setOtp('');
+  
+    try {
+      // Make the API call to resend OTP
+      const response = await fetch('/api/v1/users/resend-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+          currentEmail: email,
+          newEmail: newEmail,
+        }),
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        console.log(data.message); // "OTP resent successfully"
+      } else {
+        console.error('Error resending OTP:', data.message);
+      }
+    } catch (error) {
+      console.error('Error resending OTP:', error);
+    }
+  
+    console.log('Resending OTP to:', newEmail);
+  };
+  
 
   const handleDeleteAccount = () => {
-    setIsDeleteConfirmVisible(true)
-  }
+    setIsDeleteConfirmVisible(true);
+  };
 
   const confirmDeleteAccount = async () => {
     try {
-      await deleteAccountApiCall(username)
+      await deleteAccountApiCall(username);
     } catch (error) {
-      console.error('Failed to delete account:', error)
+      console.error('Failed to delete account:', error);
     }
-    setIsDeleteConfirmVisible(false)
-  }
+    setIsDeleteConfirmVisible(false);
+  };
 
   const deleteAccountApiCall = (userId: string): Promise<void> => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (Math.random() > 0.5) {
-          resolve()
+          resolve();
         } else {
-          reject(new Error('Failed to delete account'))
+          reject(new Error('Failed to delete account'));
         }
-      }, 1000)
-    })
-  }
+      }, 1000);
+    });
+  };
 
   return (
     <Box sx={{ maxWidth: 1000, margin: 'auto', mt: 4 }}>
       <Card sx={{ mb: 2 }}>
         <CardContent sx={{ p: 0 }}>
-          {' '}
-          {/* Remove padding from the CardContent */}
           <Typography
             variant='h6'
             sx={{
@@ -75,8 +173,6 @@ const UserAccount: React.FC = () => {
             User Information
           </Typography>
           <Box sx={{ p: 2 }}>
-            {' '}
-            {/* Add padding to content below the header */}
             <Typography>User Name: {username}</Typography>
             <Typography>Email Address: {email}</Typography>
             <Typography>Roles: {roles.join(', ')}</Typography>
@@ -120,6 +216,29 @@ const UserAccount: React.FC = () => {
           </Box>
         </CardContent>
       </Card>
+
+      <Dialog open={isOtpModalOpen} onClose={() => setIsOtpModalOpen(false)}>
+        <DialogTitle>Verify OTP</DialogTitle>
+        <DialogContent>
+          <TextField
+            fullWidth
+            label='Enter OTP'
+            variant='outlined'
+            value={otp}
+            onChange={handleOtpChange}
+            sx={{ mt: 2 }}
+            placeholder='Enter OTP'
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleResendOtp} variant='outlined'>
+            Resend OTP
+          </Button>
+          <Button onClick={handleVerifyOtp} variant='contained' color='primary'>
+            Verify OTP
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Card>
         <CardContent sx={{ p: 0 }}>
@@ -178,7 +297,7 @@ const UserAccount: React.FC = () => {
         </CardContent>
       </Card>
     </Box>
-  )
-}
+  );
+};
 
-export default UserAccount
+export default UserAccount;
