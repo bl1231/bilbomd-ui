@@ -1,5 +1,5 @@
 import { createEntityAdapter } from '@reduxjs/toolkit'
-import { superfacilityApiSlice } from '../../app/api/sfapiSlice'
+import { superfacilityApiSlice } from 'app/api/sfapiSlice'
 
 interface NerscSystemStatus {
   name: string
@@ -12,8 +12,10 @@ interface NerscSystemStatus {
 }
 
 interface ProjectHours {
-  hours_given: number
-  hours_used: number
+  cpu_hours_given: number
+  cpu_hours_used: number
+  gpu_hours_given: number
+  gpu_hours_used: number
 }
 
 type NerscSystemStatuses = NerscSystemStatus[]

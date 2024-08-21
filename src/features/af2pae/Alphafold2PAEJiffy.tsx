@@ -90,7 +90,7 @@ const Alphafold2PAEJiffy = () => {
         console.log('API request failed')
       }
     } catch (error) {
-      console.log('failed')
+      console.error('Error submitting form:', error)
     }
   }
 

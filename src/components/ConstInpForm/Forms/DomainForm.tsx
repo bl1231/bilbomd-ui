@@ -40,7 +40,7 @@ const DomainForm = ({ setStepIsValid }) => {
     return () => {
       effectRan.current = true
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [isValid])
 
   const macroMolecules = ['PRO', 'DNA', 'RNA', 'CAR', 'Other']

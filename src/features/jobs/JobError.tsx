@@ -48,7 +48,7 @@ const JobError = ({ job }: JobProps) => {
         getErrorLog(job.mongo.id, stepWithError)
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [job])
 
   return (

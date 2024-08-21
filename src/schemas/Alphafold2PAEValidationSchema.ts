@@ -1,5 +1,4 @@
 import { mixed, object } from 'yup'
-
 import { noSpaces } from './ValidationFunctions'
 
 export const af2paeJiffySchema = object().shape({
@@ -56,6 +55,7 @@ export const af2paeJiffySchema = object().shape({
               const content = reader.result as string // Explicit type cast to string
               JSON.parse(content) // Try to parse the content as JSON
               resolve(true) // Content is valid JSON
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (error) {
               resolve(false) // Content is not valid JSON
             }

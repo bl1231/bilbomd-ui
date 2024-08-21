@@ -46,7 +46,7 @@ The production instance is served from an `ngnix` [Docker container](https://hub
 When deployed to NERSC/SPIN it is not possible to develop the frontend with a simple `npm run dev` unless you forward the backend proxy. We can expose a loadbalancing port from the Rancher K8 control plane and then use SSH tunnels.
 
 ```bash
-ssh -L 5432:backend-loadbalancer.bilbomd.development.svc.spin.nersc.org:5432 perlmutter
+ssh -L 3501:backend-loadbalancer.bilbomd.development.svc.spin.nersc.org:5432 perlmutter
 ```
 
 Make sure the proxy settings in `vite.config.ts` point to `localhost:5432` (SPIN) instead of `localhost:3501` (local Docker).
@@ -73,6 +73,19 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.9.6
+  - Implement separate "latest" and "versioned" GitHub Actions for building Docker images
+- 1.9.5
+  - Improvements to the NERSC Status component
+  - Add conditional visibility to some columns in Jobs table
+  - Add NERSC logo to header when deployed to SPIN
+  - Increase maximum allowed file size for uploaded PAE json files
+- 1.9.4
+  - Add CI/CD GitHub action workflow to build docker images on push to main
+  - Add validation function for SAXS data files
+  - Add validation function for RNA
+  - Improvements to Instructions
+  - Many dependency updates including to eslint 9.x
 - 1.9.3
   - Add new NERSC step status component
   - Fix the unresponsive footer
