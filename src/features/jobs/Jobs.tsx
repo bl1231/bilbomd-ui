@@ -22,8 +22,7 @@ import BullMQSummary from '../bullmq/BullMQSummary'
 import NerscStatus from '../nersc/NerscStatus'
 import HeaderBox from 'components/HeaderBox'
 import { BilboMDJob } from 'types/interfaces'
-
-const useNersc = import.meta.env.VITE_USE_NERSC === 'true'
+import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -47,6 +46,16 @@ const Jobs = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
   })
+
+  const {
+    data: config,
+    error: configError,
+    isLoading: configIsLoading
+  } = useGetConfigsQuery({})
+  if (configIsLoading) return <div>Loading config data...</div>
+  if (configError) return <div>Error loading configuration data</div>
+  if (!config) return <div>No configuration data available</div>
+  const useNersc = config.useNersc?.toLowerCase() === 'true'
 
   useEffect(() => {
     const logEnvVariables = () => {

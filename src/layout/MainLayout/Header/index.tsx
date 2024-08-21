@@ -18,9 +18,7 @@ import PersonIcon from '@mui/icons-material/Person'
 import { useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
 import nerscLogo from 'assets/nersc-logo.png'
-
-const useNersc = import.meta.env.VITE_USE_NERSC === 'true'
-const mode = import.meta.env.MODE
+import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
 const Header = () => {
   const [time, setTime] = useState('')
@@ -44,7 +42,16 @@ const Header = () => {
 
   const { username, status } = useAuth()
   const [anchorElUser, setAnchorElUser] = useState(null)
-
+  const {
+    data: config,
+    error: configError,
+    isLoading: configIsLoading
+  } = useGetConfigsQuery({})
+  if (configIsLoading) return <div>Loading config data...</div>
+  if (configError) return <div>Error loading configuration data</div>
+  if (!config) return <div>No configuration data available</div>
+  const useNersc = config.useNersc?.toLowerCase() === 'true'
+  const mode = config.mode || 'development'
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget)
   }

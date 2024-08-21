@@ -20,8 +20,7 @@ import MolstarViewer from 'features/molstar/Viewer'
 import { BilboMDScoperTable } from '../scoperjob/BilboMDScoperTable'
 import ScoperFoXSAnalysis from 'features/scoperjob/ScoperFoXSAnalysis'
 import FoXSAnalysis from './FoXSAnalysis'
-
-const useNersc = import.meta.env.VITE_USE_NERSC === 'true'
+import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -68,7 +67,15 @@ const SingleJobPage = () => {
       </Alert>
     )
   }
-
+  const {
+    data: config,
+    error: configError,
+    isLoading: configIsLoading
+  } = useGetConfigsQuery({})
+  if (configIsLoading) return <div>Loading config data...</div>
+  if (configError) return <div>Error loading configuration data</div>
+  if (!config) return <div>No configuration data available</div>
+  const useNersc = config.useNersc?.toLowerCase() === 'true'
   const handleDownload = async (id: string) => {
     try {
       const response = await axiosInstance.get(`jobs/${id}/results`, {
