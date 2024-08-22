@@ -1,4 +1,4 @@
-import { useEffect, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid'
 import { format, parseISO } from 'date-fns'
 import { useGetJobsQuery } from './jobsApiSlice'
@@ -55,16 +55,17 @@ const Jobs = () => {
   if (configIsLoading) return <div>Loading config data...</div>
   if (configError) return <div>Error loading configuration data</div>
   if (!config) return <div>No configuration data available</div>
+  console.log(`Jobs --> useNersc: ${config.useNersc}`)
   const useNersc = config.useNersc?.toLowerCase() === 'true'
 
-  useEffect(() => {
-    const logEnvVariables = () => {
-      Object.keys(import.meta.env).forEach((key) => {
-        console.log(`${key}: ${import.meta.env[key]}`)
-      })
-    }
-    logEnvVariables()
-  }, [])
+  // useEffect(() => {
+  //   const logEnvVariables = () => {
+  //     Object.keys(import.meta.env).forEach((key) => {
+  //       console.log(`${key}: ${import.meta.env[key]}`)
+  //     })
+  //   }
+  //   logEnvVariables()
+  // }, [])
 
   let content: ReactNode
 
