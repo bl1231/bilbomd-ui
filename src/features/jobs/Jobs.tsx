@@ -46,6 +46,7 @@ const Jobs = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
   })
+  console.log('jobs data --->', jobs)
 
   const {
     data: config,
@@ -55,7 +56,7 @@ const Jobs = () => {
   if (configIsLoading) return <div>Loading config data...</div>
   if (configError) return <div>Error loading configuration data</div>
   if (!config) return <div>No configuration data available</div>
-  console.log(`Jobs --> useNersc: ${config.useNersc}`)
+  console.log(`jobs --> config: ${JSON.stringify(config)}`)
   const useNersc = config.useNersc?.toLowerCase() === 'true'
 
   // useEffect(() => {
@@ -73,9 +74,9 @@ const Jobs = () => {
 
   if (isError) {
     let errorMessage: string = ''
+    let severity: 'error' | 'warning' | 'info' = 'info'
 
     if ('status' in error) {
-      // you can access all properties of `FetchBaseQueryError` here
       if (error.status === 404) {
         errorMessage = 'No jobs found. Please run some jobs first.'
       } else {
@@ -83,12 +84,13 @@ const Jobs = () => {
           'error' in error ? error.error : JSON.stringify(error.data)
       }
     } else {
-      errorMessage = 'Call Scott'
+      errorMessage = 'Backend server may be down. Please call Scott'
+      severity = 'error'
     }
 
     content = (
       <Box>
-        <Alert severity='info' variant='outlined'>
+        <Alert severity={severity} variant='outlined'>
           <AlertTitle>{errorMessage}</AlertTitle>
         </Alert>
       </Box>

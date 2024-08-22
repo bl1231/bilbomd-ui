@@ -2,7 +2,14 @@ import { useParams } from 'react-router-dom'
 import { useGetJobByIdQuery } from './jobsApiSlice'
 import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
-import { Button, Grid, Typography, Alert, AlertTitle } from '@mui/material'
+import {
+  Button,
+  Grid,
+  Typography,
+  Alert,
+  AlertTitle,
+  CircularProgress
+} from '@mui/material'
 import LinearProgress from '@mui/material/LinearProgress'
 import Paper from '@mui/material/Paper'
 import { styled, useTheme } from '@mui/material/styles'
@@ -43,7 +50,12 @@ const SingleJobPage = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
   })
-  console.log('job data --> ', job)
+
+  const {
+    data: config,
+    error: configError,
+    isLoading: configIsLoading
+  } = useGetConfigsQuery({})
 
   if (isLoading) {
     return <PulseLoader color={'#ffffff'} />
@@ -67,15 +79,15 @@ const SingleJobPage = () => {
       </Alert>
     )
   }
-  const {
-    data: config,
-    error: configError,
-    isLoading: configIsLoading
-  } = useGetConfigsQuery({})
-  if (configIsLoading) return <div>Loading config data...</div>
-  if (configError) return <div>Error loading configuration data</div>
-  if (!config) return <div>No configuration data available</div>
+
+  if (configIsLoading) return <CircularProgress />
+  if (configError)
+    return <Alert severity='error'>Error loading configuration data</Alert>
+  if (!config)
+    return <Alert severity='warning'>No configuration data available</Alert>
+
   const useNersc = config.useNersc?.toLowerCase() === 'true'
+
   const handleDownload = async (id: string) => {
     try {
       const response = await axiosInstance.get(`jobs/${id}/results`, {

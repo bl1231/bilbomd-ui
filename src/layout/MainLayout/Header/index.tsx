@@ -7,10 +7,12 @@ import {
   MenuItem,
   Tooltip,
   IconButton,
-  CssBaseline
+  CssBaseline,
+  CircularProgress,
+  Alert,
+  Box
 } from '@mui/material'
 import { useState, useEffect } from 'react'
-import { Box } from '@mui/system'
 import useAuth from 'hooks/useAuth'
 import LogOut from 'features/auth/LogOut'
 import NightModeToggle from 'components/NightModeToggle'
@@ -23,31 +25,44 @@ import { useGetConfigsQuery } from 'slices/configsApiSlice'
 const Header = () => {
   const [time, setTime] = useState('')
   const navigate = useNavigate()
-  const settings = [
-    {
-      text: 'My Jobs',
-      onclick: () => navigate('dashboard/jobs')
-    },
-    {
-      text: 'Account',
-      onclick: () => {
-        navigate('dashboard/account')
-      }
-    },
-    {
-      text: 'Dashboard',
-      onclick: () => navigate('welcome')
-    }
-  ]
-
   const { username, status } = useAuth()
   const [anchorElUser, setAnchorElUser] = useState(null)
-  const { data: config } = useGetConfigsQuery({})
-  // if (configIsLoading) return <div>Loading config data...</div>
-  // if (configError) return <div>Error loading configuration data</div>
-  // if (!config) return <div>No configuration data available</div>
+
+  const settings = [
+    { text: 'My Jobs', onclick: () => navigate('dashboard/jobs') },
+    { text: 'Account', onclick: () => navigate('dashboard/account') },
+    { text: 'Dashboard', onclick: () => navigate('welcome') }
+  ]
+
+  const {
+    data: config,
+    isLoading: configIsLoading,
+    error: configError
+  } = useGetConfigsQuery({})
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const date = new Date()
+      const today = new Intl.DateTimeFormat('en-US', {
+        dateStyle: 'full',
+        timeStyle: 'short'
+      }).format(date)
+      setTime(today)
+    }, 1000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [])
+
+  if (configIsLoading) return <CircularProgress />
+  if (configError)
+    return <Alert severity='error'>Error loading configuration data</Alert>
+  if (!config)
+    return <Alert severity='warning'>No configuration data available</Alert>
+
   const useNersc = config.useNersc?.toLowerCase() === 'true'
-  const mode = config.mode || 'development'
+  const mode = config.mode || 'nope'
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget)
   }
@@ -55,21 +70,6 @@ const Header = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
   }
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const date = new Date()
-
-      const today = new Intl.DateTimeFormat('en-US', {
-        dateStyle: 'full',
-        timeStyle: 'short'
-      }).format(date)
-
-      setTime(today)
-    }, 1000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [])
 
   const linkStyles = {
     display: 'flex-grow',
@@ -99,8 +99,8 @@ const Header = () => {
               <Box
                 sx={{
                   display: 'flex',
-                  alignItems: 'flex-end', // Align the image to the bottom of the Box
-                  height: '100%', // Ensure the Box takes the full height of the parent
+                  alignItems: 'flex-end',
+                  height: '100%',
                   p: 1
                 }}
               >
@@ -132,7 +132,7 @@ const Header = () => {
               variant='h5'
               sx={{
                 display: 'flex',
-                flexGrow: '8',
+                flexGrow: 8,
                 justifyContent: 'flex-end',
                 mx: 2
               }}
