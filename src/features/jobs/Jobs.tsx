@@ -1,4 +1,4 @@
-import { useEffect, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid'
 import { format, parseISO } from 'date-fns'
 import { useGetJobsQuery } from './jobsApiSlice'
@@ -22,8 +22,7 @@ import BullMQSummary from '../bullmq/BullMQSummary'
 import NerscStatus from '../nersc/NerscStatus'
 import HeaderBox from 'components/HeaderBox'
 import { BilboMDJob } from 'types/interfaces'
-
-const useNersc = import.meta.env.VITE_USE_NERSC === 'true'
+import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -47,15 +46,27 @@ const Jobs = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
   })
+  // console.log('jobs data --->', jobs)
 
-  useEffect(() => {
-    const logEnvVariables = () => {
-      Object.keys(import.meta.env).forEach((key) => {
-        console.log(`${key}: ${import.meta.env[key]}`)
-      })
-    }
-    logEnvVariables()
-  }, [])
+  const {
+    data: config,
+    error: configError,
+    isLoading: configIsLoading
+  } = useGetConfigsQuery({})
+  if (configIsLoading) return <div>Loading config data...</div>
+  if (configError) return <div>Error loading configuration data</div>
+  if (!config) return <div>No configuration data available</div>
+  // console.log(`jobs --> config: ${JSON.stringify(config)}`)
+  const useNersc = config.useNersc?.toLowerCase() === 'true'
+
+  // useEffect(() => {
+  //   const logEnvVariables = () => {
+  //     Object.keys(import.meta.env).forEach((key) => {
+  //       console.log(`${key}: ${import.meta.env[key]}`)
+  //     })
+  //   }
+  //   logEnvVariables()
+  // }, [])
 
   let content: ReactNode
 
@@ -63,9 +74,9 @@ const Jobs = () => {
 
   if (isError) {
     let errorMessage: string = ''
+    let severity: 'error' | 'warning' | 'info' = 'info'
 
     if ('status' in error) {
-      // you can access all properties of `FetchBaseQueryError` here
       if (error.status === 404) {
         errorMessage = 'No jobs found. Please run some jobs first.'
       } else {
@@ -73,12 +84,13 @@ const Jobs = () => {
           'error' in error ? error.error : JSON.stringify(error.data)
       }
     } else {
-      errorMessage = 'Call Scott'
+      errorMessage = 'Backend server may be down. Please call Scott'
+      severity = 'error'
     }
 
     content = (
       <Box>
-        <Alert severity='info' variant='outlined'>
+        <Alert severity={severity} variant='outlined'>
           <AlertTitle>{errorMessage}</AlertTitle>
         </Alert>
       </Box>

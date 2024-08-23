@@ -2,7 +2,14 @@ import { useParams } from 'react-router-dom'
 import { useGetJobByIdQuery } from './jobsApiSlice'
 import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
-import { Button, Grid, Typography, Alert, AlertTitle } from '@mui/material'
+import {
+  Button,
+  Grid,
+  Typography,
+  Alert,
+  AlertTitle,
+  CircularProgress
+} from '@mui/material'
 import LinearProgress from '@mui/material/LinearProgress'
 import Paper from '@mui/material/Paper'
 import { styled, useTheme } from '@mui/material/styles'
@@ -20,8 +27,7 @@ import MolstarViewer from 'features/molstar/Viewer'
 import { BilboMDScoperTable } from '../scoperjob/BilboMDScoperTable'
 import ScoperFoXSAnalysis from 'features/scoperjob/ScoperFoXSAnalysis'
 import FoXSAnalysis from './FoXSAnalysis'
-
-const useNersc = import.meta.env.VITE_USE_NERSC === 'true'
+import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -44,7 +50,12 @@ const SingleJobPage = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
   })
-  console.log('job data --> ', job)
+
+  const {
+    data: config,
+    error: configError,
+    isLoading: configIsLoading
+  } = useGetConfigsQuery({})
 
   if (isLoading) {
     return <PulseLoader color={'#ffffff'} />
@@ -68,6 +79,14 @@ const SingleJobPage = () => {
       </Alert>
     )
   }
+
+  if (configIsLoading) return <CircularProgress />
+  if (configError)
+    return <Alert severity='error'>Error loading configuration data</Alert>
+  if (!config)
+    return <Alert severity='warning'>No configuration data available</Alert>
+
+  const useNersc = config.useNersc?.toLowerCase() === 'true'
 
   const handleDownload = async (id: string) => {
     try {
