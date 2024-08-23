@@ -36,7 +36,7 @@ export default function ClippedDrawer() {
     error: configError,
     isLoading: configIsLoading
   } = useGetConfigsQuery({})
-  console.log(`config: ${JSON.stringify(config)}`)
+  // console.log(`config: ${JSON.stringify(config)}`)
 
   const navigate = useNavigate()
   const location = useLocation()

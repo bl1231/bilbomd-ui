@@ -46,7 +46,7 @@ const Jobs = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
   })
-  console.log('jobs data --->', jobs)
+  // console.log('jobs data --->', jobs)
 
   const {
     data: config,
@@ -56,7 +56,7 @@ const Jobs = () => {
   if (configIsLoading) return <div>Loading config data...</div>
   if (configError) return <div>Error loading configuration data</div>
   if (!config) return <div>No configuration data available</div>
-  console.log(`jobs --> config: ${JSON.stringify(config)}`)
+  // console.log(`jobs --> config: ${JSON.stringify(config)}`)
   const useNersc = config.useNersc?.toLowerCase() === 'true'
 
   // useEffect(() => {
