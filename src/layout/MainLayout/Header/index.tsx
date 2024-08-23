@@ -120,6 +120,33 @@ const Header = () => {
                 )}
               </Box>
             )}
+            {!useNersc && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'flex-end',
+                  height: '100%',
+                  p: 1
+                }}
+              >
+                <Typography
+                  variant='h5'
+                  component='span'
+                  sx={{ ml: 1, pb: 0.2 }}
+                >
+                  @BL-1231
+                </Typography>
+                {mode === 'development' && (
+                  <Typography
+                    variant='h5'
+                    component='span'
+                    sx={{ ml: 1, pb: 0.2, color: 'yellow' }}
+                  >
+                    DEVELOPMENT
+                  </Typography>
+                )}
+              </Box>
+            )}
 
             <Typography
               variant='h5'
