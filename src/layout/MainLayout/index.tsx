@@ -1,4 +1,6 @@
 import Container from '@mui/material/Container'
+import Alert from '@mui/material/Alert'
+import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
 import Drawer from '@mui/material/Drawer'
 import Toolbar from '@mui/material/Toolbar'
@@ -18,7 +20,7 @@ import {
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import { useNavigate } from 'react-router-dom'
 import { Outlet, useLocation } from 'react-router-dom'
-// import { useGetConfigsQuery } from 'slices/configsApiSlice'
+import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import useAuth from 'hooks/useAuth'
 
 import Header from './Header'
@@ -29,19 +31,24 @@ const drawerWidth = 170
 
 export default function ClippedDrawer() {
   const { isAdmin } = useAuth()
-  // const {
-  //   data: config,
-  //   error: configError,
-  //   isLoading: configIsLoading
-  // } = useGetConfigsQuery({})
-  // if (configIsLoading) return <div>Loading config data...</div>
-  // if (configError) return <div>Error loading configuration data</div>
-  // if (!config) return <div>No configuration data available</div>
-  // const useNersc = config.useNersc?.toLowerCase() === 'true'
-  const useNersc = false
+  const {
+    data: config,
+    error: configError,
+    isLoading: configIsLoading
+  } = useGetConfigsQuery({})
+  console.log(`config: ${JSON.stringify(config)}`)
+
   const navigate = useNavigate()
   const location = useLocation()
   const theme = useTheme()
+
+  if (configIsLoading) return <CircularProgress />
+  if (configError)
+    return <Alert severity='error'>Error loading configuration data</Alert>
+  if (!config)
+    return <Alert severity='warning'>No configuration data available</Alert>
+
+  const useNersc = config.useNersc?.toLowerCase() === 'true'
 
   let menuItems = [
     {

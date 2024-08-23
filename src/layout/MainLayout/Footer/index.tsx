@@ -13,7 +13,7 @@ const Footer = () => {
   if (configIsLoading) return <div>Loading config data...</div>
   if (configError) return <div>Error loading configuration data</div>
   if (!config) return <div>No configuration data available</div>
-  const gitHash = config.gitHash || 'abc123'
+  const gitHash = config.gitHash || ''
 
   return (
     <Paper
