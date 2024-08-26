@@ -59,7 +59,10 @@ const DeleteJob = ({ id, title, hide }: DeleteJobProps) => {
         arrow
       >
         <span>
-          <IconButton onClick={() => setConfirmOpen(true)} disabled={deleting || hide}>
+          <IconButton
+            onClick={() => setConfirmOpen(true)}
+            disabled={deleting || hide}
+          >
             <DeleteIcon />
           </IconButton>
         </span>
@@ -68,12 +71,18 @@ const DeleteJob = ({ id, title, hide }: DeleteJobProps) => {
       <Dialog
         open={confirmOpen}
         onClose={handleCloseDialog}
-        sx={{ '& .MuiDialog-paper': { minWidth: '400px' } }}
       >
         <DialogContent>
           {deleting && <LinearProgress />}
           <DialogContentText>
-            {deleting ? `Deleting...` : `Are you sure you want to delete ${title}?`}
+            {deleting ? (
+              <>
+                <p>Deleting...</p>
+                <p>Please be patient. This sometimes takes a few seconds.</p>
+              </>
+            ) : (
+              `Are you sure you want to delete ${title}?`
+            )}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
