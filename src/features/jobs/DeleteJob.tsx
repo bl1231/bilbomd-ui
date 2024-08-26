@@ -77,8 +77,8 @@ const DeleteJob = ({ id, title, hide }: DeleteJobProps) => {
           <DialogContentText>
             {deleting ? (
               <>
-                <p>Deleting...</p>
-                <p>Please be patient. This sometimes takes a few seconds.</p>
+                Deleting...<br/>
+                Please be patient. This sometimes takes a few seconds.
               </>
             ) : (
               `Are you sure you want to delete ${title}?`
