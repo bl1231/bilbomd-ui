@@ -1,12 +1,16 @@
 import useAuth from 'hooks/useAuth'
 import useTitle from 'hooks/useTitle'
-// import { Link } from 'react-router-dom'
+import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { Typography, Link } from '@mui/material'
 
 const Welcome = () => {
   const { username } = useAuth()
-
   useTitle(`BilboMD: ${username}`)
+  const {
+    data: config,
+    error: configError,
+    isLoading: configIsLoading
+  } = useGetConfigsQuery({})
 
   const content = (
     <>
@@ -17,7 +21,15 @@ const Welcome = () => {
         Let&apos;s run some <b>BilboMD</b> simulations.
       </Typography>
       <Typography sx={{ mb: 2 }}>
-        System is running in {process.env.NODE_ENV} mode
+        {configIsLoading ? (
+          'Loading system configuration...'
+        ) : configError ? (
+          'Failed to load system configuration.'
+        ) : (
+          <>
+            System is running in <b>{config.mode}</b> mode
+          </>
+        )}
       </Typography>
       <Typography sx={{ mb: 2 }}>
         Web implementation:{' '}
