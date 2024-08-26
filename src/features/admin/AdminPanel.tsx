@@ -9,12 +9,11 @@ import TableHead from '@mui/material/TableHead'
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
+import useTitle from 'hooks/useTitle'
 
 const AdminPanel = () => {
-
+useTitle(`BilboMD: Admin Panel`)
   const bullBoardUrl = '/admin/bullmq'
-
-
 
   const {
     data: config,
@@ -33,7 +32,7 @@ const AdminPanel = () => {
       <h2>Admin Panel - Config</h2>
 
       <TableContainer component={Paper}>
-        <Table aria-label='configuration table'>
+        <Table>
           <TableHead>
             <TableRow>
               <TableCell>Key</TableCell>

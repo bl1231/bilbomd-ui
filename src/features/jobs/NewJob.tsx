@@ -1,10 +1,8 @@
 import NewJobForm from './NewJobForm'
-// import { useGetUsersQuery } from '../users/usersApiSlice'
-// import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from '../../hooks/useTitle'
 
 const NewJob = () => {
-  useTitle('BilboMD: New Job')
+  useTitle('BilboMD: New Classic Job')
 
   // this was modelled after Dave Gray's MERN tutorial
   // where the "Notes" needed a list of all users...

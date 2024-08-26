@@ -23,8 +23,10 @@ import useAuth from 'hooks/useAuth'
 import { Debug } from 'components/Debug'
 import LinearProgress from '@mui/material/LinearProgress'
 import HeaderBox from 'components/HeaderBox'
+import useTitle from 'hooks/useTitle'
 
 const NewAutoJobForm = () => {
+  useTitle('BilboMD: New Auto Job')
   const [addNewAutoJob, { isSuccess }] = useAddNewAutoJobMutation()
   const { email } = useAuth()
 
