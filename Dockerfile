@@ -14,11 +14,17 @@ RUN npm ci --force
 # Copy your project files
 COPY . .
 
-# For debugging
-#RUN cat .env.local
+# Set environment variables for the build process
+ARG BILBOMD_UI_VERSION
+ARG BILBOMD_UI_GIT_HASH
+ENV BILBOMD_UI_VERSION=$BILBOMD_UI_VERSION
+ENV BILBOMD_UI_GIT_HASH=$BILBOMD_UI_GIT_HASH
 
 # Now, run the build command
 RUN npm run build
+
+# Copy over the version.json created in GitHub Actions
+COPY version.json /app/dist/version.json
 
 # -----------------------------------------------------------------------------
 # Serve stage
