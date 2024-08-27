@@ -73,6 +73,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.10.0
+  - Add config information table to the Admin panel
+  - Improvements to CI/CD workflow
 - 1.9.7
   - Use new config API for config info (e.g. dev/prod, useNersc, repo, etc.)
   - remove all `VITE_*` references from frontend code
