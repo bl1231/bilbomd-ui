@@ -13,6 +13,8 @@ import { Link } from 'react-router-dom'
 import useTitle from 'hooks/useTitle'
 import { axiosInstance } from 'app/api/axios'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
+import { SerializedError } from '@reduxjs/toolkit'
 
 const MAGICKLINK_URL = '/magicklink'
 const VERIFICATION_CODE_URL = '/verify/resend'
@@ -26,7 +28,27 @@ const MagickLink = () => {
 
   const { data: config, error: configError, isLoading } = useGetConfigsQuery({})
   if (isLoading) return <div>Loading config data...</div>
-  if (configError) return <div>Error loading configuration data</div>
+  if (configError) {
+    let errorMessage = 'An unexpected error occurred'
+
+    if ('status' in configError) {
+      // Handle FetchBaseQueryError
+      const fetchError = configError as FetchBaseQueryError
+      errorMessage = `Error ${fetchError.status}: ${
+        'data' in fetchError &&
+        typeof fetchError.data === 'object' &&
+        fetchError.data !== null
+          ? JSON.stringify(fetchError.data)
+          : 'No additional error information'
+      }`
+    } else if ('message' in configError) {
+      // Handle SerializedError
+      const serializedError = configError as SerializedError
+      errorMessage = serializedError.message || errorMessage
+    }
+
+    return <div>Error loading configuration data: {errorMessage}</div>
+  }
   if (!config) return <div>No configuration data available</div>
 
   const onSubmit = async (values, { setStatus, resetForm, setSubmitting }) => {
