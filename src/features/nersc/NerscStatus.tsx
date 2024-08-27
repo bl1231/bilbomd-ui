@@ -1,5 +1,5 @@
 import { Grid, Typography, Paper } from '@mui/material'
-import SystemStatuses from './SystemStatuses'
+import NerscSystemStatuses from './SystemStatuses'
 import ProjectHours from './ProjectHours'
 import TokenExpirationChip from './TokenExpirationChip'
 import HeaderBox from 'components/HeaderBox'
@@ -34,7 +34,7 @@ const NerscStatusList = () => {
       <Item sx={{ p: 1 }}>
         <Grid container spacing={1} direction='column'>
           <Grid item sx={{ m: 1, display: 'flex' }}>
-            <SystemStatuses />
+            <NerscSystemStatuses />
           </Grid>
           {useNersc && (
             <>

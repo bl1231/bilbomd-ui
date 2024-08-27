@@ -2,10 +2,12 @@ import useAuth from 'hooks/useAuth'
 import useTitle from 'hooks/useTitle'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { Typography, Link } from '@mui/material'
+import Grid from '@mui/material/Grid'
+import NerscSystemStatuses from 'features/nersc/SystemStatuses'
 
 const Welcome = () => {
   const { username } = useAuth()
-  useTitle(`BilboMD: ${username}`)
+  useTitle(`BilboMD: Welcome ${username}`)
   const {
     data: config,
     error: configError,
@@ -27,7 +29,21 @@ const Welcome = () => {
           'Failed to load system configuration.'
         ) : (
           <>
-            System is running in <b>{config.mode}</b> mode
+            BilboMD is running in <b>{config.mode}</b> mode
+            <br />
+            BilboMD is deployed to{' '}
+            <b>
+              {config.useNersc && config.useNersc.toLowerCase() === 'true' ? (
+                <>
+                  <span>NERSC</span>
+                  <Grid>
+                    <NerscSystemStatuses />
+                  </Grid>
+                </>
+              ) : (
+                <span>Beamline 12.3.1</span>
+              )}
+            </b>
           </>
         )}
       </Typography>
@@ -37,6 +53,10 @@ const Welcome = () => {
         <br />
         BilboMD-specific Questions:{' '}
         <Link href='mailto:mhammel@lbl.gov'>Michal Hammel</Link>
+      </Typography>
+
+      <Typography variant='h4' sx={{ my: 3 }}>
+        Acknowledgements:
       </Typography>
       <Typography>
         Please Acknowledge the following manuscripts if you use <b>BilboMD</b>:

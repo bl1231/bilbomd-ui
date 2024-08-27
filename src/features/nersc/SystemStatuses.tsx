@@ -2,7 +2,7 @@ import { useGetNerscStatusQuery } from './nerscApiSlice'
 import { CircularProgress, Alert, AlertTitle } from '@mui/material'
 import NerscStatusChip from './NerscStatusChip'
 type ContentType = React.ReactNode | string
-const SystemStatuses = () => {
+const NerscSystemStatuses = () => {
   const {
     data: nerscStatuses,
     isSuccess,
@@ -42,4 +42,4 @@ const SystemStatuses = () => {
   return content
 }
 
-export default SystemStatuses
+export default NerscSystemStatuses
