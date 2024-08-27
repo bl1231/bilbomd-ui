@@ -30,16 +30,16 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: npm ci --force
+      # - name: Install dependencies
+      #   run: npm ci --force
 
-      - name: Set Vite environment variables
-        run: |
-          echo "VITE_USE_NERSC=true" >> .env
-          echo "VITE_NERSC_PROJ=m4659" >> .env
+      # - name: Set Vite environment variables
+      #   run: |
+      #     echo "VITE_USE_NERSC=true" >> .env
+      #     echo "VITE_NERSC_PROJ=m4659" >> .env
 
-      - name: Build the React app
-        run: npm run build
+      # - name: Build the React app
+      #   run: npm run build
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -61,11 +61,30 @@ jobs:
             type=raw,value=latest
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Generate version
+      - name: Generate version for tags
         id: version
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Get version from package.json
+        id: get_version
+        run: echo "BILBOMD_UI_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+
+      - name: Determine commit hash
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "GIT_HASH=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-7)" >> $GITHUB_ENV
+          else
+            echo "GIT_HASH=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+          fi
+
+      - name: Generate version.json
+        run: |
+          echo '{
+            "version": "${{ env.BILBOMD_UI_VERSION }}",
+            "gitHash": "${{ env.GIT_HASH }}"
+          }' > version.json
 
       - name: Build and push bilbomd-ui Docker image (latest)
         uses: docker/build-push-action@v5
@@ -76,6 +95,9 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}:latest
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BILBOMD_UI_GIT_HASH=${{ env.GIT_HASH }}
+            BILBOMD_UI_VERSION=${{ env.BILBOMD_UI_VERSION }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

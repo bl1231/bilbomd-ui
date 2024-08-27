@@ -23,6 +23,9 @@ ENV BILBOMD_UI_GIT_HASH=$BILBOMD_UI_GIT_HASH
 # Now, run the build command
 RUN npm run build
 
+# Copy over the version.json created in GitHub Actions
+COPY version.json /app/dist/version.json
+
 # -----------------------------------------------------------------------------
 # Serve stage
 FROM docker.io/nginx:alpine
