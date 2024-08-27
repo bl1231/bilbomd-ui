@@ -13,7 +13,7 @@ const Footer = () => {
   if (configIsLoading) return <div>Loading config data...</div>
   if (configError) return <div>Error loading configuration data</div>
   if (!config) return <div>No configuration data available</div>
-  const gitHash = config.gitHash || ''
+  const gitHash = config.uiGitHash || ''
 
   return (
     <Paper
@@ -47,7 +47,7 @@ const Footer = () => {
           }}
         >
           <Typography variant='caption' sx={{ wordBreak: 'break-all' }}>
-            Copyright ©{currentYear}. SIBYLS Beamline - BilboMD v{version}{' '}
+            Copyright ©{currentYear}. SIBYLS Beamline - BilboMD v{version}-
             {gitHash}
           </Typography>
         </Box>
