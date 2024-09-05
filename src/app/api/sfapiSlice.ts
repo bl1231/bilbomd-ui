@@ -9,6 +9,6 @@ const baseQuery = fetchBaseQuery({
 export const superfacilityApiSlice = createApi({
   reducerPath: 'superfacilityApi',
   baseQuery: baseQuery,
-  tagTypes: ['Status', 'Project'],
+  tagTypes: ['Status', 'Project', 'Outages'],
   endpoints: () => ({})
 })

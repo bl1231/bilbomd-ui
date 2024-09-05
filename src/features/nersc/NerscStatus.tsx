@@ -6,6 +6,7 @@ import TokenExpirationChip from './TokenExpirationChip'
 import HeaderBox from 'components/HeaderBox'
 import { styled } from '@mui/material/styles'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
+import { useGetNerscOutagesQuery } from 'slices/nerscApiSlice'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -14,6 +15,12 @@ const Item = styled(Paper)(({ theme }) => ({
 }))
 
 const NerscStatusList = () => {
+  const {
+    data: outages
+    // error: outagesError,
+    // isLoading: outagesIsLoading
+  } = useGetNerscOutagesQuery()
+  console.log('outages:', outages)
   const {
     data: config,
     error: configError,
