@@ -1,4 +1,4 @@
-import { useGetNerscStatusQuery } from './nerscApiSlice'
+import { useGetNerscStatusQuery } from 'slices/nerscApiSlice'
 import { CircularProgress, Alert, AlertTitle, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import NerscStatusChip from './NerscStatusChip'

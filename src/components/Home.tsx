@@ -3,8 +3,8 @@ import { Button, Typography, CircularProgress, Link } from '@mui/material'
 import { Box, Container } from '@mui/system'
 import { useNavigate, Link as RouterLink } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { selectCurrentToken } from 'features/auth/authSlice'
-import { useRefreshMutation } from 'features/auth/authApiSlice'
+import { selectCurrentToken } from 'slices/authSlice'
+import { useRefreshMutation } from 'slices/authApiSlice'
 import usePersist from 'hooks/usePersist'
 import useTitle from 'hooks/useTitle'
 import { version } from '../../package.json'
@@ -33,7 +33,6 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
       }
     }
     if (!token && persist) verifyRefreshToken()
-     
   }, [])
 
   let content

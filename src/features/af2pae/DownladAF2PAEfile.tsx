@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid2'
 import { Box } from '@mui/system'
 import { axiosInstance } from 'app/api/axios'
 import { useSelector } from 'react-redux'
-import { selectCurrentToken } from '../auth/authSlice'
+import { selectCurrentToken } from '../../slices/authSlice'
 
 interface DownloadProps {
   uuid: string | null
