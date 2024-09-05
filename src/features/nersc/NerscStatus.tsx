@@ -23,7 +23,7 @@ const NerscStatusList = () => {
   if (configError) return <div>Error loading configuration data</div>
   if (!config) return <div>No configuration data available</div>
   // Ensure useNersc is a boolean
-  const useNersc = config.useNersc?.toLowerCase() === 'true'
+  // const useNersc = config.useNersc?.toLowerCase() === 'true'
   // Provide a default project code if none is set
   const nerscProjCode = config.nerscProjCode || 'm4659'
 
@@ -32,21 +32,11 @@ const NerscStatusList = () => {
       <HeaderBox>
         <Typography>NERSC Status</Typography>
       </HeaderBox>
-      <Item sx={{ p: 1 }}>
+      <Item sx={{ p: 2 }}>
         <Grid container spacing={1} direction='column'>
-          <Grid sx={{ m: 1, display: 'flex' }}>
-            <NerscSystemStatuses />
-          </Grid>
-          {useNersc && (
-            <>
-              <Grid sx={{ mx: 0.5, display: 'flex' }}>
-                <TokenExpirationChip />
-              </Grid>
-              <Grid sx={{ mx: 0.5, display: 'flex' }}>
-                <ProjectHours projectCode={nerscProjCode} />
-              </Grid>
-            </>
-          )}
+          <NerscSystemStatuses />
+          <TokenExpirationChip />
+          <ProjectHours projectCode={nerscProjCode} />
         </Grid>
       </Item>
     </>

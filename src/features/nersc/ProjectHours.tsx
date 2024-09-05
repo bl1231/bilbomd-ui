@@ -31,7 +31,10 @@ const ProjectHours = ({ projectCode }) => {
     const gpuUsagePercent =
       (project.gpu_hours_used / project.gpu_hours_given) * 100
     content = (
-      <Grid container sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+      <Grid
+        container
+        sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}
+      >
         <Grid sx={{ display: 'flex', alignItems: 'center' }}>
           <Typography sx={{ mx: 1 }}>
             <b>BilboMD is using:</b>
@@ -46,7 +49,7 @@ const ProjectHours = ({ projectCode }) => {
         </Grid>
 
         {/* Top Row: CPU Hours */}
-        <Grid sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
+        <Grid sx={{ display: 'flex', alignItems: 'center' }}>
           <Typography sx={{ mx: 1 }}>
             <b>CPU Hours Available:</b>
           </Typography>
@@ -70,29 +73,32 @@ const ProjectHours = ({ projectCode }) => {
           <Typography sx={{ mx: 1 }}>
             <b>CPU Usage:</b>
           </Typography>
+
           <LinearProgress
             variant='determinate'
             value={cpuUsagePercent}
             sx={{
               flexGrow: 1,
-              height: 12,
-              borderRadius: 1,
+              height: 16,
+              borderRadius: 0.8,
               backgroundColor: '#ddd',
-              '& .MuiLinearProgress-bar': {
+              '& .MuiLinearProgress-bar1Determinate': {
                 backgroundColor: 'green',
-                borderRadius: 1
+                borderRadius: 0.8
               }
             }}
           />
-          <Typography sx={{ ml: 1 }}>{cpuUsagePercent.toFixed(2)}%</Typography>
+
+          <Typography sx={{ ml: 1 }}>
+            <b>{cpuUsagePercent.toFixed(2)}%</b>
+          </Typography>
         </Grid>
 
         {/* Bottom Row: GPU Hours */}
         <Grid
           sx={{
             display: 'flex',
-            alignItems: 'center',
-            my: 1
+            alignItems: 'center'
           }}
         >
           <Typography sx={{ mx: 1 }}>
@@ -123,16 +129,18 @@ const ProjectHours = ({ projectCode }) => {
             value={gpuUsagePercent}
             sx={{
               flexGrow: 1,
-              height: 12,
-              borderRadius: 1,
+              height: 16,
+              borderRadius: 0.8,
               backgroundColor: '#ddd',
               '& .MuiLinearProgress-bar': {
                 backgroundColor: 'green',
-                borderRadius: 1
+                borderRadius: 0.8
               }
             }}
           />
-          <Typography sx={{ ml: 1 }}>{gpuUsagePercent.toFixed(2)}%</Typography>
+          <Typography sx={{ ml: 1 }}>
+            <b>{gpuUsagePercent.toFixed(2)}%</b>
+          </Typography>
         </Grid>
       </Grid>
     )

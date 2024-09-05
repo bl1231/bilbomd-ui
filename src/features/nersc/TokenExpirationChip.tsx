@@ -5,7 +5,6 @@ import { formatDistanceToNow, isBefore, subDays, subWeeks } from 'date-fns'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
 const TokenExpirationChip = () => {
-  // const [now, setNow] = useState(new Date())
   const now = new Date()
   const { data, error, isLoading } = useGetConfigsQuery({})
 
@@ -15,21 +14,7 @@ const TokenExpirationChip = () => {
   // Check if data is undefined
   if (!data) return <div>No configuration data available</div>
 
-  // console.log('Component Rendered')
-  // console.log('Data:', data)
-
   const expirationDate = new Date(data?.tokenExpires)
-  // console.log('Parsed Expiration Date:', expirationDate)
-  // console.log('Current Date:', now)
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setNow(new Date())
-  //     console.log('Updated Current Date:', new Date())
-  //   }, 1000 * 10) // Update every minute
-
-  //   return () => clearInterval(interval) // Cleanup interval on component unmount
-  // }, [])
 
   let chipColor = 'green'
   let chipLabel = `Expires in ${formatDistanceToNow(expirationDate)}`
@@ -58,9 +43,6 @@ const TokenExpirationChip = () => {
     }
   }
 
-  // console.log('Final Chip Color:', chipColor)
-  // console.log('Final Chip Label:', chipLabel)
-
   return (
     <Grid sx={{ m: 1, display: 'flex', alignItems: 'center' }}>
       <Typography>
@@ -72,7 +54,10 @@ const TokenExpirationChip = () => {
         style={{ backgroundColor: chipColor, color: 'white' }}
       />
       <Typography>
-        <b>Expires</b>: {expirationDate.toLocaleString()}
+        <b>Expiration Date :</b>{' '}
+        <span style={{ fontSize: '1.0rem' }}>
+          {expirationDate.toLocaleString()}
+        </span>
       </Typography>
     </Grid>
   )
