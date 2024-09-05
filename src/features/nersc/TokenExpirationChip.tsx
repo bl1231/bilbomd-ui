@@ -1,7 +1,13 @@
 import Chip from '@mui/material/Chip'
 import Grid from '@mui/material/Grid2'
 import Typography from '@mui/material/Typography'
-import { formatDistanceToNow, isBefore, subDays, subWeeks } from 'date-fns'
+import {
+  formatDistanceToNow,
+  isBefore,
+  subDays,
+  subWeeks,
+  format
+} from 'date-fns'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
 const TokenExpirationChip = () => {
@@ -56,7 +62,7 @@ const TokenExpirationChip = () => {
       <Typography>
         <b>Expiration Date :</b>{' '}
         <span style={{ fontSize: '1.0rem' }}>
-          {expirationDate.toLocaleString()}
+          {format(expirationDate.toLocaleString(), 'MMMM d, yyyy h:mm a')}
         </span>
       </Typography>
     </Grid>
