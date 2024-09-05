@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import FoXSChart from 'features/scoperjob/FoXSChart'
-import { Alert, AlertTitle, Grid } from '@mui/material'
+import { Alert, AlertTitle } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import { useGetFoxsAnalysisByIdQuery } from 'features/jobs/jobsApiSlice'
@@ -149,7 +150,7 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   return (
     <Item>
       <Grid container spacing={2}>
-        <Grid item xs={6}>
+        <Grid size={{ xs: 6 }}>
           <FoXSChart
             title={`Original Model`}
             data={origData}
@@ -161,7 +162,7 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
             maxYAxis={maxYAxis}
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid size={{ xs: 6 }}>
           <FoXSEnsembleCharts
             combinedData={ensembleData}
             foxsData={foxsData}
