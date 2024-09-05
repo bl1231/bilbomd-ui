@@ -50,12 +50,6 @@ jobs:
             type=raw,value=latest
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Generate version for tags
-        id: version
-        if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-
       - name: Get version from package.json
         id: get_version
         run: echo "BILBOMD_UI_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
