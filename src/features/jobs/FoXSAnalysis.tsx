@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import FoXSChart from 'features/scoperjob/FoXSChart'
-import { Alert, AlertTitle, Grid } from '@mui/material'
+import { Alert, AlertTitle } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import { useGetFoxsAnalysisByIdQuery } from 'features/jobs/jobsApiSlice'
@@ -32,9 +33,15 @@ const combineFoxsData = (foxsDataArray: FoxsData[]): CombinedFoxsData[] => {
   // Initially map over the base data to calculate model intensities and residuals
   let baseData: CombinedFoxsData[] = foxsDataArray[0].data.map(
     (point, index) => {
-      const q = parseFloat(point.q.toFixed(4))
-      const exp_intensity = parseFloat(point.exp_intensity.toFixed(4))
-      const error = Math.max(parseFloat(point.error.toFixed(4)), 0)
+      const q = point.q != null ? parseFloat(point.q.toFixed(4)) : 0
+      const exp_intensity =
+        point.exp_intensity != null
+          ? parseFloat(point.exp_intensity.toFixed(4))
+          : 0
+      const error =
+        point.error != null
+          ? Math.max(parseFloat(point.error.toFixed(4)), 0)
+          : 1 // avoid division by 0
 
       const combinedData: CombinedFoxsData = { q, exp_intensity, error }
 
@@ -44,14 +51,18 @@ const combineFoxsData = (foxsDataArray: FoxsData[]): CombinedFoxsData[] => {
         const currentPoint = foxsData.data[index]
 
         if (currentPoint) {
-          const model_intensity = Math.max(
-            parseFloat(currentPoint.model_intensity.toFixed(4)),
-            0
-          )
+          const model_intensity =
+            currentPoint.model_intensity != null
+              ? Math.max(parseFloat(currentPoint.model_intensity.toFixed(4)), 0)
+              : 0
           combinedData[modelIntensityKey] = model_intensity
-          combinedData[residualKey] = parseFloat(
-            ((exp_intensity - model_intensity) / error).toFixed(4)
-          )
+
+          combinedData[residualKey] =
+            error !== 0
+              ? parseFloat(
+                  ((exp_intensity - model_intensity) / error).toFixed(4)
+                )
+              : 0 // handle potential division by 0
         }
       })
 
@@ -139,7 +150,7 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   return (
     <Item>
       <Grid container spacing={2}>
-        <Grid item xs={6}>
+        <Grid size={{ xs: 6 }}>
           <FoXSChart
             title={`Original Model`}
             data={origData}
@@ -151,7 +162,7 @@ const FoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
             maxYAxis={maxYAxis}
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid size={{ xs: 6 }}>
           <FoXSEnsembleCharts
             combinedData={ensembleData}
             foxsData={foxsData}
