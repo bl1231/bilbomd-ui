@@ -1,5 +1,5 @@
 import NewJobForm from './NewJobForm'
-import useTitle from '../../hooks/useTitle'
+import useTitle from 'hooks/useTitle'
 
 const NewJob = () => {
   useTitle('BilboMD: New Classic Job')
