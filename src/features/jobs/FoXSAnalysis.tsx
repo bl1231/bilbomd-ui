@@ -4,7 +4,7 @@ import { Alert, AlertTitle } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
-import { useGetFoxsAnalysisByIdQuery } from 'features/jobs/jobsApiSlice'
+import { useGetFoxsAnalysisByIdQuery } from 'slices/jobsApiSlice'
 import CircularProgress from '@mui/material/CircularProgress'
 import FoXSEnsembleCharts from 'features/foxs/FoXSEnsembleCharts'
 

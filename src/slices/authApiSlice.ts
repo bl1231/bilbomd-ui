@@ -1,5 +1,5 @@
 import { apiSlice } from 'app/api/apiSlice'
-import { logOut, setCredentials } from './authSlice'
+import { logOut, setCredentials } from 'slices/authSlice'
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -20,7 +20,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
           const { data } = await queryFulfilled
           dispatch(logOut())
           dispatch(apiSlice.util.resetApiState())
-          console.log('Logout succeeded with response:', data);
+          console.log('Logout succeeded with response:', data)
         } catch (err) {
           console.log(err)
         }

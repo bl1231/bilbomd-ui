@@ -28,8 +28,8 @@ import {
   User,
   useUpdateUserMutation,
   useDeleteUserMutation
-} from './usersApiSlice'
-import { useGetJobsQuery } from 'features/jobs/jobsApiSlice'
+} from 'slices/usersApiSlice'
+import { useGetJobsQuery } from 'slices/jobsApiSlice'
 import JobSummary from 'features/jobs/JobSummary'
 import { ROLES } from 'config/roles'
 import { useNavigate } from 'react-router-dom'

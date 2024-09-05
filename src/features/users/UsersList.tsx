@@ -1,5 +1,4 @@
-// import React from 'react'
-import { useGetUsersQuery } from './usersApiSlice'
+import { useGetUsersQuery } from 'slices/usersApiSlice'
 import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
 import EditIcon from '@mui/icons-material/Edit'
 import useTitle from 'hooks/useTitle'
@@ -56,7 +55,7 @@ const UsersList = () => {
           <GridActionsCellItem
             key={params.id}
             icon={<EditIcon />}
-            label="Edit"
+            label='Edit'
             onClick={() => navigate(params.id as string)}
           />
         ]

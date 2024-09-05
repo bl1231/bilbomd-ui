@@ -1,4 +1,4 @@
-import { useGetProjectHoursQuery } from './nerscApiSlice'
+import { useGetProjectHoursQuery } from 'slices/nerscApiSlice'
 import {
   CircularProgress,
   Alert,

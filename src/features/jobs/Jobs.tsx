@@ -1,20 +1,20 @@
 import { ReactNode } from 'react'
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid'
 import { format, parseISO } from 'date-fns'
-import { useGetJobsQuery } from './jobsApiSlice'
+import { useGetJobsQuery } from 'slices/jobsApiSlice'
 import useTitle from 'hooks/useTitle'
 import { clsx } from 'clsx'
 import { Box } from '@mui/system'
 import { green, red, amber } from '@mui/material/colors'
-import useAuth from '../../hooks/useAuth'
+import useAuth from 'hooks/useAuth'
 import {
   Alert,
   AlertTitle,
   CircularProgress,
-  Grid,
   Paper,
   Typography
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import { styled } from '@mui/material/styles'
 import DeleteJob from './DeleteJob'
 import JobDetails from './JobDetails'
@@ -227,19 +227,19 @@ const Jobs = () => {
         {/* {console.log('ROWS--->', rows)} */}
         <Grid container spacing={4}>
           {!useNersc && (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <BullMQSummary />
             </Grid>
           )}
 
           {useNersc && (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <NerscStatus />
             </Grid>
           )}
 
           {rows.length !== 0 ? (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <HeaderBox>
                 <Typography>Jobs</Typography>
               </HeaderBox>
@@ -291,7 +291,7 @@ const Jobs = () => {
               </Item>
             </Grid>
           ) : (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <HeaderBox>
                 <Typography>Jobs</Typography>
               </HeaderBox>

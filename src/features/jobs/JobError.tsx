@@ -1,7 +1,7 @@
 import { axiosInstance, AxiosResponse } from 'app/api/axios'
 import { BilboMDJob } from 'types/interfaces'
 import { useSelector } from 'react-redux'
-import { selectCurrentToken } from '../auth/authSlice'
+import { selectCurrentToken } from 'slices/authSlice'
 import { useEffect, useState } from 'react'
 import { Box } from '@mui/system'
 import Grid from '@mui/material/Grid2'

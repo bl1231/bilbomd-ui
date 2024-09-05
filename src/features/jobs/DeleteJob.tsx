@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useDeleteJobMutation } from './jobsApiSlice'
+import { useDeleteJobMutation } from 'slices/jobsApiSlice'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
@@ -68,16 +68,14 @@ const DeleteJob = ({ id, title, hide }: DeleteJobProps) => {
         </span>
       </Tooltip>
 
-      <Dialog
-        open={confirmOpen}
-        onClose={handleCloseDialog}
-      >
+      <Dialog open={confirmOpen} onClose={handleCloseDialog}>
         <DialogContent>
           {deleting && <LinearProgress />}
           <DialogContentText>
             {deleting ? (
               <>
-                Deleting...<br/>
+                Deleting...
+                <br />
                 Please be patient. This sometimes takes a few seconds.
               </>
             ) : (
