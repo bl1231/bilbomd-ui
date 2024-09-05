@@ -73,6 +73,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.10.1
+  - Fix git hash value display in footer
+  - Add checks for null/undefined data in FoXSAnalysis component
 - 1.10.0
   - Add config information table to the Admin panel
   - Improvements to CI/CD workflow
