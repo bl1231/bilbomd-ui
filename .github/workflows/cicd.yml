@@ -79,6 +79,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: bilbomd-ui.dockerfile
           push: true
           platforms: linux/amd64
           tags: |
@@ -95,10 +96,11 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: bilbomd-ui.dockerfile
           push: true
           platforms: linux/amd64
           tags: |
-            ghcr.io/${{ github.repository }}:${{ env.VERSION }}
+            ghcr.io/${{ github.repository }}:${{ env.BILBOMD_UI_VERSION }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
