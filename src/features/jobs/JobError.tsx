@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../auth/authSlice'
 import { useEffect, useState } from 'react'
 import { Box } from '@mui/system'
-import { Grid } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 
 interface JobProps {
   job: BilboMDJob
@@ -48,7 +48,6 @@ const JobError = ({ job }: JobProps) => {
         getErrorLog(job.mongo.id, stepWithError)
       }
     }
-     
   }, [job])
 
   return (

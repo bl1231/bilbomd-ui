@@ -1,6 +1,5 @@
-// import { useState } from 'react'
 import Chip from '@mui/material/Chip'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import Typography from '@mui/material/Typography'
 import { formatDistanceToNow, isBefore, subDays, subWeeks } from 'date-fns'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'

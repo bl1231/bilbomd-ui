@@ -4,12 +4,12 @@ import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
 import {
   Button,
-  Grid,
   Typography,
   Alert,
   AlertTitle,
   CircularProgress
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import LinearProgress from '@mui/material/LinearProgress'
 import Paper from '@mui/material/Paper'
 import { styled, useTheme } from '@mui/material/styles'
@@ -163,7 +163,7 @@ const SingleJobPage = () => {
   const content = job ? (
     <>
       <Grid container spacing={2} rowSpacing={2}>
-        <Grid item xs={6}>
+        <Grid size={{ xs: 6 }}>
           <HeaderBox sx={{ py: '6px' }}>
             <Typography>Job Title</Typography>
           </HeaderBox>
@@ -173,7 +173,7 @@ const SingleJobPage = () => {
             </Typography>
           </Item>
         </Grid>
-        <Grid item xs={3}>
+        <Grid size={{ xs: 3 }}>
           <HeaderBox sx={{ py: '6px' }}>
             <Typography>Status</Typography>
           </HeaderBox>
@@ -189,7 +189,7 @@ const SingleJobPage = () => {
           </Item>
         </Grid>
 
-        <Grid item xs={3}>
+        <Grid size={{ xs: 3 }}>
           <HeaderBox sx={{ py: '6px' }}>
             <Typography>Progress</Typography>
           </HeaderBox>
@@ -206,7 +206,7 @@ const SingleJobPage = () => {
         </Grid>
 
         {job.bullmq && !useNersc && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Steps</Typography>
             </HeaderBox>
@@ -215,13 +215,13 @@ const SingleJobPage = () => {
         )}
 
         {job.mongo.steps && useNersc && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <BilboMDNerscSteps job={job} />
           </Grid>
         )}
 
         {job.scoper && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Scoper Details</Typography>
             </HeaderBox>
@@ -230,12 +230,12 @@ const SingleJobPage = () => {
           </Grid>
         )}
 
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <JobDBDetails job={job} />
         </Grid>
 
         {job.mongo.status === 'Completed' && job.scoper && id && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Scoper FoXS Analysis</Typography>
             </HeaderBox>
@@ -246,7 +246,7 @@ const SingleJobPage = () => {
         {job.mongo.status === 'Completed' &&
           (job.classic || job.auto) &&
           id && (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <HeaderBox sx={{ py: '6px' }}>
                 <Typography>BilboMD FoXS Analysis</Typography>
               </HeaderBox>
@@ -255,7 +255,7 @@ const SingleJobPage = () => {
           )}
 
         {job.mongo.status === 'Completed' && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Molstar Viewer</Typography>
             </HeaderBox>
@@ -264,7 +264,7 @@ const SingleJobPage = () => {
         )}
 
         {job.mongo.status === 'Completed' && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Results</Typography>
             </HeaderBox>
@@ -296,7 +296,7 @@ const SingleJobPage = () => {
         )}
 
         {job.mongo.status === 'Error' && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Error - {job.bullmq.bullmq.failedReason}</Typography>
             </HeaderBox>

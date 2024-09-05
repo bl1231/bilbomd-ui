@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import { Chain } from 'types/interfaces'
 import ChainCard from './ChainCard'
 
@@ -10,7 +10,7 @@ const ChainSummary = ({ chains }: ChainSummaryProps) => {
   const chainCard = (
     <Grid container spacing={3}>
       {chains.map((chain) => (
-        <Grid item xs={12} md={3} lg={3} key={chain.id}>
+        <Grid size={{ xs: 12, md: 3, lg: 3 }} key={chain.id}>
           <ChainCard chain={chain} />
         </Grid>
       ))}

@@ -3,10 +3,10 @@ import {
   CircularProgress,
   Alert,
   Chip,
-  Grid,
   Typography,
   LinearProgress
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 type ContentType = React.ReactNode | string
 
 const ProjectHours = ({ projectCode }) => {
@@ -32,7 +32,7 @@ const ProjectHours = ({ projectCode }) => {
       (project.gpu_hours_used / project.gpu_hours_given) * 100
     content = (
       <Grid container sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-        <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
+        <Grid sx={{ display: 'flex', alignItems: 'center' }}>
           <Typography sx={{ mx: 1 }}>
             <b>BilboMD is using:</b>
           </Typography>
@@ -46,7 +46,7 @@ const ProjectHours = ({ projectCode }) => {
         </Grid>
 
         {/* Top Row: CPU Hours */}
-        <Grid item sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
+        <Grid sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
           <Typography sx={{ mx: 1 }}>
             <b>CPU Hours Available:</b>
           </Typography>
@@ -89,7 +89,6 @@ const ProjectHours = ({ projectCode }) => {
 
         {/* Bottom Row: GPU Hours */}
         <Grid
-          item
           sx={{
             display: 'flex',
             alignItems: 'center',

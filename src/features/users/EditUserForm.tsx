@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import {
   Button,
   Checkbox,
-  Grid,
   TextField,
   MenuItem,
   Alert,
@@ -16,6 +15,7 @@ import {
   OutlinedInput,
   ListItemText
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
@@ -24,7 +24,11 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import { Field, Form, Formik } from 'formik'
 import { format } from 'date-fns'
-import { User, useUpdateUserMutation, useDeleteUserMutation } from './usersApiSlice'
+import {
+  User,
+  useUpdateUserMutation,
+  useDeleteUserMutation
+} from './usersApiSlice'
 import { useGetJobsQuery } from 'features/jobs/jobsApiSlice'
 import JobSummary from 'features/jobs/JobSummary'
 import { ROLES } from 'config/roles'
@@ -91,7 +95,8 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
 
   let errContent = ''
   if (updateResult.error || deleteResult.error) {
-    errContent = ((updateResult.error as string) || (deleteResult.error as string)) ?? ''
+    errContent =
+      ((updateResult.error as string) || (deleteResult.error as string)) ?? ''
   }
 
   useEffect(() => {
@@ -126,16 +131,22 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
             onSubmit={myOnSubmit}
             enableReinitialize={true}
           >
-            {({ values, isSubmitting, handleChange, handleBlur, setFieldValue }) => (
+            {({
+              values,
+              isSubmitting,
+              handleChange,
+              handleBlur,
+              setFieldValue
+            }) => (
               <Form>
-                <Grid container direction="column">
-                  <Grid item sx={{ my: 2, width: '300px' }}>
+                <Grid container direction='column'>
+                  <Grid sx={{ my: 2, width: '300px' }}>
                     <Field
-                      name="username"
-                      id="username"
-                      label="Username"
-                      type="text"
-                      autoComplete="off"
+                      name='username'
+                      id='username'
+                      label='Username'
+                      type='text'
+                      autoComplete='off'
                       disabled={isSubmitting}
                       component={TextField}
                       onChange={handleChange}
@@ -143,13 +154,13 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
                       value={values.username || ''}
                     />
                   </Grid>
-                  <Grid item sx={{ my: 2, width: '300px' }}>
+                  <Grid sx={{ my: 2, width: '300px' }}>
                     <Field
-                      name="email"
-                      id="email"
-                      label="Email"
-                      type="email"
-                      autoComplete="off"
+                      name='email'
+                      id='email'
+                      label='Email'
+                      type='email'
+                      autoComplete='off'
                       fullWidth
                       disabled={isSubmitting}
                       component={TextField}
@@ -159,57 +170,63 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
                     />
                   </Grid>
 
-                  <Grid item sx={{ my: 2 }}>
-                    <FormLabel component="legend">Make User active or inactive</FormLabel>
+                  <Grid sx={{ my: 2 }}>
+                    <FormLabel component='legend'>
+                      Make User active or inactive
+                    </FormLabel>
                     <FormGroup>
                       <FormControlLabel
                         control={<Checkbox checked={values.active} />}
-                        label="Active"
-                        name="active"
+                        label='Active'
+                        name='active'
                         onChange={handleChange}
                       />
                     </FormGroup>
                   </Grid>
-                  <Grid item sx={{ mb: 2 }}>
+                  <Grid sx={{ mb: 2 }}>
                     {/* https://github.com/jaredpalmer/formik/issues/2123 */}
 
-                    <FormLabel component="legend">Assign Roles</FormLabel>
+                    <FormLabel component='legend'>Assign Roles</FormLabel>
                     <FormControl sx={{ my: 2, width: 300 }}>
-                      <InputLabel id="roles">Roles</InputLabel>
+                      <InputLabel id='roles'>Roles</InputLabel>
                       <Select
-                        labelId="roles"
-                        id="roles"
+                        labelId='roles'
+                        id='roles'
                         multiple={true}
                         value={values.roles}
-                        onChange={(e) => setFieldValue('roles', e.target.value as string)}
-                        input={<OutlinedInput label="Roles" />}
+                        onChange={(e) =>
+                          setFieldValue('roles', e.target.value as string)
+                        }
+                        input={<OutlinedInput label='Roles' />}
                         renderValue={(selected) => selected.join(', ')}
                         MenuProps={MenuProps}
                       >
                         {Object.values(ROLES).map((role) => (
                           <MenuItem key={role} value={role}>
-                            <Checkbox checked={values.roles.indexOf(role) > -1} />
+                            <Checkbox
+                              checked={values.roles.indexOf(role) > -1}
+                            />
                             <ListItemText primary={role} />
                           </MenuItem>
                         ))}
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item>
+                  <Grid>
                     <Button
-                      variant="contained"
+                      variant='contained'
                       startIcon={<EditIcon />}
                       sx={{ mr: 2 }}
-                      type="submit"
+                      type='submit'
                     >
                       Update
                     </Button>
                     <Button
-                      variant="contained"
+                      variant='contained'
                       startIcon={<DeleteIcon />}
                       sx={{ mr: 2 }}
-                      color="error"
-                      type="button"
+                      color='error'
+                      type='button'
                       disabled={isSubmitting}
                       onClick={handleClickOpen}
                     >
@@ -229,9 +246,9 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
                       </DialogActions>
                     </Dialog>
                   </Grid>
-                  <Grid item sx={{ mt: 2 }}>
+                  <Grid sx={{ mt: 2 }}>
                     {updateResult.error || deleteResult.error ? (
-                      <Alert severity="warning">{errContent}</Alert>
+                      <Alert severity='warning'>{errContent}</Alert>
                     ) : (
                       ''
                     )}
@@ -249,7 +266,8 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
         </HeaderBox>
         <Paper sx={{ p: 1 }}>
           <Typography>
-            <b>Created:</b> {format(new Date(user.createdAt), 'MM/dd/yyyy HH:mm:ss')}
+            <b>Created:</b>{' '}
+            {format(new Date(user.createdAt), 'MM/dd/yyyy HH:mm:ss')}
           </Typography>
           <Typography>
             <b>Last Modified:</b>{' '}
@@ -263,11 +281,13 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
 
       <Box sx={{ my: 1 }}>
         <HeaderBox>
-          <Chip label={`Jobs ${filteredJobs.length}`} color="success" />
+          <Chip label={`Jobs ${filteredJobs.length}`} color='success' />
         </HeaderBox>
         <Paper sx={{ p: 1 }}>
           {filteredJobs.length >= 1 ? (
-            filteredJobs.map((job, index) => <JobSummary key={index} job={job} />)
+            filteredJobs.map((job, index) => (
+              <JobSummary key={index} job={job} />
+            ))
           ) : (
             <Typography>No jobs for this user</Typography>
           )}

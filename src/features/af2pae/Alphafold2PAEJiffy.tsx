@@ -1,5 +1,4 @@
 import {
-  Grid,
   Typography,
   Paper,
   Alert,
@@ -15,7 +14,7 @@ import {
   TableContainer,
   TableRow
 } from '@mui/material'
-
+import Grid from '@mui/material/Grid2'
 import { Form, Formik, Field } from 'formik'
 import useAuth from 'hooks/useAuth'
 import { useState, useEffect } from 'react'
@@ -133,7 +132,7 @@ const Alphafold2PAEJiffy = () => {
   const content = (
     <>
       <Grid container spacing={3}>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Accordion defaultExpanded={false}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
@@ -231,7 +230,7 @@ const Alphafold2PAEJiffy = () => {
             </AccordionDetails>
           </Accordion>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <HeaderBox>
             <Typography>Create const.inp from AlphaFold PAE</Typography>
           </HeaderBox>
@@ -389,7 +388,7 @@ const Alphafold2PAEJiffy = () => {
                           <LinearProgress />
                         </Box>
                       )}
-                      <Grid item xs={6} sx={{ my: 2 }}>
+                      <Grid size={{ xs: 6 }} sx={{ my: 2 }}>
                         <LoadingButton
                           type='submit'
                           disabled={

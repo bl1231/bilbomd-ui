@@ -1,4 +1,5 @@
-import { Alert, AlertTitle, Grid } from '@mui/material'
+import { Alert, AlertTitle } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import { axiosInstance } from 'app/api/axios'
 import { useState, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
@@ -55,8 +56,7 @@ const VerifyEmail = () => {
       justifyContent='center'
     >
       <Grid
-        item
-        xs={4}
+        size={{ xs: 4 }}
         sx={{
           p: 2,
           bgcolor: 'background.paper',

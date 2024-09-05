@@ -1,4 +1,5 @@
-import { Chip, Grid, Tooltip } from '@mui/material'
+import { Chip, Tooltip } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 
 interface NerscStatusChipProps {
   system: {

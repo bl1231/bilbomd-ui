@@ -7,7 +7,8 @@ import Button from '@mui/material/Button'
 import CloseIcon from '@mui/icons-material/Close'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
-import { Alert, AlertTitle, TextField, Typography, Grid } from '@mui/material'
+import { Alert, AlertTitle, TextField, Typography } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import Divider from '@mui/material/Divider'
 import { Link } from 'react-router-dom'
 import useTitle from 'hooks/useTitle'
@@ -136,7 +137,6 @@ const MagickLink = () => {
           justifyContent='center'
         >
           <Grid
-            item
             sx={{
               p: 2,
               bgcolor: 'background.paper',

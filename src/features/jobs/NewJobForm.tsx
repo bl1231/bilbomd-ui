@@ -1,7 +1,6 @@
 import {
   Box,
   Checkbox,
-  Grid,
   TextField,
   MenuItem,
   Typography,
@@ -16,6 +15,7 @@ import {
   FormControlLabel,
   Divider
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import { Link as RouterLink } from 'react-router-dom'
 import { Form, Formik, Field } from 'formik'
 import FileSelect from './FileSelect'
@@ -136,7 +136,7 @@ const NewJobForm = () => {
   const content = (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Accordion defaultExpanded>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
@@ -320,7 +320,7 @@ const NewJobForm = () => {
           </Accordion>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <HeaderBox>
             <Typography>BilboMD Job Form</Typography>
           </HeaderBox>
@@ -374,7 +374,7 @@ const NewJobForm = () => {
                           width: '520px'
                         }}
                       >
-                        <Grid item xs={6}>
+                        <Grid size={{ xs: 6 }}>
                           <FormGroup sx={{ ml: 1 }}>
                             <FormControlLabel
                               control={
@@ -408,7 +408,7 @@ const NewJobForm = () => {
                             />
                           </FormGroup>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid size={{ xs: 6 }}>
                           <Alert severity='info'>
                             If you used CHARMM-GUI to parameterize your inputs
                             then please select the CRD/PSF option
@@ -418,7 +418,7 @@ const NewJobForm = () => {
                       <Divider textAlign='left' sx={{ my: 1 }}>
                         Job Form
                       </Divider>
-                      <Grid item sx={{ my: 2, width: '520px' }}>
+                      <Grid sx={{ my: 2, width: '520px' }}>
                         <Field
                           fullWidth
                           label='Title'
@@ -447,7 +447,7 @@ const NewJobForm = () => {
                               width: '520px'
                             }}
                           >
-                            <Grid item>
+                            <Grid>
                               <Field
                                 name='crd_file'
                                 id='crd-file-upload'
@@ -474,7 +474,7 @@ const NewJobForm = () => {
                               width: '520px'
                             }}
                           >
-                            <Grid item>
+                            <Grid>
                               <Field
                                 name='psf_file'
                                 id='psf-file-upload'
@@ -505,7 +505,7 @@ const NewJobForm = () => {
                               width: '520px'
                             }}
                           >
-                            <Grid item>
+                            <Grid>
                               <Field
                                 name='pdb_file'
                                 id='pdb-file-upload'
@@ -534,7 +534,7 @@ const NewJobForm = () => {
                           width: '520px'
                         }}
                       >
-                        <Grid item>
+                        <Grid>
                           <Field
                             name='constinp'
                             id='constinp-file-upload'
@@ -597,7 +597,7 @@ const NewJobForm = () => {
                           width: '520px'
                         }}
                       >
-                        <Grid item>
+                        <Grid>
                           <Field
                             name='expdata'
                             id='expdata-file-upload'
@@ -623,7 +623,7 @@ const NewJobForm = () => {
                           />
                         </Grid>
                       </Grid>
-                      <Grid item sx={{ display: 'flex', width: '520px' }}>
+                      <Grid sx={{ display: 'flex', width: '520px' }}>
                         <Typography>
                           <b>Rg Min</b> and <b>Rg Max</b> will be calculated
                           automatically from the selected SAXS data file. Feel
@@ -635,10 +635,7 @@ const NewJobForm = () => {
                           <LinearProgress />
                         </Box>
                       )}
-                      <Grid
-                        item
-                        sx={{ my: 2, display: 'flex', width: '520px' }}
-                      >
+                      <Grid sx={{ my: 2, display: 'flex', width: '520px' }}>
                         <Field
                           label='Rg Min'
                           fullWidth
@@ -657,10 +654,7 @@ const NewJobForm = () => {
                           }
                         />
                       </Grid>
-                      <Grid
-                        item
-                        sx={{ my: 2, display: 'flex', width: '520px' }}
-                      >
+                      <Grid sx={{ my: 2, display: 'flex', width: '520px' }}>
                         <Field
                           label='Rg Max'
                           fullWidth
@@ -679,10 +673,7 @@ const NewJobForm = () => {
                           onBlur={handleBlur}
                         />
                       </Grid>
-                      <Grid
-                        item
-                        sx={{ my: 2, display: 'flex', width: '520px' }}
-                      >
+                      <Grid sx={{ my: 2, display: 'flex', width: '520px' }}>
                         <TextField
                           label='Conformations per Rg'
                           variant='outlined'
@@ -719,7 +710,7 @@ const NewJobForm = () => {
                           <LinearProgress />
                         </Box>
                       )}
-                      <Grid item xs={6} sx={{ my: 2 }}>
+                      <Grid size={{ xs: 6 }} sx={{ my: 2 }}>
                         <LoadingButton
                           type='submit'
                           disabled={

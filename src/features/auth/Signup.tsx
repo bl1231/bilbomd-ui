@@ -12,10 +12,10 @@ import {
   Alert,
   AlertTitle,
   Divider,
-  Grid,
   TextField,
   Typography
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import useTitle from 'hooks/useTitle'
 import { axiosInstance, isAxiosError } from 'app/api/axios'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
@@ -72,8 +72,6 @@ const Signup = () => {
         justifyContent='center'
       >
         <Grid
-          item
-          // xs={4}
           sx={{
             p: 2,
             bgcolor: 'background.paper',

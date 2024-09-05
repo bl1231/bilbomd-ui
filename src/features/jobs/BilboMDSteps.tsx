@@ -2,7 +2,8 @@ import { BilboMDJob } from 'types/interfaces'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import BilboMDStep from './BilboMDStep'
-import { Chip, Grid, Typography } from '@mui/material'
+import { Chip, Typography } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -41,7 +42,7 @@ const BilboMDSteps = ({ job }: BilboMDStepsProps) => {
             <Typography sx={{ mr: 1 }}>
               <b>INFO: </b>
             </Typography>
-            <Chip label={job.bullmq.bilbomdLastStep} size="small" />
+            <Chip label={job.bullmq.bilbomdLastStep} size='small' />
           </Grid>
         </Grid>
       </Item>

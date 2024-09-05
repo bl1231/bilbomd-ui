@@ -4,9 +4,9 @@ import {
   FormControl,
   FormControlProps,
   Input,
-  Grid,
   Alert
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 
 interface FileFieldProps extends FormControlProps {
   id: string
@@ -48,7 +48,7 @@ const FileField = ({
     <FormControl error={isError}>
       {/* <FormLabel>test</FormLabel> */}
       <Grid container spacing={2} alignItems='center'>
-        <Grid item>
+        <Grid>
           <Input
             style={{ display: 'none' }}
             id={id}
@@ -72,7 +72,7 @@ const FileField = ({
             </Button>
           </label>
         </Grid>
-        <Grid item>
+        <Grid>
           {fileName && !errorMessage ? (
             <Alert
               variant='outlined'

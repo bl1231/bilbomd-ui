@@ -1,7 +1,8 @@
 import { BilboMDJob } from 'types/interfaces'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
-import { Alert, Chip, Grid } from '@mui/material'
+import { Alert, Chip } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import BilboMDScoperStep from './BilboMDScoperStep'
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -15,7 +16,14 @@ interface BilboMDStepsProps {
 }
 
 const BilboMDScoperSteps = ({ job }: BilboMDStepsProps) => {
-  const stepsToShow = ['reduce', 'rnaview', 'kgs', 'foxs', 'IonNet', 'multifoxs']
+  const stepsToShow = [
+    'reduce',
+    'rnaview',
+    'kgs',
+    'foxs',
+    'IonNet',
+    'multifoxs'
+  ]
 
   if (job.scoper && typeof job.scoper === 'object') {
     return (
@@ -42,13 +50,13 @@ const BilboMDScoperStepsV2 = ({ job }: BilboMDStepsProps) => {
   if (job.scoper && typeof job.scoper === 'object') {
     return (
       <Item>
-        <Alert severity="warning">Scoper status is a work in progress</Alert>
+        <Alert severity='warning'>Scoper status is a work in progress</Alert>
 
         <Grid container spacing={1}>
           <Grid sx={{ m: 0.5, display: 'flex', alignItems: 'center' }}>
-            <Chip size="small" label="reduce" />
-            <Chip size="small" label="RNAview" />
-            <Chip size="small" label="KGS" />
+            <Chip size='small' label='reduce' />
+            <Chip size='small' label='RNAview' />
+            <Chip size='small' label='KGS' />
           </Grid>
         </Grid>
       </Item>

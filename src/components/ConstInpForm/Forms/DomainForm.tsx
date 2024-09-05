@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, Fragment } from 'react'
 import { useFormikContext, FieldArray, FormikValues } from 'formik'
-import { Typography, Grid, Button, Chip, Box, Alert } from '@mui/material'
+import { Typography, Button, Chip, Box, Alert } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import { useTheme } from '@mui/material/styles'
 import * as PropTypes from 'prop-types'
 import Paper from '@mui/material/Paper'
@@ -40,7 +41,6 @@ const DomainForm = ({ setStepIsValid }) => {
     return () => {
       effectRan.current = true
     }
-     
   }, [isValid])
 
   const macroMolecules = ['PRO', 'DNA', 'RNA', 'CAR', 'Other']
@@ -48,7 +48,7 @@ const DomainForm = ({ setStepIsValid }) => {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <HeaderBox>
             <Typography>Instructions</Typography>
           </HeaderBox>
@@ -92,13 +92,13 @@ const DomainForm = ({ setStepIsValid }) => {
             </Box>
           </Paper>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <HeaderBox>
             <Typography>Define Rigid Bodies</Typography>
           </HeaderBox>
           <Paper sx={{ p: 1 }}>
             <Grid container>
-              <Grid item sx={{ width: '100%' }}>
+              <Grid sx={{ width: '100%' }}>
                 <Typography variant='h5' sx={{ py: 1, ml: 1 }}>
                   Macromolecule types:
                 </Typography>
@@ -115,7 +115,7 @@ const DomainForm = ({ setStepIsValid }) => {
                   />
                 ))}
               </Grid>
-              <Grid item sx={{ width: '100%' }}>
+              <Grid sx={{ width: '100%' }}>
                 <Typography variant='h5' sx={{ py: 1, ml: 1 }}>
                   Available Chains (and residue range):
                 </Typography>
@@ -134,7 +134,7 @@ const DomainForm = ({ setStepIsValid }) => {
                   />
                 ))}
               </Grid>
-              <Grid item sx={{ my: 3 }}>
+              <Grid sx={{ my: 3 }}>
                 <FieldArray name='pdb_file.rigid_bodies'>
                   {(arrayHelpers) => (
                     <>
@@ -142,9 +142,8 @@ const DomainForm = ({ setStepIsValid }) => {
                         values.pdb_file.rigid_bodies.map(
                           (rigid_body, index) => (
                             <Fragment key={index}>
-                              <Grid item sx={{ mb: 4, py: 1 }}>
+                              <Grid sx={{ mb: 4, py: 1 }}>
                                 <Grid
-                                  item
                                   sx={{
                                     display: 'flex',
                                     flexDirection: 'row',
@@ -204,8 +203,7 @@ const DomainForm = ({ setStepIsValid }) => {
                           )
                         )}
                       <Grid
-                        item
-                        xs={12}
+                        size={{ xs: 12 }}
                         sx={{ display: 'flex', justifyContent: 'flex-end' }}
                       >
                         <Button

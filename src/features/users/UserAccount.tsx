@@ -1,9 +1,10 @@
-import { Grid, Typography } from '@mui/material'
+import { Typography } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 
 const UserAccount = () => {
   const content = (
     <Grid container>
-      <Grid item>
+      <Grid>
         <Typography>Edit your account setting here</Typography>
       </Grid>
     </Grid>

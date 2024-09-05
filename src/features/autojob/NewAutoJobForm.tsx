@@ -1,6 +1,5 @@
 import {
   Box,
-  Grid,
   TextField,
   Typography,
   Alert,
@@ -11,6 +10,7 @@ import {
   AccordionDetails,
   Link
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import { Link as RouterLink } from 'react-router-dom'
 import { Form, Formik, Field } from 'formik'
 import FileSelect from 'features/jobs/FileSelect'
@@ -58,7 +58,7 @@ const NewAutoJobForm = () => {
   const content = (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
@@ -141,7 +141,7 @@ const NewAutoJobForm = () => {
           </Accordion>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <HeaderBox>
             <Typography>BilboMD Auto Job Form</Typography>
           </HeaderBox>
@@ -178,7 +178,7 @@ const NewAutoJobForm = () => {
                 }) => (
                   <Form>
                     <Grid container direction='column'>
-                      <Grid item sx={{ my: 2, width: '520px' }}>
+                      <Grid sx={{ my: 2, width: '520px' }}>
                         <Field
                           fullWidth
                           label='Title'
@@ -197,7 +197,7 @@ const NewAutoJobForm = () => {
                         />
                       </Grid>
 
-                      <Grid item>
+                      <Grid>
                         <Field
                           name='pdb_file'
                           id='crd-file-upload'
@@ -213,7 +213,7 @@ const NewAutoJobForm = () => {
                         />
                       </Grid>
 
-                      <Grid item>
+                      <Grid>
                         <Field
                           name='pae_file'
                           id='pae-file-upload'
@@ -228,7 +228,7 @@ const NewAutoJobForm = () => {
                           fileExt='.json'
                         />
                       </Grid>
-                      <Grid item>
+                      <Grid>
                         <Field
                           name='dat_file'
                           id='dat-file-upload'
@@ -249,7 +249,7 @@ const NewAutoJobForm = () => {
                           <LinearProgress />
                         </Box>
                       )}
-                      <Grid item sx={{ mt: 2 }}>
+                      <Grid sx={{ mt: 2 }}>
                         <LoadingButton
                           type='submit'
                           disabled={

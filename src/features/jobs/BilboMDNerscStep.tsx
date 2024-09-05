@@ -2,7 +2,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
 import DirectionsRunRoundedIcon from '@mui/icons-material/DirectionsRunRounded'
 import ErrorIcon from '@mui/icons-material/Error'
-import { Chip, Grid, Typography } from '@mui/material'
+import { Chip, Typography } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import Tooltip from '@mui/material/Tooltip'
 
 interface BilboMDStepProps {
@@ -122,7 +123,7 @@ const BilboMDNerscStep = ({
     <Grid key={stepName} sx={{ m: 0.5, display: 'flex', alignItems: 'center' }}>
       <Tooltip title={tooltipMessage} arrow>
         <>
-          <Grid item>
+          <Grid>
             <Chip
               icon={
                 stepStatus === 'Waiting' ? (
@@ -151,7 +152,7 @@ const BilboMDNerscStep = ({
               }
             />
           </Grid>
-          <Grid item>
+          <Grid>
             <Typography variant='body2' sx={{ ml: 1 }}>
               {stepMessage || 'Waiting'}
             </Typography>
