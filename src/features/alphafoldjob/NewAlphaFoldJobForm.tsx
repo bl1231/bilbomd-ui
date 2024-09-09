@@ -11,7 +11,6 @@ import {
   Link,
   IconButton,
   Button,
-  Select,
   MenuItem
 } from '@mui/material'
 import { Add, Delete } from '@mui/icons-material'
@@ -213,11 +212,11 @@ const NewAlphaFoldJob = () => {
                                     key={index}
                                     mb={2}
                                     display='flex'
-                                    alignItems='center'
+                                    alignItems='start'
                                   >
                                     {/* Molecule Type */}
-                                    <Field
-                                      as={Select}
+                                    <TextField
+                                      select
                                       name={`entities.${index}.type`}
                                       label='Molecule Type'
                                       fullWidth
@@ -234,14 +233,18 @@ const NewAlphaFoldJob = () => {
                                             )[index]?.type
                                         )
                                       }
-                                      sx={{ width: '150px', marginRight: 2 }}
+                                      sx={{ width: '200px', marginRight: 2 }}
                                     >
                                       <MenuItem value='Protein'>
                                         Protein
                                       </MenuItem>
-                                      <MenuItem value='DNA'>DNA</MenuItem>
-                                      <MenuItem value='RNA'>RNA</MenuItem>
-                                    </Field>
+                                      <MenuItem value='DNA' disabled={true}>
+                                        DNA
+                                      </MenuItem>
+                                      <MenuItem value='RNA' disabled={true}>
+                                        RNA
+                                      </MenuItem>
+                                    </TextField>
 
                                     {/* Count Field */}
                                     <Field
@@ -267,7 +270,7 @@ const NewAlphaFoldJob = () => {
                                             )[index]?.copies
                                         )
                                       }
-                                      sx={{ width: '150px', marginRight: 2 }}
+                                      sx={{ width: '100px', marginRight: 2 }}
                                     />
 
                                     {/* Sequence */}
@@ -276,6 +279,8 @@ const NewAlphaFoldJob = () => {
                                       name={`entities.${index}.sequence`}
                                       label='Input'
                                       fullWidth
+                                      multiline
+                                      maxRows={10}
                                       variant='outlined'
                                       value={
                                         values.entities[index].sequence || ''
@@ -290,7 +295,11 @@ const NewAlphaFoldJob = () => {
                                             )[index]?.sequence
                                         )
                                       }
-                                      sx={{ flexGrow: 1 }}
+                                      sx={{
+                                        flexGrow: 1,
+                                        maxWidth: '700px',
+                                        width: '100%'
+                                      }}
                                     />
 
                                     <IconButton
