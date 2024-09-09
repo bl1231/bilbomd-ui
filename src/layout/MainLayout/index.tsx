@@ -73,6 +73,13 @@ export default function ClippedDrawer() {
       roles: ['user', 'manager']
     },
     {
+      text: 'BilboMD AF',
+      icon: <AddCircleOutlineOutlined />,
+      path: '/dashboard/jobs/alphafold',
+      onclick: () => navigate('dashboard/jobs/alphafold'),
+      roles: ['user', 'manager']
+    },
+    {
       text: 'Scoper',
       icon: <AddCircleOutlineOutlined />,
       path: '/dashboard/jobs/scoper',

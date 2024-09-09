@@ -15,6 +15,9 @@ const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')))
 const NewAutoJob = Loadable(
   lazy(() => import('features/autojob/NewAutoJobForm'))
 )
+const NewAlphaFoldJob = Loadable(
+  lazy(() => import('features/alphafoldjob/NewAlphaFoldJobForm'))
+)
 const NewScoperJob = Loadable(
   lazy(() => import('features/scoperjob/NewScoperJobForm'))
 )
@@ -115,6 +118,10 @@ const ProtectedMainRoutes = {
                     {
                       path: 'jobs/auto',
                       element: <NewAutoJob />
+                    },
+                    {
+                      path: 'jobs/alphafold',
+                      element: <NewAlphaFoldJob />
                     },
                     {
                       path: 'jobs/scoper',
