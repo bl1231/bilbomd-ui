@@ -44,7 +44,7 @@ const NewAlphaFoldJob = () => {
       {
         id: '1',
         name: '',
-        sequence: 'Paste your sequence here',
+        sequence: '',
         type: 'Protein',
         copies: 1
       }
@@ -277,10 +277,10 @@ const NewAlphaFoldJob = () => {
                                     <Field
                                       as={TextField}
                                       name={`entities.${index}.sequence`}
-                                      label='Input'
+                                      label='Amino Acid Sequence'
                                       fullWidth
                                       multiline
-                                      maxRows={10}
+                                      minRows={1}
                                       variant='outlined'
                                       value={
                                         values.entities[index].sequence || ''
@@ -296,14 +296,33 @@ const NewAlphaFoldJob = () => {
                                         )
                                       }
                                       sx={{
-                                        flexGrow: 1,
-                                        maxWidth: '700px',
-                                        width: '100%'
+                                        width: '100%',
+                                        marginRight: 2
+                                      }}
+                                      slotProps={{
+                                        inputLabel: {
+                                          shrink: true
+                                        }
                                       }}
                                     />
 
                                     <IconButton
-                                      onClick={() => remove(index)}
+                                      onClick={() => {
+                                        if (values.entities.length === 1) {
+                                          // If there's only one entity, reset it with a new blank entity
+                                          remove(index)
+                                          push({
+                                            id: `${index + 1}`,
+                                            name: '',
+                                            sequence: '',
+                                            type: 'Protein',
+                                            copies: 1
+                                          })
+                                        } else {
+                                          // Remove the entity as usual
+                                          remove(index)
+                                        }
+                                      }}
                                       sx={{ marginLeft: 1 }}
                                     >
                                       <Delete />
