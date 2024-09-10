@@ -233,7 +233,13 @@ const NewAlphaFoldJob = () => {
                                             )[index]?.type
                                         )
                                       }
-                                      sx={{ width: '200px', marginRight: 2 }}
+                                      sx={{
+                                        width: '200px',
+                                        marginRight: 2
+                                      }}
+                                      slotProps={{
+                                        input: { style: { height: '50px' } }
+                                      }}
                                     >
                                       <MenuItem value='Protein'>
                                         Protein
@@ -253,7 +259,8 @@ const NewAlphaFoldJob = () => {
                                       label='Copies'
                                       type='number'
                                       InputProps={{
-                                        inputProps: { min: 1, step: 1 }
+                                        inputProps: { min: 1, step: 1 },
+                                        sx: { height: '100%' } // Ensure full height usage
                                       }}
                                       fullWidth
                                       variant='outlined'
@@ -270,7 +277,11 @@ const NewAlphaFoldJob = () => {
                                             )[index]?.copies
                                         )
                                       }
-                                      sx={{ width: '100px', marginRight: 2 }}
+                                      sx={{
+                                        width: '100px',
+                                        marginRight: 2,
+                                        height: '50px'
+                                      }} // Fixed height
                                     />
 
                                     {/* Sequence */}
@@ -280,8 +291,11 @@ const NewAlphaFoldJob = () => {
                                       label='Amino Acid Sequence'
                                       fullWidth
                                       multiline
-                                      minRows={1}
                                       variant='outlined'
+                                      minRows={1}
+                                      InputProps={{
+                                        sx: { height: '50px' } // Set fixed height
+                                      }}
                                       value={
                                         values.entities[index].sequence || ''
                                       }
@@ -297,12 +311,11 @@ const NewAlphaFoldJob = () => {
                                       }
                                       sx={{
                                         width: '100%',
-                                        marginRight: 2
-                                      }}
-                                      slotProps={{
-                                        inputLabel: {
-                                          shrink: true
-                                        }
+                                        marginRight: 2,
+                                        height: '50px'
+                                      }} // Fixed height
+                                      InputLabelProps={{
+                                        shrink: true // Ensures the label is displayed properly with outlined variant
                                       }}
                                     />
 
