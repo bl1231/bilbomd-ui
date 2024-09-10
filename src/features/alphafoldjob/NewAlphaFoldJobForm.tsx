@@ -465,7 +465,29 @@ const NewAlphaFoldJob = () => {
                             )
                           }}
                         </FieldArray>
+
+                        {/* Conditionally display error messages for alphafold_entities */}
+                        {Array.isArray(errors.entities) &&
+                        Array.isArray(touched.entities)
+                          ? (errors.entities as FormikErrors<Entity>[]).map(
+                              (error, idx) =>
+                                error && (
+                                  <Box key={idx} sx={{ my: 2 }}>
+                                    {error.sequence && (
+                                      <Alert severity='error'>{`Entity ${idx + 1} sequence: ${error.sequence}`}</Alert>
+                                    )}
+                                    {error.type && (
+                                      <Alert severity='error'>{`Entity ${idx + 1} type: ${error.type}`}</Alert>
+                                    )}
+                                    {error.copies && (
+                                      <Alert severity='error'>{`Entity ${idx + 1} copies: ${error.copies}`}</Alert>
+                                    )}
+                                  </Box>
+                                )
+                            )
+                          : null}
                       </Grid>
+
                       {/* SAXS dat file */}
                       <Grid>
                         <Field
