@@ -63,6 +63,10 @@ const NewAlphaFoldJob = () => {
       form.append(`entities[${index}][type]`, entity.type)
       form.append(`entities[${index}][copies]`, entity.copies.toString())
     })
+    // Log the form data to check if entities are appended
+    // for (const pair of form.entries()) {
+    //   console.log(`${pair[0]}, ${pair[1]}`)
+    // }
     try {
       const newJob = await addNewAlphaFoldJob(form).unwrap()
       setStatus(newJob)
