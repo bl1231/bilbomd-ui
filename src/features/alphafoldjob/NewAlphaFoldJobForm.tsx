@@ -55,7 +55,7 @@ const NewAlphaFoldJob = () => {
     form.append('title', values.title)
     form.append('dat_file', values.dat_file)
     form.append('email', values.email)
-    form.append('bilbomd_mode', 'af')
+    form.append('bilbomd_mode', 'alphafold')
     values.entities.forEach((entity, index) => {
       form.append(`entities[${index}][id]`, entity.id)
       form.append(`entities[${index}][name]`, entity.name)
