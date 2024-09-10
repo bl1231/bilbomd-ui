@@ -65,7 +65,7 @@ const BilboMDAlphaFoldJobSchema = object().shape({
           .min(10, 'Sequence must contain at least 10 characters.')
           .test(
             'is-amino-acid-sequence',
-            'Sequence must be a valid amino acid sequence.',
+            'Invalid character. Allowed characters: A, R, D, C, Q, E, G, H, I, L, K, M, N, F, P, S, T, W, Y, V',
             function (sequence) {
               const { type } = this.parent // Access the parent object to check the 'type'
               if (type === 'Protein') {
