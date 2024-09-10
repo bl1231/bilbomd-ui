@@ -18,11 +18,10 @@ import Grid from '@mui/material/Grid2'
 import { Link as RouterLink } from 'react-router-dom'
 import { Form, Formik, Field, FieldArray, FormikErrors } from 'formik'
 import FileSelect from 'features/jobs/FileSelect'
-import { useAddNewAutoJobMutation } from '../../slices/jobsApiSlice'
+import { useAddNewAlphaFoldJobMutation } from 'slices/jobsApiSlice'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-// import { BilboMDAutoJobSchema } from 'schemas/BilboMDAutoJobSchema'
 import { BilboMDAlphaFoldJobSchema } from 'schemas/BilboMDAlphaFoldJobSchema'
 import useAuth from 'hooks/useAuth'
 import { Debug } from 'components/Debug'
@@ -33,7 +32,7 @@ import { Entity, NewAlphaFoldJobFormValues } from 'types/alphafoldForm'
 
 const NewAlphaFoldJob = () => {
   useTitle('BilboMD: New AlphaFold Job')
-  const [addNewAutoJob, { isSuccess }] = useAddNewAutoJobMutation()
+  const [addNewAlphaFoldJob, { isSuccess }] = useAddNewAlphaFoldJobMutation()
   const { email } = useAuth()
 
   const initialValues = {
@@ -43,7 +42,7 @@ const NewAlphaFoldJob = () => {
     entities: [
       {
         id: '1',
-        name: '',
+        name: 'pro-1',
         sequence: '',
         type: 'Protein',
         copies: 1
@@ -57,8 +56,15 @@ const NewAlphaFoldJob = () => {
     form.append('dat_file', values.dat_file)
     form.append('email', values.email)
     form.append('bilbomd_mode', 'af')
+    values.entities.forEach((entity, index) => {
+      form.append(`entities[${index}][id]`, entity.id)
+      form.append(`entities[${index}][name]`, entity.name)
+      form.append(`entities[${index}][sequence]`, entity.sequence)
+      form.append(`entities[${index}][type]`, entity.type)
+      form.append(`entities[${index}][copies]`, entity.copies.toString())
+    })
     try {
-      const newJob = await addNewAutoJob(form).unwrap()
+      const newJob = await addNewAlphaFoldJob(form).unwrap()
       setStatus(newJob)
     } catch (error) {
       console.error('rejected', error)
@@ -207,6 +213,13 @@ const NewAlphaFoldJob = () => {
                       <Grid>
                         <FieldArray name='entities'>
                           {({ push, remove }) => {
+                            // Helper function to generate name based on type and id
+                            const generateName = (type: string, id: string) => {
+                              const typePrefix = type
+                                .toLowerCase()
+                                .substring(0, 3) // Take the first 3 letters of the type
+                              return `${typePrefix}-${id}`
+                            }
                             // Find the highest current `id` in the entities array
                             const getNextId = () => {
                               const highestId = values.entities.reduce(
@@ -236,7 +249,18 @@ const NewAlphaFoldJob = () => {
                                         fullWidth
                                         variant='outlined'
                                         value={entity.type || 'Protein'}
-                                        onChange={handleChange}
+                                        onChange={(e) => {
+                                          handleChange(e)
+                                          // Update the name based on type and id whenever the type changes
+                                          const newName = generateName(
+                                            e.target.value,
+                                            entity.id
+                                          )
+                                          setFieldValue(
+                                            `entities.${index}.name`,
+                                            newName
+                                          )
+                                        }}
                                         error={
                                           touched.entities &&
                                           touched.entities[index] &&
@@ -258,7 +282,7 @@ const NewAlphaFoldJob = () => {
                                         <MenuItem value='Protein'>
                                           Protein
                                         </MenuItem>
-                                        <MenuItem value='DNA' disabled={true}>
+                                        <MenuItem value='DNA' disabled={false}>
                                           DNA
                                         </MenuItem>
                                         <MenuItem value='RNA' disabled={true}>
@@ -341,7 +365,10 @@ const NewAlphaFoldJob = () => {
                                             remove(index)
                                             push({
                                               id: `${index + 1}`,
-                                              name: '',
+                                              name: generateName(
+                                                'Protein',
+                                                `${index + 1}`
+                                              ),
                                               sequence: '',
                                               type: 'Protein',
                                               copies: 1
@@ -364,7 +391,10 @@ const NewAlphaFoldJob = () => {
                                     onClick={() =>
                                       push({
                                         id: getNextId(),
-                                        name: '',
+                                        name: generateName(
+                                          'Protein',
+                                          getNextId()
+                                        ),
                                         sequence: '',
                                         type: 'Protein',
                                         copies: 1
