@@ -120,6 +120,10 @@ export default function ClippedDrawer() {
     menuItems = menuItems.filter((item) => item.text !== 'Scoper')
   }
 
+  if (!useNersc) {
+    menuItems = menuItems.filter((item) => item.text !== 'BilboMD AF')
+  }
+
   const buttonContent = (
     <>
       {menuItems.map((item) => (
