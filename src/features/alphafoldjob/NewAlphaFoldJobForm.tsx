@@ -204,163 +204,178 @@ const NewAlphaFoldJob = () => {
                       </Grid>
                       <Grid>
                         <FieldArray name='entities'>
-                          {({ push, remove }) => (
-                            <Grid container direction='column'>
-                              <Box>
-                                {values.entities.map((entity, index) => (
-                                  <Box
-                                    key={index}
-                                    mb={2}
-                                    display='flex'
-                                    alignItems='start'
-                                  >
-                                    {/* Molecule Type */}
-                                    <TextField
-                                      select
-                                      name={`entities.${index}.type`}
-                                      label='Molecule Type'
-                                      fullWidth
-                                      variant='outlined'
-                                      value={entity.type || 'Protein'}
-                                      onChange={handleChange}
-                                      error={
-                                        touched.entities &&
-                                        touched.entities[index] &&
-                                        Boolean(
-                                          errors.entities &&
-                                            (
-                                              errors.entities as FormikErrors<Entity>[]
-                                            )[index]?.type
-                                        )
-                                      }
-                                      sx={{
-                                        width: '200px',
-                                        marginRight: 2
-                                      }}
-                                      slotProps={{
-                                        input: { style: { height: '50px' } }
-                                      }}
+                          {({ push, remove }) => {
+                            // Find the highest current `id` in the entities array
+                            const getNextId = () => {
+                              const highestId = values.entities.reduce(
+                                (maxId, entity) => {
+                                  const currentId = parseInt(entity.id, 10) // Ensure it's a number
+                                  return currentId > maxId ? currentId : maxId
+                                },
+                                0
+                              )
+                              return (highestId + 1).toString() // Increment the highest `id` for the new one
+                            }
+                            return (
+                              <Grid container direction='column'>
+                                <Box>
+                                  {values.entities.map((entity, index) => (
+                                    <Box
+                                      key={index}
+                                      mb={2}
+                                      display='flex'
+                                      alignItems='start'
                                     >
-                                      <MenuItem value='Protein'>
-                                        Protein
-                                      </MenuItem>
-                                      <MenuItem value='DNA' disabled={true}>
-                                        DNA
-                                      </MenuItem>
-                                      <MenuItem value='RNA' disabled={true}>
-                                        RNA
-                                      </MenuItem>
-                                    </TextField>
-
-                                    {/* Count Field */}
-                                    <Field
-                                      as={TextField}
-                                      name={`entities.${index}.copies`}
-                                      label='Copies'
-                                      type='number'
-                                      InputProps={{
-                                        inputProps: { min: 1, step: 1 },
-                                        sx: { height: '100%' } // Ensure full height usage
-                                      }}
-                                      fullWidth
-                                      variant='outlined'
-                                      onChange={handleChange}
-                                      onBlur={handleBlur}
-                                      value={values.entities[index].copies || 1}
-                                      error={
-                                        touched.entities &&
-                                        touched.entities[index] &&
-                                        Boolean(
-                                          errors.entities &&
-                                            (
-                                              errors.entities as FormikErrors<Entity>[]
-                                            )[index]?.copies
-                                        )
-                                      }
-                                      sx={{
-                                        width: '100px',
-                                        marginRight: 2,
-                                        height: '50px'
-                                      }} // Fixed height
-                                    />
-
-                                    {/* Sequence */}
-                                    <Field
-                                      as={TextField}
-                                      name={`entities.${index}.sequence`}
-                                      label='Amino Acid Sequence'
-                                      fullWidth
-                                      multiline
-                                      variant='outlined'
-                                      minRows={1}
-                                      InputProps={{
-                                        sx: { height: '50px' } // Set fixed height
-                                      }}
-                                      value={
-                                        values.entities[index].sequence || ''
-                                      }
-                                      error={
-                                        touched.entities &&
-                                        touched.entities[index] &&
-                                        Boolean(
-                                          errors.entities &&
-                                            (
-                                              errors.entities as FormikErrors<Entity>[]
-                                            )[index]?.sequence
-                                        )
-                                      }
-                                      sx={{
-                                        width: '100%',
-                                        marginRight: 2,
-                                        height: '50px'
-                                      }} // Fixed height
-                                      InputLabelProps={{
-                                        shrink: true // Ensures the label is displayed properly with outlined variant
-                                      }}
-                                    />
-
-                                    <IconButton
-                                      onClick={() => {
-                                        if (values.entities.length === 1) {
-                                          // If there's only one entity, reset it with a new blank entity
-                                          remove(index)
-                                          push({
-                                            id: `${index + 1}`,
-                                            name: '',
-                                            sequence: '',
-                                            type: 'Protein',
-                                            copies: 1
-                                          })
-                                        } else {
-                                          // Remove the entity as usual
-                                          remove(index)
+                                      {/* Molecule Type */}
+                                      <TextField
+                                        select
+                                        name={`entities.${index}.type`}
+                                        label='Molecule Type'
+                                        fullWidth
+                                        variant='outlined'
+                                        value={entity.type || 'Protein'}
+                                        onChange={handleChange}
+                                        error={
+                                          touched.entities &&
+                                          touched.entities[index] &&
+                                          Boolean(
+                                            errors.entities &&
+                                              (
+                                                errors.entities as FormikErrors<Entity>[]
+                                              )[index]?.type
+                                          )
                                         }
-                                      }}
-                                      sx={{ marginLeft: 1 }}
-                                    >
-                                      <Delete />
-                                    </IconButton>
-                                  </Box>
-                                ))}
-                                <Button
-                                  variant='contained'
-                                  color='primary'
-                                  startIcon={<Add />}
-                                  onClick={() =>
-                                    push({
-                                      id: `${values.entities.length + 1}`,
-                                      name: '',
-                                      sequence: '',
-                                      type: 'Protein',
-                                      copies: 1
-                                    })
-                                  }
-                                >
-                                  Add Entity
-                                </Button>
-                              </Box>
-                            </Grid>
-                          )}
+                                        sx={{
+                                          width: '200px',
+                                          marginRight: 2
+                                        }}
+                                        slotProps={{
+                                          input: { style: { height: '50px' } }
+                                        }}
+                                      >
+                                        <MenuItem value='Protein'>
+                                          Protein
+                                        </MenuItem>
+                                        <MenuItem value='DNA' disabled={true}>
+                                          DNA
+                                        </MenuItem>
+                                        <MenuItem value='RNA' disabled={true}>
+                                          RNA
+                                        </MenuItem>
+                                      </TextField>
+
+                                      {/* Count Field */}
+                                      <Field
+                                        as={TextField}
+                                        name={`entities.${index}.copies`}
+                                        label='Copies'
+                                        type='number'
+                                        InputProps={{
+                                          inputProps: { min: 1, step: 1 },
+                                          sx: { height: '100%' } // Ensure full height usage
+                                        }}
+                                        fullWidth
+                                        variant='outlined'
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        value={
+                                          values.entities[index].copies || 1
+                                        }
+                                        error={
+                                          touched.entities &&
+                                          touched.entities[index] &&
+                                          Boolean(
+                                            errors.entities &&
+                                              (
+                                                errors.entities as FormikErrors<Entity>[]
+                                              )[index]?.copies
+                                          )
+                                        }
+                                        sx={{
+                                          width: '100px',
+                                          marginRight: 2,
+                                          height: '50px'
+                                        }} // Fixed height
+                                      />
+
+                                      {/* Sequence */}
+                                      <Field
+                                        as={TextField}
+                                        name={`entities.${index}.sequence`}
+                                        label='Amino Acid Sequence'
+                                        fullWidth
+                                        multiline
+                                        variant='outlined'
+                                        minRows={1}
+                                        InputProps={{
+                                          sx: { height: '50px' } // Set fixed height
+                                        }}
+                                        value={
+                                          values.entities[index].sequence || ''
+                                        }
+                                        error={
+                                          touched.entities &&
+                                          touched.entities[index] &&
+                                          Boolean(
+                                            errors.entities &&
+                                              (
+                                                errors.entities as FormikErrors<Entity>[]
+                                              )[index]?.sequence
+                                          )
+                                        }
+                                        sx={{
+                                          width: '100%',
+                                          marginRight: 2,
+                                          height: '50px'
+                                        }} // Fixed height
+                                        InputLabelProps={{
+                                          shrink: true // Ensures the label is displayed properly with outlined variant
+                                        }}
+                                      />
+
+                                      <IconButton
+                                        onClick={() => {
+                                          if (values.entities.length === 1) {
+                                            // If there's only one entity, reset it with a new blank entity
+                                            remove(index)
+                                            push({
+                                              id: `${index + 1}`,
+                                              name: '',
+                                              sequence: '',
+                                              type: 'Protein',
+                                              copies: 1
+                                            })
+                                          } else {
+                                            // Remove the entity as usual
+                                            remove(index)
+                                          }
+                                        }}
+                                        sx={{ marginLeft: 1 }}
+                                      >
+                                        <Delete />
+                                      </IconButton>
+                                    </Box>
+                                  ))}
+                                  <Button
+                                    variant='contained'
+                                    color='primary'
+                                    startIcon={<Add />}
+                                    onClick={() =>
+                                      push({
+                                        id: getNextId(),
+                                        name: '',
+                                        sequence: '',
+                                        type: 'Protein',
+                                        copies: 1
+                                      })
+                                    }
+                                  >
+                                    Add Entity
+                                  </Button>
+                                </Box>
+                              </Grid>
+                            )
+                          }}
                         </FieldArray>
                       </Grid>
 
