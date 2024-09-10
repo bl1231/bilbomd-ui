@@ -184,6 +184,7 @@ const NewAlphaFoldJob = () => {
                 }) => (
                   <Form>
                     <Grid container direction='column'>
+                      {/* Title */}
                       <Grid sx={{ my: 2, width: '520px' }}>
                         <Field
                           fullWidth
@@ -202,6 +203,7 @@ const NewAlphaFoldJob = () => {
                           value={values.title || ''}
                         />
                       </Grid>
+                      {/* Entities */}
                       <Grid>
                         <FieldArray name='entities'>
                           {({ push, remove }) => {
@@ -250,7 +252,7 @@ const NewAlphaFoldJob = () => {
                                           marginRight: 2
                                         }}
                                         slotProps={{
-                                          input: { style: { height: '50px' } }
+                                          input: { style: { height: '54px' } }
                                         }}
                                       >
                                         <MenuItem value='Protein'>
@@ -264,7 +266,7 @@ const NewAlphaFoldJob = () => {
                                         </MenuItem>
                                       </TextField>
 
-                                      {/* Count Field */}
+                                      {/* Copies Field */}
                                       <Field
                                         as={TextField}
                                         name={`entities.${index}.copies`}
@@ -294,7 +296,7 @@ const NewAlphaFoldJob = () => {
                                         sx={{
                                           width: '100px',
                                           marginRight: 2,
-                                          height: '50px'
+                                          height: '54px'
                                         }} // Fixed height
                                       />
 
@@ -307,9 +309,9 @@ const NewAlphaFoldJob = () => {
                                         multiline
                                         variant='outlined'
                                         minRows={1}
-                                        InputProps={{
-                                          sx: { height: '50px' } // Set fixed height
-                                        }}
+                                        // InputProps={{
+                                        //   sx: { height: '50px' }
+                                        // }}
                                         value={
                                           values.entities[index].sequence || ''
                                         }
@@ -325,9 +327,8 @@ const NewAlphaFoldJob = () => {
                                         }
                                         sx={{
                                           width: '100%',
-                                          marginRight: 2,
-                                          height: '50px'
-                                        }} // Fixed height
+                                          marginRight: 2
+                                        }}
                                         InputLabelProps={{
                                           shrink: true // Ensures the label is displayed properly with outlined variant
                                         }}
@@ -378,7 +379,7 @@ const NewAlphaFoldJob = () => {
                           }}
                         </FieldArray>
                       </Grid>
-
+                      {/* SAXS dat file */}
                       <Grid>
                         <Field
                           name='dat_file'
@@ -394,12 +395,13 @@ const NewAlphaFoldJob = () => {
                           fileExt='.dat'
                         />
                       </Grid>
-
+                      {/* Progress Bar */}
                       {isSubmitting && (
                         <Box sx={{ my: 1, width: '520px' }}>
                           <LinearProgress />
                         </Box>
                       )}
+                      {/* Submit Button */}
                       <Grid sx={{ mt: 2 }}>
                         <LoadingButton
                           type='submit'
