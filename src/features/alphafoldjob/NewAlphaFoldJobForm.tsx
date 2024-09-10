@@ -163,9 +163,16 @@ const NewAlphaFoldJob = () => {
                     prediction models ), therefore we can only process single
                     Protein chains or Protein complexes composed of multiple
                     chains. If you want to predict Protein/DNA, Protien/RNA, or
-                    other more complicated Macromolecules you should run
-                    AlphaFold3 on your own and then bring the PDB and PAE.json
-                    files back here to run a <b>BilboMD Auto</b> pipeline.
+                    other more complicated Macromolecules you should run{' '}
+                    <Link
+                      href='https://alphafoldserver.com/'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      AlphaFold3
+                    </Link>{' '}
+                    on your own and then bring the PDB and PAE.json files back
+                    here to run a <b>BilboMD Auto</b> pipeline.
                   </Typography>
                 </Alert>
                 <Typography sx={{ m: 1 }}>
@@ -332,11 +339,11 @@ const NewAlphaFoldJob = () => {
                                         <MenuItem value='Protein'>
                                           Protein
                                         </MenuItem>
-                                        <MenuItem value='DNA' disabled={false}>
-                                          DNA
+                                        <MenuItem value='DNA' disabled={true}>
+                                          DNA - pending AF3 availability
                                         </MenuItem>
                                         <MenuItem value='RNA' disabled={true}>
-                                          RNA
+                                          RNA - pending AF3 availability
                                         </MenuItem>
                                       </TextField>
 
