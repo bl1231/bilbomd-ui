@@ -1,5 +1,6 @@
 import { useState, Fragment } from 'react'
-import { Checkbox, Grid, Paper, TableHead, Typography } from '@mui/material'
+import { Checkbox, Paper, TableHead, Typography } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import {
   Table,
   TableBody,
@@ -140,7 +141,7 @@ const FoXSEnsembleCharts = ({
           <ReferenceLine y={0} stroke='black' />
         </LineChart>
       </ResponsiveContainer>
-      <Grid item sx={{ ml: 8 }}>
+      <Grid sx={{ ml: 8 }}>
         <TableContainer component={Paper}>
           <Table size='small' aria-label='bilbomd multifoxs ensemble results'>
             <TableHead>

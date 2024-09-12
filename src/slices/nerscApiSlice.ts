@@ -11,6 +11,17 @@ interface NerscSystemStatus {
   updated_at: string
 }
 
+interface NerscPlannedOutage {
+  name: string
+  start_at: string
+  end_at: string
+  description: string
+  notes: string
+  status: string
+  swo: string
+  update_at: string
+}
+
 interface ProjectHours {
   cpu_hours_given: number
   cpu_hours_used: number
@@ -19,6 +30,7 @@ interface ProjectHours {
 }
 
 type NerscSystemStatuses = NerscSystemStatus[]
+type NerscPlannedOutages = NerscPlannedOutage[]
 
 const nerscAdapter = createEntityAdapter({})
 
@@ -34,6 +46,13 @@ export const nerscApiSlice = superfacilityApiSlice.injectEndpoints({
       }),
       providesTags: ['Status']
     }),
+    getNerscOutages: builder.query<NerscPlannedOutages, void>({
+      query: () => ({
+        url: 'outages',
+        method: 'GET'
+      }),
+      providesTags: ['Outages']
+    }),
     getProjectHours: builder.query<ProjectHours, void>({
       query: (projectCode) => ({
         url: `account/projects/${projectCode}`,
@@ -44,4 +63,8 @@ export const nerscApiSlice = superfacilityApiSlice.injectEndpoints({
   })
 })
 
-export const { useGetNerscStatusQuery, useGetProjectHoursQuery } = nerscApiSlice
+export const {
+  useGetNerscStatusQuery,
+  useGetNerscOutagesQuery,
+  useGetProjectHoursQuery
+} = nerscApiSlice

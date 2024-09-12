@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
 import EditUserForm from './EditUserForm'
-import { useGetUsersQuery } from './usersApiSlice'
+import { useGetUsersQuery } from 'slices/usersApiSlice'
 import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
 

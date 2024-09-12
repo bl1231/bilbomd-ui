@@ -1,6 +1,7 @@
 import { Fragment } from 'react'
 import { useFormikContext, FieldArray, FormikValues } from 'formik'
-import { Grid, Button } from '@mui/material'
+import { Button } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import AddIcon from '@mui/icons-material/Add'
 import { Box } from '@mui/system'
 import Domain from './Domain'
@@ -33,7 +34,6 @@ const RigidBody = ({ rigidBodyIndex }) => {
                     (domain, index) => (
                       <Fragment key={index}>
                         <Grid
-                          item
                           sx={{
                             display: 'flex',
                             flexDirection: 'row',
@@ -64,7 +64,7 @@ const RigidBody = ({ rigidBodyIndex }) => {
                       </Fragment>
                     )
                   )}
-                  <Grid item sx={{ flex: '1 1 auto', alignItems: 'center' }}>
+                  <Grid sx={{ flex: '1 1 auto', alignItems: 'center' }}>
                     <Box sx={{ justifyContent: 'flex-end', m: 1 }}>
                       <Grid container justifyContent='flex-end'>
                         <Button

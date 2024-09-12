@@ -1,10 +1,10 @@
 import { useEffect, useRef, createRef } from 'react'
-import { Grid } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import { styled } from '@mui/material/styles'
 import Paper from '@mui/material/Paper'
 import { axiosInstance } from 'app/api/axios'
 import { useSelector } from 'react-redux'
-import { selectCurrentToken } from '../auth/authSlice'
+import { selectCurrentToken } from '../../slices/authSlice'
 import { BilboMDJob } from 'types/interfaces'
 import { createPluginUI } from 'molstar/lib/mol-plugin-ui'
 import {

@@ -1,11 +1,11 @@
 import {
   Divider,
-  Grid,
   Typography,
   Accordion,
   AccordionSummary,
   AccordionDetails
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import HeaderBox from 'components/HeaderBox'
 import { format } from 'date-fns'
@@ -76,12 +76,12 @@ const JobDBDetails = (props: JobDBDetailsProps) => {
       </AccordionSummary>
       <AccordionDetails>
         <Grid container>
-          <Grid item xs={1}>
+          <Grid size={{ xs: 1 }}>
             <Typography>
               <b>Submitted: </b>
             </Typography>
           </Grid>
-          <Grid item xs={3}>
+          <Grid size={{ xs: 3 }}>
             {job?.mongo?.time_submitted && (
               <Typography sx={{ ml: 1 }}>
                 {format(
@@ -91,12 +91,12 @@ const JobDBDetails = (props: JobDBDetailsProps) => {
               </Typography>
             )}
           </Grid>
-          <Grid item xs={1}>
+          <Grid size={{ xs: 1 }}>
             <Typography>
               <b>Started: </b>
             </Typography>
           </Grid>
-          <Grid item xs={3}>
+          <Grid size={{ xs: 3 }}>
             {job?.mongo?.time_started && (
               <Typography sx={{ ml: 1 }}>
                 {format(
@@ -106,12 +106,12 @@ const JobDBDetails = (props: JobDBDetailsProps) => {
               </Typography>
             )}
           </Grid>
-          <Grid item xs={1}>
+          <Grid size={{ xs: 1 }}>
             <Typography>
               <b>Completed: </b>
             </Typography>
           </Grid>
-          <Grid item xs={3}>
+          <Grid size={{ xs: 3 }}>
             {job?.mongo?.time_completed && (
               <Typography sx={{ ml: 1 }}>
                 {format(
@@ -126,7 +126,7 @@ const JobDBDetails = (props: JobDBDetailsProps) => {
         <Divider sx={{ my: 1 }} />
 
         <Grid container spacing={2}>
-          <Grid item xs={8}>
+          <Grid size={{ xs: 8 }}>
             <Box
               sx={{
                 display: 'flex',

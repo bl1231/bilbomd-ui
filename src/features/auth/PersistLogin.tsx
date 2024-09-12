@@ -1,10 +1,11 @@
 import { Outlet, Link } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
-import { useRefreshMutation } from './authApiSlice'
+import { useRefreshMutation } from 'slices/authApiSlice'
 import usePersist from '../../hooks/usePersist'
 import { useSelector } from 'react-redux'
-import { selectCurrentToken } from './authSlice'
-import { Alert, Button, CircularProgress, Grid } from '@mui/material'
+import { selectCurrentToken } from '../../slices/authSlice'
+import { Alert, Button, CircularProgress } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 
 const PersistLogin = () => {
@@ -36,8 +37,6 @@ const PersistLogin = () => {
       // and only if there is not existing token AND persist is true
       if (!token && persist) verifyRefreshToken()
     }
-
-     
   }, [])
 
   let content
@@ -57,15 +56,15 @@ const PersistLogin = () => {
       <Grid
         container
         columns={12}
-        direction="row"
+        direction='row'
         sx={{ height: '100vh' }}
-        alignItems="center"
-        justifyContent="center"
+        alignItems='center'
+        justifyContent='center'
       >
-        <Grid item sx={{ width: '300px' }}>
+        <Grid sx={{ width: '300px' }}>
           <Alert
-            variant="filled"
-            severity="error"
+            variant='filled'
+            severity='error'
             // sx={{ backgroundColor: '#ffa39e', color: 'black' }}
           >
             {error ? 'Session has expired' : ''}
@@ -73,12 +72,12 @@ const PersistLogin = () => {
           <Button
             fullWidth
             sx={{ my: 2 }}
-            variant="contained"
-            type="button"
-            color="primary"
+            variant='contained'
+            type='button'
+            color='primary'
             startIcon={<AutoFixHighIcon />}
             component={Link}
-            to="magicklink"
+            to='magicklink'
           >
             Request A New MagickLink&#8482;
           </Button>

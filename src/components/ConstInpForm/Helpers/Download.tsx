@@ -1,4 +1,5 @@
-import { Button, Grid } from '@mui/material'
+import { Button } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import { Box } from '@mui/system'
 
 interface DownloadProps {
@@ -29,13 +30,12 @@ const Download = ({ file }: DownloadProps) => {
       }}
     >
       <Grid
-        item
         sx={{
           display: 'flex',
           alignSelf: 'end'
         }}
       >
-        <Button variant="contained" type="button" onClick={handleDownload}>
+        <Button variant='contained' type='button' onClick={handleDownload}>
           Download
         </Button>
       </Grid>

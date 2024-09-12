@@ -1,6 +1,5 @@
 import {
   Box,
-  Grid,
   TextField,
   Typography,
   Alert,
@@ -11,10 +10,11 @@ import {
   AccordionDetails,
   Link
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import { Link as RouterLink } from 'react-router-dom'
 import { Form, Formik, Field } from 'formik'
 import FileSelect from 'features/jobs/FileSelect'
-import { useAddNewScoperJobMutation } from '../jobs/jobsApiSlice'
+import { useAddNewScoperJobMutation } from 'slices/jobsApiSlice'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -55,7 +55,7 @@ const NewScoperJobForm = () => {
   const content = (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
@@ -123,7 +123,7 @@ const NewScoperJobForm = () => {
           </Accordion>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <HeaderBox>
             <Typography>Scoper Job Form</Typography>
           </HeaderBox>
@@ -157,7 +157,7 @@ const NewScoperJobForm = () => {
                 }) => (
                   <Form>
                     <Grid container direction='column'>
-                      <Grid item sx={{ my: 2, width: '520px' }}>
+                      <Grid sx={{ my: 2, width: '520px' }}>
                         <Field
                           fullWidth
                           label='Title'
@@ -176,7 +176,7 @@ const NewScoperJobForm = () => {
                         />
                       </Grid>
 
-                      <Grid item>
+                      <Grid>
                         <Field
                           name='pdb_file'
                           id='pdb-file-upload'
@@ -192,7 +192,7 @@ const NewScoperJobForm = () => {
                         />
                       </Grid>
 
-                      <Grid item>
+                      <Grid>
                         <Field
                           name='dat_file'
                           id='dat-file-upload'
@@ -213,7 +213,7 @@ const NewScoperJobForm = () => {
                           <LinearProgress />
                         </Box>
                       )}
-                      <Grid item sx={{ mt: 2 }}>
+                      <Grid sx={{ mt: 2 }}>
                         <LoadingButton
                           type='submit'
                           disabled={

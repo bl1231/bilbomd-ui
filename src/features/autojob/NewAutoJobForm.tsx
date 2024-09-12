@@ -1,33 +1,51 @@
+import { useState } from 'react'
 import {
   Box,
-  Grid,
   TextField,
   Typography,
   Alert,
   AlertTitle,
-  Paper,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Link
+  Paper
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import { Link as RouterLink } from 'react-router-dom'
 import { Form, Formik, Field } from 'formik'
 import FileSelect from 'features/jobs/FileSelect'
-import { useAddNewAutoJobMutation } from '../jobs/jobsApiSlice'
+import { useAddNewAutoJobMutation } from '../../slices/jobsApiSlice'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import NewAutoJobFormInstructions from './NewAutoJobFormInstructions'
 import { BilboMDAutoJobSchema } from 'schemas/BilboMDAutoJobSchema'
 import useAuth from 'hooks/useAuth'
 import { Debug } from 'components/Debug'
 import LinearProgress from '@mui/material/LinearProgress'
 import HeaderBox from 'components/HeaderBox'
+import useTitle from 'hooks/useTitle'
+import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
+import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
 const NewAutoJobForm = () => {
+  useTitle('BilboMD: New Auto Job')
   const [addNewAutoJob, { isSuccess }] = useAddNewAutoJobMutation()
   const { email } = useAuth()
+  const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
+  // Fetch the configuration object
+  const {
+    data: config,
+    error: configError,
+    isLoading: configIsLoading
+  } = useGetConfigsQuery({})
 
+  if (configIsLoading) return <LinearProgress />
+  if (configError)
+    return <Alert severity='error'>Error loading configuration</Alert>
+
+  const useNersc = config.useNersc?.toLowerCase() === 'true'
+
+  const handleStatusCheck = (isUnavailable: boolean) => {
+    // Update the state based on the system's availability
+    setIsPerlmutterUnavailable(isUnavailable)
+  }
   const initialValues = {
     title: '',
     pdb_file: '',
@@ -53,100 +71,27 @@ const NewAutoJobForm = () => {
     }
   }
 
+  const isFormValid = (values) => {
+    return (
+      !isPerlmutterUnavailable &&
+      values.title !== '' &&
+      values.pdb_file !== '' &&
+      values.pae_file !== '' &&
+      values.dat_file !== ''
+    )
+  }
+
   const content = (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
-              sx={{
-                backgroundColor: '#888',
-                borderTopLeftRadius: 4,
-                borderTopRightRadius: 4,
-                pl: 1
-              }}
-            >
-              <Typography
-                sx={{
-                  textTransform: 'uppercase',
-                  fontSize: 12,
-                  fontWeight: 500,
-                  color: '#fff',
-                  letterSpacing: '1px'
-                }}
-              >
-                Instructions
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box>
-                <Typography sx={{ m: 1 }}>
-                  <b>BilboMD Auto</b> is intended to be run using the outputs
-                  from{' '}
-                  <Link
-                    href='https://deepmind.google/technologies/alphafold/'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    AlphaFold2 & AlphaFold-Multimer
-                  </Link>
-                  . <b>BilboMD Auto</b> uses the{' '}
-                  <Link
-                    href='https://alphafold.ebi.ac.uk/faq#faq-13'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    Predicted Aligned Error
-                  </Link>{' '}
-                  (PAE) from AlphaFold along with the predicted coordinates (as
-                  a PDB file) to automagically generate CHARMM-compatible input
-                  files. The <b>*.pdb</b> and PAE <b>*.json</b> files must be
-                  the exact ones obtained from AlphaFold since we are also using
-                  the{' '}
-                  <Link
-                    href='https://alphafold.ebi.ac.uk/faq#faq-12'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    pLDDT
-                  </Link>{' '}
-                  values stored in the B-factor column to guide the selection of
-                  rigid and flexible regions.
-                </Typography>
-                <ul>
-                  <li>
-                    <Typography>
-                      An AlphaFold PDB <b>*.pdb</b> file (PDB coordinate file.
-                      Make sure it matches your PAE file.)
-                    </Typography>
-                  </li>
-                  <li>
-                    <Typography>
-                      An AlphaFold PAE <b>*.json</b> file (The PAE matrix output
-                      from AlphaFold in JSON format.)
-                    </Typography>
-                  </li>
-                  <li>
-                    <Typography>
-                      A <b>*.dat</b> file (A 3-column experimental SAXS data
-                      file)
-                    </Typography>
-                  </li>
-                </ul>
-              </Box>
-            </AccordionDetails>
-          </Accordion>
+        <Grid size={{ xs: 12 }}>
+          <NewAutoJobFormInstructions />
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <HeaderBox>
             <Typography>BilboMD Auto Job Form</Typography>
           </HeaderBox>
-          {/* <Alert severity='warning'>
-            <b>BilboMD Auto</b> does not yet work with the outputs from{' '}
-            <b>AlphaFold3</b>
-          </Alert> */}
           <Paper sx={{ p: 2 }}>
             {isSuccess ? (
               <Alert severity='success'>
@@ -176,7 +121,13 @@ const NewAutoJobForm = () => {
                 }) => (
                   <Form>
                     <Grid container direction='column'>
-                      <Grid item sx={{ my: 2, width: '520px' }}>
+                      {useNersc && (
+                        <NerscStatusChecker
+                          systemName='perlmutter'
+                          onStatusCheck={handleStatusCheck}
+                        />
+                      )}
+                      <Grid sx={{ my: 2, width: '520px' }}>
                         <Field
                           fullWidth
                           label='Title'
@@ -195,7 +146,7 @@ const NewAutoJobForm = () => {
                         />
                       </Grid>
 
-                      <Grid item>
+                      <Grid>
                         <Field
                           name='pdb_file'
                           id='crd-file-upload'
@@ -211,7 +162,7 @@ const NewAutoJobForm = () => {
                         />
                       </Grid>
 
-                      <Grid item>
+                      <Grid>
                         <Field
                           name='pae_file'
                           id='pae-file-upload'
@@ -226,7 +177,7 @@ const NewAutoJobForm = () => {
                           fileExt='.json'
                         />
                       </Grid>
-                      <Grid item>
+                      <Grid>
                         <Field
                           name='dat_file'
                           id='dat-file-upload'
@@ -247,15 +198,11 @@ const NewAutoJobForm = () => {
                           <LinearProgress />
                         </Box>
                       )}
-                      <Grid item sx={{ mt: 2 }}>
+                      <Grid sx={{ mt: 2 }}>
                         <LoadingButton
                           type='submit'
                           disabled={
-                            !isValid ||
-                            values.title === '' ||
-                            values.pdb_file === '' ||
-                            values.pae_file === '' ||
-                            values.dat_file === ''
+                            !isValid || isSubmitting || !isFormValid(values)
                           }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}

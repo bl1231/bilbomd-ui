@@ -1,20 +1,16 @@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
-// import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined'
-// import DirectionsRunIcon from '@mui/icons-material/DirectionsRun'
 import DirectionsRunRoundedIcon from '@mui/icons-material/DirectionsRunRounded'
 import ErrorIcon from '@mui/icons-material/Error'
-import { Chip, Grid } from '@mui/material'
+import { Chip } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import Tooltip from '@mui/material/Tooltip'
-// import { useTheme } from '@mui/material/styles'
 
 interface BilboMDStepProps {
   stepName: string
   stepStatus: string
 }
 const BilboMDStep = ({ stepName, stepStatus }: BilboMDStepProps) => {
-  // const theme = useTheme()
-
   const getTooltipMessage = (stepName: string) => {
     if (stepName === 'scoper') {
       return 'In this step we run Scoper. Details are below.'
@@ -43,26 +39,38 @@ const BilboMDStep = ({ stepName, stepStatus }: BilboMDStepProps) => {
   return (
     <>
       {['no', 'start', 'end', 'error'].includes(stepStatus) ? (
-        <Grid key={stepName} sx={{ m: 0.5, display: 'flex', alignItems: 'center' }}>
+        <Grid
+          key={stepName}
+          sx={{ m: 0.5, display: 'flex', alignItems: 'center' }}
+        >
           <Tooltip title={tooltipMessage} arrow>
             {stepStatus === 'no' ? (
-              <Chip icon={<RadioButtonUncheckedIcon />} size="small" label={stepName} />
+              <Chip
+                icon={<RadioButtonUncheckedIcon />}
+                size='small'
+                label={stepName}
+              />
             ) : stepStatus === 'start' ? (
               <Chip
                 icon={<DirectionsRunRoundedIcon style={{ color: 'black' }} />}
-                size="small"
+                size='small'
                 label={stepName}
                 style={{ backgroundColor: '#fff566', color: 'black' }}
               />
             ) : stepStatus === 'end' ? (
               <Chip
                 icon={<CheckCircleIcon />}
-                size="small"
+                size='small'
                 label={stepName}
-                color="success"
+                color='success'
               />
             ) : stepStatus === 'error' ? (
-              <Chip icon={<ErrorIcon />} size="small" label={stepName} color="error" />
+              <Chip
+                icon={<ErrorIcon />}
+                size='small'
+                label={stepName}
+                color='error'
+              />
             ) : (
               <div>nonono</div>
             )}

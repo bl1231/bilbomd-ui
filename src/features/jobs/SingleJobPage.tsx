@@ -1,15 +1,22 @@
 import { useParams } from 'react-router-dom'
-import { useGetJobByIdQuery } from './jobsApiSlice'
+import { useGetJobByIdQuery } from 'slices/jobsApiSlice'
 import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
-import { Button, Grid, Typography, Alert, AlertTitle } from '@mui/material'
+import {
+  Button,
+  Typography,
+  Alert,
+  AlertTitle,
+  CircularProgress
+} from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import LinearProgress from '@mui/material/LinearProgress'
 import Paper from '@mui/material/Paper'
 import { styled, useTheme } from '@mui/material/styles'
 import { axiosInstance } from 'app/api/axios'
 import MissingJob from 'components/MissingJob'
 import { useSelector } from 'react-redux'
-import { selectCurrentToken } from '../auth/authSlice'
+import { selectCurrentToken } from 'slices/authSlice'
 import BilboMDSteps from './BilboMDSteps'
 import BilboMDNerscSteps from './BilboMDNerscSteps'
 import { BilboMDScoperSteps } from './BilboMDScoperSteps'
@@ -20,8 +27,7 @@ import MolstarViewer from 'features/molstar/Viewer'
 import { BilboMDScoperTable } from '../scoperjob/BilboMDScoperTable'
 import ScoperFoXSAnalysis from 'features/scoperjob/ScoperFoXSAnalysis'
 import FoXSAnalysis from './FoXSAnalysis'
-
-const useNersc = import.meta.env.VITE_USE_NERSC === 'true'
+import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -44,7 +50,12 @@ const SingleJobPage = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
   })
-  console.log('job data --> ', job)
+
+  const {
+    data: config,
+    error: configError,
+    isLoading: configIsLoading
+  } = useGetConfigsQuery({})
 
   if (isLoading) {
     return <PulseLoader color={'#ffffff'} />
@@ -68,6 +79,14 @@ const SingleJobPage = () => {
       </Alert>
     )
   }
+
+  if (configIsLoading) return <CircularProgress />
+  if (configError)
+    return <Alert severity='error'>Error loading configuration data</Alert>
+  if (!config)
+    return <Alert severity='warning'>No configuration data available</Alert>
+
+  const useNersc = config.useNersc?.toLowerCase() === 'true'
 
   const handleDownload = async (id: string) => {
     try {
@@ -144,7 +163,7 @@ const SingleJobPage = () => {
   const content = job ? (
     <>
       <Grid container spacing={2} rowSpacing={2}>
-        <Grid item xs={6}>
+        <Grid size={{ xs: 6 }}>
           <HeaderBox sx={{ py: '6px' }}>
             <Typography>Job Title</Typography>
           </HeaderBox>
@@ -154,7 +173,7 @@ const SingleJobPage = () => {
             </Typography>
           </Item>
         </Grid>
-        <Grid item xs={3}>
+        <Grid size={{ xs: 3 }}>
           <HeaderBox sx={{ py: '6px' }}>
             <Typography>Status</Typography>
           </HeaderBox>
@@ -170,7 +189,7 @@ const SingleJobPage = () => {
           </Item>
         </Grid>
 
-        <Grid item xs={3}>
+        <Grid size={{ xs: 3 }}>
           <HeaderBox sx={{ py: '6px' }}>
             <Typography>Progress</Typography>
           </HeaderBox>
@@ -187,7 +206,7 @@ const SingleJobPage = () => {
         </Grid>
 
         {job.bullmq && !useNersc && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Steps</Typography>
             </HeaderBox>
@@ -196,13 +215,13 @@ const SingleJobPage = () => {
         )}
 
         {job.mongo.steps && useNersc && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <BilboMDNerscSteps job={job} />
           </Grid>
         )}
 
         {job.scoper && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Scoper Details</Typography>
             </HeaderBox>
@@ -211,12 +230,12 @@ const SingleJobPage = () => {
           </Grid>
         )}
 
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <JobDBDetails job={job} />
         </Grid>
 
         {job.mongo.status === 'Completed' && job.scoper && id && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Scoper FoXS Analysis</Typography>
             </HeaderBox>
@@ -227,7 +246,7 @@ const SingleJobPage = () => {
         {job.mongo.status === 'Completed' &&
           (job.classic || job.auto) &&
           id && (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <HeaderBox sx={{ py: '6px' }}>
                 <Typography>BilboMD FoXS Analysis</Typography>
               </HeaderBox>
@@ -236,7 +255,7 @@ const SingleJobPage = () => {
           )}
 
         {job.mongo.status === 'Completed' && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Molstar Viewer</Typography>
             </HeaderBox>
@@ -245,7 +264,7 @@ const SingleJobPage = () => {
         )}
 
         {job.mongo.status === 'Completed' && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Results</Typography>
             </HeaderBox>
@@ -277,7 +296,7 @@ const SingleJobPage = () => {
         )}
 
         {job.mongo.status === 'Error' && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Error - {job.bullmq.bullmq.failedReason}</Typography>
             </HeaderBox>

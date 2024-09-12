@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useFormikContext, FormikValues } from 'formik'
-import { Grid, Typography } from '@mui/material'
+import { Typography } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import Paper from '@mui/material/Paper'
 import useTitle from 'hooks/useTitle'
 import { Box } from '@mui/system'
@@ -152,13 +153,12 @@ const Preview = () => {
     if (values) {
       prepareConstInputFile(rigid_bodies, chains)
     }
-     
   }, [values])
 
   return (
     <>
       <Grid container>
-        <Grid item>
+        <Grid>
           <HeaderBox>
             <Typography>Preview</Typography>
           </HeaderBox>
@@ -175,7 +175,6 @@ const Preview = () => {
             </Typography>
             <Box sx={{ display: 'flex' }}>
               <Grid
-                item
                 sx={{
                   display: 'flex',
                   flexDirection: 'column',

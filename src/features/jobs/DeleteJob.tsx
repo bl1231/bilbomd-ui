@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useDeleteJobMutation } from './jobsApiSlice'
+import { useDeleteJobMutation } from 'slices/jobsApiSlice'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
@@ -59,21 +59,28 @@ const DeleteJob = ({ id, title, hide }: DeleteJobProps) => {
         arrow
       >
         <span>
-          <IconButton onClick={() => setConfirmOpen(true)} disabled={deleting || hide}>
+          <IconButton
+            onClick={() => setConfirmOpen(true)}
+            disabled={deleting || hide}
+          >
             <DeleteIcon />
           </IconButton>
         </span>
       </Tooltip>
 
-      <Dialog
-        open={confirmOpen}
-        onClose={handleCloseDialog}
-        sx={{ '& .MuiDialog-paper': { minWidth: '400px' } }}
-      >
+      <Dialog open={confirmOpen} onClose={handleCloseDialog}>
         <DialogContent>
           {deleting && <LinearProgress />}
           <DialogContentText>
-            {deleting ? `Deleting...` : `Are you sure you want to delete ${title}?`}
+            {deleting ? (
+              <>
+                Deleting...
+                <br />
+                Please be patient. This sometimes takes a few seconds.
+              </>
+            ) : (
+              `Are you sure you want to delete ${title}?`
+            )}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

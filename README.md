@@ -73,6 +73,20 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.10.3
+  - Add Perlmutter outage notices to teh NERSC status component
+- 1.10.2
+  - Improve caching during GitHub Actions
+  - Migrate MUI Grid to Grid2
+- 1.10.1
+  - Fix git hash value display in footer
+  - Add checks for null/undefined data in FoXSAnalysis component
+- 1.10.0
+  - Add config information table to the Admin panel
+  - Improvements to CI/CD workflow
+- 1.9.7
+  - Use new config API for config info (e.g. dev/prod, useNersc, repo, etc.)
+  - remove all `VITE_*` references from frontend code
 - 1.9.6
   - Implement separate "latest" and "versioned" GitHub Actions for building Docker images
 - 1.9.5

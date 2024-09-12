@@ -3,11 +3,11 @@ import {
   Button,
   FormControl,
   FormControlProps,
-  Grid,
   Input,
   FormLabel,
   Alert
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 
 interface FileSelectProps extends FormControlProps {
   fileType: string
@@ -68,7 +68,7 @@ const FileSelect = (props: FileSelectProps) => {
         Upload your <b>{props.fileType}</b> file
       </FormLabel>
       <Grid container spacing={2} alignItems='center'>
-        <Grid item>
+        <Grid>
           <Input
             style={{ display: 'none' }}
             id={props.id}
@@ -88,7 +88,7 @@ const FileSelect = (props: FileSelectProps) => {
             </Button>
           </label>
         </Grid>
-        <Grid item>
+        <Grid>
           {fileName && !props.errorMessage ? (
             <Alert variant='outlined' severity='success' sx={{ py: 0 }}>
               {fileName}

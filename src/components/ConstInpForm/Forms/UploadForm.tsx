@@ -1,7 +1,6 @@
 import { ChangeEvent, useEffect } from 'react'
 import { Field, useFormikContext } from 'formik'
 import {
-  Grid,
   Typography,
   Link,
   Chip,
@@ -9,6 +8,7 @@ import {
   AccordionSummary,
   AccordionDetails
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import * as PropTypes from 'prop-types'
 import FileField from '../FormFields/FileField'
 import ChainSummary from '../Helpers/ChainSummary'
@@ -277,12 +277,10 @@ const UploadForm = ({ setStepIsValid }) => {
     if (src) {
       parsePdbFile()
     }
-     
   }, [src])
 
   useEffect(() => {
     setStepIsValid(isValid && dirty)
-     
   }, [isValid, dirty])
 
   const customColors = {
@@ -296,7 +294,7 @@ const UploadForm = ({ setStepIsValid }) => {
   return (
     <>
       <Grid container spacing={3}>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <HeaderBox>
             <Typography>Instructions</Typography>
           </HeaderBox>
@@ -403,13 +401,13 @@ const UploadForm = ({ setStepIsValid }) => {
             </Accordion>
           </Paper>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <HeaderBox>
             <Typography>File Upload</Typography>
           </HeaderBox>
           <Paper sx={{ p: 1 }}>
             <Grid container direction='column'>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <Field
                   name='pdb_file'
                   id='pdb_file'
@@ -430,13 +428,13 @@ const UploadForm = ({ setStepIsValid }) => {
           </Paper>
         </Grid>
         {name && (!errors.pdb_file || !errors.pdb_file.file) && chains ? (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <HeaderBox>
               <Typography>Summary</Typography>
             </HeaderBox>
 
             <Paper sx={{ p: 1 }}>
-              <Grid item>
+              <Grid>
                 {macroMolecules.map((chain: string, index: number) => (
                   <Chip
                     key={index}

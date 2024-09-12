@@ -1,4 +1,5 @@
-import { Chip, Grid, Tooltip } from '@mui/material'
+import { Chip, Tooltip } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 
 interface NerscStatusChipProps {
   system: {
@@ -19,7 +20,7 @@ const NerscStatusChip: React.FC<NerscStatusChipProps> = ({ system }) => {
     toolTipMessage = system.notes[0]
   }
   return (
-    <Grid sx={{ m: 0.5, display: 'flex', alignItems: 'center' }}>
+    <Grid sx={{ mx: 0.5, display: 'flex', alignItems: 'center' }}>
       <Tooltip title={toolTipMessage} arrow>
         <Chip label={`${system.full_name}`} color={color} />
       </Tooltip>

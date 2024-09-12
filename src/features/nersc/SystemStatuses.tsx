@@ -1,8 +1,9 @@
-import { useGetNerscStatusQuery } from './nerscApiSlice'
-import { CircularProgress, Alert, AlertTitle } from '@mui/material'
+import { useGetNerscStatusQuery } from 'slices/nerscApiSlice'
+import { CircularProgress, Alert, AlertTitle, Typography } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import NerscStatusChip from './NerscStatusChip'
 type ContentType = React.ReactNode | string
-const SystemStatuses = () => {
+const NerscSystemStatuses = () => {
   const {
     data: nerscStatuses,
     isSuccess,
@@ -30,16 +31,19 @@ const SystemStatuses = () => {
   ]
   if (isSuccess) {
     content = (
-      <>
+      <Grid sx={{ mx: 1, display: 'flex', alignItems: 'center' }}>
         {nerscStatuses
           ?.filter((system) => systemsOfInterest.includes(system.name))
           .map((system) => (
             <NerscStatusChip key={system.name} system={system} />
           ))}
-      </>
+        <Typography sx={{ ml: 2 }}>
+          (mouseover the status chips for details)
+        </Typography>
+      </Grid>
     )
   }
   return content
 }
 
-export default SystemStatuses
+export default NerscSystemStatuses

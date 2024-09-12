@@ -1,7 +1,6 @@
 import { Fragment, FC } from 'react'
 import { Field, useFormikContext, ErrorMessage, getIn } from 'formik'
 import {
-  Grid,
   TextField,
   Typography,
   Chip,
@@ -9,6 +8,7 @@ import {
   MenuItem,
   AlertProps
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import { Box } from '@mui/system'
 import { Chain, RigidBody, RigidDomain } from 'types/interfaces'
 import { useTheme } from '@mui/material/styles'
@@ -68,14 +68,13 @@ const Domain: FC<DomainProps> = ({
   }
   // Determine the background color based on the matching chain's type
   const cardBackgroundColor = matchingChain
-    ? customColors[matchingChain.type] ?? theme.palette.grey[400]
+    ? (customColors[matchingChain.type] ?? theme.palette.grey[400])
     : theme.palette.grey[400]
 
   const content = (
     <Fragment key={didx}>
-      <Grid item>
+      <Grid>
         <Grid
-          item
           sx={{
             display: 'flex',
             flexDirection: 'row',
@@ -196,7 +195,7 @@ const Domain: FC<DomainProps> = ({
           </Box>
         </Grid>
         {/* ERROR GRID CODE HERE */}
-        <Grid item sx={{ flex: '0 1 auto', mb: 1 }}>
+        <Grid sx={{ flex: '0 1 auto', mb: 1 }}>
           <ErrorMessage
             name={`pdb_file.rigid_bodies[${rbidx}].domains[${didx}].chainid`}
           >

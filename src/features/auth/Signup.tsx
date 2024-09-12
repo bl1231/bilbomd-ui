@@ -8,16 +8,27 @@ import IconButton from '@mui/material/IconButton'
 import Collapse from '@mui/material/Collapse'
 import Button from '@mui/material/Button'
 import CloseIcon from '@mui/icons-material/Close'
-import { Alert, AlertTitle, Divider, Grid, TextField, Typography } from '@mui/material'
+import {
+  Alert,
+  AlertTitle,
+  Divider,
+  TextField,
+  Typography
+} from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import useTitle from 'hooks/useTitle'
 import { axiosInstance, isAxiosError } from 'app/api/axios'
-
+import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { Debug } from 'components/Debug'
 
 const Signup = () => {
   useTitle('BilboMD: Signup')
   const [success, setSuccess] = useState(null)
   const [error, setError] = useState('')
+  const { data: config, error: configError, isLoading } = useGetConfigsQuery({})
+  if (isLoading) return <div>Loading config data...</div>
+  if (configError) return <div>Error loading configuration data</div>
+  if (!config) return <div>No configuration data available</div>
 
   const onSubmit = async (values, { resetForm, setSubmitting, setErrors }) => {
     try {
@@ -55,14 +66,12 @@ const Signup = () => {
       <Grid
         container
         columns={12}
-        direction="row"
+        direction='row'
         sx={{ height: '100vh' }}
-        alignItems="center"
-        justifyContent="center"
+        alignItems='center'
+        justifyContent='center'
       >
         <Grid
-          item
-          // xs={4}
           sx={{
             p: 2,
             bgcolor: 'background.paper',
@@ -72,12 +81,12 @@ const Signup = () => {
           }}
         >
           {success ? (
-            <Alert severity="success">
-              <AlertTitle>Woot!</AlertTitle>You have been registered for an account.
-              Before you can log in we need you to verify your email. Please check your
-              inbox for a verification email from
+            <Alert severity='success'>
+              <AlertTitle>Woot!</AlertTitle>You have been registered for an
+              account. Before you can log in we need you to verify your email.
+              Please check your inbox for a verification email from
               <br />
-              <strong>{import.meta.env.VITE_SENDMAIL_USER}</strong>
+              <strong>{config.sendMailUser}</strong>
             </Alert>
           ) : (
             <Formik
@@ -85,7 +94,13 @@ const Signup = () => {
               validationSchema={userRegisterSchema}
               onSubmit={onSubmit}
             >
-              {({ errors, touched, isSubmitting, handleChange, handleBlur }) => (
+              {({
+                errors,
+                touched,
+                isSubmitting,
+                handleChange,
+                handleBlur
+              }) => (
                 <Form>
                   <Typography sx={{ my: 2 }}>
                     Select a user name and enter your email address to create a{' '}
@@ -94,25 +109,27 @@ const Signup = () => {
                   <TextField
                     fullWidth
                     sx={{ my: 1 }}
-                    label="Pick a User Name"
-                    name="user"
-                    type="text"
-                    variant="outlined"
+                    label='Pick a User Name'
+                    name='user'
+                    type='text'
+                    variant='outlined'
                     disabled={isSubmitting}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={Boolean(errors.user) && Boolean(touched.user)}
                     helperText={
-                      Boolean(errors.user) && Boolean(touched.user) ? errors.user : null
+                      Boolean(errors.user) && Boolean(touched.user)
+                        ? errors.user
+                        : null
                     }
                   />
                   <TextField
                     fullWidth
                     sx={{ my: 1 }}
-                    label="Enter an Email address"
-                    name="email"
-                    type="email"
-                    variant="outlined"
+                    label='Enter an Email address'
+                    name='email'
+                    type='email'
+                    variant='outlined'
                     disabled={isSubmitting}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -126,22 +143,22 @@ const Signup = () => {
                   {error ? (
                     <Collapse in={Boolean(error)}>
                       <Alert
-                        severity="error"
+                        severity='error'
                         action={
                           <IconButton
-                            aria-label="close"
-                            color="inherit"
-                            size="small"
+                            aria-label='close'
+                            color='inherit'
+                            size='small'
                             onClick={() => setError('')}
                           >
-                            <CloseIcon fontSize="inherit" />
+                            <CloseIcon fontSize='inherit' />
                           </IconButton>
                         }
                         sx={{ mb: 1 }}
                       >
                         {error}
                         <br /> If you have an account{' '}
-                        <Link to="../magicklink" className="alert-link">
+                        <Link to='../magicklink' className='alert-link'>
                           get a MagickLink&#8482;
                         </Link>
                         {/* <br /> ...or maybe you still need to{' '}
@@ -157,27 +174,27 @@ const Signup = () => {
                   <Button
                     fullWidth
                     sx={{ my: 2 }}
-                    variant="contained"
-                    type="submit"
+                    variant='contained'
+                    type='submit'
                     disabled={isSubmitting}
                     startIcon={<AddCircleOutlineIcon />}
                   >
                     Create an Account
                   </Button>
-                  <Divider variant="middle" sx={{ my: 3 }} />
+                  <Divider variant='middle' sx={{ my: 3 }} />
 
-                  <Typography variant="body2" sx={{ mt: 2 }}>
+                  <Typography variant='body2' sx={{ mt: 2 }}>
                     Already have an account?
                   </Typography>
 
                   <Button
                     fullWidth
                     sx={{ my: 2 }}
-                    variant="contained"
-                    type="button"
+                    variant='contained'
+                    type='button'
                     endIcon={<AutoFixHighIcon />}
                     component={Link}
-                    to="../magicklink"
+                    to='../magicklink'
                   >
                     Get a MagickLink&#8482;
                   </Button>

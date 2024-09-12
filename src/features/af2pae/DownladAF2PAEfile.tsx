@@ -1,8 +1,9 @@
-import { Button, Grid } from '@mui/material'
+import { Button } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import { Box } from '@mui/system'
 import { axiosInstance } from 'app/api/axios'
 import { useSelector } from 'react-redux'
-import { selectCurrentToken } from '../auth/authSlice'
+import { selectCurrentToken } from '../../slices/authSlice'
 
 interface DownloadProps {
   uuid: string | null
@@ -46,13 +47,12 @@ const Download = ({ uuid }: DownloadProps) => {
       }}
     >
       <Grid
-        item
         sx={{
           display: 'flex',
           alignSelf: 'start'
         }}
       >
-        <Button variant="contained" type="button" onClick={handleDownload}>
+        <Button variant='contained' type='button' onClick={handleDownload}>
           Download
         </Button>
       </Grid>

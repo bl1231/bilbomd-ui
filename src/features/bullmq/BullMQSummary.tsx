@@ -1,6 +1,5 @@
 import { ReactNode } from 'react'
 import {
-  Grid,
   Typography,
   Paper,
   Chip,
@@ -8,6 +7,7 @@ import {
   Alert,
   AlertTitle
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import Divider from '@mui/material/Divider'
 import { useGetQueueStateQuery } from 'features/bullmq/bullmqApiSlice'
 import HeaderBox from 'components/HeaderBox'
@@ -84,7 +84,7 @@ const BullMQSummary = () => {
 
         <Item sx={{ p: 1 }}>
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
               <Divider textAlign='left' variant='fullWidth'>
                 <Chip label='BilboMD Queue' />
               </Divider>
@@ -127,7 +127,7 @@ const BullMQSummary = () => {
               </Grid>
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
               <Divider textAlign='left' variant='fullWidth'>
                 <Chip label='Scoper Queue' />
               </Divider>

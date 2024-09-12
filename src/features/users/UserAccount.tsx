@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import { useState } from 'react';
 import {
@@ -14,8 +15,8 @@ import {
 } from '@mui/material';
 import useAuth from 'hooks/useAuth';
 import useLogout  from 'hooks/useLogout';
-import { ToastContainer, toast,Bounce } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+//import { ToastContainer, toast,Bounce } from 'react-toastify';
+//import 'react-toastify/dist/ReactToastify.css';
 
 
 interface User {
@@ -64,13 +65,13 @@ const UserAccount: React.FC = () => {
       if (response.ok) {
         console.log(data.message);
         setOtpSent(true);
-        toast.success("OTP is sent")
+        //toast.success("OTP is sent")
         setIsOtpModalOpen(true); // Open OTP modal
       } else {
-        toast.error('Error sending an OTP to your new email address')
+        //toast.error('Error sending an OTP to your new email address')
       }
     } catch (error) {
-      toast.error('Error sending an OTP to your new email address')
+      //toast.error('Error sending an OTP to your new email address')
     }
   };
 
@@ -96,14 +97,14 @@ const UserAccount: React.FC = () => {
       const data = await response.json();
       if (response.ok) {
         console.log(data.message); // "Email address updated successfully"
-        toast.success('Email address updated successfully please login with new email address');
+        //toast.success('Email address updated successfully please login with new email address');
         setTimeout(handleAutomaticLogout,3000);
         setIsOtpModalOpen(false); // Close OTP modal after successful verification
       } else {
-        toast.error('Error verifying OTP');
+        //toast.error('Error verifying OTP');
       }
     } catch (error) {
-      toast.error('Error verifying OTP');
+      //toast.error('Error verifying OTP');
     }
   };
   
@@ -128,12 +129,12 @@ const UserAccount: React.FC = () => {
   
       const data = await response.json();
       if (response.ok) {
-        toast.success("OTP sent successfully to new email address")
+        //toast.success("OTP sent successfully to new email address")
       } else {
-        toast.error("Error resending OTP");
+        //toast.error("Error resending OTP");
       }
     } catch (error) {
-      toast.error("Error resending OTP")
+      //toast.error("Error resending OTP")
     }
   
     console.log('Resending OTP to:', newEmail);
@@ -166,20 +167,7 @@ const UserAccount: React.FC = () => {
   };
 
   return (
-    <><ToastContainer
-    position="top-right"
-    autoClose={5000}
-    hideProgressBar={false}
-    newestOnTop={false}
-    closeOnClick
-    rtl={false}
-    pauseOnFocusLoss
-    draggable
-    pauseOnHover
-    theme="light"
-    transition={Bounce}
-  />
-    
+    <>
     <Box sx={{ maxWidth: 1000, margin: 'auto', mt: 4 }}>
       <Card sx={{ mb: 2 }}>
         <CardContent sx={{ p: 0 }}>

@@ -1,28 +1,64 @@
-import { useNavigate } from "react-router-dom"
-import Button from "@mui/material/Button"
+
+import Alert from '@mui/material/Alert'
+import CircularProgress from '@mui/material/CircularProgress'
+import { useGetConfigsQuery } from 'slices/configsApiSlice'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableCell from '@mui/material/TableCell'
+import TableRow from '@mui/material/TableRow'
+import Paper from '@mui/material/Paper'
+import useTitle from 'hooks/useTitle'
 
 const AdminPanel = () => {
-  const navigate = useNavigate()
-  const bullBoardUrl = "/admin/bullmq"
+useTitle(`BilboMD: Admin Panel`)
+  const bullBoardUrl = '/admin/bullmq'
 
-  const navigateToBullMQ = () => {
-    navigate(bullBoardUrl)
-  }
+  const {
+    data: config,
+    error: configError,
+    isLoading: configIsLoading
+  } = useGetConfigsQuery({})
+
+  if (configIsLoading) return <CircularProgress />
+  if (configError)
+    return <Alert severity='error'>Error loading configuration data</Alert>
+  if (!config)
+    return <Alert severity='warning'>No configuration data available</Alert>
 
   return (
-    <div>
+    <>
+      <h2>Admin Panel - Config</h2>
+
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Key</TableCell>
+              <TableCell>Value</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Object.entries(config).map(([key, value]) => (
+              <TableRow key={key}>
+                <TableCell>{key}</TableCell>
+                <TableCell>{value as React.ReactNode}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
       <h2>Admin Panel - Job Queue Management</h2>
-      <Button variant="contained" color="primary" onClick={navigateToBullMQ}>
-        Go to BullMQ Admin
-      </Button>
       <iframe
         src={bullBoardUrl}
-        width="100%"
-        height="800" // Adjust the height as necessary
-        style={{ border: "none" }}
-        title="BullBoard"
+        width='100%'
+        height='800' // Adjust the height as necessary
+        style={{ border: 'none' }}
+        title='BullBoard'
       ></iframe>
-    </div>
+    </>
   )
 }
 

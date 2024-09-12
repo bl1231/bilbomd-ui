@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { setCredentials } from '../../features/auth/authSlice'
+import { setCredentials } from '../../slices/authSlice'
 import type { RootState } from '../store'
 
 const baseURL = '/api/v1'

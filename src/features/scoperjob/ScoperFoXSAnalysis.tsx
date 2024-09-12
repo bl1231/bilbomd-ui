@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
 import FoXSChart from './FoXSChart'
-import { Alert, AlertTitle, Grid } from '@mui/material'
+import { Alert, AlertTitle } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
-import { useGetFoxsAnalysisByIdQuery } from 'features/jobs/jobsApiSlice'
+import { useGetFoxsAnalysisByIdQuery } from 'slices/jobsApiSlice'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -107,7 +108,7 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
   return (
     <Item>
       <Grid container spacing={2}>
-        <Grid item xs={6}>
+        <Grid size={{ xs: 6 }}>
           <FoXSChart
             title={`Original Model - ${origPDBFile}`}
             data={origData}
@@ -119,7 +120,7 @@ const ScoperFoXSAnalysis = ({ id }: ScoperFoXSAnalysisProps) => {
             maxYAxis={maxYAxis}
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid size={{ xs: 6 }}>
           <FoXSChart
             title={`Scoper Model - ${scopPDBFile}`}
             data={scopData}

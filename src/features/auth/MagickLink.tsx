@@ -7,11 +7,15 @@ import Button from '@mui/material/Button'
 import CloseIcon from '@mui/icons-material/Close'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
-import { Alert, AlertTitle, TextField, Typography, Grid } from '@mui/material'
+import { Alert, AlertTitle, TextField, Typography } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import Divider from '@mui/material/Divider'
 import { Link } from 'react-router-dom'
 import useTitle from 'hooks/useTitle'
 import { axiosInstance } from 'app/api/axios'
+import { useGetConfigsQuery } from 'slices/configsApiSlice'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
+import { SerializedError } from '@reduxjs/toolkit'
 
 const MAGICKLINK_URL = '/magicklink'
 const VERIFICATION_CODE_URL = '/verify/resend'
@@ -22,6 +26,31 @@ const MagickLink = () => {
   const [error, setError] = useState('')
   const [verified, setVerified] = useState(false)
   const [verifyEmail, setVerifyEmail] = useState('')
+
+  const { data: config, error: configError, isLoading } = useGetConfigsQuery({})
+  if (isLoading) return <div>Loading config data...</div>
+  if (configError) {
+    let errorMessage = 'An unexpected error occurred'
+
+    if ('status' in configError) {
+      // Handle FetchBaseQueryError
+      const fetchError = configError as FetchBaseQueryError
+      errorMessage = `Error ${fetchError.status}: ${
+        'data' in fetchError &&
+        typeof fetchError.data === 'object' &&
+        fetchError.data !== null
+          ? JSON.stringify(fetchError.data)
+          : 'No additional error information'
+      }`
+    } else if ('message' in configError) {
+      // Handle SerializedError
+      const serializedError = configError as SerializedError
+      errorMessage = serializedError.message || errorMessage
+    }
+
+    return <div>Error loading configuration data: {errorMessage}</div>
+  }
+  if (!config) return <div>No configuration data available</div>
 
   const onSubmit = async (values, { setStatus, resetForm, setSubmitting }) => {
     setStatus({ success: 'Splinching the data...', css: 'sending' })
@@ -81,17 +110,17 @@ const MagickLink = () => {
       <Grid
         container
         columns={12}
-        direction="row"
+        direction='row'
         sx={{ height: '100vh' }}
-        alignItems="center"
-        justifyContent="center"
+        alignItems='center'
+        justifyContent='center'
       >
         <>
-          <Alert severity="success" variant="outlined">
-            <AlertTitle>Woot!</AlertTitle>A new email verification code has been sent to{' '}
-            <strong>{verifyEmail}</strong>.<br /> Please check your inbox and perhaps your
-            Spam folder for an email from{' '}
-            <strong>{import.meta.env.VITE_SENDMAIL_USER}</strong>
+          <Alert severity='success' variant='outlined'>
+            <AlertTitle>Woot!</AlertTitle>A new email verification code has been
+            sent to <strong>{verifyEmail}</strong>.<br /> Please check your
+            inbox and perhaps your Spam folder for an email from{' '}
+            <strong>{config.sendMailUser}</strong>
           </Alert>
         </>
       </Grid>
@@ -102,13 +131,12 @@ const MagickLink = () => {
         <Grid
           container
           columns={12}
-          direction="row"
+          direction='row'
           sx={{ height: '100vh' }}
-          alignItems="center"
-          justifyContent="center"
+          alignItems='center'
+          justifyContent='center'
         >
           <Grid
-            item
             sx={{
               p: 2,
               bgcolor: 'background.paper',
@@ -118,8 +146,9 @@ const MagickLink = () => {
             }}
           >
             {success ? (
-              <Alert severity="success">
-                <AlertTitle>Woot!</AlertTitle>A MagickLink&#8482; has been generated.
+              <Alert severity='success'>
+                <AlertTitle>Woot!</AlertTitle>A MagickLink&#8482; has been
+                generated.
                 <br />
                 <strong>Please check your inbox.</strong>
               </Alert>
@@ -144,10 +173,10 @@ const MagickLink = () => {
                     <TextField
                       fullWidth
                       sx={{ my: 1 }}
-                      label="Email address"
-                      name="email"
-                      type="email"
-                      variant="outlined"
+                      label='Email address'
+                      name='email'
+                      type='email'
+                      variant='outlined'
                       disabled={isSubmitting}
                       onChange={handleChange}
                       onBlur={handleBlur}
@@ -165,22 +194,24 @@ const MagickLink = () => {
                           severity={error == 'Pending' ? 'warning' : 'error'}
                           action={
                             <IconButton
-                              aria-label="close"
-                              color="inherit"
-                              size="small"
+                              aria-label='close'
+                              color='inherit'
+                              size='small'
                               onClick={() => setError('')}
                             >
-                              <CloseIcon fontSize="inherit" />
+                              <CloseIcon fontSize='inherit' />
                             </IconButton>
                           }
                           sx={{ mb: 1 }}
                         >
                           {error == 'Pending' ? (
                             <>
-                              <Typography>Please verify your email first</Typography>
+                              <Typography>
+                                Please verify your email first
+                              </Typography>
                               <Button
-                                variant="outlined"
-                                type="button"
+                                variant='outlined'
+                                type='button'
                                 sx={{ my: 1 }}
                                 onClick={() => {
                                   setVerifyEmail(values.email)
@@ -202,26 +233,26 @@ const MagickLink = () => {
                     <Button
                       fullWidth
                       sx={{ my: 2 }}
-                      variant="contained"
-                      type="submit"
-                      color="primary"
+                      variant='contained'
+                      type='submit'
+                      color='primary'
                       disabled={isSubmitting}
                       startIcon={<AutoFixHighIcon />}
                     >
                       Send a MagickLink&#8482;
                     </Button>
-                    <Divider variant="middle" sx={{ my: 3 }} />
-                    <Typography variant="body2" sx={{ mt: 2 }}>
+                    <Divider variant='middle' sx={{ my: 3 }} />
+                    <Typography variant='body2' sx={{ mt: 2 }}>
                       Need an account?
                     </Typography>
                     <Button
                       fullWidth
                       sx={{ my: 2 }}
-                      variant="contained"
-                      type="button"
+                      variant='contained'
+                      type='button'
                       endIcon={<ChevronRightIcon />}
                       component={Link}
-                      to="../register"
+                      to='../register'
                     >
                       Create an Account
                     </Button>
