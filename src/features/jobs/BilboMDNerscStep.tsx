@@ -39,6 +39,12 @@ const BilboMDNerscStep = ({
           friendlyName: 'Scoper',
           tooltipMessage: 'In this step we run Scoper. Details are below.'
         }
+      case 'alphafold':
+        return {
+          friendlyName: 'AlphaFold2',
+          tooltipMessage:
+            'In this step we use ColabFold to run AlphaFold on your molecule.'
+        }
       case 'pae':
         return {
           friendlyName: 'Define MD Domains from AlphaFold PAE matrix',

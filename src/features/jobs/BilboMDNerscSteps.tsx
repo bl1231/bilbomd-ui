@@ -25,11 +25,14 @@ interface BilboMDStepsProps {
 }
 
 const BilboMDNerscSteps = ({ job }: BilboMDStepsProps) => {
-  console.log('BilboMDNerscSteps: job:', job)
+  // console.log('BilboMDNerscSteps: job:', job)
   let stepsToHide: string[] = []
   if (job.mongo.__t === 'BilboMdCRD') {
     stepsToHide = ['autorg', 'pdb2crd', 'pae', 'alphafold']
-  } else if (job.mongo.__t === 'BilboMdAuto') {
+  } else if (
+    job.mongo.__t === 'BilboMdAuto' ||
+    job.mongo.__t === 'BilboMdAlphaFold'
+  ) {
     stepsToHide = ['autorg']
   } else if (job.mongo.__t === 'BilboMdPDB') {
     stepsToHide = ['autorg', 'pae', 'alphafold']
