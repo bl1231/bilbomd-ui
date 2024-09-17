@@ -88,12 +88,19 @@ const NewAlphaFoldJobFormInstructions = () => (
             Important information about AlphaFold2 vs. AlphaFold3
           </AlertTitle>
           <Typography>
-            <b>BilboMD AF</b> uses ColabFold under the hood which in turn uses
-            AlphaFold2 (with either the AF2 or AF2-multimer prediction models ),
-            therefore we can only process single Protein chains or Protein
-            complexes composed of multiple chains. If you want to predict
-            Protein/DNA, Protien/RNA, or other more complicated Macromolecules
-            you should run{' '}
+            <b>BilboMD AF</b> uses{' '}
+            <Link
+              href='https://github.com/sokrypton/ColabFold'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              ColabFold
+            </Link>{' '}
+            under the hood which in turn uses AlphaFold2 (with either the AF2 or
+            AF2-multimer prediction models ), therefore we can only process
+            single Protein chains or Protein complexes composed of multiple
+            chains. If you want to predict Protein/DNA, Protien/RNA, or other
+            more complicated Macromolecules you should run{' '}
             <Link
               href='https://alphafoldserver.com/'
               target='_blank'
