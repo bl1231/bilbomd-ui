@@ -160,6 +160,8 @@ const SingleJobPage = () => {
 
   const statusColors = getStatusColors(job?.mongo.status, theme)
 
+  // console.log('job', job)
+
   const content = job ? (
     <>
       <Grid container spacing={2} rowSpacing={2}>
@@ -244,7 +246,7 @@ const SingleJobPage = () => {
         )}
 
         {job.mongo.status === 'Completed' &&
-          (job.classic || job.auto) &&
+          (job.classic || job.auto || job.mongo.__t == 'BilboMdAlphaFold') &&
           id && (
             <Grid size={{ xs: 12 }}>
               <HeaderBox sx={{ py: '6px' }}>
