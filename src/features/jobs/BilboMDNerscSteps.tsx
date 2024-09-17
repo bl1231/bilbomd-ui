@@ -29,10 +29,9 @@ const BilboMDNerscSteps = ({ job }: BilboMDStepsProps) => {
   let stepsToHide: string[] = []
   if (job.mongo.__t === 'BilboMdCRD') {
     stepsToHide = ['autorg', 'pdb2crd', 'pae', 'alphafold']
-  } else if (
-    job.mongo.__t === 'BilboMdAuto' ||
-    job.mongo.__t === 'BilboMdAlphaFold'
-  ) {
+  } else if (job.mongo.__t === 'BilboMdAuto') {
+    stepsToHide = ['autorg', 'alphafold']
+  } else if (job.mongo.__t === 'BilboMdAlphaFold') {
     stepsToHide = ['autorg']
   } else if (job.mongo.__t === 'BilboMdPDB') {
     stepsToHide = ['autorg', 'pae', 'alphafold']
