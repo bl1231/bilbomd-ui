@@ -22,17 +22,19 @@ const BilboMDNerscStep = ({
       case 'nersc_prepare_slurm_batch':
         return {
           friendlyName: 'NERSC Prepare Slurm Batch File',
-          tooltipMessage: 'In this step we run Scoper. Details are below.'
+          tooltipMessage:
+            'In this step we prepare the Slurm batch file for NERSC.'
         }
       case 'nersc_submit_slurm_batch':
         return {
           friendlyName: 'NERSC Submit Slurm Batch File',
-          tooltipMessage: 'In this step we run Scoper. Details are below.'
+          tooltipMessage:
+            'In this step we submit the Slurm batch file to NERSC.'
         }
       case 'nersc_job_status':
         return {
           friendlyName: 'NERSC Job Status',
-          tooltipMessage: 'In this step we run Scoper. Details are below.'
+          tooltipMessage: 'This Chip will display the status of the NERSC job.'
         }
       case 'scoper':
         return {
@@ -102,6 +104,12 @@ const BilboMDNerscStep = ({
           tooltipMessage:
             'In this step we use MultiFoXS to determine the best FoXS curves to match your experimental SAXS data.'
         }
+      case 'copy_results_to_cfs':
+        return {
+          friendlyName: 'Copy Results to CFS',
+          tooltipMessage:
+            'In this step we copy the results from the PSCRATCH file system to the CFS file system.'
+        }
       case 'results':
         return {
           friendlyName: 'Create Results file for download',
@@ -127,44 +135,42 @@ const BilboMDNerscStep = ({
   // console.log(friendlyName, tooltipMessage)
   return (
     <Grid key={stepName} sx={{ m: 0.5, display: 'flex', alignItems: 'center' }}>
-      <Tooltip title={tooltipMessage} arrow>
-        <>
-          <Grid>
-            <Chip
-              icon={
-                stepStatus === 'Waiting' ? (
-                  <RadioButtonUncheckedIcon />
-                ) : stepStatus === 'Running' ? (
-                  <DirectionsRunRoundedIcon style={{ color: 'black' }} />
-                ) : stepStatus === 'Success' ? (
-                  <CheckCircleIcon />
-                ) : stepStatus === 'Error' ? (
-                  <ErrorIcon />
-                ) : undefined
-              }
-              size='small'
-              label={friendlyName}
-              color={
-                stepStatus === 'Success'
-                  ? 'success'
-                  : stepStatus === 'Error'
-                    ? 'error'
-                    : undefined
-              }
-              style={
-                stepStatus === 'Running'
-                  ? { backgroundColor: '#fff566', color: 'black' }
+      <Grid>
+        <Tooltip title={tooltipMessage} arrow>
+          <Chip
+            icon={
+              stepStatus === 'Waiting' ? (
+                <RadioButtonUncheckedIcon />
+              ) : stepStatus === 'Running' ? (
+                <DirectionsRunRoundedIcon style={{ color: 'black' }} />
+              ) : stepStatus === 'Success' ? (
+                <CheckCircleIcon />
+              ) : stepStatus === 'Error' ? (
+                <ErrorIcon />
+              ) : undefined
+            }
+            size='small'
+            label={friendlyName}
+            color={
+              stepStatus === 'Success'
+                ? 'success'
+                : stepStatus === 'Error'
+                  ? 'error'
                   : undefined
-              }
-            />
-          </Grid>
-          <Grid>
-            <Typography variant='body2' sx={{ ml: 1 }}>
-              {stepMessage || 'Waiting'}
-            </Typography>
-          </Grid>
-        </>
-      </Tooltip>
+            }
+            style={
+              stepStatus === 'Running'
+                ? { backgroundColor: '#fff566', color: 'black' }
+                : undefined
+            }
+          />
+        </Tooltip>
+      </Grid>
+      <Grid>
+        <Typography variant='body2' sx={{ ml: 1 }}>
+          {stepMessage || 'Waiting'}
+        </Typography>
+      </Grid>
     </Grid>
   )
 }
