@@ -99,7 +99,7 @@ const isPsfData = (file: File): Promise<boolean> => {
         natomLineIndex + 1,
         natomLineIndex + 1 + natom
       )
-      console.log('num atom lines = ', atomLines.length)
+      // console.log('num atom lines = ', atomLines.length)
       if (atomLines.length !== natom) {
         // console.log('Incorrect number of atom lines')
         resolve(false)
@@ -309,7 +309,7 @@ const isValidConstInpFile = (
         const validSegid = lines
           .filter((line) => line.startsWith('define'))
           .every((line) => segidRegex.test(line))
-        console.log(file.name, ' valid segid is ', validSegid)
+        // console.log(file.name, ' valid segid is ', validSegid)
         if (!validSegid) {
           resolve('segid must be: PRO[A-Z], DNA[A-Z], RNA[A-Z], etc.')
           return
@@ -319,7 +319,7 @@ const isValidConstInpFile = (
         const validSegid = lines
           .filter((line) => line.startsWith('define'))
           .every((line) => segidRegex.test(line))
-        console.log(file.name, ' valid segid is ', validSegid)
+        // console.log(file.name, ' valid segid is ', validSegid)
         if (!validSegid) {
           resolve('segid must contain 4 uppercase letters [A-Z]')
           return
