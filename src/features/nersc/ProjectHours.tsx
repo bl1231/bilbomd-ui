@@ -55,7 +55,12 @@ const ProjectHours = ({ projectCode }) => {
           </Typography>
           <Chip
             label={project.cpu_hours_given}
-            sx={{ mx: 0.5, fontSize: '0.9rem', fontWeight: 'bold' }}
+            sx={{
+              mx: 0.5,
+              fontSize: '0.9rem',
+              fontWeight: 'bold',
+              width: '60px'
+            }}
             variant='outlined'
             style={{ backgroundColor: 'black', color: '#bae637' }}
           />
@@ -63,8 +68,13 @@ const ProjectHours = ({ projectCode }) => {
             <b>CPU Hours Used:</b>
           </Typography>
           <Chip
-            label={project.cpu_hours_used.toFixed(2)}
-            sx={{ mx: 0.5, fontSize: '0.9rem', fontWeight: 'bold' }}
+            label={project.cpu_hours_used.toFixed(1)}
+            sx={{
+              mx: 0.5,
+              fontSize: '0.9rem',
+              fontWeight: 'bold',
+              width: '60px'
+            }}
             variant='outlined'
             style={{ backgroundColor: 'black', color: '#bae637' }}
           />
@@ -106,7 +116,12 @@ const ProjectHours = ({ projectCode }) => {
           </Typography>
           <Chip
             label={project.gpu_hours_given}
-            sx={{ mx: 0.5, fontSize: '0.9rem', fontWeight: 'bold' }}
+            sx={{
+              mx: 0.5,
+              fontSize: '0.9rem',
+              fontWeight: 'bold',
+              width: '60px'
+            }}
             variant='outlined'
             style={{ backgroundColor: 'black', color: '#bae637' }}
           />
@@ -114,8 +129,13 @@ const ProjectHours = ({ projectCode }) => {
             <b>GPU Hours Used:</b>
           </Typography>
           <Chip
-            label={project.gpu_hours_used.toFixed(2)}
-            sx={{ mx: 0.5, fontSize: '0.9rem', fontWeight: 'bold' }}
+            label={project.gpu_hours_used.toFixed(1)}
+            sx={{
+              mx: 0.5,
+              fontSize: '0.9rem',
+              fontWeight: 'bold',
+              width: '60px'
+            }}
             variant='outlined'
             style={{ backgroundColor: 'black', color: '#bae637' }}
           />
