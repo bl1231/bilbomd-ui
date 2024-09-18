@@ -118,6 +118,10 @@ export type BilboMDSteps = {
   numEnsembles: number
 }
 
+export type BilboMDAlphaFoldResults = {
+  numEnsembles: number
+}
+
 export type BilboMDScoperSteps = {
   reduce: string
   rnaview: string
@@ -156,4 +160,5 @@ export type BilboMDJob = {
   scoper?: BilboMDScoperSteps
   classic?: BilboMDSteps
   auto?: BilboMDSteps
+  alphafold?: BilboMDAlphaFoldResults
 }

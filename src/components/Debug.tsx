@@ -2,6 +2,18 @@ import { FormikConsumer } from 'formik'
 import { useTheme } from '@mui/material/styles'
 import { blue, green } from '@mui/material/colors'
 
+// Utility function to add newline every 80 characters
+const addNewlines = (str: string, everyN: number) => {
+  const regex = new RegExp(`(.{1,${everyN}})`, 'g')
+  return str.match(regex)?.join('\n') || str
+}
+// Custom stringify function to handle newlines
+const customStringify = (obj, indent: number = 2) => {
+  let json = JSON.stringify(obj, null, indent)
+  // Replace escaped newlines with actual newlines
+  json = json.replace(/\\n/g, '\n')
+  return json
+}
 export const Debug = () => {
   const theme = useTheme()
   return (
@@ -40,10 +52,23 @@ export const Debug = () => {
                 }
               }
             : rest.values // Use the original values if pdb_file doesn't exist
-
+          // Modify entities sequences to add newlines every 80 characters
+          const entitiesWithModifiedSequences =
+            valuesWithModifiedPdbFile.entities
+              ? valuesWithModifiedPdbFile.entities.map((entity) => ({
+                  ...entity,
+                  sequence:
+                    entity.sequence.length > 80
+                      ? addNewlines(entity.sequence, 80)
+                      : entity.sequence
+                }))
+              : []
           const displayContent = {
             ...rest,
-            values: valuesWithModifiedPdbFile
+            values: {
+              ...valuesWithModifiedPdbFile,
+              entities: entitiesWithModifiedSequences
+            }
           }
 
           return (
@@ -51,7 +76,8 @@ export const Debug = () => {
               style={{
                 fontSize: '.85rem',
                 padding: '.25rem .5rem',
-                backgroundColor: theme.palette.mode === 'light' ? green[50] : green[900],
+                backgroundColor:
+                  theme.palette.mode === 'light' ? green[50] : green[900],
                 color: theme.palette.mode === 'light' ? blue[900] : blue[100],
                 maxWidth: '100%',
                 overflowX: 'auto',
@@ -59,7 +85,7 @@ export const Debug = () => {
                 whiteSpace: 'pre-wrap'
               }}
             >
-              {JSON.stringify(displayContent, null, 3)}
+              {customStringify(displayContent, 3)}
             </pre>
           )
         }}

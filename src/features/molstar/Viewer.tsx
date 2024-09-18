@@ -115,6 +115,14 @@ const MolstarViewer = ({ job }: MolstarViewerProps) => {
         const fileName = `ensemble_size_${i}_model.pdb`
         addFilesToLoadParams(fileName, i)
       }
+    } else if (
+      job.mongo.__t === 'BilboMdAlphaFold' &&
+      job.alphafold?.numEnsembles
+    ) {
+      for (let i = 1; i <= job.alphafold.numEnsembles; i++) {
+        const fileName = `ensemble_size_${i}_model.pdb`
+        addFilesToLoadParams(fileName, i)
+      }
     } else if (job.mongo.__t === 'BilboMdScoper' && job.scoper?.foxsTopFile) {
       const pdbFilename = `scoper_combined_${job.scoper.foxsTopFile}`
       addFilesToLoadParams(pdbFilename, 1)

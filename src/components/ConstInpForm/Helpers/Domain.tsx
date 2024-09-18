@@ -103,10 +103,12 @@ const Domain: FC<DomainProps> = ({
                   : ''
               }
               sx={{ flex: '0 0 auto' }}
-              InputLabelProps={{
-                style: { backgroundColor: 'transparent', color: 'black' }
+              slotProps={{
+                inputLabel: {
+                  style: { backgroundColor: 'transparent', color: 'black' }
+                },
+                input: { style: { color: 'black' } }
               }}
-              InputProps={{ style: { color: 'black' } }}
               onChange={handleChange}
               onBlur={handleBlur}
               error={Boolean(
