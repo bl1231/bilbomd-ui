@@ -8,9 +8,9 @@ import {
   AccordionDetails,
   Chip,
   Divider,
-  Grid,
   Typography
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import HeaderBox from 'components/HeaderBox'
 
@@ -25,13 +25,16 @@ interface BilboMDStepsProps {
 }
 
 const BilboMDNerscSteps = ({ job }: BilboMDStepsProps) => {
+  // console.log('BilboMDNerscSteps: job:', job)
   let stepsToHide: string[] = []
   if (job.mongo.__t === 'BilboMdCRD') {
-    stepsToHide = ['autorg', 'pdb2crd', 'pae']
+    stepsToHide = ['autorg', 'pdb2crd', 'pae', 'alphafold']
   } else if (job.mongo.__t === 'BilboMdAuto') {
+    stepsToHide = ['autorg', 'alphafold']
+  } else if (job.mongo.__t === 'BilboMdAlphaFold') {
     stepsToHide = ['autorg']
   } else if (job.mongo.__t === 'BilboMdPDB') {
-    stepsToHide = ['autorg', 'pae']
+    stepsToHide = ['autorg', 'pae', 'alphafold']
   }
 
   const { steps } = job.mongo
@@ -91,7 +94,11 @@ const BilboMDNerscSteps = ({ job }: BilboMDStepsProps) => {
               <Typography sx={{ mr: 1 }}>
                 <b>INFO: </b>
               </Typography>
-              <Chip label={job.bullmq.bilbomdLastStep} size='small' />
+              {job.bullmq && job.bullmq.bilbomdLastStep ? (
+                <Chip label={job.bullmq.bilbomdLastStep} size='small' />
+              ) : (
+                <Chip label='N/A' size='small' />
+              )}
             </Grid>
           </Grid>
         </AccordionDetails>

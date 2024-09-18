@@ -73,6 +73,10 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.11.0
+  - Add BilboMD AF (AlphaFold) job type
+  - Add NERSC status checker so that new jobs cannot be submitted if Perlmutter is down.
+  - Various UI improvements
 - 1.10.3
   - Add Perlmutter outage notices to teh NERSC status component
 - 1.10.2
