@@ -202,7 +202,7 @@ const SingleJobPage = () => {
               sx={{ flexGrow: 1 }}
             />
             <Typography variant='h3' sx={{ ml: 1 }}>
-              {job.bullmq?.bullmq?.progress ?? 'n/a'} %
+              {parseFloat(job.bullmq?.bullmq?.progress ?? '0').toFixed(0)} %
             </Typography>
           </Item>
         </Grid>
