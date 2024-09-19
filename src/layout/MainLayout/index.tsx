@@ -25,7 +25,6 @@ import useAuth from 'hooks/useAuth'
 
 import Header from './Header'
 import Footer from './Footer'
-// ============================|| MAIN LAYOUT ||============================ //
 
 const drawerWidth = 170
 
@@ -77,6 +76,13 @@ export default function ClippedDrawer() {
       icon: <AddCircleOutlineOutlined />,
       path: '/dashboard/jobs/alphafold',
       onclick: () => navigate('dashboard/jobs/alphafold'),
+      roles: ['user', 'manager']
+    },
+    {
+      text: 'BilboMD SANS',
+      icon: <AddCircleOutlineOutlined />,
+      path: '/dashboard/jobs/sans',
+      onclick: () => navigate('dashboard/jobs/sans'),
       roles: ['user', 'manager']
     },
     {

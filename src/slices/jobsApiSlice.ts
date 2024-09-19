@@ -103,6 +103,14 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'Job', id: 'LIST' }]
     }),
+    addNewSANSJob: builder.mutation({
+      query: (newJob) => ({
+        url: '/jobs/bilbomd-sans',
+        method: 'POST',
+        body: newJob
+      }),
+      invalidatesTags: [{ type: 'Job', id: 'LIST' }]
+    }),
     addNewScoperJob: builder.mutation({
       query: (newJob) => ({
         url: '/jobs/bilbomd-scoper',
@@ -123,6 +131,7 @@ export const {
   useDeleteJobMutation,
   useAddNewAutoJobMutation,
   useAddNewAlphaFoldJobMutation,
+  useAddNewSANSJobMutation,
   useAddNewScoperJobMutation
 } = jobsApiSlice
 
