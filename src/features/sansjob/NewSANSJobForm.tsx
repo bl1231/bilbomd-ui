@@ -5,7 +5,9 @@ import {
   Typography,
   Alert,
   AlertTitle,
-  Paper
+  Paper,
+  Slider,
+  Chip
 } from '@mui/material'
 // import { Add, Delete } from '@mui/icons-material'
 import Grid from '@mui/material/Grid2'
@@ -53,13 +55,17 @@ const NewSANSJob = () => {
   const initialValues = {
     title: '',
     dat_file: '',
-    email: email
+    email: email,
+    d2o_fraction: 0,
+    deuteration_fraction: 0
   }
 
   const onSubmit = async (values, { setStatus }) => {
     const form = new FormData()
     form.append('title', values.title)
     form.append('dat_file', values.dat_file)
+    form.append('d2o_fraction', values.d2o_fraction)
+    form.append('deuteration_fraction', values.deuteration_fraction)
     form.append('email', values.email)
     form.append('bilbomd_mode', 'sans')
 
@@ -72,9 +78,16 @@ const NewSANSJob = () => {
   }
   const isFormValid = (values) => {
     return (
-      !isPerlmutterUnavailable && values.title !== '' && values.dat_file !== ''
+      !isPerlmutterUnavailable &&
+      values.title !== '' &&
+      values.dat_file !== '' &&
+      values.d2o_fraction >= 0 &&
+      values.d2o_fraction <= 100 &&
+      values.deuteration_fraction >= 0 &&
+      values.deuteration_fraction <= 100
     )
   }
+
   const content = (
     <>
       <Grid container spacing={2}>
@@ -156,6 +169,74 @@ const NewSANSJob = () => {
                           fileType='experimental SANS data *.dat'
                           fileExt='.dat'
                         />
+                      </Grid>
+
+                      {/* D2O Fraction Slider */}
+                      <Grid sx={{ my: 2, width: '520px' }}>
+                        <Box display='flex' alignItems='center'>
+                          <Typography id='d2o-fraction-slider' gutterBottom>
+                            D2O Fraction
+                          </Typography>
+                          <Chip
+                            label={`${values.d2o_fraction}%`}
+                            sx={{ ml: 2 }}
+                          />
+                        </Box>
+                        <Slider
+                          aria-labelledby='d2o-fraction-slider'
+                          name='d2o_fraction'
+                          value={values.d2o_fraction}
+                          onChange={(event, value) => {
+                            setFieldValue('d2o_fraction', value)
+                          }}
+                          min={0}
+                          max={100}
+                          step={1}
+                          marks
+                          valueLabelDisplay='off'
+                          disabled={isSubmitting}
+                        />
+                        {errors.d2o_fraction && touched.d2o_fraction ? (
+                          <Typography color='error'>
+                            {errors.d2o_fraction}
+                          </Typography>
+                        ) : null}
+                      </Grid>
+
+                      {/* Deuteration Fraction Slider */}
+                      <Grid sx={{ my: 2, width: '520px' }}>
+                        <Box display='flex' alignItems='center'>
+                          <Typography
+                            id='deuteration-fraction-slider'
+                            gutterBottom
+                          >
+                            Deuteration Fraction
+                          </Typography>
+                          <Chip
+                            label={`${values.deuteration_fraction}%`}
+                            sx={{ ml: 2 }}
+                          />
+                        </Box>
+                        <Slider
+                          aria-labelledby='deuteration-fraction-slider'
+                          name='deuteration_fraction'
+                          value={values.deuteration_fraction}
+                          onChange={(event, value) => {
+                            setFieldValue('deuteration_fraction', value)
+                          }}
+                          min={0}
+                          max={100}
+                          step={1}
+                          marks
+                          valueLabelDisplay='off'
+                          disabled={isSubmitting}
+                        />
+                        {errors.deuteration_fraction &&
+                        touched.deuteration_fraction ? (
+                          <Typography color='error'>
+                            {errors.deuteration_fraction}
+                          </Typography>
+                        ) : null}
                       </Grid>
                       {/* Progress Bar */}
                       {isSubmitting && (

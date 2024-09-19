@@ -1,4 +1,4 @@
-import { mixed, object, string } from 'yup'
+import { mixed, object, string, number } from 'yup'
 import { noSpaces, isSaxsData } from './ValidationFunctions'
 
 // const isAminoAcidSequence = (sequence: string) => {
@@ -54,7 +54,17 @@ const BilboMDSANSJobSchema = object().shape({
       (file) => {
         return file && (file as File).name.length <= 30
       }
-    )
+    ),
+
+  d2o_fraction: number()
+    .min(0, 'D2O Fraction cannot be less than 0')
+    .max(100, 'D2O Fraction cannot be more than 100')
+    .required('D2O Fraction is required'),
+
+  deuteration_fraction: number()
+    .min(0, 'Deuteration Fraction cannot be less than 0')
+    .max(100, 'Deuteration Fraction cannot be more than 100')
+    .required('Deuteration Fraction is required')
 })
 
 export { BilboMDSANSJobSchema }
