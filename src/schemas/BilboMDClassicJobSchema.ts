@@ -13,7 +13,7 @@ const BilboMDClassicJobSchema = object().shape({
   title: string()
     .required('Please provide a title for your BilboMD Job.')
     .min(4, 'Title must contain at least 4 characters.')
-    .max(24, 'Title must contain less than 20 characters.')
+    .max(24, 'Title must contain less than 24 characters.')
     .matches(/^[\w\s-]+$/, 'no special characters allowed'),
   psf_file: mixed().when('bilbomd_mode', {
     is: 'crd_psf',
