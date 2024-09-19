@@ -78,7 +78,10 @@ const UserAccount: React.FC = () => {
         setOtpSent(true);
         showMessageDialog('OTP is sent successfully to your new email address.');
         setIsOtpModalOpen(true); // Open OTP modal
-      } else {
+      } else if(response.status === 409) {
+          showMessageDialog('Email address already exists');
+      }
+      else {
         showMessageDialog('Error sending an OTP to your new email address');
       }
     } catch (error) {
@@ -153,25 +156,48 @@ const UserAccount: React.FC = () => {
 
   const confirmDeleteAccount = async () => {
     try {
-      await deleteAccountApiCall(username);
+      await deleteAccountApiCall(username); // Ensure we await the async function
+      setIsDeleteConfirmVisible(false); // Hide confirmation after successful deletion
     } catch (error) {
       console.error('Failed to delete account:', error);
+      setIsDeleteConfirmVisible(false); // Hide confirmation even if there's an error
     }
-    setIsDeleteConfirmVisible(false); // Hide confirmation after deletion
   };
-
-  const deleteAccountApiCall = (userId: string): Promise<void> => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (Math.random() > 0.5) {
-          resolve();
-        } else {
-          reject(new Error('Failed to delete account'));
-        }
-      }, 1000);
-    });
+  
+  const deleteAccountApiCall = async (username: string): Promise<void> => {
+    try {
+      console.log('Deleting account:', username);
+      const response = await fetch('/api/v1/users/delete-user-by-username', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        showMessageDialog('Account deleted successfully');
+        setTimeout(handleAutomaticLogout, 3000);
+      } else if (response.status === 404) {
+        showMessageDialog(data.message);
+        return Promise.reject('User not found');
+      }else if(response.status === 409) {
+         showMessageDialog('You have active jobs please delete them first before deleting account');
+      }
+      else {
+        showMessageDialog('Error deleting account');
+        return Promise.reject('Failed to delete account');
+      }
+    } catch (error) {
+      console.error('Error during delete account API call:', error);
+      showMessageDialog('An unexpected error occurred');
+      return Promise.reject(error);
+    }
   };
-
   return (
     <>
     <Box sx={{ maxWidth: 1000, margin: 'auto', mt: 4 }}>
