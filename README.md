@@ -73,6 +73,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.11.2
+  - Add line length validation (70 character limit) for user-uploaded `const.inp` files
 - 1.11.1
   - Add "experimental" tag to teh MolStar Viewer
   - Single Job Page loads with NERSC Steps Accordian unexpanded if job is Completed
