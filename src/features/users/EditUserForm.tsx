@@ -59,13 +59,8 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
 
   const { data: jobs } = useGetJobsQuery('jobsList', {})
 
-  let filteredJobs
-  if (jobs) {
-    filteredJobs = jobs.filter((job) => job.mongo.user === user.id)
-    // console.log('got jobs: ', filteredJobs)
-  } else {
-    console.log('no jobs')
-  }
+  const filteredJobs = jobs ? jobs.filter((job) => job.mongo.user === user.id) : [];
+
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -281,7 +276,7 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
 
       <Box sx={{ my: 1 }}>
         <HeaderBox>
-          <Chip label={`Jobs ${filteredJobs.length}`} color='success' />
+        <Chip label={`Jobs ${filteredJobs?.length || 0}`} color='success' />
         </HeaderBox>
         <Paper sx={{ p: 1 }}>
           {filteredJobs.length >= 1 ? (
