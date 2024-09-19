@@ -7,7 +7,8 @@ import {
   Typography,
   Alert,
   AlertTitle,
-  CircularProgress
+  CircularProgress,
+  Box
 } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import LinearProgress from '@mui/material/LinearProgress'
@@ -259,7 +260,15 @@ const SingleJobPage = () => {
         {job.mongo.status === 'Completed' && (
           <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
-              <Typography>Molstar Viewer</Typography>
+              <Typography>
+                Molstar Viewer{' '}
+                <Box
+                  component='span'
+                  sx={{ color: 'yellow', fontSize: '0.75em' }}
+                >
+                  experimental
+                </Box>
+              </Typography>
             </HeaderBox>
             <MolstarViewer job={job} />
           </Grid>

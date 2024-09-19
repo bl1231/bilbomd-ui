@@ -69,7 +69,7 @@ const BilboMDNerscSteps = ({ job }: BilboMDStepsProps) => {
       ))
 
     return (
-      <Accordion defaultExpanded>
+      <Accordion defaultExpanded={job.mongo.status !== 'Completed'}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
           sx={{
