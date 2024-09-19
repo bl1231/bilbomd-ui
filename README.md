@@ -73,6 +73,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.11.1
+  - Add "experimental" tag to teh MolStar Viewer
+  - Single Job Page loads with NERSC Steps Accordian unexpanded if job is Completed
 - 1.11.0
   - Add BilboMD AF (AlphaFold) job type
   - Add NERSC status checker so that new jobs cannot be submitted if Perlmutter is down.
