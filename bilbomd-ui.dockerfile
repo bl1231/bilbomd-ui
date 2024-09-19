@@ -24,7 +24,11 @@ ENV BILBOMD_UI_GIT_HASH=$BILBOMD_UI_GIT_HASH
 RUN npm run build
 
 # Copy over the version.json created in GitHub Actions
-COPY version.json /app/dist/version.json
+# COPY version.json /app/dist/version.json
+
+# Generate version.json during the build
+RUN echo "{ \"version\": \"${BILBOMD_UI_VERSION}\", \"gitHash\": \"${BILBOMD_UI_GIT_HASH}\" }" > /app/dist/version.json
+
 
 # -----------------------------------------------------------------------------
 # Serve stage
