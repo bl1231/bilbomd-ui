@@ -1,4 +1,4 @@
-import { mixed, object, string, number } from 'yup'
+import { mixed, object, string, number, TestContext } from 'yup'
 import { noSpaces, isSaxsData } from './ValidationFunctions'
 
 // const isAminoAcidSequence = (sequence: string) => {
@@ -30,7 +30,7 @@ const BilboMDSANSJobSchema = object().shape({
     .test(
       'saxs-data-check',
       'File does not appear to be SAXS data',
-      async function (file) {
+      async function (this: TestContext, file) {
         if (file) {
           const result = await isSaxsData(file as File)
           if (result.valid) return true
