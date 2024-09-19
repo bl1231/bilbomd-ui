@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router"
-import { useSendLogoutMutation } from "features/auth/authApiSlice"
+import { useSendLogoutMutation } from "slices/authApiSlice"
 
 const useLogout = () => {
   const navigate = useNavigate()
