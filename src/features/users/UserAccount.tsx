@@ -16,14 +16,13 @@ import useAuth from 'hooks/useAuth'
 import useLogout from 'hooks/useLogout'
 
 interface User {
-  id: string
   email: string
   username: string
   roles: string[]
 }
 
 const UserAccount: React.FC = () => {
-  const { id, username, email, roles } = useAuth() as User
+  const { username, email, roles } = useAuth() as User
   const [newEmail, setNewEmail] = useState('')
   const [isEmailValid, setIsEmailValid] = useState(false) // State for email validity
   const [otp, setOtp] = useState('')
@@ -65,7 +64,6 @@ const UserAccount: React.FC = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          id: id,
           username: username,
           currentEmail: email,
           newEmail: newEmail
