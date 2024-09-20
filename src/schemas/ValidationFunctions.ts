@@ -282,12 +282,12 @@ const isValidConstInpFile = (
       const lines = text.split('\n').filter((line) => line.trim() !== '') // Filter out empty lines
 
       // Check if any line exceeds 70 characters
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].length > 70) {
-          resolve(`Line ${i + 1} exceeds 70 characters.`)
-          return
-        }
-      }
+      // for (let i = 0; i < lines.length; i++) {
+      //   if (lines[i].length > 70) {
+      //     resolve(`Line ${i + 1} exceeds 70 characters.`)
+      //     return
+      //   }
+      // }
 
       // Check if the last non-empty line is exactly 'return'
       if (lines.length === 0 || lines[lines.length - 1].trim() !== 'return') {
