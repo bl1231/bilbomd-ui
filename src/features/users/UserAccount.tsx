@@ -76,17 +76,17 @@ const UserAccount: React.FC = () => {
       if (response.ok) {
         console.log(data.message)
         setOtpSent(true)
-        showMessageDialog('OTP is sent successfully to your new email address.')
+        showMessageDialog('OTP is sent successfully to your current email address.')
         setIsOtpModalOpen(true) // Open OTP modal
       } else if (response.status === 409) {
         showMessageDialog('Email address already exists')
       } else if (response.status === 400) {
         showMessageDialog(data.message)
       } else {
-        showMessageDialog('Error sending an OTP to your new email address')
+        showMessageDialog('Error sending an OTP to your current email address')
       }
     } catch (error) {
-      showMessageDialog('Error sending an OTP to your new email address')
+      showMessageDialog('Error sending an OTP to your current email address')
     }
   }
 
@@ -140,7 +140,7 @@ const UserAccount: React.FC = () => {
 
       const data = await response.json()
       if (response.ok) {
-        showMessageDialog('OTP sent successfully to your new email address')
+        showMessageDialog('OTP sent successfully to your current email address')
       } else {
         showMessageDialog('Error resending OTP')
       }
