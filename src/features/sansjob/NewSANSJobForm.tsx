@@ -54,7 +54,9 @@ const NewSANSJob = () => {
   }
   const initialValues = {
     title: '',
+    pdb_file: '',
     dat_file: '',
+    inp_file: '',
     email: email,
     d2o_fraction: 0,
     deuteration_fraction: 0
@@ -63,7 +65,9 @@ const NewSANSJob = () => {
   const onSubmit = async (values, { setStatus }) => {
     const form = new FormData()
     form.append('title', values.title)
+    form.append('pdb_file', values.pdb_file)
     form.append('dat_file', values.dat_file)
+    form.append('inp_file', values.inp_file)
     form.append('d2o_fraction', values.d2o_fraction)
     form.append('deuteration_fraction', values.deuteration_fraction)
     form.append('email', values.email)
@@ -76,11 +80,14 @@ const NewSANSJob = () => {
       console.error('rejected', error)
     }
   }
+
   const isFormValid = (values) => {
     return (
       !isPerlmutterUnavailable &&
       values.title !== '' &&
+      values.pdb_file !== '' &&
       values.dat_file !== '' &&
+      values.inp_file !== '' &&
       values.d2o_fraction >= 0 &&
       values.d2o_fraction <= 100 &&
       values.deuteration_fraction >= 0 &&
@@ -154,6 +161,23 @@ const NewSANSJob = () => {
                         />
                       </Grid>
 
+                      {/* PDB file */}
+                      <Grid>
+                        <Field
+                          name='pdb_file'
+                          id='pdb-file-upload'
+                          as={FileSelect}
+                          title='Select File'
+                          disabled={isSubmitting}
+                          setFieldValue={setFieldValue}
+                          setFieldTouched={setFieldTouched}
+                          error={errors.pdb_file && touched.pdb_file}
+                          errorMessage={errors.pdb_file ? errors.pdb_file : ''}
+                          fileType='Starting PDB file *.pdb'
+                          fileExt='.pdb'
+                        />
+                      </Grid>
+
                       {/* SANS dat file */}
                       <Grid>
                         <Field
@@ -168,6 +192,23 @@ const NewSANSJob = () => {
                           errorMessage={errors.dat_file ? errors.dat_file : ''}
                           fileType='experimental SANS data *.dat'
                           fileExt='.dat'
+                        />
+                      </Grid>
+
+                      {/* const.inp file */}
+                      <Grid>
+                        <Field
+                          name='inp_file'
+                          id='const-inp-file-upload'
+                          as={FileSelect}
+                          title='Select File'
+                          disabled={isSubmitting}
+                          setFieldValue={setFieldValue}
+                          setFieldTouched={setFieldTouched}
+                          error={errors.inp_file && touched.inp_file}
+                          errorMessage={errors.inp_file ? errors.inp_file : ''}
+                          fileType='CHARMM const.inp file'
+                          fileExt='.inp'
                         />
                       </Grid>
 
