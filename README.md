@@ -12,10 +12,11 @@ There are a number of scripts defined in the `package.json` file:
 
 ```json
   "scripts": {
+    "clean": "rimraf dist/*",
     "dev": "GIT_HASH=$(git rev-parse --short HEAD) vite",
     "prebuild": "tsc",
     "build": "vite build",
-    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint",
     "preview": "vite preview",
     "optimize": "vite optimize"
   }
@@ -35,33 +36,18 @@ Will transpile the Typescript code using `tsc` then optimize for production. Out
 
 ### `npm run lint`
 
-I haven't played with this much. I do most linting in VSCode
+Will run eslint on code.
 
 ## Deploy production
 
-The production instance is served from an `ngnix` [Docker container](https://hub.docker.com/_/nginx). Have a look at the `Dockerfile` for details of the docker build. The entire production ecosystem is deployed as a single Docker compose setup. Details are in the [bilbomd](https://github.com/bl1231/bilbomd) repo.
+The production instance is served from an `ngnix` [Docker container](https://hub.docker.com/_/nginx). Have a look at the `bilbomd-ui.dockerfile` for details of the docker build. The entire production ecosystem is deployed as a single Docker compose setup. Details are in the [bilbomd](https://github.com/bl1231/bilbomd) repo.
 
 ## NERSC Notes
 
-When deployed to NERSC/SPIN it is not possible to develop the frontend with a simple `npm run dev` unless you forward the backend proxy. We can expose a loadbalancing port from the Rancher K8 control plane and then use SSH tunnels.
+When deployed to NERSC/SPIN in order to develop the frontend with a simple `npm run dev` you must forward the backend proxy. We can expose a loadbalancing port from the Rancher K8 control plane and then use SSH tunnels.
 
 ```bash
 ssh -L 3501:backend-loadbalancer.bilbomd.development.svc.spin.nersc.org:5432 perlmutter
-```
-
-Make sure the proxy settings in `vite.config.ts` point to `localhost:5432` (SPIN) instead of `localhost:3501` (local Docker).
-
-Make sure that the ENV variable `VITE_USE_NERSC=true` in `.env` is set to `true`
-
-```bash
-# --------------------------------------------------------------------------- #
-# WARNING - DO NOT PUT SENSITIVE INFORMATION IN THIS FILE                     #
-# --------------------------------------------------------------------------- #
-# This files is needed by Vite during `npm run build` to bake these variables #
-# into the frontend React code.                                               #
-# --------------------------------------------------------------------------- #
-VITE_USE_NERSC=true
-VITE_NERSC_PROJ=m4659
 ```
 
 Then you should be able to start a local development instance of `bilbomd-ui` with `npm run dev` and point your browser to `localhost:3002` and you should be connected to the development backend service running on SPIN.
@@ -69,10 +55,14 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 ## Authors
 
 - Scott Classen sclassen at lbl dot gov
+- Shreyas Prabhakar shreyasprabhakar at lbl dot gov
 - Michal Hammel mhammel at lbl dot gov
 
 ## Version History
 
+- 1.11.3
+  - Remove line length validation (70 character limit) for user-uploaded `const.inp` files.
+  - Instead we will sanitize `const.inp` files on the backend.
 - 1.11.2
   - Add line length validation (70 character limit) for user-uploaded `const.inp` files
 - 1.11.1
