@@ -1,10 +1,7 @@
 import { useEffect } from 'react'
 import { Box, Typography, Chip, Slider } from '@mui/material'
 import Grid from '@mui/material/Grid2'
-
-interface DeuterationValues {
-  [key: string]: number
-}
+import { NewSANSJobFormValues } from 'types/sansForm'
 
 interface FormikErrors {
   [key: string]: string | undefined
@@ -16,7 +13,7 @@ interface FormikTouched {
 
 interface DynamicChainSlidersProps {
   chainIds: string[]
-  values: DeuterationValues
+  values: NewSANSJobFormValues
   errors: FormikErrors
   touched: FormikTouched
   isSubmitting: boolean
