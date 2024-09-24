@@ -125,7 +125,6 @@ const NewSANSJob = () => {
       })
   }
 
-  // Function to parse PDB file and extract unique chain IDs
   const parsePDBFile = (fileContent: string): string[] => {
     const lines = fileContent.split('\n')
     const chainIdsSet: Set<string> = new Set()
@@ -150,9 +149,7 @@ const NewSANSJob = () => {
       values.dat_file !== '' &&
       values.inp_file !== '' &&
       values.d2o_fraction >= 0 &&
-      values.d2o_fraction <= 100 &&
-      values.deuteration_fraction >= 0 &&
-      values.deuteration_fraction <= 100
+      values.d2o_fraction <= 100
     )
   }
 
