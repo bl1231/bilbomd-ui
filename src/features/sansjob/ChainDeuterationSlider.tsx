@@ -2,15 +2,27 @@ import { useEffect } from 'react'
 import { Box, Typography, Chip, Slider } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 
+interface DeuterationValues {
+  [key: string]: number
+}
+
+interface FormikErrors {
+  [key: string]: string | undefined
+}
+
+interface FormikTouched {
+  [key: string]: boolean | undefined
+}
+
 interface DynamicChainSlidersProps {
   chainIds: string[]
-  values: { [key: string]: any }
-  errors: { [key: string]: any }
-  touched: { [key: string]: any }
+  values: DeuterationValues
+  errors: FormikErrors
+  touched: FormikTouched
   isSubmitting: boolean
   setFieldValue: (
     field: string,
-    value: any,
+    value: number,
     shouldValidate?: boolean | undefined
   ) => void
 }
@@ -53,7 +65,10 @@ const DynamicChainSliders: React.FC<DynamicChainSlidersProps> = ({
             name={`deuteration_fraction_${chainId}`}
             value={values[`deuteration_fraction_${chainId}`] || 0}
             onChange={(event, value) => {
-              setFieldValue(`deuteration_fraction_${chainId}`, value)
+              setFieldValue(
+                `deuteration_fraction_${chainId}`,
+                Array.isArray(value) ? value[0] : value
+              )
             }}
             min={0}
             max={100}
