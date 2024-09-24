@@ -96,6 +96,26 @@ const BilboMDSANSJobSchema = object().shape({
         return file && (file as File).name.length <= 30
       }
     ),
+  rg_min: number()
+    .integer()
+    .positive()
+    .min(10)
+    .max(100)
+    .required('Please provide a Minimum Rg value'),
+  rg_max: number()
+    .integer()
+    .positive()
+    .min(10)
+    .max(100)
+    .required('Please provide a Maximum Rg value')
+    .test(
+      'is-greater',
+      'Rg Maximum must be at least 1 Å greater than Rg Minimum',
+      function (value) {
+        const { rg_min } = this.parent
+        return value > rg_min
+      }
+    ),
   inp_file: mixed()
     .required('const.inp file is required')
     .test('file-size-check', 'Max file size is 2MB', (file) => {
