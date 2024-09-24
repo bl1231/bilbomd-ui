@@ -138,12 +138,7 @@ const BilboMDSANSJobSchema = object().shape({
   d2o_fraction: number()
     .min(0, 'D2O Fraction cannot be less than 0')
     .max(100, 'D2O Fraction cannot be more than 100')
-    .required('D2O Fraction is required'),
-
-  deuteration_fraction: number()
-    .min(0, 'Deuteration Fraction cannot be less than 0')
-    .max(100, 'Deuteration Fraction cannot be more than 100')
-    .required('Deuteration Fraction is required')
+    .required('D2O Fraction is required')
 })
 
 export { BilboMDSANSJobSchema }
