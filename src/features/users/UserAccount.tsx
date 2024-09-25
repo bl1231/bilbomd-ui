@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useState } from 'react'
+import { useReducer } from 'react'
 import {
   Typography,
   Button,
@@ -14,6 +14,12 @@ import {
 } from '@mui/material'
 import useAuth from 'hooks/useAuth'
 import useLogout from 'hooks/useLogout'
+import {
+  useUpdateEmailMutation,
+  useVerifyOtpMutation,
+  useResendOtpMutation,
+  useDeleteUserByUserNameMutation
+} from '../../slices/userAccountApiSlice'
 
 interface User {
   email: string
@@ -21,29 +27,76 @@ interface User {
   roles: string[]
 }
 
+interface State {
+  newEmail: string
+  isEmailValid: boolean
+  otp: string
+  isOtpModalOpen: boolean
+  isMessageDialogOpen: boolean
+  message: string
+  isDeleteConfirmVisible: boolean
+}
+
+const initialState: State = {
+  newEmail: '',
+  isEmailValid: false,
+  otp: '',
+  isOtpModalOpen: false,
+  isMessageDialogOpen: false,
+  message: '',
+  isDeleteConfirmVisible: false
+}
+
+type Action =
+  | { type: 'SET_NEW_EMAIL'; payload: string }
+  | { type: 'SET_IS_EMAIL_VALID'; payload: boolean }
+  | { type: 'SET_OTP'; payload: string }
+  | { type: 'TOGGLE_OTP_MODAL'; payload: boolean }
+  | { type: 'TOGGLE_MESSAGE_DIALOG'; payload: boolean }
+  | { type: 'SET_MESSAGE'; payload: string }
+  | { type: 'TOGGLE_DELETE_CONFIRM'; payload: boolean }
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case 'SET_NEW_EMAIL':
+      return { ...state, newEmail: action.payload }
+    case 'SET_IS_EMAIL_VALID':
+      return { ...state, isEmailValid: action.payload }
+    case 'SET_OTP':
+      return { ...state, otp: action.payload }
+    case 'TOGGLE_OTP_MODAL':
+      return { ...state, isOtpModalOpen: action.payload }
+    case 'TOGGLE_MESSAGE_DIALOG':
+      return { ...state, isMessageDialogOpen: action.payload }
+    case 'SET_MESSAGE':
+      return { ...state, message: action.payload }
+    case 'TOGGLE_DELETE_CONFIRM':
+      return { ...state, isDeleteConfirmVisible: action.payload }
+    default:
+      return state
+  }
+}
+
 const UserAccount: React.FC = () => {
   const { username, email, roles } = useAuth() as User
-  const [newEmail, setNewEmail] = useState('')
-  const [isEmailValid, setIsEmailValid] = useState(false) // State for email validity
-  const [otp, setOtp] = useState('')
-  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false)
-  const [otpSent, setOtpSent] = useState(false)
-  const [isMessageDialogOpen, setIsMessageDialogOpen] = useState(false)
-  const [message, setMessage] = useState('')
-  const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false) // Added missing useState
+  const [state, dispatch] = useReducer(reducer, initialState)
+
+  const [updateEmail] = useUpdateEmailMutation()
+  const [verifyOtp] = useVerifyOtpMutation()
+  const [resendOtp] = useResendOtpMutation()
+  const [deleteUserByUserName] = useDeleteUserByUserNameMutation()
 
   const showMessageDialog = (msg: string) => {
-    setMessage(msg)
-    setIsMessageDialogOpen(true)
+    dispatch({ type: 'SET_MESSAGE', payload: msg })
+    dispatch({ type: 'TOGGLE_MESSAGE_DIALOG', payload: true })
   }
 
   const handleNewEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const email = e.target.value
-    setNewEmail(email)
+    dispatch({ type: 'SET_NEW_EMAIL', payload: email })
 
-    // Simple email validation regex
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    setIsEmailValid(emailRegex.test(email))
+    dispatch({ type: 'SET_IS_EMAIL_VALID', payload: emailRegex.test(email) })
   }
 
   const logout = useLogout()
@@ -52,155 +105,99 @@ const UserAccount: React.FC = () => {
   }
 
   const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setOtp(e.target.value)
+    dispatch({ type: 'SET_OTP', payload: e.target.value })
   }
 
   const handleUpdateEmail = async () => {
     try {
-      console.log('Updating email to:', newEmail)
-      const response = await fetch('/api/v1/users/change-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          username: username,
-          currentEmail: email,
-          newEmail: newEmail
-        })
-      })
+      console.log('Updating email to:', state.newEmail)
+      await updateEmail({
+        username,
+        currentEmail: email,
+        newEmail: state.newEmail
+      }).unwrap()
 
-      const data = await response.json()
-      if (response.ok) {
-        console.log(data.message)
-        setOtpSent(true)
-        showMessageDialog(
-          'OTP is sent successfully to your current email address.'
-        )
-        setIsOtpModalOpen(true) // Open OTP modal
-      } else if (response.status === 409) {
+      showMessageDialog(
+        'OTP is sent successfully to your current email address.'
+      )
+      dispatch({ type: 'TOGGLE_OTP_MODAL', payload: true }) // Open OTP modal
+    } catch (error: any) {
+      if (error.status === 409) {
         showMessageDialog('Email address already exists')
-      } else if (response.status === 400) {
-        showMessageDialog(data.message)
+      } else if (error.status === 400) {
+        showMessageDialog(error.data.message)
       } else {
         showMessageDialog('Error sending an OTP to your current email address')
       }
-    } catch (error) {
-      showMessageDialog('Error sending an OTP to your current email address')
     }
   }
 
   const handleVerifyOtp = async () => {
-    console.log('Verifying OTP:', otp)
+    console.log('Verifying OTP:', state.otp)
 
     try {
-      const response = await fetch('/api/v1/users/verify-otp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          username: username,
-          currentEmail: email,
-          newEmail: newEmail,
-          otp: otp
-        })
-      })
+      await verifyOtp({
+        username,
+        currentEmail: email,
+        newEmail: state.newEmail,
+        otp: state.otp
+      }).unwrap()
 
-      const data = await response.json()
-      if (response.ok) {
-        console.log(data.message) // "Email address updated successfully"
-        showMessageDialog(
-          'New Email address updated successfully. Please login with your new email address.'
-        )
-        setTimeout(handleAutomaticLogout, 3000)
-        setIsOtpModalOpen(false) // Close OTP modal after successful verification
-      } else {
-        showMessageDialog('Error verifying OTP')
-      }
+      showMessageDialog(
+        'New Email address updated successfully. Please login with your new email address.'
+      )
+      setTimeout(handleAutomaticLogout, 3000)
+      dispatch({ type: 'TOGGLE_OTP_MODAL', payload: false }) // Close OTP modal after successful verification
     } catch (error) {
       showMessageDialog('Error verifying OTP')
     }
   }
 
   const handleResendOtp = async () => {
-    setOtp('')
+    dispatch({ type: 'SET_OTP', payload: '' })
     try {
-      const response = await fetch('/api/v1/users/resend-otp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          username: username,
-          currentEmail: email,
-          newEmail: newEmail
-        })
-      })
+      await resendOtp({
+        username,
+        currentEmail: email,
+        newEmail: state.newEmail
+      }).unwrap()
 
-      const data = await response.json()
-      if (response.ok) {
-        showMessageDialog('OTP sent successfully to your current email address')
-      } else {
-        showMessageDialog('Error resending OTP')
-      }
+      showMessageDialog('OTP sent successfully to your current email address')
     } catch (error) {
       showMessageDialog('Error resending OTP')
     }
-
-    console.log('Resending OTP to:', newEmail)
   }
 
   const handleDeleteAccount = () => {
-    setIsDeleteConfirmVisible(true) // Toggle state to show delete confirmation
+    dispatch({ type: 'TOGGLE_DELETE_CONFIRM', payload: true }) // Toggle state to show delete confirmation
   }
 
   const confirmDeleteAccount = async () => {
-    try {
-      await deleteAccountApiCall(username) // Ensure we await the async function
-      setIsDeleteConfirmVisible(false) // Hide confirmation after successful deletion
-    } catch (error) {
-      console.error('Failed to delete account:', error)
-      setIsDeleteConfirmVisible(false) // Hide confirmation even if there's an error
+    if (!username) {
+      showMessageDialog('Username is undefined. Cannot delete account.')
+      return
     }
-  }
 
-  const deleteAccountApiCall = async (username: string): Promise<void> => {
     try {
       console.log('Deleting account:', username)
-      const response = await fetch(
-        `/api/v1/users/delete-user-by-username/${username}`,
-        {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-          // No need for body since the username is in the URL
-        }
-      )
-
-      const data = await response.json()
-
-      if (response.ok) {
-        showMessageDialog('Account deleted successfully')
-        setTimeout(handleAutomaticLogout, 3000)
-      } else if (response.status === 404) {
-        showMessageDialog(data.message)
-        return Promise.reject('User not found')
-      } else if (response.status === 409) {
+      await deleteUserByUserName(username).unwrap()
+      showMessageDialog('Account deleted successfully')
+      setTimeout(handleAutomaticLogout, 3000)
+      dispatch({ type: 'TOGGLE_DELETE_CONFIRM', payload: false }) // Hide confirmation after successful deletion
+    } catch (error: any) {
+      if (error.status === 404) {
+        showMessageDialog(error.data.message)
+      } else if (error.status === 409) {
         showMessageDialog(
           'You have active jobs; please delete them first before deleting the account.'
         )
       } else {
         showMessageDialog('Error deleting account')
-        return Promise.reject('Failed to delete account')
       }
-    } catch (error) {
-      console.error('Error during delete account API call:', error)
-      showMessageDialog('An unexpected error occurred')
-      return Promise.reject(error)
+      dispatch({ type: 'TOGGLE_DELETE_CONFIRM', payload: false }) // Hide confirmation even if there's an error
     }
   }
+
   return (
     <>
       <Box sx={{ maxWidth: 1000, margin: 'auto', mt: 4 }}>
@@ -247,7 +244,7 @@ const UserAccount: React.FC = () => {
                 fullWidth
                 label='New Email Address'
                 variant='outlined'
-                value={newEmail}
+                value={state.newEmail}
                 onChange={handleNewEmailChange}
                 sx={{ mb: 2 }}
                 placeholder='Enter new email address'
@@ -257,7 +254,7 @@ const UserAccount: React.FC = () => {
                 variant='contained'
                 color='primary'
                 onClick={handleUpdateEmail}
-                disabled={!isEmailValid} // Disable button if email is invalid
+                disabled={!state.isEmailValid} // Disable button if email is invalid
               >
                 Update Email
               </Button>
@@ -266,14 +263,17 @@ const UserAccount: React.FC = () => {
         </Card>
 
         {/* OTP Verification Modal */}
-        <Dialog open={isOtpModalOpen} onClose={() => setIsOtpModalOpen(false)}>
+        <Dialog
+          open={state.isOtpModalOpen}
+          onClose={() => dispatch({ type: 'TOGGLE_OTP_MODAL', payload: false })}
+        >
           <DialogTitle>Verify OTP</DialogTitle>
           <DialogContent>
             <TextField
               fullWidth
               label='Enter OTP'
               variant='outlined'
-              value={otp}
+              value={state.otp}
               onChange={handleOtpChange}
               sx={{ mt: 2 }}
               placeholder='Enter OTP'
@@ -295,16 +295,20 @@ const UserAccount: React.FC = () => {
 
         {/* Message Dialog */}
         <Dialog
-          open={isMessageDialogOpen}
-          onClose={() => setIsMessageDialogOpen(false)}
+          open={state.isMessageDialogOpen}
+          onClose={() =>
+            dispatch({ type: 'TOGGLE_MESSAGE_DIALOG', payload: false })
+          }
         >
           <DialogTitle>Notification</DialogTitle>
           <DialogContent>
-            <Typography>{message}</Typography>
+            <Typography>{state.message}</Typography>
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={() => setIsMessageDialogOpen(false)}
+              onClick={() =>
+                dispatch({ type: 'TOGGLE_MESSAGE_DIALOG', payload: false })
+              }
               variant='contained'
             >
               OK
@@ -347,8 +351,10 @@ const UserAccount: React.FC = () => {
 
         {/* Delete Account Confirmation Modal */}
         <Dialog
-          open={isDeleteConfirmVisible}
-          onClose={() => setIsDeleteConfirmVisible(false)}
+          open={state.isDeleteConfirmVisible}
+          onClose={() =>
+            dispatch({ type: 'TOGGLE_DELETE_CONFIRM', payload: false })
+          }
         >
           <DialogTitle>Confirm Account Deletion</DialogTitle>
           <DialogContent>
@@ -359,7 +365,9 @@ const UserAccount: React.FC = () => {
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={() => setIsDeleteConfirmVisible(false)}
+              onClick={() =>
+                dispatch({ type: 'TOGGLE_DELETE_CONFIRM', payload: false })
+              }
               variant='outlined'
             >
               Cancel
