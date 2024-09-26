@@ -198,24 +198,42 @@ const UserAccount: React.FC = () => {
     }
   }
 
+  const SectionHeader: React.FC<{ title: string }> = ({ title }) => (
+    <Typography
+      variant='h6'
+      sx={{
+        backgroundColor: '#888',
+        color: 'white',
+        padding: '16px',
+        borderRadius: '4px 4px 0 0',
+        textTransform: 'uppercase'
+      }}
+      gutterBottom
+    >
+      {title}
+    </Typography>
+  )
+
+  const CustomDialog: React.FC<{
+    open: boolean
+    onClose: () => void
+    title: string
+    children: React.ReactNode
+    actions: React.ReactNode
+  }> = ({ open, onClose, title, children, actions }) => (
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent>{children}</DialogContent>
+      <DialogActions>{actions}</DialogActions>
+    </Dialog>
+  )
+
   return (
     <>
       <Box sx={{ maxWidth: 1000, margin: 'auto', mt: 4 }}>
         <Card sx={{ mb: 2 }}>
           <CardContent sx={{ p: 0 }}>
-            <Typography
-              variant='h6'
-              sx={{
-                backgroundColor: '#888',
-                color: 'white',
-                padding: '16px',
-                borderRadius: '4px 4px 0 0',
-                textTransform: 'uppercase'
-              }}
-              gutterBottom
-            >
-              User Information
-            </Typography>
+            <SectionHeader title='User Information' />
             <Box sx={{ p: 2 }}>
               <Typography>User Name: {username}</Typography>
               <Typography>Email Address: {email}</Typography>
@@ -226,19 +244,7 @@ const UserAccount: React.FC = () => {
 
         <Card sx={{ mb: 2 }}>
           <CardContent sx={{ p: 0 }}>
-            <Typography
-              variant='h6'
-              sx={{
-                backgroundColor: '#888',
-                color: 'white',
-                padding: '16px',
-                borderRadius: '4px 4px 0 0',
-                textTransform: 'uppercase'
-              }}
-              gutterBottom
-            >
-              Change Email Address
-            </Typography>
+            <SectionHeader title='Change Email Address' />
             <Box sx={{ p: 2 }}>
               <TextField
                 fullWidth
@@ -263,48 +269,44 @@ const UserAccount: React.FC = () => {
         </Card>
 
         {/* OTP Verification Modal */}
-        <Dialog
+        <CustomDialog
           open={state.isOtpModalOpen}
           onClose={() => dispatch({ type: 'TOGGLE_OTP_MODAL', payload: false })}
+          title='Verify OTP'
+          actions={
+            <>
+              <Button onClick={handleResendOtp} variant='outlined'>
+                Resend OTP
+              </Button>
+              <Button
+                onClick={handleVerifyOtp}
+                variant='contained'
+                color='primary'
+              >
+                Verify OTP
+              </Button>
+            </>
+          }
         >
-          <DialogTitle>Verify OTP</DialogTitle>
-          <DialogContent>
-            <TextField
-              fullWidth
-              label='Enter OTP'
-              variant='outlined'
-              value={state.otp}
-              onChange={handleOtpChange}
-              sx={{ mt: 2 }}
-              placeholder='Enter OTP'
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleResendOtp} variant='outlined'>
-              Resend OTP
-            </Button>
-            <Button
-              onClick={handleVerifyOtp}
-              variant='contained'
-              color='primary'
-            >
-              Verify OTP
-            </Button>
-          </DialogActions>
-        </Dialog>
+          <TextField
+            fullWidth
+            label='Enter OTP'
+            variant='outlined'
+            value={state.otp}
+            onChange={handleOtpChange}
+            sx={{ mt: 2 }}
+            placeholder='Enter OTP'
+          />
+        </CustomDialog>
 
         {/* Message Dialog */}
-        <Dialog
+        <CustomDialog
           open={state.isMessageDialogOpen}
           onClose={() =>
             dispatch({ type: 'TOGGLE_MESSAGE_DIALOG', payload: false })
           }
-        >
-          <DialogTitle>Notification</DialogTitle>
-          <DialogContent>
-            <Typography>{state.message}</Typography>
-          </DialogContent>
-          <DialogActions>
+          title='Notification'
+          actions={
             <Button
               onClick={() =>
                 dispatch({ type: 'TOGGLE_MESSAGE_DIALOG', payload: false })
@@ -313,25 +315,15 @@ const UserAccount: React.FC = () => {
             >
               OK
             </Button>
-          </DialogActions>
-        </Dialog>
+          }
+        >
+          <Typography>{state.message}</Typography>
+        </CustomDialog>
 
         {/* Account Deletion Section */}
         <Card>
           <CardContent sx={{ p: 0 }}>
-            <Typography
-              variant='h6'
-              sx={{
-                backgroundColor: '#888',
-                color: 'white',
-                padding: '16px',
-                borderRadius: '4px 4px 0 0',
-                textTransform: 'uppercase'
-              }}
-              gutterBottom
-            >
-              Delete Account
-            </Typography>
+            <SectionHeader title='Delete Account' />
             <Box sx={{ p: 2 }}>
               <Button
                 fullWidth
@@ -350,37 +342,37 @@ const UserAccount: React.FC = () => {
         </Card>
 
         {/* Delete Account Confirmation Modal */}
-        <Dialog
+        <CustomDialog
           open={state.isDeleteConfirmVisible}
           onClose={() =>
             dispatch({ type: 'TOGGLE_DELETE_CONFIRM', payload: false })
           }
+          title='Confirm Account Deletion'
+          actions={
+            <>
+              <Button
+                onClick={() =>
+                  dispatch({ type: 'TOGGLE_DELETE_CONFIRM', payload: false })
+                }
+                variant='outlined'
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={confirmDeleteAccount}
+                variant='contained'
+                color='error'
+              >
+                Delete Account
+              </Button>
+            </>
+          }
         >
-          <DialogTitle>Confirm Account Deletion</DialogTitle>
-          <DialogContent>
-            <Typography>
-              Are you sure you want to delete your account? This action cannot
-              be undone.
-            </Typography>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={() =>
-                dispatch({ type: 'TOGGLE_DELETE_CONFIRM', payload: false })
-              }
-              variant='outlined'
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={confirmDeleteAccount}
-              variant='contained'
-              color='error'
-            >
-              Delete Account
-            </Button>
-          </DialogActions>
-        </Dialog>
+          <Typography>
+            Are you sure you want to delete your account? This action cannot be
+            undone.
+          </Typography>
+        </CustomDialog>
       </Box>
     </>
   )
