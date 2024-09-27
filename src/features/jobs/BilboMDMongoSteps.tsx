@@ -28,7 +28,7 @@ const BilboMDMongoSteps: React.FC<BilboMDMongoStepsProps> = ({ steps }) => {
 
   // Find the latest message from the steps
   const latestStepMessage = Object.entries(steps).reduce(
-    (latestMessage, [stepName, stepValue]) => {
+    (latestMessage, [, stepValue]) => {
       return stepValue.message || latestMessage // Find the latest available message
     },
     ''
@@ -53,13 +53,17 @@ const BilboMDMongoSteps: React.FC<BilboMDMongoStepsProps> = ({ steps }) => {
         <Grid container sx={{ flexDirection: 'column' }}>
           {bilboMdSteps}
 
-          {/* Display the latest message in a Chip */}
           {latestStepMessage && (
             <Chip
-              label={`Latest message: ${latestStepMessage}`}
-              color='primary' // You can change the color as needed
-              variant='outlined' // Use outlined variant or filled depending on the design
-              sx={{ mt: 2 }}
+              label={latestStepMessage}
+              variant='filled'
+              sx={{
+                mt: 2,
+                fontSize: '1.5em',
+                backgroundColor: 'green',
+                color: 'white',
+                width: 'auto'
+              }}
             />
           )}
         </Grid>
