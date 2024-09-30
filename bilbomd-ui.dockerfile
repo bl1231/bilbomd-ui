@@ -16,7 +16,7 @@ COPY package*.json ./
 RUN echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" > /root/.npmrc
 
 # Install dependencies
-RUN npm ci --force
+RUN npm ci
 
 # Remove .npmrc file for security
 RUN rm /root/.npmrc
