@@ -48,6 +48,8 @@ export default function ClippedDrawer() {
     return <Alert severity='warning'>No configuration data available</Alert>
 
   const useNersc = config.useNersc?.toLowerCase() === 'true'
+  const enableBilboMdSANS = config.enableBilboMdSANS?.toLowerCase() === 'true'
+  // console.log(`enableBilboMdSANS: ${enableBilboMdSANS}`)
 
   let menuItems = [
     {
@@ -128,6 +130,10 @@ export default function ClippedDrawer() {
 
   if (!useNersc) {
     menuItems = menuItems.filter((item) => item.text !== 'BilboMD AF')
+  }
+
+  if (!enableBilboMdSANS) {
+    menuItems = menuItems.filter((item) => item.text !== 'BilboMD SANS')
   }
 
   const buttonContent = (
