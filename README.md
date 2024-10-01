@@ -60,6 +60,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.12.0
+  - Add initial BilboMD SANS forms
+  - Add @bl1231/bilbomd-mongodb-schema as a dependency
 - 1.11.3
   - Remove line length validation (70 character limit) for user-uploaded `const.inp` files.
   - Instead we will sanitize `const.inp` files on the backend.
