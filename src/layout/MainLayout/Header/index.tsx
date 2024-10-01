@@ -22,6 +22,104 @@ import { Link } from 'react-router-dom'
 import nerscLogo from 'assets/nersc-logo.png'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
+const UserMenu = ({
+  anchorElUser,
+  handleOpenUserMenu,
+  handleCloseUserMenu,
+  settings
+}) => (
+  <>
+    <Tooltip
+      title='Open settings'
+      sx={{ flexGrow: 1, justifyContent: 'flex-end' }}
+    >
+      <IconButton
+        onClick={handleOpenUserMenu}
+        sx={{ p: 0, flexGrow: 0, justifyContent: 'flex-end' }}
+      >
+        <Avatar>
+          <PersonIcon />
+        </Avatar>
+      </IconButton>
+    </Tooltip>
+    <Menu
+      sx={{ mt: '45px' }}
+      id='menu-appbar'
+      anchorEl={anchorElUser}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right'
+      }}
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right'
+      }}
+      open={Boolean(anchorElUser)}
+      onClose={handleCloseUserMenu}
+    >
+      {settings.map((setting) => (
+        <MenuItem key={setting.text} onClick={setting.onclick}>
+          <Typography textAlign='center'>{setting.text}</Typography>
+        </MenuItem>
+      ))}
+      <MenuItem>
+        <LogOut />
+      </MenuItem>
+    </Menu>
+  </>
+)
+
+const NerscLogo = ({ useNersc, mode }) =>
+  useNersc && (
+    <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', p: 1 }}>
+      <img src={nerscLogo} alt='NERSC Logo' style={{ height: '30px' }} />
+      {mode === 'development' && (
+        <Typography
+          variant='h5'
+          component='span'
+          sx={{ ml: 1, pb: 0.2, color: 'yellow' }}
+        >
+          DEVELOPMENT
+        </Typography>
+      )}
+    </Box>
+  )
+
+const ModeDisplay = ({ useNersc, mode }) =>
+  !useNersc && (
+    <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', p: 1 }}>
+      {mode !== 'local' && (
+        <Typography variant='h5' component='span' sx={{ ml: 1, pb: 0.2 }}>
+          BL12.3.1
+        </Typography>
+      )}
+      {mode === 'development' && (
+        <Typography
+          variant='h5'
+          component='span'
+          sx={{ ml: 1, pb: 0.2, color: 'yellow' }}
+        >
+          DEVELOPMENT
+        </Typography>
+      )}
+      {mode === 'local' && (
+        <Box>
+          <Typography variant='h5' component='span' sx={{ ml: 1, pb: 0.2 }}>
+            LOCAL
+          </Typography>
+          <Typography
+            variant='h5'
+            component='span'
+            sx={{ ml: 1, pb: 0.2, color: 'yellow' }}
+          >
+            DEVELOPMENT
+          </Typography>
+        </Box>
+      )}
+    </Box>
+  )
+
 const Header = () => {
   const [time, setTime] = useState('')
   const navigate = useNavigate()
@@ -94,67 +192,14 @@ const Header = () => {
             <Link to='/welcome' style={linkStyles}>
               BilboMD
             </Link>
-
-            {useNersc && (
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                  height: '100%',
-                  p: 1
-                }}
-              >
-                <img
-                  src={nerscLogo}
-                  alt='NERSC Logo'
-                  style={{ height: '30px' }}
-                />
-                {mode === 'development' && (
-                  <Typography
-                    variant='h5'
-                    component='span'
-                    sx={{ ml: 1, pb: 0.2, color: 'yellow' }}
-                  >
-                    DEVELOPMENT
-                  </Typography>
-                )}
-              </Box>
-            )}
-            {!useNersc && (
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                  height: '100%',
-                  p: 1
-                }}
-              >
-                <Typography
-                  variant='h5'
-                  component='span'
-                  sx={{ ml: 1, pb: 0.2 }}
-                >
-                  @BL-1231
-                </Typography>
-                {mode === 'development' && (
-                  <Typography
-                    variant='h5'
-                    component='span'
-                    sx={{ ml: 1, pb: 0.2, color: 'yellow' }}
-                  >
-                    DEVELOPMENT
-                  </Typography>
-                )}
-              </Box>
-            )}
-
+            <NerscLogo useNersc={useNersc} mode={mode} />
+            <ModeDisplay useNersc={useNersc} mode={mode} />
             <Typography
               variant='h5'
               sx={{ display: { xs: 'none', sm: 'flex' }, ml: 8 }}
             >
               {time}
             </Typography>
-
             <Typography
               variant='h5'
               sx={{
@@ -166,45 +211,12 @@ const Header = () => {
             >
               {status}: {username}
             </Typography>
-
-            <Tooltip
-              title='Open settings'
-              sx={{ flexGrow: 1, justifyContent: 'flex-end' }}
-            >
-              <IconButton
-                onClick={handleOpenUserMenu}
-                sx={{ p: 0, flexGrow: 0, justifyContent: 'flex-end' }}
-              >
-                <Avatar>
-                  <PersonIcon />
-                </Avatar>
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id='menu-appbar'
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting.text} onClick={setting.onclick}>
-                  <Typography textAlign='center'>{setting.text}</Typography>
-                </MenuItem>
-              ))}
-              <MenuItem>
-                <LogOut />
-              </MenuItem>
-            </Menu>
+            <UserMenu
+              anchorElUser={anchorElUser}
+              handleOpenUserMenu={handleOpenUserMenu}
+              handleCloseUserMenu={handleCloseUserMenu}
+              settings={settings}
+            />
             <NightModeToggle />
           </Toolbar>
         </AppBar>

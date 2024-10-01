@@ -1,5 +1,4 @@
 import { useParams } from 'react-router-dom'
-import { useGetJobByIdQuery } from 'slices/jobsApiSlice'
 import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
 import {
@@ -7,8 +6,8 @@ import {
   Typography,
   Alert,
   AlertTitle,
-  CircularProgress,
-  Box
+  Box,
+  CircularProgress
 } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import LinearProgress from '@mui/material/LinearProgress'
@@ -18,8 +17,9 @@ import { axiosInstance } from 'app/api/axios'
 import MissingJob from 'components/MissingJob'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from 'slices/authSlice'
-import BilboMDSteps from './BilboMDSteps'
+// import BilboMDSteps from './BilboMDSteps'
 import BilboMDNerscSteps from './BilboMDNerscSteps'
+import BilboMDMongoSteps from './BilboMDMongoSteps'
 import { BilboMDScoperSteps } from './BilboMDScoperSteps'
 import HeaderBox from 'components/HeaderBox'
 import JobError from './JobError'
@@ -29,6 +29,7 @@ import { BilboMDScoperTable } from '../scoperjob/BilboMDScoperTable'
 import ScoperFoXSAnalysis from 'features/scoperjob/ScoperFoXSAnalysis'
 import FoXSAnalysis from './FoXSAnalysis'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
+import { useGetJobByIdQuery } from 'slices/jobsApiSlice'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -208,21 +209,31 @@ const SingleJobPage = () => {
           </Item>
         </Grid>
 
-        {job.bullmq && !useNersc && (
+        {/* Old BilboMD Steps that uses BullMQ object */}
+        {/* {job.bullmq && !useNersc && (
           <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Steps</Typography>
             </HeaderBox>
             <BilboMDSteps job={job} />
           </Grid>
+        )} */}
+
+        {/* New BilboMD Steps that uses mongo.steps object */}
+        {job.mongo.steps && (
+          <Grid size={{ xs: 12 }}>
+            <BilboMDMongoSteps steps={job.mongo.steps} />
+          </Grid>
         )}
 
+        {/* New BilboMD Steps that uses mongo.steps object for NERSC jobs */}
         {job.mongo.steps && useNersc && (
           <Grid size={{ xs: 12 }}>
             <BilboMDNerscSteps job={job} />
           </Grid>
         )}
 
+        {/* Scoper steps.... who knows ? */}
         {job.scoper && (
           <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
@@ -257,7 +268,7 @@ const SingleJobPage = () => {
             </Grid>
           )}
 
-        {job.mongo.status === 'Completed' && (
+        {job.mongo.status === 'Completed' && config.mode !== 'local' && (
           <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>

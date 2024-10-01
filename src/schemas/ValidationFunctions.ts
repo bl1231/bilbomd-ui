@@ -157,6 +157,7 @@ const noSpaces = (file: File): Promise<boolean> => {
 const isSaxsData = (
   file: File
 ): Promise<{ valid: boolean; message?: string }> => {
+  console.log(`validate if ${file.name} isSaxsData`)
   const sciNotation = /-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?/g
 
   return new Promise((resolve) => {
@@ -172,7 +173,7 @@ const isSaxsData = (
         }
 
         const numbers = line.match(sciNotation)
-        if (numbers && numbers.length === 3) {
+        if (numbers && numbers.length >= 3) {
           const qValue = parseFloat(numbers[0])
           if (qValue < 0.005 || qValue > 0.04) {
             resolve({
