@@ -94,6 +94,7 @@ jobs:
             ghcr.io/${{ github.repository }}:latest
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
+            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
             BILBOMD_UI_GIT_HASH=${{ env.GIT_HASH }}
             BILBOMD_UI_VERSION=${{ env.BILBOMD_UI_VERSION }}
           cache-from: type=gha
@@ -111,6 +112,10 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}:${{ env.BILBOMD_UI_VERSION }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+            BILBOMD_UI_GIT_HASH=${{ env.GIT_HASH }}
+            BILBOMD_UI_VERSION=${{ env.BILBOMD_UI_VERSION }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           load: true
