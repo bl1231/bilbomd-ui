@@ -2,6 +2,9 @@ import { Chip, Divider, Typography } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Grid2'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import WarningIcon from '@mui/icons-material/Warning'
+import ErrorIcon from '@mui/icons-material/Error'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -30,6 +33,25 @@ const BilboMdFeedback = () => {
       'Flexibility of elongated regions must be increased, but you are close to a good fit. Try adjusting the flexible regions in the const.inp file. Buffer subtraction problems may have also occured.'
   }
 
+  const getChipProps = (value: number) => {
+    if (value < 1.2) {
+      return {
+        icon: <CheckCircleIcon sx={{ color: 'green' }} />,
+        color: 'success' as const
+      }
+    } else if (value >= 1.2 && value <= 2.0) {
+      return {
+        icon: <WarningIcon sx={{ color: 'orange' }} />,
+        color: 'warning' as const
+      }
+    } else {
+      return {
+        icon: <ErrorIcon sx={{ color: 'red' }} />,
+        color: 'error' as const
+      }
+    }
+  }
+
   return (
     <Item>
       <Grid
@@ -44,42 +66,36 @@ const BilboMdFeedback = () => {
         </Grid>
 
         {/* Best Chi-Square and Multi-State Info */}
-        <Grid size={{ xs: 4 }}>
-          <Typography sx={{ fontSize: '1.3em' }}>
-            The best Chi<sup>2</sup> is{' '}
-            <Chip
-              label={report.overall_chi_square}
-              color='primary'
-              size='medium'
-              sx={{ mx: 1 }}
-            />
-          </Typography>
-        </Grid>
-
-        <Grid size={{ xs: 4 }}>
-          <Typography sx={{ fontSize: '1.3em' }}>
-            Experimental MW:{' '}
-            <Chip
-              label={report.mw_saxs}
-              color='primary'
-              size='medium'
-              sx={{ mx: 1 }}
-            />{' '}
-            kDa
-          </Typography>
-        </Grid>
-
-        <Grid size={{ xs: 4 }}>
-          <Typography sx={{ fontSize: '1.3em' }}>
-            Model MW:{' '}
-            <Chip
-              label={report.mw_model}
-              color='primary'
-              size='medium'
-              sx={{ mx: 1 }}
-            />{' '}
-            kDa
-          </Typography>
+        <Grid container sx={{ my: 0.5 }}>
+          <Grid>
+            <Typography sx={{ fontSize: '1.3em' }}>
+              The best Chi<sup>2</sup> is
+              <Chip
+                label={report.overall_chi_square}
+                sx={{ mx: 1, fontSize: '1.2em', backgroundColor: '#999' }}
+              />
+            </Typography>
+          </Grid>
+          <Grid>
+            <Typography sx={{ fontSize: '1.3em' }}>
+              Experimental MW:
+              <Chip
+                label={report.mw_saxs}
+                sx={{ mx: 1, fontSize: '1.2em', backgroundColor: '#999' }}
+              />
+              kDa
+            </Typography>
+          </Grid>
+          <Grid>
+            <Typography sx={{ fontSize: '1.3em' }}>
+              Model MW:
+              <Chip
+                label={report.mw_model}
+                sx={{ mx: 1, fontSize: '1.2em', backgroundColor: '#999' }}
+              />
+              kDa
+            </Typography>
+          </Grid>
         </Grid>
 
         <Grid size={{ xs: 12 }}>
@@ -87,122 +103,162 @@ const BilboMdFeedback = () => {
         </Grid>
 
         {/* Chi-Squares for Regions */}
-        <Grid size={{ xs: 5 }}>
+        <Grid size={{ xs: 6 }}>
           <Typography sx={{ mb: 2, fontSize: '1.7em' }}>
             Chi<sup>2</sup> Values for Regions
           </Typography>
-          <Typography sx={{ justifyContent: 'end', my: 0.5 }}>
-            Chi<sup>2</sup> for 0.01 &lt; q &lt; 0.1:
+
+          {/* Chi-Square for 0.01 < q < 0.1 */}
+          <Grid
+            container
+            alignItems='center'
+            justifyContent='space-between'
+            sx={{ my: 0.5 }}
+            width='55%'
+          >
+            <Typography>
+              Chi<sup>2</sup> for 0.01 &lt; q &lt; 0.1:
+            </Typography>
             <Chip
               sx={{
-                ml: 1,
                 fontSize: '1.2em',
-                width: '70px',
-                alignItems: 'center'
+                width: '100px'
               }}
               label={report.chi_squares_of_regions[0]}
+              {...getChipProps(report.chi_squares_of_regions[0])}
             />
-          </Typography>
-          <Typography sx={{ justifyContent: 'end', my: 0.5 }}>
-            Chi<sup>2</sup> for 0.1 &lt; q &lt; 0.2:
+          </Grid>
+
+          {/* Chi-Square for 0.1 < q < 0.2 */}
+          <Grid
+            container
+            alignItems='center'
+            justifyContent='space-between'
+            sx={{ my: 0.5 }}
+            width='55%'
+          >
+            <Typography>
+              Chi<sup>2</sup> for 0.1 &lt; q &lt; 0.2:
+            </Typography>
             <Chip
               sx={{
-                ml: 1,
                 fontSize: '1.2em',
-                width: '70px',
-                alignItems: 'center'
+                width: '100px'
               }}
               label={report.chi_squares_of_regions[1]}
+              {...getChipProps(report.chi_squares_of_regions[1])}
             />
-          </Typography>
-          <Typography sx={{ justifyContent: 'end', my: 0.5 }}>
-            Chi<sup>2</sup> for 0.2 &lt; q &lt; 0.5:
+          </Grid>
+
+          {/* Chi-Square for 0.2 < q < 0.5 */}
+          <Grid
+            container
+            alignItems='center'
+            justifyContent='space-between'
+            sx={{ my: 0.5 }}
+            width='55%'
+          >
+            <Typography>
+              Chi<sup>2</sup> for 0.2 &lt; q &lt; 0.5:
+            </Typography>
             <Chip
               sx={{
-                ml: 1,
                 fontSize: '1.2em',
-                width: '70px',
-                alignItems: 'center'
+                width: '100px'
               }}
               label={report.chi_squares_of_regions[2]}
+              {...getChipProps(report.chi_squares_of_regions[2])}
             />
-          </Typography>
+          </Grid>
         </Grid>
 
         {/* Residuals of Regions */}
-
-        <Grid size={{ xs: 5 }}>
+        <Grid size={{ xs: 6 }}>
           <Typography sx={{ mb: 2, fontSize: '1.7em' }}>
             Mean Residuals of Regions
           </Typography>
-          <Typography sx={{ justifyContent: 'end', my: 0.5 }}>
-            Mean residuals of 0.01 &lt; q &lt; 0.1:
+
+          {/* Chi-Square for 0.01 < q < 0.1 */}
+          <Grid
+            container
+            alignItems='center'
+            justifyContent='space-between'
+            sx={{ my: 0.5 }}
+            width='68%'
+          >
+            <Typography>Mean residuals of 0.01 &lt; q &lt; 0.1:</Typography>
             <Chip
               sx={{
-                ml: 1,
                 fontSize: '1.2em',
-                width: '70px',
-                alignItems: 'center'
+                width: '100px'
               }}
               label={report.residuals_of_regions[0].toFixed(2)}
             />
-          </Typography>
-          <Typography sx={{ justifyContent: 'end', my: 0.5 }}>
-            Mean residuals of 0.1 &lt; q &lt; 0.2:
+          </Grid>
+
+          {/* Chi-Square for 0.1 < q < 0.2 */}
+          <Grid
+            container
+            alignItems='center'
+            justifyContent='space-between'
+            sx={{ my: 0.5 }}
+            width='68%'
+          >
+            <Typography>Mean residuals of 0.1 &lt; q &lt; 0.2:</Typography>
             <Chip
               sx={{
-                ml: 1,
                 fontSize: '1.2em',
-                width: '70px',
-                alignItems: 'center'
+                width: '100px'
               }}
               label={report.residuals_of_regions[1].toFixed(2)}
             />
-          </Typography>
-          <Typography sx={{ justifyContent: 'end', my: 0.5 }}>
-            Mean residuals of 0.2 &lt; q &lt; 0.5:
+          </Grid>
+
+          {/* Chi-Square for 0.2 < q < 0.5 */}
+          <Grid
+            container
+            alignItems='center'
+            justifyContent='space-between'
+            sx={{ my: 0.5 }}
+            width='68%'
+          >
+            <Typography>Mean residuals of 0.2 &lt; q &lt; 0.5:</Typography>
             <Chip
               sx={{
-                ml: 1,
                 fontSize: '1.2em',
-                width: '70px',
-                alignItems: 'center'
+                width: '100px'
               }}
               label={report.residuals_of_regions[2].toFixed(2)}
             />
-          </Typography>
+          </Grid>
         </Grid>
 
         <Grid size={{ xs: 12 }}>
-          <Divider sx={{ my: 2 }} />
+          <Divider sx={{ my: 1 }} />
         </Grid>
 
         {/* Feedback Reports */}
-        <Grid size={{ xs: 5 }}>
-          <Typography variant='body2' gutterBottom color='blue'>
+        <Grid size={{ xs: 12 }}>
+          <Typography sx={{ mb: 1, fontSize: '1.2em' }}>
             {report.highest_chi_square_report}
           </Typography>
-          <Typography variant='body2' gutterBottom color='red'>
+          <Typography sx={{ mb: 1, fontSize: '1.2em' }}>
             {report.second_highest_cs_report}
           </Typography>
         </Grid>
 
         <Grid size={{ xs: 12 }}>
-          <Divider sx={{ my: 2 }} />
+          <Divider sx={{ my: 1 }} />
         </Grid>
 
         {/* Feedback and Suggestions */}
         <Grid size={{ xs: 12 }}>
-          <Typography variant='h5' gutterBottom>
-            Feedback
-          </Typography>
-          <Typography variant='body1' color='text.secondary' gutterBottom>
-            {report.mw_feedback}
-          </Typography>
-          <Typography variant='body1' color='text.secondary' gutterBottom>
+          <Typography sx={{ fontSize: '1.7em' }}>Summary Feedback</Typography>
+          <Typography sx={{ m: 1 }}>{report.mw_feedback}</Typography>
+          <Typography sx={{ m: 1 }}>
             {report.overall_chi_square_feedback}
           </Typography>
-          <Typography variant='body1' color='text.secondary'>
+          <Typography sx={{ m: 1 }}>
             {report.regional_chi_square_feedback}
           </Typography>
         </Grid>

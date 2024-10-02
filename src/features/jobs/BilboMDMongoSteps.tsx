@@ -46,7 +46,7 @@ const BilboMDMongoSteps: React.FC<BilboMDMongoStepsProps> = ({ steps }) => {
         }}
       >
         <HeaderBox sx={{ py: 0 }}>
-          <Typography>MONGO STEPS</Typography>
+          <Typography>BilboMD Steps</Typography>
         </HeaderBox>
       </AccordionSummary>
       <AccordionDetails>

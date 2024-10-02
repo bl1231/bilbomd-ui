@@ -269,7 +269,7 @@ const SingleJobPage = () => {
             </Grid>
           )}
 
-        {job.mongo.status === 'Completed' && config.mode !== 'local' && (
+        {job.mongo.status === 'Completed' && config.mode === 'local' && (
           <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
               <Typography>Feedback</Typography>
@@ -320,8 +320,8 @@ const SingleJobPage = () => {
                 >
                   results.tar.gz
                 </span>{' '}
-                will contains your original files plus some output files from
-                Scoper.
+                tar archive will contains your original files plus some output
+                files from BilboMD.
               </Typography>
             </Item>
           </Grid>
