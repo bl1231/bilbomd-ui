@@ -117,9 +117,7 @@ const UserAccount: React.FC = () => {
         newEmail: state.newEmail
       }).unwrap()
 
-      showMessageDialog(
-        'OTP is sent successfully to your current email address.'
-      )
+      showMessageDialog('OTP is sent successfully to your new email address.')
       dispatch({ type: 'TOGGLE_OTP_MODAL', payload: true }) // Open OTP modal
     } catch (error: any) {
       if (error.status === 409) {
@@ -127,7 +125,7 @@ const UserAccount: React.FC = () => {
       } else if (error.status === 400) {
         showMessageDialog(error.data.message)
       } else {
-        showMessageDialog('Error sending an OTP to your current email address')
+        showMessageDialog('Error sending an OTP to your new email address')
       }
     }
   }
@@ -162,7 +160,7 @@ const UserAccount: React.FC = () => {
         newEmail: state.newEmail
       }).unwrap()
 
-      showMessageDialog('OTP sent successfully to your current email address')
+      showMessageDialog('OTP sent successfully to your new email address')
     } catch (error) {
       showMessageDialog('Error resending OTP')
     }
