@@ -149,7 +149,7 @@ const NewAutoJobForm = () => {
                       <Grid>
                         <Field
                           name='pdb_file'
-                          id='crd-file-upload'
+                          id='pdb-file-upload'
                           as={FileSelect}
                           title='Select File'
                           disabled={isSubmitting}

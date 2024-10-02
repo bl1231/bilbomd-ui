@@ -1,6 +1,10 @@
 # -----------------------------------------------------------------------------
 # Build stage
 FROM node:20-alpine AS build-stage
+ARG GITHUB_TOKEN
+ARG BILBOMD_UI_VERSION
+ARG BILBOMD_UI_GIT_HASH
+
 RUN npm install -g npm@10.8.3
 
 WORKDIR /app
@@ -8,25 +12,33 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
+# Create .npmrc file using the build argument
+RUN echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" > /root/.npmrc
+
 # Install dependencies
-RUN npm ci --force
+RUN npm ci --no-audit
+
+# Remove .npmrc file for security
+RUN rm /root/.npmrc
+
+# Optionally, clean up the environment variable for security
+RUN unset GITHUB_TOKEN
 
 # Copy your project files
 COPY . .
 
 # Set environment variables for the build process
-ARG BILBOMD_UI_VERSION
-ARG BILBOMD_UI_GIT_HASH
-ENV BILBOMD_UI_VERSION=$BILBOMD_UI_VERSION
-ENV BILBOMD_UI_GIT_HASH=$BILBOMD_UI_GIT_HASH
+ENV BILBOMD_UI_VERSION=${BILBOMD_UI_VERSION}
+ENV BILBOMD_UI_GIT_HASH=${BILBOMD_UI_GIT_HASH}
 
-# Now, run the build command
+# Build our app
 RUN npm run build
 
 # Copy over the version.json created in GitHub Actions
 # COPY version.json /app/dist/version.json
 
 # Generate version.json during the build
+# this json is served up from /version-info
 RUN echo "{ \"version\": \"${BILBOMD_UI_VERSION}\", \"gitHash\": \"${BILBOMD_UI_GIT_HASH}\" }" > /app/dist/version.json
 
 

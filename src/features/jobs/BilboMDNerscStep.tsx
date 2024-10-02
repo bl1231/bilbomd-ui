@@ -98,11 +98,23 @@ const BilboMDNerscStep = ({
           tooltipMessage:
             'In this step we use FoXS to calculate SAXS scattering curves from MD models.'
         }
+      case 'pepsisans':
+        return {
+          friendlyName: 'Pepsi-SANS Analysis',
+          tooltipMessage:
+            'In this step we use Pepsi-SANS to calculate SANS scattering curves from MD models.'
+        }
       case 'multifoxs':
         return {
           friendlyName: 'MultiFoXS',
           tooltipMessage:
             'In this step we use MultiFoXS to determine the best FoXS curves to match your experimental SAXS data.'
+        }
+      case 'gasans':
+        return {
+          friendlyName: 'GA-SANS',
+          tooltipMessage:
+            'In this step we use a Genetic Algorithm to determine the best Pepsi-SANS curves to match your experimental SANS data.'
         }
       case 'copy_results_to_cfs':
         return {

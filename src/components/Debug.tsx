@@ -7,6 +7,7 @@ const addNewlines = (str: string, everyN: number) => {
   const regex = new RegExp(`(.{1,${everyN}})`, 'g')
   return str.match(regex)?.join('\n') || str
 }
+
 // Custom stringify function to handle newlines
 const customStringify = (obj, indent: number = 2) => {
   let json = JSON.stringify(obj, null, indent)
@@ -14,6 +15,7 @@ const customStringify = (obj, indent: number = 2) => {
   json = json.replace(/\\n/g, '\n')
   return json
 }
+
 export const Debug = () => {
   const theme = useTheme()
   return (
@@ -52,7 +54,8 @@ export const Debug = () => {
                 }
               }
             : rest.values // Use the original values if pdb_file doesn't exist
-          // Modify entities sequences to add newlines every 80 characters
+
+          // Check if entities exist before attempting to modify them
           const entitiesWithModifiedSequences =
             valuesWithModifiedPdbFile.entities
               ? valuesWithModifiedPdbFile.entities.map((entity) => ({
@@ -62,12 +65,15 @@ export const Debug = () => {
                       ? addNewlines(entity.sequence, 80)
                       : entity.sequence
                 }))
-              : []
+              : undefined // Keep entities undefined if they don't exist
+
           const displayContent = {
             ...rest,
             values: {
               ...valuesWithModifiedPdbFile,
-              entities: entitiesWithModifiedSequences
+              ...(entitiesWithModifiedSequences && {
+                entities: entitiesWithModifiedSequences
+              })
             }
           }
 

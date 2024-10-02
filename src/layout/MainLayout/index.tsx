@@ -25,7 +25,6 @@ import useAuth from 'hooks/useAuth'
 
 import Header from './Header'
 import Footer from './Footer'
-// ============================|| MAIN LAYOUT ||============================ //
 
 const drawerWidth = 170
 
@@ -49,6 +48,8 @@ export default function ClippedDrawer() {
     return <Alert severity='warning'>No configuration data available</Alert>
 
   const useNersc = config.useNersc?.toLowerCase() === 'true'
+  const enableBilboMdSANS = config.enableBilboMdSANS?.toLowerCase() === 'true'
+  // console.log(`enableBilboMdSANS: ${enableBilboMdSANS}`)
 
   let menuItems = [
     {
@@ -77,6 +78,13 @@ export default function ClippedDrawer() {
       icon: <AddCircleOutlineOutlined />,
       path: '/dashboard/jobs/alphafold',
       onclick: () => navigate('dashboard/jobs/alphafold'),
+      roles: ['user', 'manager']
+    },
+    {
+      text: 'BilboMD SANS',
+      icon: <AddCircleOutlineOutlined />,
+      path: '/dashboard/jobs/sans',
+      onclick: () => navigate('dashboard/jobs/sans'),
       roles: ['user', 'manager']
     },
     {
@@ -122,6 +130,10 @@ export default function ClippedDrawer() {
 
   if (!useNersc) {
     menuItems = menuItems.filter((item) => item.text !== 'BilboMD AF')
+  }
+
+  if (!enableBilboMdSANS) {
+    menuItems = menuItems.filter((item) => item.text !== 'BilboMD SANS')
   }
 
   const buttonContent = (
