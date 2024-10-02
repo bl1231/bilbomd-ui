@@ -30,6 +30,7 @@ import ScoperFoXSAnalysis from 'features/scoperjob/ScoperFoXSAnalysis'
 import FoXSAnalysis from './FoXSAnalysis'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useGetJobByIdQuery } from 'slices/jobsApiSlice'
+import BilboMdFeedback from 'features/analysis/BilboMdFeedback'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -267,6 +268,15 @@ const SingleJobPage = () => {
               <FoXSAnalysis id={id} />
             </Grid>
           )}
+
+        {job.mongo.status === 'Completed' && config.mode !== 'local' && (
+          <Grid size={{ xs: 12 }}>
+            <HeaderBox sx={{ py: '6px' }}>
+              <Typography>Feedback</Typography>
+            </HeaderBox>
+            <BilboMdFeedback />
+          </Grid>
+        )}
 
         {job.mongo.status === 'Completed' && config.mode !== 'local' && (
           <Grid size={{ xs: 12 }}>
