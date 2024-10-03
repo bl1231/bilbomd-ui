@@ -2,9 +2,9 @@ import { Chip, Divider, Typography } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Grid2'
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import WarningIcon from '@mui/icons-material/Warning'
-import ErrorIcon from '@mui/icons-material/Error'
+// import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+// import WarningIcon from '@mui/icons-material/Warning'
+// import ErrorIcon from '@mui/icons-material/Error'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -34,21 +34,15 @@ const BilboMdFeedback = () => {
   }
 
   const getChipProps = (value: number) => {
+    // console.log('value:', value)
     if (value < 1.2) {
-      return {
-        icon: <CheckCircleIcon sx={{ color: 'green' }} />,
-        color: 'success' as const
-      }
+      return { sx: { backgroundColor: 'green' } }
     } else if (value >= 1.2 && value <= 2.0) {
-      return {
-        icon: <WarningIcon sx={{ color: 'orange' }} />,
-        color: 'warning' as const
-      }
+      return { sx: { backgroundColor: '#59a14f' } }
+    } else if (value >= 2.0 && value <= 3.0) {
+      return { sx: { backgroundColor: '#bdbf20' } }
     } else {
-      return {
-        icon: <ErrorIcon sx={{ color: 'red' }} />,
-        color: 'error' as const
-      }
+      return { sx: { backgroundColor: 'red' } }
     }
   }
 
@@ -64,7 +58,6 @@ const BilboMdFeedback = () => {
             SAXS Model Analysis Report
           </Typography>
         </Grid>
-
         {/* Best Chi-Square and Multi-State Info */}
         <Grid container sx={{ my: 0.5 }}>
           <Grid>
@@ -97,11 +90,13 @@ const BilboMdFeedback = () => {
             </Typography>
           </Grid>
         </Grid>
-
         <Grid size={{ xs: 12 }}>
           <Divider sx={{ my: 1 }} />
         </Grid>
-
+        hi
+        <Grid size={{ xs: 12 }}>
+          <Divider sx={{ my: 1 }} />
+        </Grid>
         {/* Chi-Squares for Regions */}
         <Grid size={{ xs: 6 }}>
           <Typography sx={{ mb: 2, fontSize: '1.7em' }}>
@@ -122,10 +117,10 @@ const BilboMdFeedback = () => {
             <Chip
               sx={{
                 fontSize: '1.2em',
-                width: '100px'
+                width: '100px',
+                ...(getChipProps(report.chi_squares_of_regions[0]).sx || {})
               }}
               label={report.chi_squares_of_regions[0]}
-              {...getChipProps(report.chi_squares_of_regions[0])}
             />
           </Grid>
 
@@ -143,10 +138,11 @@ const BilboMdFeedback = () => {
             <Chip
               sx={{
                 fontSize: '1.2em',
-                width: '100px'
+                width: '100px',
+                ...(getChipProps(report.chi_squares_of_regions[1]).sx || {})
               }}
               label={report.chi_squares_of_regions[1]}
-              {...getChipProps(report.chi_squares_of_regions[1])}
+              // {...getChipProps(report.chi_squares_of_regions[1])}
             />
           </Grid>
 
@@ -164,14 +160,14 @@ const BilboMdFeedback = () => {
             <Chip
               sx={{
                 fontSize: '1.2em',
-                width: '100px'
+                width: '100px',
+                ...(getChipProps(report.chi_squares_of_regions[2]).sx || {})
               }}
               label={report.chi_squares_of_regions[2]}
-              {...getChipProps(report.chi_squares_of_regions[2])}
+              // {...getChipProps(report.chi_squares_of_regions[2])}
             />
           </Grid>
         </Grid>
-
         {/* Residuals of Regions */}
         <Grid size={{ xs: 6 }}>
           <Typography sx={{ mb: 2, fontSize: '1.7em' }}>
@@ -232,11 +228,9 @@ const BilboMdFeedback = () => {
             />
           </Grid>
         </Grid>
-
         <Grid size={{ xs: 12 }}>
           <Divider sx={{ my: 1 }} />
         </Grid>
-
         {/* Feedback Reports */}
         <Grid size={{ xs: 12 }}>
           <Typography sx={{ mb: 1, fontSize: '1.2em' }}>
@@ -246,11 +240,9 @@ const BilboMdFeedback = () => {
             {report.second_highest_cs_report}
           </Typography>
         </Grid>
-
         <Grid size={{ xs: 12 }}>
           <Divider sx={{ my: 1 }} />
         </Grid>
-
         {/* Feedback and Suggestions */}
         <Grid size={{ xs: 12 }}>
           <Typography sx={{ fontSize: '1.7em' }}>Summary Feedback</Typography>
