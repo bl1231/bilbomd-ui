@@ -22,16 +22,15 @@ interface FeedbackChartProps {
 }
 
 const FeedbackChart: React.FC<FeedbackChartProps> = ({ data }) => {
-  // Prepare the data points to center the values within each region
   const q_midpoints = [
-    (data.q_ranges[0] + data.q_ranges[1]) / 2,
-    (data.q_ranges[1] + data.q_ranges[2]) / 2,
-    (data.q_ranges[2] + data.q_ranges[3]) / 2
+    ((data.q_ranges[0] + data.q_ranges[1]) / 2).toFixed(3), // Round to 3 decimal places
+    ((data.q_ranges[1] + data.q_ranges[2]) / 2).toFixed(3),
+    ((data.q_ranges[2] + data.q_ranges[3]) / 2).toFixed(3)
   ]
 
   // Prepare data for chi-squares and residuals
   const chartData = q_midpoints.map((q_mid, index) => ({
-    q: q_mid,
+    q: parseFloat(q_mid), // Convert back to a number after toFixed returns a string
     chi_square: data.chi_squares_of_regions[index],
     residual: data.residuals_of_regions[index]
   }))
