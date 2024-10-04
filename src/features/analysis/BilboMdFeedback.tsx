@@ -3,6 +3,7 @@ import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Grid2'
 import FeedbackChart from './FeedbackChart'
+
 // import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 // import WarningIcon from '@mui/icons-material/Warning'
 // import ErrorIcon from '@mui/icons-material/Error'
@@ -17,7 +18,7 @@ const BilboMdFeedback = () => {
   const report = {
     mw_saxs: 36.9,
     mw_model: 36.9,
-    mw_err: 0.0,
+    mw_err: 0.01,
     overall_chi_square: 1.13,
     q_ranges: [0.011428, 0.1, 0.2, 0.40267],
     chi_squares_of_regions: [1.22, 1.7, 0.8],
@@ -47,13 +48,23 @@ const BilboMdFeedback = () => {
     }
   }
 
-  const getChipBackgroundColor = (overallChiSquare: number): string => {
+  const getChi2ChipBackgroundColor = (overallChiSquare: number): string => {
     if (overallChiSquare < 1.0) {
       return 'green' // Green for values less than 1.0
     } else if (overallChiSquare >= 1.0 && overallChiSquare < 2.0) {
       return '#59a14f' // Yellow for values between 1.0 and 2.0
     } else if (overallChiSquare >= 2.0 && overallChiSquare < 3.0) {
       return '#bdbf20' // Orange for values between 2.0 and 3.0
+    } else {
+      return '#f44336' // Red for values 3.0 and above
+    }
+  }
+
+  const getMWChipBackgroundColor = (mwError: number): string => {
+    if (mwError < 0.06) {
+      return 'green'
+    } else if (mwError >= 0.06 && mwError < 0.1) {
+      return '#bdbf20'
     } else {
       return '#f44336' // Red for values 3.0 and above
     }
@@ -77,11 +88,11 @@ const BilboMdFeedback = () => {
             <Typography sx={{ fontSize: '1.3em' }}>
               Overall Chi<sup>2</sup> :
               <Chip
-                label={report.overall_chi_square}
+                label={report.overall_chi_square.toFixed(2)}
                 sx={{
                   mx: 1,
                   fontSize: '1.2em',
-                  backgroundColor: getChipBackgroundColor(
+                  backgroundColor: getChi2ChipBackgroundColor(
                     report.overall_chi_square
                   )
                 }}
@@ -92,8 +103,12 @@ const BilboMdFeedback = () => {
             <Typography sx={{ fontSize: '1.3em' }}>
               Experimental MW:
               <Chip
-                label={report.mw_saxs}
-                sx={{ mx: 1, fontSize: '1.2em', backgroundColor: '#999' }}
+                label={report.mw_saxs.toFixed(1)}
+                sx={{
+                  mx: 1,
+                  fontSize: '1.2em',
+                  backgroundColor: getMWChipBackgroundColor(report.mw_err)
+                }}
               />
               kDa
             </Typography>
@@ -102,8 +117,12 @@ const BilboMdFeedback = () => {
             <Typography sx={{ fontSize: '1.3em' }}>
               Model MW:
               <Chip
-                label={report.mw_model}
-                sx={{ mx: 1, fontSize: '1.2em', backgroundColor: '#999' }}
+                label={report.mw_model.toFixed(1)}
+                sx={{
+                  mx: 1,
+                  fontSize: '1.2em',
+                  backgroundColor: getMWChipBackgroundColor(report.mw_err)
+                }}
               />
               kDa
             </Typography>
@@ -145,7 +164,7 @@ const BilboMdFeedback = () => {
                 width: '100px',
                 ...(getChipProps(report.chi_squares_of_regions[0]).sx || {})
               }}
-              label={report.chi_squares_of_regions[0]}
+              label={report.chi_squares_of_regions[0].toFixed(2)}
             />
           </Grid>
 
@@ -166,8 +185,7 @@ const BilboMdFeedback = () => {
                 width: '100px',
                 ...(getChipProps(report.chi_squares_of_regions[1]).sx || {})
               }}
-              label={report.chi_squares_of_regions[1]}
-              // {...getChipProps(report.chi_squares_of_regions[1])}
+              label={report.chi_squares_of_regions[1].toFixed(2)}
             />
           </Grid>
 
@@ -188,8 +206,7 @@ const BilboMdFeedback = () => {
                 width: '100px',
                 ...(getChipProps(report.chi_squares_of_regions[2]).sx || {})
               }}
-              label={report.chi_squares_of_regions[2]}
-              // {...getChipProps(report.chi_squares_of_regions[2])}
+              label={report.chi_squares_of_regions[2].toFixed(2)}
             />
           </Grid>
         </Grid>
