@@ -133,24 +133,15 @@ const FeedbackChart: React.FC<FeedbackChartProps> = ({ data }) => {
         </ReferenceArea>
 
         {/* Vertical reference lines for the region boundaries */}
-        <ReferenceLine
-          x={data.q_ranges[1]}
-          stroke='red'
-          // label={data.q_ranges[1]}
-          yAxisId='left'
-        />
-        <ReferenceLine
-          x={data.q_ranges[2]}
-          stroke='red'
-          // label={data.q_ranges[2]}
-          yAxisId='left'
-        />
+        <ReferenceLine x={data.q_ranges[1]} stroke='red' yAxisId='left' />
+        <ReferenceLine x={data.q_ranges[2]} stroke='red' yAxisId='left' />
 
         {/* Scatter plot for chi-square values (Left Y-Axis) */}
         <Scatter
           name={`Chi\u00B2`}
           data={chartData}
           dataKey='chi_square'
+          line
           fill='#8884d8'
           yAxisId='left'
         />
@@ -160,6 +151,7 @@ const FeedbackChart: React.FC<FeedbackChartProps> = ({ data }) => {
           name='Residuals'
           data={chartData}
           dataKey='residual'
+          line
           fill='#82ca9d'
           yAxisId='right'
         />
