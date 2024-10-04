@@ -79,7 +79,7 @@ const BilboMdFeedback = () => {
       >
         <Grid size={{ xs: 10 }}>
           <Typography sx={{ fontSize: '1.7em' }}>
-            SAXS Model Analysis Report
+            SAXS Model Analysis Report For Ensemble of size #
           </Typography>
         </Grid>
         {/* Best Chi-Square and Multi-State Info */}
