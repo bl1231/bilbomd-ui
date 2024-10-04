@@ -269,14 +269,18 @@ const SingleJobPage = () => {
             </Grid>
           )}
 
-        {job.mongo.status === 'Completed' && config.mode === 'local' && (
-          <Grid size={{ xs: 12 }}>
-            <HeaderBox sx={{ py: '6px' }}>
-              <Typography>Feedback</Typography>
-            </HeaderBox>
-            <BilboMdFeedback />
-          </Grid>
-        )}
+        {job.mongo.status === 'Completed' &&
+          (job.mongo.__t == 'BilboMdPDB' ||
+            job.mongo.__t == 'BilboMdCRD' ||
+            job.mongo.__t == 'BilboMdAuto' ||
+            job.mongo.__t == 'BilboMdAlphaFold') && (
+            <Grid size={{ xs: 12 }}>
+              <HeaderBox sx={{ py: '6px' }}>
+                <Typography>Feedback</Typography>
+              </HeaderBox>
+              <BilboMdFeedback />
+            </Grid>
+          )}
 
         {job.mongo.status === 'Completed' && config.mode !== 'local' && (
           <Grid size={{ xs: 12 }}>

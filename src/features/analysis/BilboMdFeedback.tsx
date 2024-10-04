@@ -2,6 +2,7 @@ import { Chip, Divider, Typography } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Grid2'
+import FeedbackChart from './FeedbackChart'
 // import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 // import WarningIcon from '@mui/icons-material/Warning'
 // import ErrorIcon from '@mui/icons-material/Error'
@@ -14,23 +15,23 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const BilboMdFeedback = () => {
   const report = {
-    mw_saxs: 67.08,
-    mw_model: 68.78,
+    mw_saxs: 36.9,
+    mw_model: 36.9,
     mw_err: 0.0,
-    overall_chi_square: 2.22,
-    q_ranges: [0.011985, 0.1, 0.2, 0.499587],
-    chi_squares_of_regions: [1.84, 2.5, 2.25],
-    residuals_of_regions: [-0.07, 0.098, -0.017],
+    overall_chi_square: 1.13,
+    q_ranges: [0.011428, 0.1, 0.2, 0.40267],
+    chi_squares_of_regions: [1.22, 1.7, 0.8],
+    residuals_of_regions: [-0.056, 0.433, -0.155],
     mw_feedback:
-      'The difference between the model MW (68.775) and the SAXS MW (67.075) is 2.5%, within acceptable error (< 10.0%)',
+      'The difference between the model MW (36.9) and the SAXS MW (36.9) is within acceptable error (0.0%).',
     overall_chi_square_feedback:
-      "The overall chi-square of this fit is 2.22. Moderate. You are getting there, so let's try to improve it.",
-    highest_chi_square_report:
-      'The chi-square is highest (2.5) in the region where (0.1 < q < 0.2).',
-    second_highest_cs_report:
-      'The chi-square is also high (2) in the region where 0.2 < q < 0.5.',
+      'The overall chi-square of this fit is 1.13. Moderate.',
+    highest_chi_square_feedback:
+      'The chi-square is highest (1.7) in the region where 0.1 < q < 0.2, but this is okay.',
+    second_highest_chi_square_feedback:
+      'The 2nd highest chi-square (1.22) is in the region where 0.01 < q < 0.1, but this is okay.',
     regional_chi_square_feedback:
-      'Flexibility of elongated regions must be increased, but you are close to a good fit. Try adjusting the flexible regions in the const.inp file. Buffer subtraction problems may have also occured.'
+      'The model has a low chi-square throughout all q-ranges and is a good fit overall.'
   }
 
   const getChipProps = (value: number) => {
@@ -42,7 +43,19 @@ const BilboMdFeedback = () => {
     } else if (value >= 2.0 && value <= 3.0) {
       return { sx: { backgroundColor: '#bdbf20' } }
     } else {
-      return { sx: { backgroundColor: 'red' } }
+      return { sx: { backgroundColor: '#f44336' } }
+    }
+  }
+
+  const getChipBackgroundColor = (overallChiSquare: number): string => {
+    if (overallChiSquare < 1.0) {
+      return 'green' // Green for values less than 1.0
+    } else if (overallChiSquare >= 1.0 && overallChiSquare < 2.0) {
+      return '#59a14f' // Yellow for values between 1.0 and 2.0
+    } else if (overallChiSquare >= 2.0 && overallChiSquare < 3.0) {
+      return '#bdbf20' // Orange for values between 2.0 and 3.0
+    } else {
+      return '#f44336' // Red for values 3.0 and above
     }
   }
 
@@ -62,10 +75,16 @@ const BilboMdFeedback = () => {
         <Grid container sx={{ my: 0.5 }}>
           <Grid>
             <Typography sx={{ fontSize: '1.3em' }}>
-              The best Chi<sup>2</sup> is
+              Overall Chi<sup>2</sup> :
               <Chip
                 label={report.overall_chi_square}
-                sx={{ mx: 1, fontSize: '1.2em', backgroundColor: '#999' }}
+                sx={{
+                  mx: 1,
+                  fontSize: '1.2em',
+                  backgroundColor: getChipBackgroundColor(
+                    report.overall_chi_square
+                  )
+                }}
               />
             </Typography>
           </Grid>
@@ -93,7 +112,13 @@ const BilboMdFeedback = () => {
         <Grid size={{ xs: 12 }}>
           <Divider sx={{ my: 1 }} />
         </Grid>
-        hi
+        <FeedbackChart
+          data={{
+            q_ranges: report.q_ranges,
+            chi_squares_of_regions: report.chi_squares_of_regions,
+            residuals_of_regions: report.residuals_of_regions
+          }}
+        />
         <Grid size={{ xs: 12 }}>
           <Divider sx={{ my: 1 }} />
         </Grid>
@@ -234,10 +259,10 @@ const BilboMdFeedback = () => {
         {/* Feedback Reports */}
         <Grid size={{ xs: 12 }}>
           <Typography sx={{ mb: 1, fontSize: '1.2em' }}>
-            {report.highest_chi_square_report}
+            {report.highest_chi_square_feedback}
           </Typography>
           <Typography sx={{ mb: 1, fontSize: '1.2em' }}>
-            {report.second_highest_cs_report}
+            {report.second_highest_chi_square_feedback}
           </Typography>
         </Grid>
         <Grid size={{ xs: 12 }}>
