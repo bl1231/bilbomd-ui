@@ -30,10 +30,10 @@ export const usersApiSlice = apiSlice.injectEndpoints({
           return response.status === 200 && !result.isError
         }
       }),
-      transformResponse: (responseData: User[]) => {
-        // console.log('users:', responseData)
-        const loadedUsers = responseData.map((user) => {
-          user.id = user._id
+      transformResponse: (responseData: { success: boolean; data: User[] }) => {
+        // Access the `data` field from the response
+        const loadedUsers = responseData.data.map((user) => {
+          user.id = user._id // Assign 'id' for each user
           return user
         })
         usersAdapter.setAll(initialState, loadedUsers)
