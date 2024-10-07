@@ -96,6 +96,7 @@ export interface Job {
   user: string
   uuid: string
   steps: IBilboMDSteps
+  feedback: object
 }
 
 export interface Queue {
