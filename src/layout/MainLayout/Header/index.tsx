@@ -174,8 +174,15 @@ const Header = () => {
     fontFamily: 'monospace',
     fontWeight: 900,
     fontSize: '3em',
-    letterSpacing: '.2rem',
-    color: 'inherit',
+    letterSpacing: '.3rem',
+    // background: 'linear-gradient(to right, #ff7e5f, #feb47b)', // Gradient colors
+    background: 'linear-gradient(to top, #00c9ff, #92fe9d)', // Blue to Light Green
+    // background: 'linear-gradient(to right, #6a11cb, #2575fc)', // Purple to Blue
+    // background: 'linear-gradient(to right, #36d1dc, #5b86e5)', // Cyan to Blue ***
+    // background: 'linear-gradient(to right, #ff6a88, #bb4e75)', // Light Pink to Purple
+    WebkitBackgroundClip: 'text', // Ensures gradient is applied only to the text
+    WebkitTextFillColor: 'transparent', // Makes the text transparent so gradient shows
+    color: 'transparent', // Fallback for other browsers
     textDecoration: 'none'
   }
 
