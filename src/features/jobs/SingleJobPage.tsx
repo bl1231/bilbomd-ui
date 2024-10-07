@@ -278,7 +278,7 @@ const SingleJobPage = () => {
               <HeaderBox sx={{ py: '6px' }}>
                 <Typography>Feedback</Typography>
               </HeaderBox>
-              <BilboMdFeedback />
+              <BilboMdFeedback feedback={job.mongo.feedback} />
             </Grid>
           )}
 
