@@ -90,8 +90,18 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
 
   let errContent = ''
   if (updateResult.error || deleteResult.error) {
-    errContent =
-      ((updateResult.error as string) || (deleteResult.error as string)) ?? ''
+    const error = updateResult.error || deleteResult.error
+    if (
+      error &&
+      'data' in error &&
+      typeof error.data === 'object' &&
+      error.data &&
+      (error.data as { message: string }).message
+    ) {
+      errContent = error.data ? (error.data as { message: string }).message : ''
+    } else {
+      errContent = error?.toString() ?? ''
+    }
   }
 
   useEffect(() => {
@@ -242,7 +252,7 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
                     </Dialog>
                   </Grid>
                   <Grid sx={{ mt: 2 }}>
-                    {updateResult.error || deleteResult.error ? (
+                    {errContent ? (
                       <Alert severity='warning'>{errContent}</Alert>
                     ) : (
                       ''

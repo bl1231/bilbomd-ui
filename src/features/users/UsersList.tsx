@@ -4,7 +4,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import useTitle from 'hooks/useTitle'
 import { Box } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
-import { CircularProgress, Typography, Paper } from '@mui/material'
+import { CircularProgress, Typography, Paper, Alert } from '@mui/material'
 import HeaderBox from 'components/HeaderBox'
 import { styled } from '@mui/material/styles'
 
@@ -33,15 +33,20 @@ const UsersList = () => {
 
   let content: ContentType
 
-  if (isLoading) content = <CircularProgress />
-
-  if (isError) {
-    console.error('error in UsersList', error)
-    // content = <p>{error}</p>
-    // content = <p className="errmsg">{error?.data?.message}</p>
+  if (isLoading) {
+    content = <CircularProgress />
   }
 
-  if (isSuccess) {
+  if (isError) {
+    console.error('Error fetching users:', error)
+    content = (
+      <Alert severity='error' variant='outlined'>
+        An error occurred while fetching users.
+      </Alert>
+    )
+  }
+
+  if (isSuccess && users && Array.isArray(users)) {
     const columns: GridColDef[] = [
       { field: 'username', headerName: 'Username' },
       { field: 'email', headerName: 'Email', width: 180 },
@@ -85,6 +90,15 @@ const UsersList = () => {
     )
   }
 
-  return content
+  if (isSuccess && (!users || !Array.isArray(users))) {
+    console.warn('Unexpected data format for users:', users)
+    content = (
+      <Typography color='error'>
+        No users available or data format is invalid.
+      </Typography>
+    )
+  }
+
+  return content || null
 }
 export default UsersList
