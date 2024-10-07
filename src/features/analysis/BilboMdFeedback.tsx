@@ -14,27 +14,7 @@ const Item = styled(Paper)(({ theme }) => ({
   borderTopRightRadius: 0
 }))
 
-const BilboMdFeedback = () => {
-  const report = {
-    mw_saxs: 36.9,
-    mw_model: 36.9,
-    mw_err: 0.01,
-    overall_chi_square: 1.13,
-    q_ranges: [0.011428, 0.1, 0.2, 0.40267],
-    chi_squares_of_regions: [1.22, 1.7, 0.8],
-    residuals_of_regions: [-0.056, 0.433, -0.155],
-    mw_feedback:
-      'The difference between the model MW (36.9) and the SAXS MW (36.9) is within acceptable error (0.0%).',
-    overall_chi_square_feedback:
-      'The overall chi-square of this fit is 1.13. Moderate.',
-    highest_chi_square_feedback:
-      'The chi-square is highest (1.7) in the region where 0.1 < q < 0.2, but this is okay.',
-    second_highest_chi_square_feedback:
-      'The 2nd highest chi-square (1.22) is in the region where 0.01 < q < 0.1, but this is okay.',
-    regional_chi_square_feedback:
-      'The model has a low chi-square throughout all q-ranges and is a good fit overall.'
-  }
-
+const BilboMdFeedback = ({ feedback }) => {
   const getChipProps = (value: number) => {
     // console.log('value:', value)
     if (value < 1.2) {
@@ -79,7 +59,7 @@ const BilboMdFeedback = () => {
       >
         <Grid size={{ xs: 10 }}>
           <Typography sx={{ fontSize: '1.7em' }}>
-            SAXS Model Analysis Report For Ensemble of size #
+            SAXS Model Analysis Report: <b>{feedback.best_model}</b>
           </Typography>
         </Grid>
         {/* Best Chi-Square and Multi-State Info */}
@@ -88,12 +68,12 @@ const BilboMdFeedback = () => {
             <Typography sx={{ fontSize: '1.3em' }}>
               Overall Chi<sup>2</sup> :
               <Chip
-                label={report.overall_chi_square.toFixed(2)}
+                label={feedback.overall_chi_square.toFixed(2)}
                 sx={{
                   mx: 1,
                   fontSize: '1.2em',
                   backgroundColor: getChi2ChipBackgroundColor(
-                    report.overall_chi_square
+                    feedback.overall_chi_square
                   )
                 }}
               />
@@ -103,11 +83,11 @@ const BilboMdFeedback = () => {
             <Typography sx={{ fontSize: '1.3em' }}>
               Experimental MW:
               <Chip
-                label={report.mw_saxs.toFixed(1)}
+                label={feedback.mw_saxs.toFixed(1)}
                 sx={{
                   mx: 1,
                   fontSize: '1.2em',
-                  backgroundColor: getMWChipBackgroundColor(report.mw_err)
+                  backgroundColor: getMWChipBackgroundColor(feedback.mw_err)
                 }}
               />
               kDa
@@ -117,11 +97,11 @@ const BilboMdFeedback = () => {
             <Typography sx={{ fontSize: '1.3em' }}>
               Model MW:
               <Chip
-                label={report.mw_model.toFixed(1)}
+                label={feedback.mw_model.toFixed(1)}
                 sx={{
                   mx: 1,
                   fontSize: '1.2em',
-                  backgroundColor: getMWChipBackgroundColor(report.mw_err)
+                  backgroundColor: getMWChipBackgroundColor(feedback.mw_err)
                 }}
               />
               kDa
@@ -133,9 +113,9 @@ const BilboMdFeedback = () => {
         </Grid>
         <FeedbackChart
           data={{
-            q_ranges: report.q_ranges,
-            chi_squares_of_regions: report.chi_squares_of_regions,
-            residuals_of_regions: report.residuals_of_regions
+            q_ranges: feedback.q_ranges,
+            chi_squares_of_regions: feedback.chi_squares_of_regions,
+            residuals_of_regions: feedback.residuals_of_regions
           }}
         />
         <Grid size={{ xs: 12 }}>
@@ -162,9 +142,9 @@ const BilboMdFeedback = () => {
               sx={{
                 fontSize: '1.2em',
                 width: '100px',
-                ...(getChipProps(report.chi_squares_of_regions[0]).sx || {})
+                ...(getChipProps(feedback.chi_squares_of_regions[0]).sx || {})
               }}
-              label={report.chi_squares_of_regions[0].toFixed(2)}
+              label={feedback.chi_squares_of_regions[0].toFixed(2)}
             />
           </Grid>
 
@@ -183,9 +163,9 @@ const BilboMdFeedback = () => {
               sx={{
                 fontSize: '1.2em',
                 width: '100px',
-                ...(getChipProps(report.chi_squares_of_regions[1]).sx || {})
+                ...(getChipProps(feedback.chi_squares_of_regions[1]).sx || {})
               }}
-              label={report.chi_squares_of_regions[1].toFixed(2)}
+              label={feedback.chi_squares_of_regions[1].toFixed(2)}
             />
           </Grid>
 
@@ -204,9 +184,9 @@ const BilboMdFeedback = () => {
               sx={{
                 fontSize: '1.2em',
                 width: '100px',
-                ...(getChipProps(report.chi_squares_of_regions[2]).sx || {})
+                ...(getChipProps(feedback.chi_squares_of_regions[2]).sx || {})
               }}
-              label={report.chi_squares_of_regions[2].toFixed(2)}
+              label={feedback.chi_squares_of_regions[2].toFixed(2)}
             />
           </Grid>
         </Grid>
@@ -230,7 +210,7 @@ const BilboMdFeedback = () => {
                 fontSize: '1.2em',
                 width: '100px'
               }}
-              label={report.residuals_of_regions[0].toFixed(2)}
+              label={feedback.residuals_of_regions[0].toFixed(2)}
             />
           </Grid>
 
@@ -248,7 +228,7 @@ const BilboMdFeedback = () => {
                 fontSize: '1.2em',
                 width: '100px'
               }}
-              label={report.residuals_of_regions[1].toFixed(2)}
+              label={feedback.residuals_of_regions[1].toFixed(2)}
             />
           </Grid>
 
@@ -266,7 +246,7 @@ const BilboMdFeedback = () => {
                 fontSize: '1.2em',
                 width: '100px'
               }}
-              label={report.residuals_of_regions[2].toFixed(2)}
+              label={feedback.residuals_of_regions[2].toFixed(2)}
             />
           </Grid>
         </Grid>
@@ -276,10 +256,10 @@ const BilboMdFeedback = () => {
         {/* Feedback Reports */}
         <Grid size={{ xs: 12 }}>
           <Typography sx={{ mb: 1, fontSize: '1.2em' }}>
-            {report.highest_chi_square_feedback}
+            {feedback.highest_chi_square_feedback}
           </Typography>
           <Typography sx={{ mb: 1, fontSize: '1.2em' }}>
-            {report.second_highest_chi_square_feedback}
+            {feedback.second_highest_chi_square_feedback}
           </Typography>
         </Grid>
         <Grid size={{ xs: 12 }}>
@@ -288,12 +268,12 @@ const BilboMdFeedback = () => {
         {/* Feedback and Suggestions */}
         <Grid size={{ xs: 12 }}>
           <Typography sx={{ fontSize: '1.7em' }}>Summary Feedback</Typography>
-          <Typography sx={{ m: 1 }}>{report.mw_feedback}</Typography>
+          <Typography sx={{ m: 1 }}>{feedback.mw_feedback}</Typography>
           <Typography sx={{ m: 1 }}>
-            {report.overall_chi_square_feedback}
+            {feedback.overall_chi_square_feedback}
           </Typography>
           <Typography sx={{ m: 1 }}>
-            {report.regional_chi_square_feedback}
+            {feedback.regional_chi_square_feedback}
           </Typography>
         </Grid>
       </Grid>
