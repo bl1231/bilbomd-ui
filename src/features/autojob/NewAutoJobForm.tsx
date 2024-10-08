@@ -87,7 +87,18 @@ const NewAutoJobForm = () => {
         <Grid size={{ xs: 12 }}>
           <NewAutoJobFormInstructions />
         </Grid>
-
+        <Grid size={{ xs: 12 }}>
+          <HeaderBox>
+            <Typography>BilboMD Auto Schematic</Typography>
+          </HeaderBox>
+          <Paper sx={{ p: 2 }}>
+            <img
+              src='/images/bilbomd-auto-schematic.png'
+              alt='Overview of Scoper pipeline'
+              style={{ maxWidth: '100%', height: 'auto' }}
+            />
+          </Paper>
+        </Grid>
         <Grid size={{ xs: 12 }}>
           <HeaderBox>
             <Typography>BilboMD Auto Job Form</Typography>
