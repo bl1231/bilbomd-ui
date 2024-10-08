@@ -30,6 +30,7 @@ import ScoperFoXSAnalysis from 'features/scoperjob/ScoperFoXSAnalysis'
 import FoXSAnalysis from './FoXSAnalysis'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useGetJobByIdQuery } from 'slices/jobsApiSlice'
+import BilboMdFeedback from 'features/analysis/BilboMdFeedback'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -268,6 +269,20 @@ const SingleJobPage = () => {
             </Grid>
           )}
 
+        {job.mongo.status === 'Completed' &&
+          (job.mongo.__t === 'BilboMdPDB' ||
+            job.mongo.__t === 'BilboMdCRD' ||
+            job.mongo.__t === 'BilboMdAuto' ||
+            job.mongo.__t === 'BilboMdAlphaFold') &&
+          job.mongo.feedback && (
+            <Grid size={{ xs: 12 }}>
+              <HeaderBox sx={{ py: '6px' }}>
+                <Typography>Feedback</Typography>
+              </HeaderBox>
+              <BilboMdFeedback feedback={job.mongo.feedback} />
+            </Grid>
+          )}
+
         {job.mongo.status === 'Completed' && config.mode !== 'local' && (
           <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
@@ -310,8 +325,8 @@ const SingleJobPage = () => {
                 >
                   results.tar.gz
                 </span>{' '}
-                will contains your original files plus some output files from
-                Scoper.
+                tar archive will contains your original files plus some output
+                files from BilboMD.
               </Typography>
             </Item>
           </Grid>
