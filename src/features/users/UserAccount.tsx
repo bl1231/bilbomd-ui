@@ -12,6 +12,8 @@ import {
   DialogContent,
   DialogTitle
 } from '@mui/material'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
+import * as Yup from 'yup'
 import useAuth from 'hooks/useAuth'
 import useLogout from 'hooks/useLogout'
 import {
@@ -21,12 +23,6 @@ import {
   useDeleteUserByUserNameMutation
 } from '../../slices/userAccountApiSlice'
 
-interface User {
-  email: string
-  username: string
-  roles: string[]
-}
-
 interface State {
   newEmail: string
   isEmailValid: boolean
@@ -35,6 +31,13 @@ interface State {
   isMessageDialogOpen: boolean
   message: string
   isDeleteConfirmVisible: boolean
+}
+
+interface CustomError {
+  status: number
+  data: {
+    message: string
+  }
 }
 
 const initialState: State = {
@@ -76,7 +79,11 @@ const reducer = (state: State, action: Action): State => {
       return state
   }
 }
-
+interface User {
+  username: string
+  email: string
+  roles: string[]
+}
 const UserAccount: React.FC = () => {
   const { username, email, roles } = useAuth() as User
   const [state, dispatch] = useReducer(reducer, initialState)
@@ -91,54 +98,43 @@ const UserAccount: React.FC = () => {
     dispatch({ type: 'TOGGLE_MESSAGE_DIALOG', payload: true })
   }
 
-  const handleNewEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const email = e.target.value
-    dispatch({ type: 'SET_NEW_EMAIL', payload: email })
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    dispatch({ type: 'SET_IS_EMAIL_VALID', payload: emailRegex.test(email) })
-  }
-
   const logout = useLogout()
   const handleAutomaticLogout = () => {
     logout()
   }
 
-  const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: 'SET_OTP', payload: e.target.value })
-  }
-
-  const handleUpdateEmail = async () => {
+  const handleUpdateEmail = async (values: { newEmail: string }) => {
     try {
-      console.log('Updating email to:', state.newEmail)
+      console.log('Updating email to:', values.newEmail)
       await updateEmail({
         username,
         currentEmail: email,
-        newEmail: state.newEmail
+        newEmail: values.newEmail
       }).unwrap()
 
       showMessageDialog('OTP is sent successfully to your new email address.')
       dispatch({ type: 'TOGGLE_OTP_MODAL', payload: true }) // Open OTP modal
-    } catch (error: any) {
-      if (error.status === 409) {
+    } catch (error) {
+      const customError = error as CustomError
+      if (customError.status === 409) {
         showMessageDialog('Email address already exists')
-      } else if (error.status === 400) {
-        showMessageDialog(error.data.message)
+      } else if (customError.status === 400) {
+        showMessageDialog(customError.data.message)
       } else {
         showMessageDialog('Error sending an OTP to your new email address')
       }
     }
   }
 
-  const handleVerifyOtp = async () => {
-    console.log('Verifying OTP:', state.otp)
+  const handleVerifyOtp = async (values: { otp: string }) => {
+    console.log('Verifying OTP:', values.otp)
 
     try {
       await verifyOtp({
         username,
         currentEmail: email,
         newEmail: state.newEmail,
-        otp: state.otp
+        otp: values.otp
       }).unwrap()
 
       showMessageDialog(
@@ -147,7 +143,12 @@ const UserAccount: React.FC = () => {
       setTimeout(handleAutomaticLogout, 3000)
       dispatch({ type: 'TOGGLE_OTP_MODAL', payload: false }) // Close OTP modal after successful verification
     } catch (error) {
-      showMessageDialog('Error verifying OTP')
+      const customError = error as CustomError
+      if (customError.status === 400) {
+        showMessageDialog(customError.data.message)
+      } else {
+        showMessageDialog('Error verifying OTP')
+      }
     }
   }
 
@@ -162,7 +163,12 @@ const UserAccount: React.FC = () => {
 
       showMessageDialog('OTP sent successfully to your new email address')
     } catch (error) {
-      showMessageDialog('Error resending OTP')
+      const customError = error as CustomError
+      if (customError.status === 400) {
+        showMessageDialog(customError.data.message)
+      } else {
+        showMessageDialog('Error resending OTP')
+      }
     }
   }
 
@@ -182,10 +188,11 @@ const UserAccount: React.FC = () => {
       showMessageDialog('Account deleted successfully')
       setTimeout(handleAutomaticLogout, 3000)
       dispatch({ type: 'TOGGLE_DELETE_CONFIRM', payload: false }) // Hide confirmation after successful deletion
-    } catch (error: any) {
-      if (error.status === 404) {
-        showMessageDialog(error.data.message)
-      } else if (error.status === 409) {
+    } catch (error) {
+      const customError = error as CustomError
+      if (customError.status === 404) {
+        showMessageDialog(customError.data.message)
+      } else if (customError.status === 409) {
         showMessageDialog(
           'You have active jobs; please delete them first before deleting the account.'
         )
@@ -226,6 +233,18 @@ const UserAccount: React.FC = () => {
     </Dialog>
   )
 
+  const validationSchema = Yup.object({
+    newEmail: Yup.string()
+      .email('Invalid email address')
+      .required('New email address is required')
+  })
+
+  const otpValidationSchema = Yup.object({
+    otp: Yup.string()
+      .required('OTP is required')
+      .length(6, 'OTP must be 6 characters long')
+  })
+
   return (
     <>
       <Box sx={{ maxWidth: 1000, margin: 'auto', mt: 4 }}>
@@ -244,24 +263,37 @@ const UserAccount: React.FC = () => {
           <CardContent sx={{ p: 0 }}>
             <SectionHeader title='Change Email Address' />
             <Box sx={{ p: 2 }}>
-              <TextField
-                fullWidth
-                label='New Email Address'
-                variant='outlined'
-                value={state.newEmail}
-                onChange={handleNewEmailChange}
-                sx={{ mb: 2 }}
-                placeholder='Enter new email address'
-              />
-              <Button
-                fullWidth
-                variant='contained'
-                color='primary'
-                onClick={handleUpdateEmail}
-                disabled={!state.isEmailValid} // Disable button if email is invalid
+              <Formik
+                initialValues={{ newEmail: '' }}
+                validationSchema={validationSchema}
+                validateOnChange={true}
+                validateOnBlur={true}
+                onSubmit={handleUpdateEmail}
               >
-                Update Email
-              </Button>
+                {({ isValid }) => (
+                  <Form>
+                    <Field
+                      as={TextField}
+                      fullWidth
+                      label='New Email Address'
+                      name='newEmail'
+                      variant='outlined'
+                      sx={{ mb: 2 }}
+                      placeholder='Enter new email address'
+                      helperText={<ErrorMessage name='newEmail' />}
+                    />
+                    <Button
+                      fullWidth
+                      variant='contained'
+                      color='primary'
+                      type='submit'
+                      disabled={!isValid}
+                    >
+                      Update Email
+                    </Button>
+                  </Form>
+                )}
+              </Formik>
             </Box>
           </CardContent>
         </Card>
@@ -277,7 +309,8 @@ const UserAccount: React.FC = () => {
                 Resend OTP
               </Button>
               <Button
-                onClick={handleVerifyOtp}
+                form='otpForm'
+                type='submit'
                 variant='contained'
                 color='primary'
               >
@@ -286,15 +319,28 @@ const UserAccount: React.FC = () => {
             </>
           }
         >
-          <TextField
-            fullWidth
-            label='Enter OTP'
-            variant='outlined'
-            value={state.otp}
-            onChange={handleOtpChange}
-            sx={{ mt: 2 }}
-            placeholder='Enter OTP'
-          />
+          <Formik
+            initialValues={{ otp: '' }}
+            validationSchema={otpValidationSchema}
+            validateOnChange={true}
+            validateOnBlur={true}
+            onSubmit={handleVerifyOtp}
+          >
+            {() => (
+              <Form id='otpForm'>
+                <Field
+                  as={TextField}
+                  fullWidth
+                  label='Enter OTP'
+                  name='otp'
+                  variant='outlined'
+                  sx={{ mt: 2 }}
+                  placeholder='Enter OTP'
+                  helperText={<ErrorMessage name='otp' />}
+                />
+              </Form>
+            )}
+          </Formik>
         </CustomDialog>
 
         {/* Message Dialog */}
