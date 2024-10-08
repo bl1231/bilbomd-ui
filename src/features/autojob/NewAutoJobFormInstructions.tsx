@@ -23,13 +23,13 @@ const NewAutoJobFormInstructions = () => (
       <Typography
         sx={{
           textTransform: 'uppercase',
-          fontSize: 12,
-          fontWeight: 500,
+          fontSize: '0.875rem',
+          fontWeight: 400,
           color: '#fff',
           letterSpacing: '1px'
         }}
       >
-        Instructions
+        BilboMD Auto Instructions
       </Typography>
     </AccordionSummary>
     <AccordionDetails>

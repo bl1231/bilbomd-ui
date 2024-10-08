@@ -38,6 +38,7 @@ const NewJobForm = () => {
   const { email } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
+  const [selectedMode, setSelectedMode] = useState('pdb')
   // Fetch the configuration object
   const {
     data: config,
@@ -123,6 +124,8 @@ const NewJobForm = () => {
       const newBilboMDMode =
         event.target.name === 'pdb_inputs' ? 'pdb' : 'crd_psf'
 
+      setSelectedMode(newBilboMDMode)
+
       if (newBilboMDMode === 'pdb') {
         console.log('reset to PDB mode')
         resetForm({
@@ -169,6 +172,27 @@ const NewJobForm = () => {
       <Grid container spacing={2}>
         <Grid size={{ xs: 12 }}>
           <NewJobFormInstructions />
+        </Grid>
+
+        <Grid size={{ xs: 12 }}>
+          <HeaderBox>
+            <Typography>BilboMD Classic Schematic</Typography>
+          </HeaderBox>
+          <Paper sx={{ p: 2 }}>
+            <img
+              src={
+                selectedMode === 'pdb'
+                  ? '/images/bilbomd-classic-pdb-schematic.png'
+                  : '/images/bilbomd-classic-crd-schematic.png'
+              }
+              alt={
+                selectedMode === 'pdb'
+                  ? 'Overview of BilboMD PDB mode pipeline'
+                  : 'Overview of BilboMD CRD/PSF mode pipeline'
+              }
+              style={{ maxWidth: '100%', height: 'auto' }}
+            />
+          </Paper>
         </Grid>
 
         <Grid size={{ xs: 12 }}>
