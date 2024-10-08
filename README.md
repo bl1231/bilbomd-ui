@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.12.1
+  - Add feedback components and conditionally display based on presence in MongoDB
 - 1.12.0
   - Add initial BilboMD SANS forms
   - Add @bl1231/bilbomd-mongodb-schema as a dependency
