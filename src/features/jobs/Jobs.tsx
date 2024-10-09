@@ -76,9 +76,16 @@ const Jobs = () => {
     let errorMessage: string = ''
     let severity: 'error' | 'warning' | 'info' = 'info'
 
-    if ('status' in error) {
-      if (error.status === 404) {
+    if (error && 'status' in error) {
+      if (error.status === 204) {
+        // No jobs available, but user exists
+        console.log(error)
         errorMessage = 'No jobs found. Please run some jobs first.'
+        severity = 'info'
+      } else if (error.status === 404) {
+        // User not found
+        errorMessage = 'User not found. Please contact support.'
+        severity = 'error'
       } else {
         errorMessage =
           'error' in error ? error.error : JSON.stringify(error.data)
