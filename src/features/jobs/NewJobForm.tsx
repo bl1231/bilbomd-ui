@@ -176,7 +176,10 @@ const NewJobForm = () => {
 
         <Grid size={{ xs: 12 }}>
           <HeaderBox>
-            <Typography>BilboMD Classic Schematic</Typography>
+            <Typography>
+              BilboMD Classic Schematic -{' '}
+              {selectedMode === 'pdb' ? 'PDB inputs' : 'CRD/PSF inputs'}
+            </Typography>
           </HeaderBox>
           <Paper sx={{ p: 2 }}>
             <img
