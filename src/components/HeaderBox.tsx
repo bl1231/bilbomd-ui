@@ -12,7 +12,6 @@ const HeaderBox = ({ children, ...props }: HeaderBoxProps) => {
     <Box
       sx={{
         textTransform: 'uppercase',
-        fontSize: 11,
         borderTopLeftRadius: 4,
         borderTopRightRadius: 4,
         fontWeight: 500,
