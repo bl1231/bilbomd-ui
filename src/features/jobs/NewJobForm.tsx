@@ -187,8 +187,8 @@ const NewJobForm = () => {
               }
               alt={
                 selectedMode === 'pdb'
-                  ? 'Overview of BilboMD PDB mode pipeline'
-                  : 'Overview of BilboMD CRD/PSF mode pipeline'
+                  ? 'Overview of BilboMD PDB pipeline'
+                  : 'Overview of BilboMD CRD/PSF pipeline'
               }
               style={{ maxWidth: '100%', height: 'auto' }}
             />
