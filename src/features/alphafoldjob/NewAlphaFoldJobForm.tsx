@@ -109,7 +109,7 @@ const NewAlphaFoldJob = () => {
           <Paper sx={{ p: 2 }}>
             <img
               src='/images/bilbomd-af-schematic.png'
-              alt='Overview of BilboMD pipeline'
+              alt='Overview of BilboMD AF pipeline'
               style={{ maxWidth: '100%', height: 'auto' }}
             />
           </Paper>
