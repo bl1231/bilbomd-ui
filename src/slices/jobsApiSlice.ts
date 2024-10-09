@@ -12,11 +12,12 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
       query: () => ({
         url: '/jobs',
         method: 'GET'
-        // validateStatus: (response, result) => {
-        //   return response.status === 200 && !result.isError
-        // }
       }),
       transformResponse: (responseData: BilboMDJob[]) => {
+        // Handle the case where there's no content (204)
+        if (!responseData || responseData.length === 0) {
+          return [] // Return an empty array if there are no jobs
+        }
         const loadedJobs = responseData.map((job) => {
           job.mongo.id = job.mongo._id
           job.id = job.mongo._id
