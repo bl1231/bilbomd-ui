@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.12.3
+  - Improve error handling for teh Jobs page when user has no jobs
 - 1.12.2
   - Add schematic diagrams showing various steps of BilboMD pipelines
 - 1.12.1
