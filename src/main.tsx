@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom/client'
 import './index.css'
 import App from './App'
 import { Provider as ReduxProvider } from 'react-redux'
-import { store } from 'app/store'
+import { setupStore } from 'app/store'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { ThemeContextProvider } from 'themes/ThemeContextProvider'
 import { StyledEngineProvider } from '@mui/system'
@@ -29,7 +29,7 @@ if (rootElement) {
     <React.StrictMode>
       <ThemeContextProvider>
         <StyledEngineProvider injectFirst>
-          <ReduxProvider store={store}>
+          <ReduxProvider store={setupStore()}>
             <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {}}>
               <RouterProvider router={router} />
             </ErrorBoundary>

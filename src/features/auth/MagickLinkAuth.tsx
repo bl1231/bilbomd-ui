@@ -7,24 +7,22 @@ import { Alert, AlertTitle, CircularProgress } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import usePersist from 'hooks/usePersist'
 import useTitle from 'hooks/useTitle'
-
-interface AuthError {
-  data: { message: string }
-}
+import { isAxiosError } from 'app/api/axios'
 
 const MagickLinkAuth = () => {
   useTitle('BilboMD: Check OTP')
+
   const { otp } = useParams()
   const [success, setSuccess] = useState(false)
   const [authErrorMsg, setAuthErrorMsg] = useState('')
   const [persist, setPersist] = usePersist()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
-
   const [login, { isLoading }] = useLoginMutation()
 
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout
+
     const authenticateOTP = async () => {
       try {
         const { accessToken } = await login({ otp }).unwrap()
@@ -33,20 +31,21 @@ const MagickLinkAuth = () => {
         if (!persist) {
           setPersist(true)
         }
-        await sleep(3000)
-        navigate('../dashboard/jobs')
-      } catch (err: unknown) {
-        const authError = err as AuthError
-        if (!err) {
-          setAuthErrorMsg('No Server Response')
+        timeoutId = setTimeout(() => {
+          navigate('../dashboard/jobs')
+        }, 3000)
+      } catch (err) {
+        if (isAxiosError(err) && err.response) {
+          setAuthErrorMsg(err.response.data.message || 'No Server Response1')
         } else {
-          setAuthErrorMsg(authError.data.message)
+          setAuthErrorMsg('No Server Response2')
         }
       }
     }
 
     authenticateOTP()
-  }, [])
+    return () => clearTimeout(timeoutId)
+  }, [login, otp, persist, setPersist, navigate, dispatch])
 
   const content = (
     <>

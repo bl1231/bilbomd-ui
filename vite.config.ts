@@ -1,17 +1,20 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import { visualizer } from 'rollup-plugin-visualizer'
+// import { visualizer } from 'rollup-plugin-visualizer'
 
 console.log('Starting Vite configuration...')
 // console.log(process.env)
 export default defineConfig({
   plugins: [
-    react({
-      include: '**/*.tsx'
-    }),
-    visualizer({ gzipSize: true, brotliSize: true, template: 'sunburst' }),
+    react(),
     tsconfigPaths()
+    // react({
+    //   include: '**/*.tsx'
+    // }),
+    // visualizer({ gzipSize: true, brotliSize: true, template: 'sunburst' }),
+    // tsconfigPaths()
   ],
   server: {
     host: 'localhost',
@@ -48,5 +51,12 @@ export default defineConfig({
         }
       }
     }
+  },
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
+    reporters: ['html', 'default', 'verbose'],
+    globals: true,
+    css: true
   }
 })
