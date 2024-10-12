@@ -56,11 +56,11 @@ describe('MagickLink Component', () => {
       name: /Send a MagickLink/i
     })
 
-    act(() => {
+    await act(async () => {
       fireEvent.change(emailInputs[0], { target: { value: 'user@test.com' } })
     })
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(submitButtons[0])
     })
   })
@@ -79,11 +79,11 @@ describe('MagickLink Component', () => {
     const submitButtons = screen.getAllByRole('button', {
       name: /Send a MagickLink/i
     })
-    act(() => {
+    await act(async () => {
       fireEvent.change(emailInputs[0], { target: { value: 'nope@test.com' } })
     })
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(submitButtons[0])
     })
   })

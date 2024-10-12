@@ -44,13 +44,6 @@ describe('Signup Component', () => {
   })
 
   it('submits the form successfully and shows the success message', async () => {
-    // Mock successful form submission
-    // axiosInstance.post.mockImplementationOnce(() =>
-    //   Promise.resolve({
-    //     status: 201,
-    //     data: { success: true }
-    //   })
-    // )
     vi.spyOn(axiosInstance, 'post').mockResolvedValueOnce({
       status: 201,
       data: { success: true }
@@ -60,14 +53,16 @@ describe('Signup Component', () => {
 
     // Simulate user input
     const usernameInputs = screen.getAllByLabelText(/Pick a User Name/i)
-    act(() => {
+    await act(async () => {
       fireEvent.change(usernameInputs[0], {
         target: { value: 'testuser' }
       })
     })
     const emailInputs = screen.getAllByLabelText(/Enter an Email address/i)
-    fireEvent.change(emailInputs[0], {
-      target: { value: 'test@example.com' }
+    await act(async () => {
+      fireEvent.change(emailInputs[0], {
+        target: { value: 'test@example.com' }
+      })
     })
 
     // Submit the form
