@@ -162,6 +162,19 @@ const NewSANSJob = () => {
 
         <Grid size={{ xs: 12 }}>
           <HeaderBox>
+            <Typography>BilboMD SANS Schematic</Typography>
+          </HeaderBox>
+          <Paper sx={{ p: 2 }}>
+            <img
+              src='/images/bilbomd-sans-schematic.png'
+              alt='Overview of BilboMD SANS pipeline'
+              style={{ maxWidth: '100%', height: 'auto' }}
+            />
+          </Paper>
+        </Grid>
+
+        <Grid size={{ xs: 12 }}>
+          <HeaderBox>
             <Typography>BilboMD SANS Job Form</Typography>
           </HeaderBox>
           <Paper sx={{ p: 2 }}>
