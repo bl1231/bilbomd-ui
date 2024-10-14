@@ -2,7 +2,7 @@ import useAuth from 'hooks/useAuth'
 import useTitle from 'hooks/useTitle'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { Typography, Link } from '@mui/material'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import NerscSystemStatuses from 'features/nersc/SystemStatuses'
 
 const Welcome = () => {
@@ -34,12 +34,12 @@ const Welcome = () => {
             BilboMD is deployed to{' '}
             <b>
               {config.useNersc && config.useNersc.toLowerCase() === 'true' ? (
-                <>
+                <div>
                   <span>NERSC</span>
                   <Grid>
                     <NerscSystemStatuses />
                   </Grid>
-                </>
+                </div>
               ) : (
                 <span>Beamline 12.3.1</span>
               )}
