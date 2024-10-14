@@ -1,5 +1,5 @@
 import { renderWithProviders } from 'test/test-utils'
-import { screen, act } from '@testing-library/react'
+import { screen, act, waitFor } from '@testing-library/react'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import Welcome from './Welcome'
 import useAuth from 'hooks/useAuth'
@@ -11,6 +11,61 @@ vi.mock('hooks/useAuth', () => ({
 
 vi.mock('slices/configsApiSlice', () => ({
   useGetConfigsQuery: vi.fn()
+}))
+
+vi.mock('slices/nerscApiSlice', () => ({
+  useGetNerscStatusQuery: () => ({
+    data: [
+      {
+        name: 'perlmutter',
+        full_name: 'Perlmutter',
+        description: 'System is active',
+        system_type: 'compute',
+        notes: [],
+        status: 'active',
+        updated_at: '2024-10-03T15:35:00-07:00'
+      },
+      {
+        name: 'community_filesystem',
+        full_name: 'Community File System (CFS)',
+        description: 'System is active',
+        system_type: 'filesystem',
+        notes: [],
+        status: 'active',
+        updated_at: '2024-08-06T17:15:00-07:00'
+      },
+      {
+        name: 'spin',
+        full_name: 'Spin',
+        description: 'System is active',
+        system_type: 'service',
+        notes: [],
+        status: 'active',
+        updated_at: '2024-10-04T14:17:00-07:00'
+      },
+      {
+        name: 'ldap',
+        full_name: 'LDAP',
+        description: 'System is active',
+        system_type: 'service',
+        notes: [],
+        status: 'active',
+        updated_at: '2023-08-31T10:45:00-07:00'
+      },
+      {
+        name: 'iris',
+        full_name: 'IRIS',
+        description: 'System is active',
+        system_type: 'service',
+        notes: [],
+        status: 'active',
+        updated_at: '2024-09-04T12:58:00-07:00'
+      }
+    ],
+    isLoading: false,
+    error: null,
+    isSuccess: true
+  })
 }))
 
 describe('Welcome Component', () => {
@@ -112,36 +167,28 @@ describe('Welcome Component', () => {
       isLoading: false,
       refetch: vi.fn()
     })
-    vi.mock('slices/nerscApiSlice', () => ({
-      useGetNerscStatusQuery: () => ({
-        data: { status: 'OK' },
-        isLoading: false,
-        error: null
-      })
-    }))
 
     await act(async () => {
       renderWithProviders(<Welcome />)
     })
 
-    expect(
-      screen.getByText((content, element) => {
-        const hasText = (text: string) => content.includes(text)
-        const isCorrectElement = element?.tagName.toLowerCase() === 'p'
-        return (
-          hasText('BilboMD is running in') &&
-          hasText('mode') &&
-          isCorrectElement
-        )
-      })
-    ).toBeInTheDocument()
-
-    expect(screen.getByText(/NERSC/i)).toBeInTheDocument()
-
-    // This assumes NerscSystemStatuses renders something specific, adjust this accordingly
-    // await waitFor(() => {
-    //   expect(screen.getByText(/NERSC System Statuses/i)).toBeInTheDocument()
-    // })
+    await waitFor(() => {
+      expect(
+        screen.getByText((content, element) => {
+          const hasText = (text: string) => content.includes(text)
+          const isCorrectElement = element?.tagName.toLowerCase() === 'p'
+          return (
+            hasText('BilboMD is running in') &&
+            hasText('mode') &&
+            isCorrectElement
+          )
+        })
+      ).toBeInTheDocument()
+      expect(screen.getByText(/NERSC/i)).toBeInTheDocument()
+      expect(screen.getByText(/perlmutter/i)).toBeInTheDocument()
+      expect(screen.getByText(/spin/i)).toBeInTheDocument()
+      screen.debug()
+    })
   })
 
   it('displays contact information', () => {

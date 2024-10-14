@@ -1,5 +1,11 @@
 import { useGetNerscStatusQuery } from 'slices/nerscApiSlice'
-import { CircularProgress, Alert, AlertTitle, Typography } from '@mui/material'
+import {
+  CircularProgress,
+  Alert,
+  AlertTitle,
+  Typography,
+  Box
+} from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import NerscStatusChip from './NerscStatusChip'
 type ContentType = React.ReactNode | string
@@ -30,17 +36,20 @@ const NerscSystemStatuses = () => {
     'community_filesystem'
   ]
   if (isSuccess) {
+    // console.log('nerscStatuses:', nerscStatuses)
     content = (
-      <Grid sx={{ mx: 1, display: 'flex', alignItems: 'center' }}>
-        {nerscStatuses
-          ?.filter((system) => systemsOfInterest.includes(system.name))
-          .map((system) => (
-            <NerscStatusChip key={system.name} system={system} />
-          ))}
-        <Typography sx={{ ml: 2 }}>
-          (mouseover the status chips for details)
-        </Typography>
-      </Grid>
+      <Box>
+        <Grid sx={{ mx: 1, display: 'flex', alignItems: 'center' }}>
+          {nerscStatuses
+            ?.filter((system) => systemsOfInterest.includes(system.name))
+            .map((system) => (
+              <NerscStatusChip key={system.name} system={system} />
+            ))}
+          <Typography sx={{ ml: 2 }}>
+            (mouseover the status chips for details)
+          </Typography>
+        </Grid>
+      </Box>
     )
   }
   return content
