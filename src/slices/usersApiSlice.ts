@@ -96,7 +96,7 @@ export const selectUsersResult = usersApiSlice.endpoints.getUsers.select({})
 //   (usersResult) => usersResult.data // normalized state object with ids & entities
 // )
 
-// // getSelectors creates these selectors and we rename them with aliases using destructuring
+// //getSelectors creates these selectors and we rename them with aliases using destructuring
 // export const {
 //   selectAll: selectAllUsers,
 //   selectById: selectUserById,
