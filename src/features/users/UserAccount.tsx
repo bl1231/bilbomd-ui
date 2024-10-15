@@ -117,7 +117,9 @@ const UserAccount: React.FC = () => {
     } catch (error) {
       const customError = error as CustomError
       if (customError.status === 409) {
-        showMessageDialog('Email address already exists')
+        showMessageDialog(
+          'This Email is already associated with another account'
+        )
       } else if (customError.status === 400) {
         showMessageDialog(customError.data.message)
       } else {
