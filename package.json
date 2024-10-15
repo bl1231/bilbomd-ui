@@ -31,7 +31,7 @@
     "@mui/material": "^6.1.2",
     "@mui/system": "^6.1.2",
     "@mui/x-data-grid": "^7.19.0",
-    "@reduxjs/toolkit": "^2.2.7",
+    "@reduxjs/toolkit": "^2.3.0",
     "@types/node": "^22.7.4",
     "axios": "^1.7.7",
     "axios-retry": "^4.5.0",
