@@ -4,7 +4,7 @@
 
 ## Getting Started with Vite
 
-Although this project was initially bootstrapped with [Create React App](https://github.com/facebook/create-react-app), CRA is no longer maintained and we switched to using [Vite](https://vitejs.dev/). Have a look at the Vite documentation to see why we use it.
+This project uses [Vite](https://vite.dev/guide/why.html) for bundling, to provide a dev server, and we are beginning to use teh closly related [Vitest](https://vitest.dev/) to help us write unit tests. Have a look at the Vite documentation to see why we use it.
 
 ## Available Scripts
 
@@ -61,9 +61,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 ## Version History
 
 - 1.12.4 (10/10/2024)
-  - Add schematic diagrams fro BilboMD AF and BilboMD SANS pipelines
+  - Add schematic diagrams for BilboMD AF and BilboMD SANS pipelines
 - 1.12.3
-  - Improve error handling for teh Jobs page when user has no jobs
+  - Improve error handling for the Jobs page when user has no jobs
 - 1.12.2
   - Add schematic diagrams showing various steps of BilboMD pipelines
 - 1.12.1
@@ -77,14 +77,14 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 - 1.11.2
   - Add line length validation (70 character limit) for user-uploaded `const.inp` files
 - 1.11.1
-  - Add "experimental" tag to teh MolStar Viewer
+  - Add "experimental" tag to the MolStar Viewer
   - Single Job Page loads with NERSC Steps Accordian unexpanded if job is Completed
 - 1.11.0
   - Add BilboMD AF (AlphaFold) job type
   - Add NERSC status checker so that new jobs cannot be submitted if Perlmutter is down.
   - Various UI improvements
 - 1.10.3
-  - Add Perlmutter outage notices to teh NERSC status component
+  - Add Perlmutter outage notices to the NERSC status component
 - 1.10.2
   - Improve caching during GitHub Actions
   - Migrate MUI Grid to Grid2
@@ -199,7 +199,7 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 - 0.0.19
   - Add necessary changes to make compatible with the new `v1` API
 - 0.0.18
-  - Bug fixes fro AutoRg
+  - Bug fixes for AutoRg
 - 0.0.17
   - Add AutoRG functionality to the New Job Form
 - 0.0.16
