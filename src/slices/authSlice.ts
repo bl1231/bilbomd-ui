@@ -1,8 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-// could add interface to make TS happy
 interface AuthState {
-  token: null
+  token: string | null
 }
 
 const initialState: AuthState = {
@@ -13,7 +12,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: initialState,
   reducers: {
-    setCredentials: (state, action) => {
+    setCredentials: (state, action: PayloadAction<{ accessToken: string }>) => {
       const { accessToken } = action.payload
       state.token = accessToken
     },
@@ -27,4 +26,5 @@ export const { setCredentials, logOut } = authSlice.actions
 
 export default authSlice.reducer
 
-export const selectCurrentToken = (state: { auth: { token } }) => state.auth.token
+export const selectCurrentToken = (state: { auth: AuthState }) =>
+  state.auth.token

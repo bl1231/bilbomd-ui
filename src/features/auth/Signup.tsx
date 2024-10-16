@@ -141,32 +141,31 @@ const Signup = () => {
                     }
                   />
                   {error ? (
-                    <Collapse in={Boolean(error)}>
-                      <Alert
-                        severity='error'
-                        action={
-                          <IconButton
-                            aria-label='close'
-                            color='inherit'
-                            size='small'
-                            onClick={() => setError('')}
-                          >
-                            <CloseIcon fontSize='inherit' />
-                          </IconButton>
-                        }
-                        sx={{ mb: 1 }}
-                      >
-                        {error}
-                        <br /> If you have an account{' '}
-                        <Link to='../magicklink' className='alert-link'>
-                          get a MagickLink&#8482;
-                        </Link>
-                        {/* <br /> ...or maybe you still need to{' '}
-                        <Link to="../magicklink" className="alert-link">
-                          verify your email
-                        </Link> */}
-                      </Alert>
-                    </Collapse>
+                    <>
+                      {console.log('Error State:', error)}
+                      <Collapse in={Boolean(error)}>
+                        <Alert
+                          severity='error'
+                          action={
+                            <IconButton
+                              aria-label='close'
+                              color='inherit'
+                              size='small'
+                              onClick={() => setError('')}
+                            >
+                              <CloseIcon fontSize='inherit' />
+                            </IconButton>
+                          }
+                          sx={{ mb: 1 }}
+                        >
+                          {error}
+                          <br /> If you have an account{' '}
+                          <Link to='../magicklink' className='alert-link'>
+                            get a MagickLink&#8482;
+                          </Link>
+                        </Alert>
+                      </Collapse>
+                    </>
                   ) : (
                     ''
                   )}

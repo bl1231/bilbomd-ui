@@ -11,7 +11,7 @@ export default [
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
-  { ignores: ['dist/*'] },
+  { ignores: ['dist/*','coverage/*'] },
   {
     rules: {
       'react/react-in-jsx-scope': 'off',
