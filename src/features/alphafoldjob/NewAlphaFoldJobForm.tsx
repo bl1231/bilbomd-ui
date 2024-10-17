@@ -79,10 +79,6 @@ const NewAlphaFoldJob = () => {
       form.append(`entities[${index}][type]`, entity.type)
       form.append(`entities[${index}][copies]`, entity.copies.toString())
     })
-    // Log the form data to check if entities are appended
-    // for (const pair of form.entries()) {
-    //   console.log(`${pair[0]}, ${pair[1]}`)
-    // }
     try {
       const newJob = await addNewAlphaFoldJob(form).unwrap()
       setStatus(newJob)
@@ -90,7 +86,7 @@ const NewAlphaFoldJob = () => {
       console.error('rejected', error)
     }
   }
-  const isFormValid = (values) => {
+  const isFormValid = (values: NewAlphaFoldJobFormValues) => {
     return (
       !isPerlmutterUnavailable && values.title !== '' && values.dat_file !== ''
     )
@@ -261,7 +257,11 @@ const NewAlphaFoldJob = () => {
                                         label='Copies'
                                         type='number'
                                         InputProps={{
-                                          inputProps: { min: 1, step: 1 },
+                                          inputProps: {
+                                            min: 1,
+                                            max: 10,
+                                            step: 1
+                                          },
                                           sx: { height: '100%' } // Ensure full height usage
                                         }}
                                         fullWidth
