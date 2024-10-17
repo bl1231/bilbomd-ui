@@ -187,7 +187,7 @@ describe('Welcome Component', () => {
       expect(screen.getByText(/NERSC/i)).toBeInTheDocument()
       expect(screen.getByText(/perlmutter/i)).toBeInTheDocument()
       expect(screen.getByText(/spin/i)).toBeInTheDocument()
-      screen.debug()
+      // screen.debug()
     })
   })
 

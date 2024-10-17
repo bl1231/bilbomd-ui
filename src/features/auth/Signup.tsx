@@ -36,7 +36,7 @@ const Signup = () => {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true
       })
-      console.log('response: ', response)
+      // console.log('response: ', response)
       if (response.status === 201) {
         // successfully created a new user
         setError('')
@@ -56,7 +56,7 @@ const Signup = () => {
         }
         setSubmitting(false)
       } else {
-        console.error('error2:', error)
+        console.error(error)
       }
     }
   }
