@@ -24,10 +24,6 @@ type HomeProps = {
   title?: string
 }
 
-// const Demo = styled('div')(({ theme }) => ({
-//   backgroundColor: theme.palette.background.paper
-// }))
-
 const Home = ({ title = 'BilboMD' }: HomeProps) => {
   useTitle(title)
   const navigate = useNavigate()
