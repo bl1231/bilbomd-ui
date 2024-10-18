@@ -8,7 +8,8 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Paper
+  Paper,
+  Alert
 } from '@mui/material'
 import { Box, Container, Grid } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
@@ -115,12 +116,27 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
               </Link>
               ; PMCID: PMC3773563.
             </Typography>
-
-            <Typography variant='body1' sx={{ my: 1 }}>
-              <b>BilboMD</b> runs on dedicated servers at the SIBYLS beamline.
-              Please register for an account in order to use this public
-              resource.
-            </Typography>
+            <Alert severity='info'>
+              Currently <b>BilboMD</b> runs on a dedicated server located at the
+              SIBYLS Beamline (BL12.3.1) at the Advanced Light Source. We are
+              developing a version of <b>BilboMD</b> that will be deployed to{' '}
+              <Link
+                href='https://nersc.gov/'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                <b>NERSC</b>
+              </Link>{' '}
+              that will run <b>BilboMD</b> jobs on{' '}
+              <Link
+                href='https://www.nersc.gov/systems/perlmutter/'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                <b>Perlmutter</b>
+              </Link>
+              . Keep your eyes out here for updates.
+            </Alert>
 
             <List>
               <Paper elevation={3} sx={{ my: 1 }}>
@@ -138,7 +154,7 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
                   <Grid container spacing={2}>
                     <Grid>
                       <img
-                        src='/images/bilbomd-classic-crd-schematic.png'
+                        src='/images/bilbomd-classic-pdb-schematic.png'
                         alt='Overview of BilboMD AF pipeline'
                         style={{ maxWidth: '92%', height: 'auto' }}
                       />
@@ -162,7 +178,7 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
                   <Grid container spacing={2}>
                     <Grid>
                       <img
-                        src='/images/bilbomd-classic-pdb-schematic.png'
+                        src='/images/bilbomd-classic-crd-schematic.png'
                         alt='Overview of BilboMD AF pipeline'
                         style={{ maxWidth: '92%', height: 'auto' }}
                       />
@@ -201,14 +217,14 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText
-                    primary='BilboMD AF'
+                    primary='BilboMD AF - NERSC only'
                     secondary='Bring the Amino Acid sequence and let BilboMD run AlphaFold'
                     sx={{ width: '25%' }}
                   />
                   <Grid container spacing={2}>
                     <Grid>
                       <img
-                        src='/images/bilbomd-auto-schematic.png'
+                        src='/images/bilbomd-af-schematic.png'
                         alt='Overview of BilboMD AF pipeline'
                         style={{ maxWidth: '92%', height: 'auto' }}
                       />
@@ -219,8 +235,17 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
             </List>
 
             <Typography variant='body1' sx={{ my: 3 }}>
-              <b>BilboMD</b> is still in development. However, we would
-              appreciate you testing and reporting your experience.
+              We are continually and actively developing <b>BilboMD</b> and
+              would appreciate you testing and reporting your experience. Feel
+              free to add an issue on the{' '}
+              <Link
+                href='https://github.com/bl1231/bilbomd-ui/'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                <b>blilbomd-ui</b>
+              </Link>{' '}
+              GitHub repository.
             </Typography>
 
             {/* FEATURES */}
@@ -230,8 +255,7 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
               </Typography>
               <ul>
                 <li>
-                  Registered users can submit <b>BilboMD</b> jobs to our
-                  cluster.
+                  Registered users can submit <b>BilboMD</b> jobs to our server.
                 </li>
                 <li>
                   <b>BilboMD</b> jobs can be run in different modes depending on
@@ -267,20 +291,20 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
                       the standard BilboMD pipeline.
                     </li>
                     <li>
-                      <b>SANS</b> mode which has been designed to run the
-                      Classic BilboMD pipeline with SANS experimental data.
-                      BilboMD SANS uses Pepsi-SANS to calculate theoretical SANS
-                      scattering curves from the MD models and then a genetic
-                      algorithm to fit the theoretical curves to the
-                      experimental data.
+                      <b>SANS - coming soon</b> mode which has been designed to
+                      run the Classic BilboMD pipeline with SANS experimental
+                      data. BilboMD SANS uses Pepsi-SANS to calculate
+                      theoretical SANS scattering curves from the MD models and
+                      then a genetic algorithm to fit the theoretical curves to
+                      the experimental data.
                     </li>
                     <li>
-                      <b>Scoper</b> mode where you provide an RNA pdb file.
-                      Scoper is a novel data analysis pipeline that uses a
-                      combination of classical algorithms and deep-learning
-                      techniques to find structures, along with magnesium ion
-                      binding sites that fit a given SAXS profile, given an
-                      initial structure to work with.
+                      <b>Scoper - at BL12.3.1 only</b> mode where you provide an
+                      RNA pdb file. Scoper is a novel data analysis pipeline
+                      that uses a combination of classical algorithms and
+                      deep-learning techniques to find structures, along with
+                      magnesium ion binding sites that fit a given SAXS profile,
+                      given an initial structure to work with.
                     </li>
                   </ul>
                 </li>
