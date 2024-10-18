@@ -24,6 +24,13 @@ import useTitle from 'hooks/useTitle'
 import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
+interface SubmitValues {
+  title: string
+  pdb_file: string
+  pae_file: string
+  dat_file: string
+  email: string
+}
 const NewAutoJobForm = () => {
   useTitle('BilboMD: New Auto Job')
   const [addNewAutoJob, { isSuccess }] = useAddNewAutoJobMutation()
@@ -54,7 +61,10 @@ const NewAutoJobForm = () => {
     email: email
   }
 
-  const onSubmit = async (values, { setStatus }) => {
+  const onSubmit = async (
+    values: SubmitValues,
+    { setStatus }: { setStatus: (status: string) => void }
+  ) => {
     const form = new FormData()
     form.append('title', values.title)
     form.append('pdb_file', values.pdb_file)
@@ -71,7 +81,7 @@ const NewAutoJobForm = () => {
     }
   }
 
-  const isFormValid = (values) => {
+  const isFormValid = (values: SubmitValues) => {
     return (
       !isPerlmutterUnavailable &&
       values.title !== '' &&

@@ -2,6 +2,7 @@ import { ReactNode } from 'react'
 import {
   Typography,
   Paper,
+  Box,
   Chip,
   CircularProgress,
   Alert,
@@ -77,13 +78,13 @@ const BullMQSummary = () => {
 
   if (isSuccess) {
     content = (
-      <>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <HeaderBox>
           <Typography>BullMQ Status</Typography>
         </HeaderBox>
 
         <Item sx={{ p: 1 }}>
-          <Grid container spacing={2}>
+          <Grid container spacing={2} sx={{ display: 'flex' }}>
             <Grid size={{ xs: 6 }}>
               <Divider textAlign='left' variant='fullWidth'>
                 <Chip label='BilboMD Queue' />
@@ -171,7 +172,7 @@ const BullMQSummary = () => {
             </Grid>
           </Grid>
         </Item>
-      </>
+      </Box>
     )
   }
 
