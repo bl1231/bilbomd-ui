@@ -1,11 +1,11 @@
 import { renderWithProviders } from 'test/test-utils'
 import { screen, waitFor, act } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import Home from '../Home'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from 'slices/authSlice'
 import { useRefreshMutation } from 'slices/authApiSlice'
 import { useNavigate } from 'react-router-dom'
+
 // Mock react-router-dom
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom')

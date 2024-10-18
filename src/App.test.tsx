@@ -1,38 +1,28 @@
-// import { render } from '@testing-library/react'
-// import { ThemeContextProvider } from 'themes/ThemeContextProvider'
-// import { useThemeContext } from 'themes/ThemeContextProvider'
 import App from './App'
-import { describe, it, expect } from 'vitest'
 import { renderWithProviders } from 'test/test-utils'
+import { act } from '@testing-library/react'
+
+// Mock the useGetConfigsQuery call from the authApiSlice
+vi.mock('slices/configsApiSlice', () => ({
+  useGetConfigsQuery: vi.fn(() => ({
+    data: { mode: 'test', useNersc: 'false' }, // Example mock response
+    isLoading: false,
+    isError: false,
+    error: null
+  }))
+}))
 
 describe('App Component', () => {
-  it('renders without crashing', () => {
-    const { container } = renderWithProviders(<App />)
+  it('renders without crashing', async () => {
+    let container: HTMLElement | null = null
+
+    await act(async () => {
+      const result = renderWithProviders(<App />)
+      container = result.container
+    })
+
+    // Add a null check to avoid TypeScript error
+    expect(container).not.toBeNull()
     expect(container).toBeInTheDocument()
   })
-  // it('applies the correct theme from ThemeContext', () => {
-  //   const mockTheme = {
-  //     palette: { mode: 'dark' },
-  //     unstable_sx: {},
-  //     unstable_sxConfig: {},
-  //     mixins: {},
-  //     shadows: [],
-  //     typography: {},
-  //     spacing: () => 0,
-  //     shape: {},
-  //     transitions: {},
-  //     zIndex: {},
-  //     components: {},
-  //     direction: 'ltr',
-  //     breakpoints: {},
-  //     overrides: {},
-  //     props: {}
-  //   }
-  //   vi.mocked(useThemeContext).mockReturnValue({ theme: mockTheme })
-
-  //   const { getByTestId } = renderWithProviders(<App />)
-
-  //   const themeProvider = getByTestId('ThemeProvider') // Ensure your ThemeProvider or App has the test id
-  //   expect(themeProvider).toHaveStyle('palette-mode: dark') // Adjust this style check to how MUI actually renders it
-  // })
 })

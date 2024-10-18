@@ -65,6 +65,7 @@
     "preview": "vite preview",
     "optimize": "vite optimize",
     "test": "vitest",
+    "test:ui": "vitest --ui",
     "coverage": "vitest --coverage"
   },
   "browserslist": {
