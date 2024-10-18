@@ -1,5 +1,3 @@
-// ==============================|| OVERRIDES - LINER PROGRESS ||============================== //
-
 export default function LinearProgress() {
   return {
     MuiLinearProgress: {

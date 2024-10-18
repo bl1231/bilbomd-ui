@@ -1,5 +1,3 @@
-// ==============================|| OVERRIDES - TABS ||============================== //
-
 export default function Tabs() {
   return {
     MuiTabs: {
