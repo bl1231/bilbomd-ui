@@ -12,6 +12,7 @@ import CardContent from './CardContent'
 import Checkbox from './Checkbox'
 import Chip from './Chip'
 import Dialog from './Dialog'
+import Footer from './Footer'
 import IconButton from './IconButton'
 import InputLabel from './InputLabel'
 import LinearProgress from './LinearProgress'
@@ -24,7 +25,9 @@ import TableCell from './TableCell'
 import Tabs from './Tabs'
 import Typography from './Typography'
 
-export default function ComponentsOverrides(theme) {
+import { Theme } from '@mui/material/styles'
+
+export default function ComponentsOverrides(theme: Theme) {
   return merge(
     Alert(),
     AppBar(theme),
@@ -36,6 +39,7 @@ export default function ComponentsOverrides(theme) {
     Checkbox(theme),
     Chip(theme),
     Dialog(theme),
+    Footer(theme),
     IconButton(theme),
     InputLabel(theme),
     Paper(theme),

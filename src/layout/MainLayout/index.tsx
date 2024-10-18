@@ -162,12 +162,12 @@ export default function ClippedDrawer() {
   )
 
   const content = (
-    <Container>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Box sx={{ display: 'flex', mb: 8 }}>
         <Header />
       </Box>
 
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex', flexGrow: 1 }}>
         <Drawer
           variant='permanent'
           sx={{
@@ -193,10 +193,10 @@ export default function ClippedDrawer() {
         </Box>
       </Box>
 
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ width: '100vw' }}>
         <Footer />
       </Box>
-    </Container>
+    </Box>
   )
 
   return content

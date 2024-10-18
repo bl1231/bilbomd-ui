@@ -1,6 +1,6 @@
-// ==============================|| OVERRIDES - TAB ||============================== //
+import { Theme } from '@mui/material/styles'
 
-export default function Tab(theme) {
+export default function Tab(theme: Theme) {
   return {
     MuiTab: {
       styleOverrides: {

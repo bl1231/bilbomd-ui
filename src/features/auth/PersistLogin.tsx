@@ -63,7 +63,7 @@ const PersistLogin = () => {
       >
         <Grid sx={{ width: '300px' }}>
           <Alert
-            variant='filled'
+            variant='outlined'
             severity='error'
             // sx={{ backgroundColor: '#ffa39e', color: 'black' }}
           >

@@ -1,5 +1,3 @@
-// ==============================|| OVERRIDES - LINK ||============================== //
-
 export default function Link() {
   return {
     MuiLink: {

@@ -22,12 +22,19 @@ import { Link } from 'react-router-dom'
 import nerscLogo from 'assets/nersc-logo.png'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
+interface UserMenuProps {
+  anchorElUser: HTMLElement | null
+  handleOpenUserMenu: (event: React.MouseEvent<HTMLElement>) => void
+  handleCloseUserMenu: () => void
+  settings: { text: string; onclick: () => void }[]
+}
+
 const UserMenu = ({
   anchorElUser,
   handleOpenUserMenu,
   handleCloseUserMenu,
   settings
-}) => (
+}: UserMenuProps) => (
   <>
     <Tooltip
       title='Open settings'
@@ -70,7 +77,12 @@ const UserMenu = ({
   </>
 )
 
-const NerscLogo = ({ useNersc, mode }) =>
+interface NerscLogoProps {
+  useNersc: boolean
+  mode: string
+}
+
+const NerscLogo = ({ useNersc, mode }: NerscLogoProps) =>
   useNersc && (
     <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', p: 1 }}>
       <img src={nerscLogo} alt='NERSC Logo' style={{ height: '30px' }} />
@@ -86,7 +98,7 @@ const NerscLogo = ({ useNersc, mode }) =>
     </Box>
   )
 
-const ModeDisplay = ({ useNersc, mode }) =>
+const ModeDisplay = ({ useNersc, mode }: NerscLogoProps) =>
   !useNersc && (
     <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', p: 1 }}>
       {mode !== 'local' && (
@@ -124,7 +136,7 @@ const Header = () => {
   const [time, setTime] = useState('')
   const navigate = useNavigate()
   const { username, status } = useAuth()
-  const [anchorElUser, setAnchorElUser] = useState(null)
+  const [anchorElUser, setAnchorElUser] = useState<HTMLElement | null>(null)
 
   const settings = [
     { text: 'My Jobs', onclick: () => navigate('dashboard/jobs') },
@@ -161,7 +173,7 @@ const Header = () => {
   const useNersc = config.useNersc?.toLowerCase() === 'true'
   const mode = config.mode || 'nope'
 
-  const handleOpenUserMenu = (event) => {
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget)
   }
 
