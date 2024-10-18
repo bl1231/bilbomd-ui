@@ -1,6 +1,6 @@
 {
   "name": "bilbomd-ui",
-  "version": "1.12.4",
+  "version": "1.13.0",
   "description": "Frontend Single Page Web Application for BilboMD",
   "private": true,
   "type": "module",
@@ -65,6 +65,7 @@
     "preview": "vite preview",
     "optimize": "vite optimize",
     "test": "vitest",
+    "test:ui": "vitest --ui",
     "coverage": "vitest --coverage"
   },
   "browserslist": {

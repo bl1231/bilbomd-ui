@@ -1,6 +1,6 @@
-// ==============================|| OVERRIDES - CHECKBOX ||============================== //
+import { Theme } from '@mui/material/styles'
 
-export default function Checkbox(theme) {
+export default function Checkbox(theme: Theme) {
   return {
     MuiCheckbox: {
       styleOverrides: {

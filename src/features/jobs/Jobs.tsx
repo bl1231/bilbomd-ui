@@ -230,50 +230,54 @@ const Jobs = () => {
     ]
 
     content = (
-      <>
-        {/* {console.log('ROWS--->', rows)} */}
-        <Grid container spacing={4}>
-          {!useNersc && (
-            <Grid size={{ xs: 12 }}>
-              <BullMQSummary />
-            </Grid>
-          )}
+      <Grid container spacing={4}>
+        {!useNersc && (
+          <Grid size={{ xs: 12 }}>
+            <BullMQSummary />
+          </Grid>
+        )}
 
-          {useNersc && (
-            <Grid size={{ xs: 12 }}>
-              <NerscStatus />
-            </Grid>
-          )}
+        {useNersc && (
+          <Grid size={{ xs: 12 }}>
+            <NerscStatus />
+          </Grid>
+        )}
 
-          {rows.length !== 0 ? (
-            <Grid size={{ xs: 12 }}>
-              <HeaderBox>
-                <Typography>Jobs</Typography>
-              </HeaderBox>
-              <Item>
+        {rows.length !== 0 ? (
+          <Grid size={{ xs: 12 }}>
+            <HeaderBox>
+              <Typography>Jobs</Typography>
+            </HeaderBox>
+            <Item>
+              <Box
+                sx={{
+                  '& .bilbomd.completed': {
+                    backgroundColor: green[400],
+                    color: '#1a3e72',
+                    fontWeight: '800'
+                  },
+                  '& .bilbomd.error': {
+                    backgroundColor: red[600],
+                    color: '#1a3e72',
+                    fontWeight: '600'
+                  },
+                  '& .bilbomd.running': {
+                    backgroundColor: amber[200],
+                    color: '#1a3e72',
+                    fontWeight: '600'
+                  },
+                  '& .bilbomd.submitted': {
+                    backgroundColor: amber[100],
+                    color: '#1a3e72',
+                    fontWeight: '600'
+                  }
+                }}
+              >
                 <Box
                   sx={{
-                    width: '100%',
-                    '& .bilbomd.completed': {
-                      backgroundColor: green[400],
-                      color: '#1a3e72',
-                      fontWeight: '800'
-                    },
-                    '& .bilbomd.error': {
-                      backgroundColor: red[600],
-                      color: '#1a3e72',
-                      fontWeight: '600'
-                    },
-                    '& .bilbomd.running': {
-                      backgroundColor: amber[200],
-                      color: '#1a3e72',
-                      fontWeight: '600'
-                    },
-                    '& .bilbomd.submitted': {
-                      backgroundColor: amber[100],
-                      color: '#1a3e72',
-                      fontWeight: '600'
-                    }
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '99%'
                   }}
                 >
                   <DataGrid
@@ -295,20 +299,20 @@ const Jobs = () => {
                     pageSizeOptions={[5, 10, 15, 25]}
                   />
                 </Box>
-              </Item>
-            </Grid>
-          ) : (
-            <Grid size={{ xs: 12 }}>
-              <HeaderBox>
-                <Typography>Jobs</Typography>
-              </HeaderBox>
-              <Alert severity='info' variant='outlined'>
-                <AlertTitle>No Jobs found.</AlertTitle>Run some jobs first
-              </Alert>
-            </Grid>
-          )}
-        </Grid>
-      </>
+              </Box>
+            </Item>
+          </Grid>
+        ) : (
+          <Grid size={{ xs: 12 }}>
+            <HeaderBox>
+              <Typography>Jobs</Typography>
+            </HeaderBox>
+            <Alert severity='info' variant='outlined'>
+              <AlertTitle>No Jobs found.</AlertTitle>Run some jobs first
+            </Alert>
+          </Grid>
+        )}
+      </Grid>
     )
   }
 
