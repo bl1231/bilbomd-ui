@@ -269,7 +269,7 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
                     <li>
                       <b>Classic (CRD/PSF)</b> mode where you supply a starting
                       model that has already been parameterized for CHARMM as a
-                      *.rd and *.psf files. This is typically done with{' '}
+                      *.crd and *.psf files. This is typically done with{' '}
                       <Link
                         href='https://www.charmm-gui.org/'
                         target='_blank'
@@ -286,25 +286,33 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
                       provide a starting model obtained from AlphaFold.
                     </li>
                     <li>
-                      <b>AF (AlphaFold)</b> mode where you provide the amino
-                      acid sequence and let BilboMD run AlphaFold followed by
-                      the standard BilboMD pipeline.
+                      <b>
+                        AF (AlphaFold) - <em>at NERSC only</em>
+                      </b>{' '}
+                      mode where you provide the amino acid sequence and let
+                      BilboMD run AlphaFold followed by the standard BilboMD
+                      pipeline.
                     </li>
                     <li>
-                      <b>SANS - coming soon</b> mode which has been designed to
-                      run the Classic BilboMD pipeline with SANS experimental
-                      data. BilboMD SANS uses Pepsi-SANS to calculate
-                      theoretical SANS scattering curves from the MD models and
-                      then a genetic algorithm to fit the theoretical curves to
-                      the experimental data.
+                      <b>
+                        SANS - <em>coming soon</em>
+                      </b>{' '}
+                      mode which has been designed to run the Classic BilboMD
+                      pipeline with SANS experimental data. BilboMD SANS uses
+                      Pepsi-SANS to calculate theoretical SANS scattering curves
+                      from the MD models and then a genetic algorithm to fit the
+                      theoretical curves to the experimental data.
                     </li>
                     <li>
-                      <b>Scoper - at BL12.3.1 only</b> mode where you provide an
-                      RNA pdb file. Scoper is a novel data analysis pipeline
-                      that uses a combination of classical algorithms and
-                      deep-learning techniques to find structures, along with
-                      magnesium ion binding sites that fit a given SAXS profile,
-                      given an initial structure to work with.
+                      <b>
+                        Scoper - <em>at BL12.3.1 only</em>
+                      </b>{' '}
+                      mode where you provide an RNA pdb file. Scoper is a novel
+                      data analysis pipeline that uses a combination of
+                      classical algorithms and deep-learning techniques to find
+                      structures, along with magnesium ion binding sites that
+                      fit a given SAXS profile, given an initial structure to
+                      work with.
                     </li>
                   </ul>
                 </li>
