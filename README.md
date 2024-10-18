@@ -4,7 +4,7 @@
 
 ## Getting Started with Vite
 
-This project uses [Vite](https://vite.dev/guide/why.html) for bundling, to provide a dev server, and we are beginning to use teh closly related [Vitest](https://vitest.dev/) to help us write unit tests. Have a look at the Vite documentation to see why we use it.
+This project uses [Vite](https://vite.dev/guide/why.html) for bundling, to provide a dev server, and we are beginning to use the closly related [Vitest](https://vitest.dev/) to help us write unit tests. Have a look at the Vite documentation to see why we use it.
 
 ## Available Scripts
 
@@ -60,6 +60,10 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.13.0 (10/18/2024)
+  - Add User Account component that allows user to change email address and delete account
+  - Implement Vitest and add a few initial tests
+  - Improve the Home page component seen by unauthenticated users
 - 1.12.4 (10/10/2024)
   - Add schematic diagrams for BilboMD AF and BilboMD SANS pipelines
 - 1.12.3
