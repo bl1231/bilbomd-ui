@@ -17,6 +17,16 @@ const router = createBrowserRouter([
   }
 ])
 
+// Mock the useGetConfigsQuery call from the authApiSlice
+vi.mock('slices/configsApiSlice', () => ({
+  useGetConfigsQuery: vi.fn(() => ({
+    data: { mode: 'test', useNersc: 'false' }, // Example mock response
+    isLoading: false,
+    isError: false,
+    error: null
+  }))
+}))
+
 describe('Main Application', () => {
   it('renders without crashing', () => {
     const { container } = render(
