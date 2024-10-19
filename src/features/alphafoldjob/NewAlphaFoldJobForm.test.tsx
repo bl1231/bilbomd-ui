@@ -5,17 +5,19 @@ import NewAlphaFoldJob from './NewAlphaFoldJobForm'
 import { useAddNewAlphaFoldJobMutation } from 'slices/jobsApiSlice'
 
 // Mock the Config API slice for testing
-vi.mock('slices/configsApiSlice', () => ({
+vi.mock('../../slices/configsApiSlice', () => ({
   useGetConfigsQuery: vi.fn(() => ({
     data: { sendMailUser: 'test@example.com' },
     error: null,
     isLoading: false
   }))
 }))
+
 // Mock the jobsApiSlice globally for all tests
-vi.mock('slices/jobsApiSlice', () => ({
+vi.mock('../../slices/jobsApiSlice', () => ({
   useAddNewAlphaFoldJobMutation: vi.fn()
 }))
+
 describe('NewAlphaFoldJob Form', () => {
   const mockSubmit = vi.fn()
 
@@ -102,64 +104,66 @@ describe('NewAlphaFoldJob Form', () => {
       ).toBeInTheDocument()
     })
   })
-  // it('shows success message after form submission', async () => {
-  //   const mockSubmit = vi.fn().mockResolvedValue({ success: true })
+  it('shows success message after form submission', async () => {
+    const mockSubmit = vi.fn().mockResolvedValue({ success: true })
 
-  //   // Mock the mutation to return a successful response
-  //   vi.mocked(useAddNewAlphaFoldJobMutation).mockReturnValue([
-  //     mockSubmit,
-  //     { isSuccess: true, reset: vi.fn() }
-  //   ])
+    // Mock the mutation to return a successful response
+    vi.mocked(useAddNewAlphaFoldJobMutation).mockReturnValue([
+      mockSubmit,
+      { isSuccess: true, reset: vi.fn() }
+    ])
 
-  //   renderWithProviders(<NewAlphaFoldJob />)
-  //   screen.debug()
-  //   // Fill out the Title field
-  //   await act(async () => {
-  //     fireEvent.change(screen.getByLabelText(/Title/i), {
-  //       target: { value: 'New AlphaFold Job' }
-  //     })
-  //   })
+    await act(async () => {
+      renderWithProviders(<NewAlphaFoldJob />)
+    })
+    expect(screen.getByRole('Title')).toBeInTheDocument()
+    // Fill out the Title field
+    await act(async () => {
+      fireEvent.change(screen.getByLabelText(/Title/i), {
+        target: { value: 'New AlphaFold Job' }
+      })
+    })
 
-  //   // Create a mock file
-  //   const file = new File(['file content'], 'example.dat', {
-  //     type: 'text/plain'
-  //   })
+    // Create a mock file
+    const file = new File(['file content'], 'example.dat', {
+      type: 'text/plain'
+    })
 
-  //   // Fill out the SAXS dat file with the mock file
-  //   const fileInput = screen.getByLabelText(/Select File/i)
-  //   await act(async () => {
-  //     fireEvent.change(fileInput, {
-  //       target: { files: [file] }
-  //     })
-  //   })
+    // Fill out the SAXS dat file with the mock file
+    const fileInput = screen.getByLabelText(/Select File/i)
+    await act(async () => {
+      fireEvent.change(fileInput, {
+        target: { files: [file] }
+      })
+    })
 
-  //   // By default, the form starts with one entity, let's modify that entity
-  //   await act(async () => {
-  //     fireEvent.change(screen.getByLabelText(/Amino Acid Sequence/i), {
-  //       target: { value: 'MASQSYLFKHLEVSDGLSNNSVNTIYK' }
-  //     })
-  //   })
+    // By default, the form starts with one entity, let's modify that entity
+    await act(async () => {
+      fireEvent.change(screen.getByLabelText(/Amino Acid Sequence/i), {
+        target: { value: 'MASQSYLFKHLEVSDGLSNNSVNTIYK' }
+      })
+    })
 
-  //   // Check if the submit button is enabled
-  //   const submitButton = screen.getByRole('button', { name: /Submit/i })
-  //   expect(submitButton).not.toBeDisabled()
+    // Check if the submit button is enabled
+    const submitButton = screen.getByRole('button', { name: /Submit/i })
+    expect(submitButton).not.toBeDisabled()
 
-  //   // Trigger form submission
-  //   await act(async () => {
-  //     fireEvent.click(submitButton)
-  //   })
+    // Trigger form submission
+    await act(async () => {
+      fireEvent.click(submitButton)
+    })
 
-  //   // Wait for the success message to appear after form submission
-  //   await waitFor(() => {
-  //     expect(
-  //       screen.getByText(/Your job has been submitted/i)
-  //     ).toBeInTheDocument()
-  //   })
+    // Wait for the success message to appear after form submission
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Your job has been submitted/i)
+      ).toBeInTheDocument()
+    })
 
-  //   // Assert that the mutation function (mockSubmit) was called
-  //   expect(mockSubmit).toHaveBeenCalled()
+    // Assert that the mutation function (mockSubmit) was called
+    expect(mockSubmit).toHaveBeenCalled()
 
-  //   // Debugging output if necessary
-  //   console.log(mockSubmit.mock.calls)
-  // })
+    // Debugging output if necessary
+    console.log(mockSubmit.mock.calls)
+  })
 })

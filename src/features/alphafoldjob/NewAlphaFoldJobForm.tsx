@@ -66,7 +66,10 @@ const NewAlphaFoldJob = () => {
     ]
   }
 
-  const onSubmit = async (values, { setStatus }) => {
+  const onSubmit = async (
+    values: NewAlphaFoldJobFormValues,
+    { setStatus }: { setStatus: (status: string) => void }
+  ) => {
     const form = new FormData()
     form.append('title', values.title)
     form.append('dat_file', values.dat_file)
@@ -156,7 +159,7 @@ const NewAlphaFoldJob = () => {
                           fullWidth
                           label='Title'
                           name='title'
-                          id='title'
+                          id='job-title'
                           type='text'
                           disabled={isSubmitting}
                           as={TextField}
