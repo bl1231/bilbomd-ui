@@ -5,7 +5,7 @@ ARG GITHUB_TOKEN
 ARG BILBOMD_UI_VERSION
 ARG BILBOMD_UI_GIT_HASH
 
-RUN npm install -g npm@10.8.3
+RUN npm install -g npm@10.9.0
 
 WORKDIR /app
 
