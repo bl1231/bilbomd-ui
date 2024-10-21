@@ -85,8 +85,9 @@ const Signup = () => {
         <Grid
           sx={{
             p: 2,
-            bgcolor: 'background.paper',
+            backgroundColor: 'background.paper',
             border: 1,
+            borderColor: '#bfbfbf',
             borderRadius: 1,
             width: '400px'
           }}
