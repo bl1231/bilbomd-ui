@@ -60,6 +60,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.13.1 (10/21/2024)
+  - Improve colors for the Home component
+  - Add dark mode schematic image files
 - 1.13.0 (10/18/2024)
   - Add User Account component that allows user to change email address and delete account
   - Implement Vitest and add a few initial tests
