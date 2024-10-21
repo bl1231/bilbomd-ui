@@ -8,7 +8,6 @@ const MinimalLayout = () => {
     <Box
       sx={{
         width: '100vw',
-        backgroundColor: '#b5f5ec',
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column'

@@ -1,4 +1,3 @@
-import Container from '@mui/material/Container'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
@@ -162,7 +161,13 @@ export default function ClippedDrawer() {
   )
 
   const content = (
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh'
+      }}
+    >
       <Box sx={{ display: 'flex', mb: 8 }}>
         <Header />
       </Box>

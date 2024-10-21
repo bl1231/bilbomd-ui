@@ -4,13 +4,14 @@ import {
   CircularProgress,
   Link,
   List,
+  Paper,
   Avatar,
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Paper,
   Alert
 } from '@mui/material'
+import { green } from '@mui/material/colors'
 import { Box, Container, Grid } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
@@ -18,6 +19,7 @@ import { selectCurrentToken } from 'slices/authSlice'
 import { useRefreshMutation } from 'slices/authApiSlice'
 import usePersist from 'hooks/usePersist'
 import useTitle from 'hooks/useTitle'
+import useTheme from '@mui/material/styles/useTheme'
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
 
 type HomeProps = {
@@ -26,6 +28,8 @@ type HomeProps = {
 
 const Home = ({ title = 'BilboMD' }: HomeProps) => {
   useTitle(title)
+  const theme = useTheme()
+  const isLightMode = theme.palette.mode === 'light'
   const navigate = useNavigate()
   const [persist] = usePersist()
   const token = useSelector(selectCurrentToken)
@@ -135,10 +139,10 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
             </Alert>
 
             <List>
-              <Paper elevation={3} sx={{ my: 1 }}>
+              <Paper className='bilbomd-pipeline'>
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar>
+                    <Avatar sx={{ backgroundColor: green[700] }}>
                       <RocketLaunchIcon />
                     </Avatar>
                   </ListItemAvatar>
@@ -150,7 +154,11 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
                   <Grid container spacing={2}>
                     <Grid>
                       <img
-                        src='/images/bilbomd-classic-pdb-schematic.png'
+                        src={
+                          isLightMode
+                            ? '/images/bilbomd-classic-pdb-schematic.png'
+                            : '/images/bilbomd-classic-pdb-schematic-dark.png'
+                        }
                         alt='Overview of BilboMD AF pipeline'
                         style={{ maxWidth: '92%', height: 'auto' }}
                       />
@@ -159,10 +167,10 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
                 </ListItem>
               </Paper>
 
-              <Paper elevation={3} sx={{ my: 1 }}>
+              <Paper className='bilbomd-pipeline'>
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar>
+                    <Avatar sx={{ backgroundColor: green[700] }}>
                       <RocketLaunchIcon />
                     </Avatar>
                   </ListItemAvatar>
@@ -174,7 +182,11 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
                   <Grid container spacing={2}>
                     <Grid>
                       <img
-                        src='/images/bilbomd-classic-crd-schematic.png'
+                        src={
+                          isLightMode
+                            ? '/images/bilbomd-classic-crd-schematic.png'
+                            : '/images/bilbomd-classic-crd-schematic-dark.png'
+                        }
                         alt='Overview of BilboMD AF pipeline'
                         style={{ maxWidth: '92%', height: 'auto' }}
                       />
@@ -182,10 +194,11 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
                   </Grid>
                 </ListItem>
               </Paper>
-              <Paper elevation={3} sx={{ my: 1 }}>
+
+              <Paper className='bilbomd-pipeline'>
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar>
+                    <Avatar sx={{ backgroundColor: green[700] }}>
                       <RocketLaunchIcon />
                     </Avatar>
                   </ListItemAvatar>
@@ -197,7 +210,11 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
                   <Grid container spacing={2}>
                     <Grid>
                       <img
-                        src='/images/bilbomd-auto-schematic.png'
+                        src={
+                          isLightMode
+                            ? '/images/bilbomd-auto-schematic.png'
+                            : '/images/bilbomd-auto-schematic-dark.png'
+                        }
                         alt='Overview of BilboMD AF pipeline'
                         style={{ maxWidth: '92%', height: 'auto' }}
                       />
@@ -205,10 +222,11 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
                   </Grid>
                 </ListItem>
               </Paper>
-              <Paper elevation={3} sx={{ my: 1 }}>
+
+              <Paper className='bilbomd-pipeline'>
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar>
+                    <Avatar sx={{ backgroundColor: green[700] }}>
                       <RocketLaunchIcon />
                     </Avatar>
                   </ListItemAvatar>
@@ -220,7 +238,11 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
                   <Grid container spacing={2}>
                     <Grid>
                       <img
-                        src='/images/bilbomd-af-schematic.png'
+                        src={
+                          isLightMode
+                            ? '/images/bilbomd-af-schematic.png'
+                            : '/images/bilbomd-af-schematic-dark.png'
+                        }
                         alt='Overview of BilboMD AF pipeline'
                         style={{ maxWidth: '92%', height: 'auto' }}
                       />
