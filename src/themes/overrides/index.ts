@@ -7,6 +7,7 @@ import AppBar from './AppBar'
 import Accordion from './Accordion'
 import Badge from './Badge'
 import BackGround from './BackGround'
+import BilboMdPipeline from './BilboMdPipeline'
 import Button from './Button'
 import CardContent from './CardContent'
 import Checkbox from './Checkbox'
@@ -35,6 +36,7 @@ export default function ComponentsOverrides(theme: Theme) {
     Button(theme),
     Badge(theme),
     BackGround(theme),
+    BilboMdPipeline(theme),
     CardContent(),
     Checkbox(theme),
     Chip(theme),
