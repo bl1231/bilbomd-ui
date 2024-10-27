@@ -14,7 +14,14 @@ import {
 } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { Link as RouterLink } from 'react-router-dom'
-import { Form, Formik, Field } from 'formik'
+import {
+  Form,
+  Formik,
+  Field,
+  FormikHelpers,
+  FormikErrors,
+  FormikTouched
+} from 'formik'
 import { useAddNewJobMutation } from 'slices/jobsApiSlice'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
@@ -72,7 +79,10 @@ const NewJobForm = () => {
     email: email
   }
 
-  const onSubmit = async (values, { setStatus }) => {
+  const onSubmit = async (
+    values: typeof initialValues,
+    { setStatus }: { setStatus: (status: string) => void }
+  ) => {
     const form = new FormData()
     form.append('bilbomd_mode', values.bilbomd_mode)
     form.append('title', values.title)
@@ -96,7 +106,14 @@ const NewJobForm = () => {
     }
   }
 
-  const calculateAutoRg = (selectedFile, setFieldValue) => {
+  const calculateAutoRg = (
+    selectedFile: File,
+    setFieldValue: (
+      field: string,
+      value: string | number,
+      shouldValidate?: boolean
+    ) => void
+  ) => {
     setIsLoading(true)
     const form = new FormData()
     form.append('email', email)
@@ -122,7 +139,14 @@ const NewJobForm = () => {
   }
 
   const handleCheckboxChange =
-    (resetForm, values, validateForm, touched) =>
+    (
+      resetForm: FormikHelpers<typeof initialValues>['resetForm'],
+      values: typeof initialValues,
+      validateForm: (
+        values?: Partial<typeof initialValues>
+      ) => Promise<FormikErrors<typeof initialValues>>,
+      touched: FormikTouched<typeof initialValues>
+    ) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const newBilboMDMode =
         event.target.name === 'pdb_inputs' ? 'pdb' : 'crd_psf'
