@@ -66,6 +66,7 @@ const NewJobForm = () => {
     constinp: '',
     expdata: '',
     num_conf: '',
+    rg: '',
     rg_min: '',
     rg_max: '',
     email: email
@@ -79,6 +80,7 @@ const NewJobForm = () => {
     form.append('crd_file', values.crd_file)
     form.append('pdb_file', values.pdb_file)
     form.append('num_conf', values.num_conf)
+    form.append('rg', values.rg)
     form.append('rg_min', values.rg_min)
     form.append('rg_max', values.rg_max)
     form.append('expdata', values.expdata)
@@ -106,7 +108,8 @@ const NewJobForm = () => {
         }
       })
       .then((response) => {
-        const { rg_min, rg_max } = response.data
+        const { rg, rg_min, rg_max } = response.data
+        setFieldValue('rg', rg)
         setFieldValue('rg_min', rg_min)
         setFieldValue('rg_max', rg_max)
       })
@@ -152,7 +155,7 @@ const NewJobForm = () => {
       }, 0) // You can adjust the timeout, but even a 0ms timeout can be enough to push to the next event loop
     }
 
-  const isFormValid = (values) => {
+  const isFormValid = (values: typeof initialValues) => {
     return (
       !isPerlmutterUnavailable &&
       values.title !== '' &&
@@ -494,7 +497,7 @@ const NewJobForm = () => {
                             errorMessage={errors.expdata ? errors.expdata : ''}
                             fileType='experimental SAXS data'
                             fileExt='.dat'
-                            onFileChange={async (selectedFile) => {
+                            onFileChange={async (selectedFile: File) => {
                               const isExpdataValid =
                                 await expdataSchema.isValid(selectedFile)
                               if (isExpdataValid) {
