@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from 'slices/authSlice'
 import { useRefreshMutation } from 'slices/authApiSlice'
+import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import usePersist from 'hooks/usePersist'
 import useTitle from 'hooks/useTitle'
 import useTheme from '@mui/material/styles/useTheme'
@@ -28,6 +29,7 @@ type HomeProps = {
 
 const Home = ({ title = 'BilboMD' }: HomeProps) => {
   useTitle(title)
+  const { data: config, isLoading: configIsLoading } = useGetConfigsQuery({})
   const theme = useTheme()
   const isLightMode = theme.palette.mode === 'light'
   const navigate = useNavigate()
@@ -52,7 +54,7 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
 
   let content
 
-  if (isLoading) {
+  if (isLoading || configIsLoading) {
     content = <CircularProgress />
   } else if (isSuccess && trueSuccess) {
     navigate('welcome')
@@ -116,27 +118,31 @@ const Home = ({ title = 'BilboMD' }: HomeProps) => {
               </Link>
               ; PMCID: PMC3773563.
             </Typography>
-            <Alert severity='info'>
-              Currently <b>BilboMD</b> runs on a dedicated server located at the
-              SIBYLS Beamline (BL12.3.1) at the Advanced Light Source. We are
-              developing a version of <b>BilboMD</b> that will be deployed to{' '}
-              <Link
-                href='https://nersc.gov/'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                <b>NERSC</b>
-              </Link>{' '}
-              that will run <b>BilboMD</b> jobs on{' '}
-              <Link
-                href='https://www.nersc.gov/systems/perlmutter/'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                <b>Perlmutter</b>
-              </Link>
-              . Keep your eyes out here for updates.
-            </Alert>
+            {config.useNersc && config.useNersc.toLowerCase() === 'false' ? (
+              <Alert severity='info' variant='outlined'>
+                You are about to run <b>BilboMD</b> on SIBYLS servers. If you
+                would prefer to run on NERSC head over to:{' '}
+                <Link
+                  href='https://bilbomd-nersc.bl1231.als.lbl.gov'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  <b>bilbomd-nersc.bl1231.als.lbl.gov</b>.
+                </Link>
+              </Alert>
+            ) : (
+              <Alert severity='info' variant='outlined'>
+                You are about to run <b>BilboMD</b> on NERSC. If you would
+                prefer to run on the SIBYLS Beamline servers head over to:{' '}
+                <Link
+                  href='https://bilbomd.bl1231.als.lbl.gov'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  <b>bilbomd.bl1231.als.lbl.gov</b>.
+                </Link>
+              </Alert>
+            )}
 
             <List>
               <Paper className='bilbomd-pipeline'>
