@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.13.3 (11/04/2024)
+  - Add experimental Rg to all new job form submissions.
 - 1.13.2 (11/04/2024)
   - Inform users of NERSC vs. SIBYLS versions of BilboMD
   - Fix the condition display of job steps on NERSC
