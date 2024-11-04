@@ -60,6 +60,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.13.2 (11/04/2024)
+  - Inform users of NERSC vs. SIBYLS versions of BilboMD
+  - Fix the condition display of job steps on NERSC
 - 1.13.1 (10/21/2024)
   - Improve colors for the Home component
   - Add dark mode schematic image files
