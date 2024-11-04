@@ -4,6 +4,7 @@ import Home from '../Home'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from 'slices/authSlice'
 import { useRefreshMutation } from 'slices/authApiSlice'
+import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useNavigate } from 'react-router-dom'
 
 // Mock react-router-dom
@@ -43,6 +44,10 @@ vi.mock('slices/authApiSlice', () => ({
   ])
 }))
 
+vi.mock('slices/configsApiSlice', () => ({
+  useGetConfigsQuery: vi.fn()
+}))
+
 describe('Home Component', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -54,6 +59,12 @@ describe('Home Component', () => {
       if (selector === selectCurrentToken) {
         return null // Simulate no token (unauthenticated)
       }
+    })
+    vi.mocked(useGetConfigsQuery).mockReturnValue({
+      data: { mode: 'production', useNersc: 'false' },
+      error: null,
+      isLoading: false,
+      refetch: vi.fn()
     })
     await act(async () => {
       renderWithProviders(<Home />)
