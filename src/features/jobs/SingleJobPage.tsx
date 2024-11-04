@@ -12,7 +12,7 @@ import {
 import Grid from '@mui/material/Grid2'
 import LinearProgress from '@mui/material/LinearProgress'
 import Paper from '@mui/material/Paper'
-import { styled, useTheme } from '@mui/material/styles'
+import { styled, useTheme, Theme } from '@mui/material/styles'
 import { axiosInstance } from 'app/api/axios'
 import MissingJob from 'components/MissingJob'
 import { useSelector } from 'react-redux'
@@ -37,6 +37,8 @@ const Item = styled(Paper)(({ theme }) => ({
   borderTopLeftRadius: 0,
   borderTopRightRadius: 0
 }))
+
+type JobStatus = 'Submitted' | 'Pending' | 'Running' | 'Completed' | 'Error'
 
 const SingleJobPage = () => {
   useTitle('BilboMD: Job Details')
@@ -125,8 +127,11 @@ const SingleJobPage = () => {
     }
   }
 
-  const getStatusColors = (status, theme) => {
-    const statusColors = {
+  const getStatusColors = (status: JobStatus, theme: Theme) => {
+    const statusColors: Record<
+      JobStatus,
+      { background: string; text: string }
+    > = {
       Submitted: {
         background: '#d6e4ff',
         text: theme.palette.mode === 'light' ? 'black' : 'white'
@@ -161,7 +166,10 @@ const SingleJobPage = () => {
     }
   }
 
-  const statusColors = getStatusColors(job?.mongo.status, theme)
+  const statusColors = getStatusColors(
+    (job?.mongo.status as JobStatus) || 'Pending',
+    theme
+  )
 
   // console.log('job', job)
 
@@ -210,18 +218,8 @@ const SingleJobPage = () => {
           </Item>
         </Grid>
 
-        {/* Old BilboMD Steps that uses BullMQ object */}
-        {/* {job.bullmq && !useNersc && (
-          <Grid size={{ xs: 12 }}>
-            <HeaderBox sx={{ py: '6px' }}>
-              <Typography>Steps</Typography>
-            </HeaderBox>
-            <BilboMDSteps job={job} />
-          </Grid>
-        )} */}
-
         {/* New BilboMD Steps that uses mongo.steps object */}
-        {job.mongo.steps && (
+        {job.mongo.steps && !useNersc && (
           <Grid size={{ xs: 12 }}>
             <BilboMDMongoSteps steps={job.mongo.steps} />
           </Grid>
