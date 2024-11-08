@@ -62,6 +62,12 @@ const SingleJobPage = () => {
     isLoading: configIsLoading
   } = useGetConfigsQuery({})
 
+  const getProgressValue = () => {
+    return (
+      job?.mongo?.progress ?? parseFloat(job?.bullmq?.bullmq?.progress ?? '0')
+    )
+  }
+
   if (isLoading) {
     return <PulseLoader color={'#ffffff'} />
   }
@@ -209,11 +215,11 @@ const SingleJobPage = () => {
           <Item sx={{ display: 'flex', alignItems: 'center' }}>
             <LinearProgress
               variant='determinate'
-              value={parseFloat(job.bullmq?.bullmq?.progress ?? '0')}
+              value={getProgressValue()}
               sx={{ flexGrow: 1 }}
             />
             <Typography variant='h3' sx={{ ml: 1 }}>
-              {parseFloat(job.bullmq?.bullmq?.progress ?? '0').toFixed(0)} %
+              {getProgressValue().toFixed(0)} %
             </Typography>
           </Item>
         </Grid>

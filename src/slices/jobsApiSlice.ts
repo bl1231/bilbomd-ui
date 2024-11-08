@@ -20,7 +20,7 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
         }
         const loadedJobs = responseData.map((job) => {
           job.mongo.id = job.mongo._id
-          job.id = job.mongo._id
+          job.id = job.mongo._id as string
           return job
         })
         jobsAdapter.setAll(initialState, loadedJobs)
@@ -47,7 +47,7 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
       }),
       transformResponse: (responseData: BilboMDJob) => {
         responseData.mongo.id = responseData.mongo._id
-        responseData.id = responseData.mongo._id
+        responseData.id = responseData.mongo._id as string
         return responseData
       },
       providesTags: (result, error, id) => [{ type: 'Job', id }]
