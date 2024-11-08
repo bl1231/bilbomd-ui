@@ -25,7 +25,8 @@ interface BilboMDStepsProps {
 }
 
 const BilboMDNerscSteps = ({ job }: BilboMDStepsProps) => {
-  // console.log('BilboMDNerscSteps: job:', job)
+  console.log('BilboMDNerscSteps: job:', job)
+
   let stepsToHide: string[] = []
   if (job.mongo.__t === 'BilboMdCRD') {
     stepsToHide = ['autorg', 'pdb2crd', 'pae', 'alphafold', '_id']
@@ -37,13 +38,41 @@ const BilboMDNerscSteps = ({ job }: BilboMDStepsProps) => {
     stepsToHide = ['autorg', 'pae', 'alphafold', '_id']
   }
 
+  const stepOrder = [
+    'alphafold',
+    'pdb2crd',
+    'pae',
+    'autorg',
+    'minimize',
+    'initfoxs',
+    'heat',
+    'md',
+    'dcd2pdb',
+    'pdb_remediate',
+    'foxs',
+    'pepsisans',
+    'multifoxs',
+    'gasans',
+    'copy_results_to_cfs',
+    'results',
+    'email',
+    'nersc_prepare_slurm_batch',
+    'nersc_submit_slurm_batch',
+    'nersc_job_status',
+    'nersc_copy_results_to_cfs'
+  ]
+
   const { steps } = job.mongo
-  // Check if bilbomdStep is defined and not null before using Object.entries
+
   if (steps && typeof steps === 'object') {
     const nerscSteps = Object.entries(steps)
       .filter(
         ([stepName]) =>
           stepName.startsWith('nersc_') && !stepsToHide.includes(stepName)
+      )
+      .sort(
+        ([a], [b]) =>
+          stepOrder.indexOf(a) - stepOrder.indexOf(b) || a.localeCompare(b)
       )
       .map(([stepName, stepValue]) => (
         <BilboMDNerscStep
@@ -58,6 +87,10 @@ const BilboMDNerscSteps = ({ job }: BilboMDStepsProps) => {
       .filter(
         ([stepName]) =>
           !stepName.startsWith('nersc_') && !stepsToHide.includes(stepName)
+      )
+      .sort(
+        ([a], [b]) =>
+          stepOrder.indexOf(a) - stepOrder.indexOf(b) || a.localeCompare(b)
       )
       .map(([stepName, stepValue]) => (
         <BilboMDNerscStep
@@ -79,7 +112,6 @@ const BilboMDNerscSteps = ({ job }: BilboMDStepsProps) => {
             pl: 0
           }}
         >
-          {' '}
           <HeaderBox sx={{ py: 0 }}>
             <Typography>NERSC STEPS</Typography>
           </HeaderBox>
@@ -106,7 +138,6 @@ const BilboMDNerscSteps = ({ job }: BilboMDStepsProps) => {
     )
   }
 
-  // Handle the case where bilbomdStep is undefined or null
   return <Item>No steps available</Item>
 }
 
