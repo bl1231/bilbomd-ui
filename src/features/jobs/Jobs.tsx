@@ -12,7 +12,8 @@ import {
   AlertTitle,
   CircularProgress,
   Paper,
-  Typography
+  Typography,
+  LinearProgress
 } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { styled } from '@mui/material/styles'
@@ -114,15 +115,15 @@ const Jobs = () => {
     }
 
     const rows = filteredIds.map((job) => {
-      const nerscJobidMessage =
-        job.mongo.steps?.nersc_submit_slurm_batch?.message || ''
-      const nerscJobid = nerscJobidMessage.replace('NERSC JobID ', '')
+      const nerscJobid = job.mongo.nersc?.jobid || ''
+      const nerscStatus = job.mongo.nersc?.state || ''
 
       return {
         ...job.mongo,
         position: job.bullmq?.queuePosition ?? '',
         username: job.username,
-        nerscJobid: nerscJobid
+        nerscJobid: nerscJobid,
+        nerscStatus: nerscStatus
       }
     })
 
@@ -177,6 +178,34 @@ const Jobs = () => {
         }
       },
       {
+        field: 'progress',
+        headerName: 'Progress',
+        width: 150,
+        renderCell: (params) => {
+          const progressValue = Number(params.value) // Ensure it's a number
+          return (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%',
+                width: '100%'
+              }}
+            >
+              <LinearProgress
+                variant='determinate'
+                value={progressValue}
+                sx={{ width: '100%', marginRight: 1 }}
+              />
+              <Typography variant='body2' sx={{ minWidth: 35 }}>
+                {`${progressValue}%`}
+              </Typography>
+            </Box>
+          )
+        }
+      },
+      {
         field: 'position',
         headerName: 'Position',
         width: 150
@@ -184,7 +213,12 @@ const Jobs = () => {
       {
         field: 'nerscJobid',
         headerName: 'NERSC JobID',
-        width: 150
+        width: 110
+      },
+      {
+        field: 'nerscStatus',
+        headerName: 'NERSC Status',
+        width: 110
       },
 
       {

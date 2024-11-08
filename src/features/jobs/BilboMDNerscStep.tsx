@@ -122,6 +122,12 @@ const BilboMDNerscStep = ({
           tooltipMessage:
             'In this step we copy the results from the PSCRATCH file system to the CFS file system.'
         }
+      case 'nersc_copy_results_to_cfs':
+        return {
+          friendlyName: 'NERSC Copy Results to CFS',
+          tooltipMessage:
+            'In this step we copy the results from the PSCRATCH file system to the CFS file system.'
+        }
       case 'results':
         return {
           friendlyName: 'Create Results file for download',
