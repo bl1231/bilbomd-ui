@@ -60,6 +60,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.13.4 (11/08/2024)
+  - Fixes for NERSC status step display
+  - Add NERSC state and overall progress to Jobs list table
 - 1.13.3 (11/04/2024)
   - Add experimental Rg to all new job form submissions.
 - 1.13.2 (11/04/2024)
