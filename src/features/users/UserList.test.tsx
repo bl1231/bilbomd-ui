@@ -12,7 +12,7 @@ vi.mock('slices/usersApiSlice', () => ({
 
 describe('UsersList Component', () => {
   it('should display loading indicator when data is loading', () => {
-    ;(useGetUsersQuery as jest.Mock).mockReturnValue({
+    ;(useGetUsersQuery as ReturnType<typeof vi.fn>).mockReturnValue({
       data: null,
       isLoading: true,
       isSuccess: false,
@@ -30,7 +30,7 @@ describe('UsersList Component', () => {
   })
 
   it('should display an error message when there is an error', () => {
-    ;(useGetUsersQuery as jest.Mock).mockReturnValue({
+    ;(useGetUsersQuery as ReturnType<typeof vi.fn>).mockReturnValue({
       data: null,
       isLoading: false,
       isSuccess: false,
@@ -60,7 +60,7 @@ describe('UsersList Component', () => {
       }
     ]
 
-    ;(useGetUsersQuery as jest.Mock).mockReturnValue({
+    ;(useGetUsersQuery as ReturnType<typeof vi.fn>).mockReturnValue({
       data: mockUsers,
       isLoading: false,
       isSuccess: true,
