@@ -8,7 +8,9 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Link
+  Link,
+  Checkbox,
+  FormControlLabel
 } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { Link as RouterLink } from 'react-router-dom'
@@ -32,6 +34,7 @@ const NewScoperJobForm = () => {
     title: '',
     pdb_file: '',
     dat_file: '',
+    fixc1c2: false,
     email: email
   }
 
@@ -40,6 +43,7 @@ const NewScoperJobForm = () => {
     form.append('title', values.title)
     form.append('pdb_file', values.pdb_file)
     form.append('dat_file', values.dat_file)
+    form.append('fixc1c2', values.fixc1c2)
     form.append('email', values.email)
     form.append('bilbomd_mode', 'scoper')
 
@@ -206,6 +210,41 @@ const NewScoperJobForm = () => {
                           fileType='experimental SAXS data *.dat'
                           fileExt='.dat'
                         />
+                      </Grid>
+
+                      <Grid>
+                        <Box
+                          sx={{ display: 'flex', alignItems: 'center', mt: 2 }}
+                        >
+                          <Field name='fixc1c2'>
+                            {({
+                              field
+                            }: {
+                              field: {
+                                name: string
+                                value: boolean
+                                onChange: (
+                                  e: React.ChangeEvent<HTMLInputElement>
+                                ) => void
+                              }
+                            }) => (
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    checked={field.value}
+                                    onChange={field.onChange}
+                                    name={field.name}
+                                    disabled={isSubmitting}
+                                    inputProps={{
+                                      'aria-label': 'fix-c1c2-checkbox'
+                                    }}
+                                  />
+                                }
+                                label='Fix c1/c2 values at 1.00 during multifoxs step'
+                              />
+                            )}
+                          </Field>
+                        </Box>
                       </Grid>
 
                       {isSubmitting && (
