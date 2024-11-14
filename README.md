@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.13.7 (11/14/2024)
+  - Add clarification about new option to fix c1/c2 values in Scoper runs
 - 1.13.6 (11/12/2024)
   - Fix display of progress and steps for Scoper jobs
 - 1.13.5 (11/12/2024)
