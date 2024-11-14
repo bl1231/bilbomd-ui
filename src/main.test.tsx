@@ -10,12 +10,23 @@ import ErrorFallback from 'components/ErrorFallback'
 import { describe, it, expect } from 'vitest'
 
 // Setup the router
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: '/*',
+      element: <App />
+    }
+  ],
   {
-    path: '/*',
-    element: <App />
+    future: {
+      v7_fetcherPersist: true,
+      v7_normalizeFormMethod: true,
+      v7_partialHydration: true,
+      v7_relativeSplatPath: true,
+      v7_skipActionErrorRevalidation: true
+    }
   }
-])
+)
 
 describe('Main Application', () => {
   it('renders without crashing', () => {
@@ -24,7 +35,10 @@ describe('Main Application', () => {
         <StyledEngineProvider injectFirst>
           <ReduxProvider store={setupStore()}>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
-              <RouterProvider router={router} />
+              <RouterProvider
+                router={router}
+                future={{ v7_startTransition: true }}
+              />
             </ErrorBoundary>
           </ReduxProvider>
         </StyledEngineProvider>
