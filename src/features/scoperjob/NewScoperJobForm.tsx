@@ -14,7 +14,7 @@ import {
 } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { Link as RouterLink } from 'react-router-dom'
-import { Form, Formik, Field } from 'formik'
+import { Form, Formik, Field, FormikHelpers } from 'formik'
 import FileSelect from 'features/jobs/FileSelect'
 import { useAddNewScoperJobMutation } from 'slices/jobsApiSlice'
 import LoadingButton from '@mui/lab/LoadingButton'
@@ -38,18 +38,28 @@ const NewScoperJobForm = () => {
     email: email
   }
 
-  const onSubmit = async (values, { setStatus }) => {
+  interface FormValues {
+    title: string
+    pdb_file: string
+    dat_file: string
+    fixc1c2: boolean
+    email: string
+  }
+
+  const onSubmit = async (
+    values: FormValues,
+    { setStatus }: FormikHelpers<FormValues>
+  ) => {
     const form = new FormData()
     form.append('title', values.title)
     form.append('pdb_file', values.pdb_file)
     form.append('dat_file', values.dat_file)
-    form.append('fixc1c2', values.fixc1c2)
+    form.append('fixc1c2', values.fixc1c2.toString())
     form.append('email', values.email)
     form.append('bilbomd_mode', 'scoper')
 
     try {
       const newJob = await addNewScoperJob(form).unwrap()
-      // setJobid(newJob.jobid)
       setStatus(newJob)
     } catch (error) {
       console.error('rejected', error)
@@ -240,11 +250,34 @@ const NewScoperJobForm = () => {
                                     }}
                                   />
                                 }
-                                label='Fix c1/c2 values at 1.00 during multifoxs step'
+                                label='Fix c1/c2 values at 1.00 during MultiFoXS step'
                               />
                             )}
                           </Field>
                         </Box>
+                      </Grid>
+
+                      <Grid sx={{ my: 2, width: '520px' }}>
+                        <Alert severity='info'>
+                          SAXS profiles are calculated using the Debye formula
+                          and fit to the experimental data with adjustment of
+                          the excluded volume (<b>c1</b>) and hydration layer
+                          density (<b>c2</b>) parameters ({' '}
+                          <Link
+                            href='https://doi.org/10.1093/nar/gkw389'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                          >
+                            <b>details</b>
+                          </Link>
+                          ). The default is to let <b>MultiFoXS</b> refine the{' '}
+                          <b>c1</b> and <b>c2</b> values. However, this can
+                          result in some Mg ions being &quot;absorbed&quot; into
+                          the solvent contribution. In order to increase the
+                          likelihood of Scoper placing Mg ions in the RNA
+                          structure, you can fix the <b>c1</b> and <b>c2</b>{' '}
+                          values at <b>1.00</b> during the MultiFoXS step.
+                        </Alert>
                       </Grid>
 
                       {isSubmitting && (
