@@ -326,7 +326,8 @@ const Jobs = () => {
                       columns: {
                         columnVisibilityModel: {
                           position: !useNersc,
-                          nerscJobid: useNersc
+                          nerscJobid: useNersc,
+                          nerscStatus: useNersc
                         }
                       }
                     }}

@@ -63,6 +63,9 @@ const SingleJobPage = () => {
   } = useGetConfigsQuery({})
 
   const getProgressValue = () => {
+    if (job?.scoper) {
+      return parseFloat(job?.bullmq?.bullmq?.progress ?? '0')
+    }
     return (
       job?.mongo?.progress ?? parseFloat(job?.bullmq?.bullmq?.progress ?? '0')
     )
@@ -177,7 +180,7 @@ const SingleJobPage = () => {
     theme
   )
 
-  // console.log('job', job)
+  console.log('job', job)
 
   const content = job ? (
     <>
@@ -225,7 +228,7 @@ const SingleJobPage = () => {
         </Grid>
 
         {/* New BilboMD Steps that uses mongo.steps object */}
-        {job.mongo.steps && !useNersc && (
+        {job.mongo.steps && !useNersc && !job.scoper && (
           <Grid size={{ xs: 12 }}>
             <BilboMDMongoSteps steps={job.mongo.steps} />
           </Grid>

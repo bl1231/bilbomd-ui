@@ -60,6 +60,10 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.13.6 (11/12/2024)
+  - Fix display of progress and steps for Scoper jobs
+- 1.13.5 (11/12/2024)
+  - Add checkbox for users to fix c1/c2 values during multifoxs step
 - 1.13.4 (11/08/2024)
   - Fixes for NERSC status step display
   - Add NERSC state and overall progress to Jobs list table
