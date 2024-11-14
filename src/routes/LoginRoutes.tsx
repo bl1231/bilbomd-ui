@@ -10,8 +10,6 @@ const MagickLinkAuth = Loadable(
   lazy(() => import('features/auth/MagickLinkAuth'))
 )
 
-// ===========================|| AUTH ROUTING ||============================ //
-
 const LoginRoutes = {
   element: <MinimalLayout />,
   path: '/',

@@ -1,7 +1,7 @@
 import { renderWithProviders } from 'test/test-utils'
 import { screen, waitFor } from '@testing-library/react'
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import MagickLinkAuth from './MagickLinkAuth'
+import MagickLinkAuth from '../MagickLinkAuth'
 import { useLoginMutation } from 'slices/authApiSlice'
 // import { setCredentials } from 'slices/authSlice'
 import { useParams, useNavigate } from 'react-router-dom'

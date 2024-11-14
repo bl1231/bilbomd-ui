@@ -1,7 +1,7 @@
 import { renderWithProviders } from 'test/test-utils'
 import { screen, act, waitFor } from '@testing-library/react'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
-import Welcome from './Welcome'
+import Welcome from '../Welcome'
 import useAuth from 'hooks/useAuth'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
