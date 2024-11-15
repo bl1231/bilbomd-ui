@@ -2,20 +2,11 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
-// import { visualizer } from 'rollup-plugin-visualizer'
 
 console.log('Starting Vite configuration...')
 // console.log(process.env)
 export default defineConfig({
-  plugins: [
-    react(),
-    tsconfigPaths()
-    // react({
-    //   include: '**/*.tsx'
-    // }),
-    // visualizer({ gzipSize: true, brotliSize: true, template: 'sunburst' }),
-    // tsconfigPaths()
-  ],
+  plugins: [react(), tsconfigPaths()],
   server: {
     host: 'localhost',
     port: 3002,
