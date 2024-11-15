@@ -60,6 +60,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.13.8 (11/15/2024)
+  - Fix display of job steps
+  - Update the details link and text of c1/c2 fix option for Scoper job form
 - 1.13.7 (11/14/2024)
   - Add clarification about new option to fix c1/c2 values in Scoper runs
 - 1.13.6 (11/12/2024)
