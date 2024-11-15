@@ -1,7 +1,7 @@
 import { renderWithProviders } from 'test/test-utils'
 import { screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import EditUserForm from './EditUserForm'
+import EditUserForm from '../EditUserForm'
 import {
   useUpdateUserMutation,
   useDeleteUserMutation

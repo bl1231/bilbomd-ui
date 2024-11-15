@@ -2,7 +2,7 @@ import { renderWithProviders } from 'test/test-utils'
 import { screen } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { useGetUsersQuery } from 'slices/usersApiSlice'
-import UsersList from './UsersList'
+import UsersList from '../UsersList'
 
 // Mock the useGetUsersQuery hook
 vi.mock('slices/usersApiSlice', () => ({

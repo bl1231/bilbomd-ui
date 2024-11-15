@@ -1,6 +1,6 @@
 import { renderWithProviders } from 'test/test-utils'
 import { describe, it, expect, vi } from 'vitest'
-import EditUser from './EditUser'
+import EditUser from '../EditUser'
 import * as usersApiSlice from 'slices/usersApiSlice'
 import * as reactRouterDom from 'react-router-dom'
 import { screen } from '@testing-library/react'
