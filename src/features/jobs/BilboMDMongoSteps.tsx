@@ -16,15 +16,49 @@ interface BilboMDMongoStepsProps {
 }
 
 const BilboMDMongoSteps: React.FC<BilboMDMongoStepsProps> = ({ steps }) => {
+  // console.log('BilboMDMongoSteps: steps:', steps)
+  let stepsToHide: string[] = []
+  stepsToHide = ['_id']
+
+  const stepOrder = [
+    'alphafold',
+    'pdb2crd',
+    'pae',
+    'autorg',
+    'minimize',
+    'initfoxs',
+    'heat',
+    'md',
+    'dcd2pdb',
+    'pdb_remediate',
+    'foxs',
+    'pepsisans',
+    'multifoxs',
+    'gasans',
+    'copy_results_to_cfs',
+    'results',
+    'email',
+    'nersc_prepare_slurm_batch',
+    'nersc_submit_slurm_batch',
+    'nersc_job_status',
+    'nersc_copy_results_to_cfs'
+  ]
+
   // Convert steps into an array of step entries
-  const bilboMdSteps = Object.entries(steps).map(([stepName, stepValue]) => (
-    <BilboMDNerscStep
-      key={stepName}
-      stepName={stepName}
-      stepStatus={stepValue.status}
-      stepMessage={stepValue.message}
-    />
-  ))
+  const bilboMdSteps = Object.entries(steps)
+    .filter(([stepName]) => !stepsToHide.includes(stepName))
+    .sort(
+      ([a], [b]) =>
+        stepOrder.indexOf(a) - stepOrder.indexOf(b) || a.localeCompare(b)
+    )
+    .map(([stepName, stepValue]) => (
+      <BilboMDNerscStep
+        key={stepName}
+        stepName={stepName}
+        stepStatus={stepValue.status}
+        stepMessage={stepValue.message}
+      />
+    ))
 
   // Find the latest message from the steps
   const latestStepMessage = Object.entries(steps).reduce(

@@ -92,6 +92,12 @@ const BilboMDNerscStep = ({
           friendlyName: 'Extract PDBs from MD Trajectories',
           tooltipMessage: ''
         }
+      case 'pdb_remediate':
+        return {
+          friendlyName: 'Remediate PDB Files',
+          tooltipMessage:
+            'In this step we attempt to copy SEGID back to CHAINID'
+        }
       case 'foxs':
         return {
           friendlyName: 'FoXS Analysis',
