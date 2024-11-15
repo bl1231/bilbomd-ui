@@ -250,7 +250,7 @@ const NewScoperJobForm = () => {
                                     }}
                                   />
                                 }
-                                label='Fix c1/c2 values at 1.00 during MultiFoXS step'
+                                label='Fix c1/c2 values at 1.00'
                               />
                             )}
                           </Field>
@@ -258,25 +258,31 @@ const NewScoperJobForm = () => {
                       </Grid>
 
                       <Grid sx={{ my: 2, width: '520px' }}>
-                        <Alert severity='info'>
-                          SAXS profiles are calculated using the Debye formula
-                          and fit to the experimental data with adjustment of
-                          the excluded volume (<b>c1</b>) and hydration layer
-                          density (<b>c2</b>) parameters ({' '}
+                        <Alert
+                          severity='info'
+                          sx={{
+                            fontSize: '1rem', // Adjust font size
+                            lineHeight: '1.4' // Adjust line spacing
+                          }}
+                        >
+                          SAXS profiles are calculated using the <b>FoXS</b>{' '}
+                          calculator and fit to the experimental data by
+                          adjusting the excluded volume (<b>c1</b>) and
+                          hydration layer (<b>c2</b>) parameters (
                           <Link
-                            href='https://doi.org/10.1093/nar/gkw389'
+                            href='https://doi.org/10.1016/j.bpj.2013.07.020'
                             target='_blank'
                             rel='noopener noreferrer'
                           >
                             <b>details</b>
                           </Link>
-                          ). The default is to let <b>MultiFoXS</b> refine the{' '}
-                          <b>c1</b> and <b>c2</b> values. However, this can
-                          result in some Mg ions being &quot;absorbed&quot; into
-                          the solvent contribution. In order to increase the
-                          likelihood of Scoper placing Mg ions in the RNA
+                          ). The default is to let <b>FoXS</b> refine the{' '}
+                          <b>c2</b> values. However, this can result in some Mg
+                          <sup>++</sup> ions being &quot;absorbed&quot; into the
+                          solvent contribution. To increase the likelihood of{' '}
+                          <b>Scoper</b> placing Mg<sup>++</sup> ions in the RNA
                           structure, you can fix the <b>c1</b> and <b>c2</b>{' '}
-                          values at <b>1.00</b> during the MultiFoXS step.
+                          values at <b>1.00</b>.
                         </Alert>
                       </Grid>
 
