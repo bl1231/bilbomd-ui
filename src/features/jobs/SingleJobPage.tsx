@@ -180,7 +180,7 @@ const SingleJobPage = () => {
     theme
   )
 
-  console.log('job', job)
+  // console.log('job', job)
 
   const content = job ? (
     <>
