@@ -3,10 +3,7 @@ import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Grid2'
 import FeedbackChart from './FeedbackChart'
-
-// import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-// import WarningIcon from '@mui/icons-material/Warning'
-// import ErrorIcon from '@mui/icons-material/Error'
+import { IFeedbackData } from '@bl1231/bilbomd-mongodb-schema'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -14,7 +11,11 @@ const Item = styled(Paper)(({ theme }) => ({
   borderTopRightRadius: 0
 }))
 
-const BilboMdFeedback = ({ feedback }) => {
+interface FeedbackProps {
+  feedback: IFeedbackData
+}
+
+const BilboMdFeedback = ({ feedback }: FeedbackProps) => {
   const getChipProps = (value: number) => {
     // console.log('value:', value)
     if (value < 1.2) {
@@ -64,48 +65,46 @@ const BilboMdFeedback = ({ feedback }) => {
         </Grid>
         {/* Best Chi-Square and Multi-State Info */}
         <Grid container sx={{ my: 0.5 }}>
-          <Grid>
+          <Grid sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography sx={{ fontSize: '1.3em' }}>
               Overall Chi<sup>2</sup> :
-              <Chip
-                label={feedback.overall_chi_square.toFixed(2)}
-                sx={{
-                  mx: 1,
-                  fontSize: '1.2em',
-                  backgroundColor: getChi2ChipBackgroundColor(
-                    feedback.overall_chi_square
-                  )
-                }}
-              />
             </Typography>
+            <Chip
+              label={feedback.overall_chi_square.toFixed(2)}
+              sx={{
+                mx: 1,
+                fontSize: '1.2em',
+                backgroundColor: getChi2ChipBackgroundColor(
+                  feedback.overall_chi_square
+                )
+              }}
+            />
           </Grid>
-          <Grid>
-            <Typography sx={{ fontSize: '1.3em' }}>
-              Experimental MW:
-              <Chip
-                label={feedback.mw_saxs.toFixed(1)}
-                sx={{
-                  mx: 1,
-                  fontSize: '1.2em',
-                  backgroundColor: getMWChipBackgroundColor(feedback.mw_err)
-                }}
-              />
-              kDa
-            </Typography>
+          <Grid sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography sx={{ fontSize: '1.3em' }}>Experimental MW:</Typography>
+            <Chip
+              label={feedback.mw_saxs.toFixed(1)}
+              sx={{
+                mx: 1,
+                fontSize: '1.2em',
+                backgroundColor: getMWChipBackgroundColor(feedback.mw_err)
+              }}
+            />
+
+            <Typography sx={{ fontSize: '1.3em' }}>kDa</Typography>
           </Grid>
-          <Grid>
-            <Typography sx={{ fontSize: '1.3em' }}>
-              Model MW:
-              <Chip
-                label={feedback.mw_model.toFixed(1)}
-                sx={{
-                  mx: 1,
-                  fontSize: '1.2em',
-                  backgroundColor: getMWChipBackgroundColor(feedback.mw_err)
-                }}
-              />
-              kDa
-            </Typography>
+          <Grid sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography sx={{ fontSize: '1.3em' }}>Model MW:</Typography>
+            <Chip
+              label={feedback.mw_model.toFixed(1)}
+              sx={{
+                mx: 1,
+                fontSize: '1.2em',
+                backgroundColor: getMWChipBackgroundColor(feedback.mw_err)
+              }}
+            />
+
+            <Typography sx={{ fontSize: '1.3em' }}>kDa</Typography>
           </Grid>
         </Grid>
         <Grid size={{ xs: 12 }}>
