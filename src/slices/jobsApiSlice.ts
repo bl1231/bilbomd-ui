@@ -41,33 +41,26 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
       query: (id) => ({
         url: `/jobs/${id}`,
         method: 'GET'
-        // validateStatus: (response, result) => {
-        //   return response.status === 200 && !result.isError
-        // }
       }),
       transformResponse: (responseData: BilboMDJob) => {
         responseData.mongo.id = responseData.mongo._id
         responseData.id = responseData.mongo._id as string
         return responseData
       },
-      providesTags: (result, error, id) => [{ type: 'Job', id }]
+      providesTags: (_, __, id) => [{ type: 'Job', id }]
     }),
     getFoxsAnalysisById: builder.query({
       query: (id) => ({
         url: `/jobs/${id}/results/foxs`,
         method: 'GET'
-        // validateStatus: (response, result) => {
-        //   return response.status === 200 && !result.isError
-        // }
       }),
-      providesTags: (result, error, id) => [{ type: 'FoxsAnalysis', id }]
+      providesTags: (_, __, id) => [{ type: 'FoxsAnalysis', id }]
     }),
     addNewJob: builder.mutation({
       query: (newJob) => ({
         url: '/jobs',
         method: 'POST',
         body: newJob
-        // headers: { 'Content-Type': 'multipart/form-data' }
       }),
       invalidatesTags: [{ type: 'Job', id: 'LIST' }]
     }),
@@ -79,14 +72,21 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
           ...initialJob
         }
       }),
-      invalidatesTags: (result, error, arg) => [{ type: 'Job', id: arg.id }]
+      invalidatesTags: (_, __, arg) => [{ type: 'Job', id: arg.id }]
     }),
     deleteJob: builder.mutation({
       query: ({ id }) => ({
         url: `/jobs/${id}`,
         method: 'DELETE'
       }),
-      invalidatesTags: (result, error, arg) => [{ type: 'Job', id: arg.id }]
+      invalidatesTags: (_, __, arg) => [{ type: 'Job', id: arg.id }]
+    }),
+    calculateAutoRg: builder.mutation({
+      query: (formData: FormData) => ({
+        url: '/autorg',
+        method: 'POST',
+        body: formData
+      })
     }),
     addNewAutoJob: builder.mutation({
       query: (newJob) => ({
@@ -130,6 +130,7 @@ export const {
   useAddNewJobMutation,
   useUpdateJobMutation,
   useDeleteJobMutation,
+  useCalculateAutoRgMutation,
   useAddNewAutoJobMutation,
   useAddNewAlphaFoldJobMutation,
   useAddNewSANSJobMutation,

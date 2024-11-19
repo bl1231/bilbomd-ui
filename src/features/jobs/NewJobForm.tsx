@@ -22,30 +22,31 @@ import {
   FormikErrors,
   FormikTouched
 } from 'formik'
-import { useAddNewJobMutation } from 'slices/jobsApiSlice'
+import {
+  useAddNewJobMutation,
+  useCalculateAutoRgMutation
+} from 'slices/jobsApiSlice'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import { expdataSchema } from 'schemas/ExpdataSchema'
 import { BilboMDClassicJobSchema } from 'schemas/BilboMDClassicJobSchema'
 import useAuth from 'hooks/useAuth'
-import { useSelector } from 'react-redux'
-import { selectCurrentToken } from 'slices/authSlice'
 import LinearProgress from '@mui/material/LinearProgress'
 import HeaderBox from 'components/HeaderBox'
 import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import FileSelect from './FileSelect'
 import { Debug } from 'components/Debug'
-import { axiosInstance } from 'app/api/axios'
 import NewJobFormInstructions from './NewJobFormInstructions'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
 const NewJobForm = () => {
-  const token = useSelector(selectCurrentToken)
   const [addNewJob, { isSuccess }] = useAddNewJobMutation()
+  const [calculateAutoRg, { isLoading }] = useCalculateAutoRgMutation()
   const { email } = useAuth()
-  const [isLoading, setIsLoading] = useState(false)
+
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
   const [selectedMode, setSelectedMode] = useState('pdb')
+
   // Fetch the configuration object
   const {
     data: config,
@@ -104,38 +105,6 @@ const NewJobForm = () => {
     } catch (error) {
       console.error('rejected', error)
     }
-  }
-
-  const calculateAutoRg = (
-    selectedFile: File,
-    setFieldValue: (
-      field: string,
-      value: string | number,
-      shouldValidate?: boolean
-    ) => void
-  ) => {
-    setIsLoading(true)
-    const form = new FormData()
-    form.append('email', email)
-    form.append('expdata', selectedFile)
-    axiosInstance
-      .post('/autorg', form, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then((response) => {
-        const { rg, rg_min, rg_max } = response.data
-        setFieldValue('rg', rg)
-        setFieldValue('rg_min', rg_min)
-        setFieldValue('rg_max', rg_max)
-      })
-      .catch((error) => {
-        console.error('Error:', error)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
   }
 
   const handleCheckboxChange =
@@ -525,7 +494,20 @@ const NewJobForm = () => {
                               const isExpdataValid =
                                 await expdataSchema.isValid(selectedFile)
                               if (isExpdataValid) {
-                                calculateAutoRg(selectedFile, setFieldValue)
+                                const formData = new FormData()
+                                formData.append('email', email)
+                                formData.append('expdata', selectedFile)
+                                try {
+                                  const { rg, rg_min, rg_max } =
+                                    await calculateAutoRg(formData).unwrap()
+                                  setFieldValue('rg', rg)
+                                  setFieldValue('rg_min', rg_min)
+                                  setFieldValue('rg_max', rg_max)
+                                } catch (error) {
+                                  console.error('Error:', error)
+                                  setFieldValue('rg_min', '')
+                                  setFieldValue('rg_max', '')
+                                }
                               } else {
                                 setFieldValue('rg_min', '')
                                 setFieldValue('rg_max', '')
