@@ -123,7 +123,8 @@ const Jobs = () => {
         position: job.bullmq?.queuePosition ?? '',
         username: job.username,
         nerscJobid: nerscJobid,
-        nerscStatus: nerscStatus
+        nerscStatus: nerscStatus,
+        progress: job.mongo.progress
       }
     })
 
@@ -182,7 +183,10 @@ const Jobs = () => {
         headerName: 'Progress',
         width: 150,
         renderCell: (params) => {
-          const progressValue = Number(params.value ?? 0)
+          if (params.value === undefined || params.value === null) {
+            return null // Hide progress bar if progress is not available
+          }
+          const progressValue = Number(params.value)
           const displayProgress = Number.isNaN(progressValue)
             ? 0
             : progressValue
