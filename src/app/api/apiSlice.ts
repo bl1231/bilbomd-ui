@@ -49,6 +49,9 @@ const baseQueryWithReauth: BaseQueryFn<
 
       // Retry original query
       result = await baseQuery(fetchArgs, api, extraOptions)
+
+      // Return the result of the original query
+      return result
     } else if (refreshResult?.error?.status === 403) {
       console.error(
         'Refresh token expired or invalid:',
@@ -58,10 +61,10 @@ const baseQueryWithReauth: BaseQueryFn<
     return refreshResult
   }
 
-  if (result?.error?.status === 401) {
-    console.error('Unauthorized - consider logging out the user')
-    // Optionally dispatch a logout or show a notification
-  }
+  // if (result?.error?.status === 401) {
+  //   console.error('Unauthorized - consider logging out the user')
+  //   // Optionally dispatch a logout or show a notification
+  // }
 
   return result
 }
