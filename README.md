@@ -60,6 +60,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.13.9 (11/19/2024)
+  - Fix an issue where the AutoRg calculation would fail silently if the Access Token expired
+    before selecting the SAXS dat file for a BilboMD Classic job.
 - 1.13.8 (11/15/2024)
   - Fix display of job steps
   - Update the details link and text of c1/c2 fix option for Scoper job form
