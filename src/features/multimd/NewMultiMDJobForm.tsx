@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import * as Yup from 'yup'
-import { useGetJobsQuery, useAddNewJobMutation } from 'slices/jobsApiSlice'
+import { useGetJobsQuery, useAddNewMultiJobMutation } from 'slices/jobsApiSlice'
 import {
   Box,
   Checkbox,
@@ -35,7 +35,8 @@ interface SubmitValues {
 }
 
 const NewMultiMDJobForm: React.FC = () => {
-  const [addNewJob, { isSuccess }] = useAddNewJobMutation()
+  const [addNewJob, { isSuccess }] = useAddNewMultiJobMutation()
+
   const {
     data: jobs,
     isLoading,
@@ -47,10 +48,12 @@ const NewMultiMDJobForm: React.FC = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
   })
+
   const initialValues = {
     title: '',
     bilbomdUUIDs: [] as string[]
   }
+
   const validationSchema = Yup.object({
     title: Yup.string()
       .required('Please provide a title for your BilboMD SANS Job.')
@@ -59,13 +62,17 @@ const NewMultiMDJobForm: React.FC = () => {
       .matches(/^[\w\s-]+$/, 'No special characters allowed'),
     bilbomdUUIDs: Yup.array().min(2, 'Select at least one job')
   })
+
   const onSubmit = async (
     values: typeof initialValues,
     { setStatus }: { setStatus: (status: string) => void }
   ) => {
     const form = new FormData()
     form.append('title', values.title)
-    form.append('bilbomdUUIDs', JSON.stringify(values.bilbomdUUIDs))
+
+    // Append each UUID individually
+    values.bilbomdUUIDs.forEach((uuid) => form.append('bilbomdUUIDs', uuid))
+
     try {
       const newJob = await addNewJob(form).unwrap()
       setStatus(newJob)
@@ -156,6 +163,7 @@ const NewMultiMDJobForm: React.FC = () => {
                                 <TableRow>
                                   <TableCell>Select</TableCell>
                                   <TableCell>Title</TableCell>
+                                  <TableCell>Type</TableCell>
                                   <TableCell>Status</TableCell>
                                   <TableCell>UUID</TableCell>
                                   <TableCell>Time Completed</TableCell>
@@ -199,6 +207,7 @@ const NewMultiMDJobForm: React.FC = () => {
                                         />
                                       </TableCell>
                                       <TableCell>{job.mongo.title}</TableCell>
+                                      <TableCell>{job.mongo.__t}</TableCell>
                                       <TableCell>{job.mongo.status}</TableCell>
                                       <TableCell>{job.mongo.uuid}</TableCell>
                                       <TableCell>

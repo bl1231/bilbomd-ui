@@ -119,6 +119,14 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
         body: newJob
       }),
       invalidatesTags: [{ type: 'Job', id: 'LIST' }]
+    }),
+    addNewMultiJob: builder.mutation({
+      query: (newJob) => ({
+        url: '/jobs/bilbomd-multi',
+        method: 'POST',
+        body: newJob
+      }),
+      invalidatesTags: [{ type: 'Job', id: 'LIST' }]
     })
   })
 })
@@ -134,7 +142,8 @@ export const {
   useAddNewAutoJobMutation,
   useAddNewAlphaFoldJobMutation,
   useAddNewSANSJobMutation,
-  useAddNewScoperJobMutation
+  useAddNewScoperJobMutation,
+  useAddNewMultiJobMutation
 } = jobsApiSlice
 
 // returns the query result object
