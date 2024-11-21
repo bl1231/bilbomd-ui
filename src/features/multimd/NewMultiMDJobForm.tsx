@@ -17,7 +17,8 @@ import {
   Alert,
   Paper,
   AlertTitle,
-  Divider
+  Divider,
+  Radio
 } from '@mui/material'
 import LinearProgress from '@mui/material/LinearProgress'
 import Grid from '@mui/material/Grid2'
@@ -31,7 +32,8 @@ import { Debug } from 'components/Debug'
 
 interface SubmitValues {
   title: string
-  bilbomdUUIDs: string[]
+  bilbomd_uuids: string[]
+  data_file_from: string
 }
 
 const NewMultiMDJobForm: React.FC = () => {
@@ -51,16 +53,29 @@ const NewMultiMDJobForm: React.FC = () => {
 
   const initialValues = {
     title: '',
-    bilbomdUUIDs: [] as string[]
+    bilbomd_uuids: [] as string[],
+    data_file_from: ''
   }
 
   const validationSchema = Yup.object({
     title: Yup.string()
-      .required('Please provide a title for your BilboMD SANS Job.')
+      .required('Please provide a title for your BilboMD Multi Job.')
       .min(4, 'Title must contain at least 4 characters.')
       .max(30, 'Title must contain less than 30 characters.')
       .matches(/^[\w\s-]+$/, 'No special characters allowed'),
-    bilbomdUUIDs: Yup.array().min(2, 'Select at least one job')
+    bilbomd_uuids: Yup.array().min(2, 'Select at least two jobs to combine'),
+    data_file_from: Yup.string()
+      .required(
+        'Select the BilboMD Job that has the dataset to use for the BilboMD Multi run'
+      )
+      .test(
+        'is-in-bilbomd-uuids',
+        'Select a SAXS dataset from a job being combined',
+        function (value) {
+          const { bilbomd_uuids } = this.parent
+          return bilbomd_uuids.includes(value)
+        }
+      )
   })
 
   const onSubmit = async (
@@ -69,9 +84,10 @@ const NewMultiMDJobForm: React.FC = () => {
   ) => {
     const form = new FormData()
     form.append('title', values.title)
+    form.append('data_file_from', values.data_file_from)
 
     // Append each UUID individually
-    values.bilbomdUUIDs.forEach((uuid) => form.append('bilbomdUUIDs', uuid))
+    values.bilbomd_uuids.forEach((uuid) => form.append('bilbomd_uuids', uuid))
 
     try {
       const newJob = await addNewJob(form).unwrap()
@@ -82,7 +98,11 @@ const NewMultiMDJobForm: React.FC = () => {
   }
 
   const isFormValid = (values: SubmitValues) => {
-    return values.title.length > 0 && values.bilbomdUUIDs.length > 0
+    return (
+      values.title.trim().length > 0 &&
+      values.bilbomd_uuids.length > 0 &&
+      values.data_file_from.trim().length > 0
+    )
   }
 
   return (
@@ -119,6 +139,7 @@ const NewMultiMDJobForm: React.FC = () => {
                   isValid,
                   isSubmitting,
                   handleChange,
+                  setFieldValue,
                   handleBlur,
                   status
                 }) => (
@@ -161,11 +182,12 @@ const NewMultiMDJobForm: React.FC = () => {
                             <Table>
                               <TableHead>
                                 <TableRow>
-                                  <TableCell>Select</TableCell>
+                                  <TableCell>Combine</TableCell>
+                                  <TableCell>Select SAXS Data</TableCell>
                                   <TableCell>Title</TableCell>
                                   <TableCell>Type</TableCell>
                                   <TableCell>Status</TableCell>
-                                  <TableCell>UUID</TableCell>
+                                  <TableCell>Exp. Rg</TableCell>
                                   <TableCell>Time Completed</TableCell>
                                 </TableRow>
                               </TableHead>
@@ -179,37 +201,53 @@ const NewMultiMDJobForm: React.FC = () => {
                                     <TableRow key={job.mongo.uuid}>
                                       <TableCell>
                                         <Checkbox
-                                          checked={values.bilbomdUUIDs.includes(
+                                          checked={values.bilbomd_uuids.includes(
                                             job.mongo.uuid
                                           )}
                                           onChange={() => {
                                             const isSelected =
-                                              values.bilbomdUUIDs.includes(
+                                              values.bilbomd_uuids.includes(
                                                 job.mongo.uuid
                                               )
                                             const updatedSelectedJobUUIDs =
                                               isSelected
-                                                ? values.bilbomdUUIDs.filter(
+                                                ? values.bilbomd_uuids.filter(
                                                     (id) =>
                                                       id !== job.mongo.uuid
                                                   )
                                                 : [
-                                                    ...values.bilbomdUUIDs,
+                                                    ...values.bilbomd_uuids,
                                                     job.mongo.uuid
                                                   ]
-                                            handleChange({
-                                              target: {
-                                                name: 'bilbomdUUIDs',
-                                                value: updatedSelectedJobUUIDs
-                                              }
-                                            })
+                                            setFieldValue(
+                                              'bilbomd_uuids',
+                                              updatedSelectedJobUUIDs
+                                            )
                                           }}
+                                        />
+                                      </TableCell>
+                                      <TableCell>
+                                        <Radio
+                                          checked={
+                                            values.data_file_from ===
+                                            job.mongo.uuid
+                                          }
+                                          onChange={() =>
+                                            setFieldValue(
+                                              'data_file_from',
+                                              job.mongo.uuid
+                                            )
+                                          }
                                         />
                                       </TableCell>
                                       <TableCell>{job.mongo.title}</TableCell>
                                       <TableCell>{job.mongo.__t}</TableCell>
                                       <TableCell>{job.mongo.status}</TableCell>
-                                      <TableCell>{job.mongo.uuid}</TableCell>
+                                      <TableCell>
+                                        {'rg' in job.mongo
+                                          ? `${job.mongo.rg} Å`
+                                          : 'N/A'}
+                                      </TableCell>
                                       <TableCell>
                                         {job.mongo.time_completed
                                           ? new Date(
@@ -225,11 +263,26 @@ const NewMultiMDJobForm: React.FC = () => {
                         </Typography>
                       )}
                       <Grid sx={{ mt: 2 }}>
+                        {Object.keys(errors).length > 0 ? (
+                          <Alert severity='error' sx={{ mb: 2 }}>
+                            <Typography variant='body2'>
+                              {Object.values(errors).map((error, index) => (
+                                <div key={index}>{error}</div>
+                              ))}
+                            </Typography>
+                          </Alert>
+                        ) : (
+                          isFormValid(values) && (
+                            <Alert severity='success' sx={{ mb: 2 }}>
+                              <Typography variant='body2'>
+                                All fields are valid and ready to submit!
+                              </Typography>
+                            </Alert>
+                          )
+                        )}
                         <LoadingButton
                           type='submit'
-                          disabled={
-                            !isValid || isSubmitting || !isFormValid(values)
-                          }
+                          disabled={!isValid || isSubmitting}
                           loading={isSubmitting}
                           endIcon={<SendIcon />}
                           loadingPosition='end'
