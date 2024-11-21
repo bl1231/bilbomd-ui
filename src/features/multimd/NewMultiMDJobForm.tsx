@@ -36,6 +36,13 @@ interface SubmitValues {
   data_file_from: string
 }
 
+interface ApiError {
+  status: number
+  data?: {
+    message?: string
+  }
+}
+
 const NewMultiMDJobForm: React.FC = () => {
   const [addNewJob, { isSuccess }] = useAddNewMultiJobMutation()
 
@@ -80,21 +87,36 @@ const NewMultiMDJobForm: React.FC = () => {
 
   const onSubmit = async (
     values: typeof initialValues,
-    { setStatus }: { setStatus: (status: string) => void }
+    { setStatus }: { setStatus: (status: string | null) => void }
   ) => {
     const form = new FormData()
     form.append('title', values.title)
-    form.append('data_file_from', values.data_file_from)
-
-    // Append each UUID individually
     values.bilbomd_uuids.forEach((uuid) => form.append('bilbomd_uuids', uuid))
+    form.append('data_file_from', values.data_file_from)
 
     try {
       const newJob = await addNewJob(form).unwrap()
-      setStatus(newJob)
-    } catch (error) {
-      console.error('rejected', error)
+      setStatus(null)
+      console.log('Job created successfully:', newJob)
+    } catch (error: unknown) {
+      if (isApiError(error)) {
+        // If the error is from the API, extract the message
+        setStatus(error.data?.message || 'An unexpected error occurred.')
+      } else {
+        // Generic fallback for unexpected errors
+        console.error('Unexpected error:', error)
+        setStatus('An unexpected error occurred.')
+      }
     }
+  }
+
+  const isApiError = (error: unknown): error is ApiError => {
+    return (
+      typeof error === 'object' &&
+      error !== null &&
+      'status' in error &&
+      typeof (error as ApiError).status === 'number'
+    )
   }
 
   const isFormValid = (values: SubmitValues) => {
@@ -263,6 +285,18 @@ const NewMultiMDJobForm: React.FC = () => {
                         </Typography>
                       )}
                       <Grid sx={{ mt: 2 }}>
+                        {/* Backend Error Alert */}
+                        {status && (
+                          <Alert severity='error' sx={{ mb: 2 }}>
+                            <AlertTitle>Backend Error:</AlertTitle>
+                            <Typography variant='body1'>{status}</Typography>
+                            <Typography variant='body2'>
+                              This shouldn&apos;t happen. Please let Scott know
+                              about this.
+                            </Typography>
+                          </Alert>
+                        )}
+                        {/* Form Validation Errors Alert */}
                         {Object.keys(errors).length > 0 ? (
                           <Alert severity='error' sx={{ mb: 2 }}>
                             <Typography variant='body2'>
