@@ -217,7 +217,13 @@ const NewMultiMDJobForm: React.FC = () => {
                                 {jobs
                                   .filter(
                                     (job: BilboMDJob) =>
-                                      job.mongo.status === 'Completed'
+                                      job.mongo.status === 'Completed' &&
+                                      [
+                                        'BilboMdPDB',
+                                        'BilboMdCRD',
+                                        'BilboMdAuto',
+                                        'BilboMdAlphaFold'
+                                      ].includes(job.mongo.__t)
                                   )
                                   .map((job: BilboMDJob) => (
                                     <TableRow key={job.mongo.uuid}>
