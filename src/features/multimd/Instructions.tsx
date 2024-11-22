@@ -35,9 +35,9 @@ const Instructions = () => (
         <Typography>
           <b>BilboMD Multi</b> allows you to combine the outputs from multiple
           BilboMD runs (i.e. the combined output of all CHARMM MD simulations)
-          and analyze them together ina asingel MultiFoXS run. Because MultiFoXS
-          requires a single experimental data file you will need to decide which
-          experimental SAXS data file to use.
+          and analyze them together in a single MultiFoXS run. Because MultiFoXS
+          requires a single experimental SAXS data file, you will need to decide
+          which experimental SAXS data file to use.
         </Typography>
       </Box>
     </AccordionDetails>
