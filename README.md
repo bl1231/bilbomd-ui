@@ -60,6 +60,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.14.1 (11/22/2024)
+  - Add feature toggle to hide BilboMD if necessary
+  - Add Alert warning if no jobs available for a BilboMD Multi run
 - 1.14.0 (11/21/2024)
   - Add BilboMD Multi pipeline
 - 1.13.9 (11/19/2024)
