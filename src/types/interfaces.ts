@@ -1,4 +1,4 @@
-import { IJob } from '@bl1231/bilbomd-mongodb-schema'
+import { IJob, IMultiJob } from '@bl1231/bilbomd-mongodb-schema'
 
 export interface Chain {
   id: string
@@ -158,7 +158,7 @@ export type BilboMDBullMQ = {
 export type BilboMDJob = {
   id: string
   username: string
-  mongo: IJob
+  mongo: IJob | IMultiJob
   bullmq: BilboMDBullMQ
   scoper?: BilboMDScoperSteps
   classic?: BilboMDSteps
