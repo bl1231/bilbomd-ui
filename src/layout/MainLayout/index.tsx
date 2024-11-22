@@ -48,7 +48,7 @@ export default function ClippedDrawer() {
 
   const useNersc = config.useNersc?.toLowerCase() === 'true'
   const enableBilboMdSANS = config.enableBilboMdSANS?.toLowerCase() === 'true'
-  // const enableBilboMdMulti = config.enableBilboMdMulti?.toLowerCase() === 'true'
+  const enableBilboMdMulti = config.enableBilboMdMulti?.toLowerCase() === 'true'
 
   let menuItems = [
     {
@@ -142,9 +142,9 @@ export default function ClippedDrawer() {
     menuItems = menuItems.filter((item) => item.text !== 'BilboMD SANS')
   }
 
-  // if (!enableBilboMdMulti) {
-  //   menuItems = menuItems.filter((item) => item.text !== 'BilboMD Multi')
-  // }
+  if (!enableBilboMdMulti) {
+    menuItems = menuItems.filter((item) => item.text !== 'BilboMD Multi')
+  }
 
   const buttonContent = (
     <>

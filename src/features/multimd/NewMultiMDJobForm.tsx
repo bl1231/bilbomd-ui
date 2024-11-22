@@ -136,7 +136,12 @@ const NewMultiMDJobForm: React.FC = () => {
 
         <Grid size={{ xs: 12 }}>
           <HeaderBox>
-            <Typography>BilboMD Multi Job Form</Typography>
+            <Box display='flex' alignItems='center'>
+              <Typography>BilboMD Multi Job Form</Typography>
+              <Typography component='span' sx={{ color: 'yellow', ml: 1 }}>
+                *beta - please send ideas and feedback to scott
+              </Typography>
+            </Box>
           </HeaderBox>
 
           <Paper sx={{ p: 2 }}>
@@ -285,6 +290,26 @@ const NewMultiMDJobForm: React.FC = () => {
                                       </TableCell>
                                     </TableRow>
                                   ))}
+
+                                {/* Render an alert when no jobs are available */}
+                                {jobs.filter(
+                                  (job: BilboMDJob) =>
+                                    job.mongo.status === 'Completed' &&
+                                    [
+                                      'BilboMdPDB',
+                                      'BilboMdCRD',
+                                      'BilboMdAuto',
+                                      'BilboMdAlphaFold'
+                                    ].includes(job.mongo.__t)
+                                ).length === 0 && (
+                                  <TableRow>
+                                    <TableCell colSpan={7}>
+                                      <Alert severity='warning'>
+                                        Please run some BilboMD Jobs first.
+                                      </Alert>
+                                    </TableCell>
+                                  </TableRow>
+                                )}
                               </TableBody>
                             </Table>
                           </TableContainer>
