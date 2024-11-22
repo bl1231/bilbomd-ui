@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.14.0 (11/21/2024)
+  - Add BilboMD Multi pipeline
 - 1.13.9 (11/19/2024)
   - Fix an issue where the AutoRg calculation would fail silently if the Access Token expired
     before selecting the SAXS dat file for a BilboMD Classic job.
