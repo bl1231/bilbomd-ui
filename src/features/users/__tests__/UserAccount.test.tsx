@@ -9,7 +9,7 @@ import * as userAccountApiSlice from '../../../slices/userAccountApiSlice'
 // Mock the hooks and API mutations
 vi.mock('hooks/useAuth')
 vi.mock('hooks/useLogout')
-vi.mock('../../slices/userAccountApiSlice')
+vi.mock('../../../slices/userAccountApiSlice')
 
 describe('UserAccount Component', () => {
   let mockUpdateEmailMutation: Mock
