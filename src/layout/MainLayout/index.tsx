@@ -48,7 +48,7 @@ export default function ClippedDrawer() {
 
   const useNersc = config.useNersc?.toLowerCase() === 'true'
   const enableBilboMdSANS = config.enableBilboMdSANS?.toLowerCase() === 'true'
-  // console.log(`enableBilboMdSANS: ${enableBilboMdSANS}`)
+  const enableBilboMdMulti = config.enableBilboMdMulti?.toLowerCase() === 'true'
 
   let menuItems = [
     {
@@ -77,6 +77,13 @@ export default function ClippedDrawer() {
       icon: <AddCircleOutlineOutlined />,
       path: '/dashboard/jobs/alphafold',
       onclick: () => navigate('dashboard/jobs/alphafold'),
+      roles: ['user', 'manager']
+    },
+    {
+      text: 'BilboMD Multi',
+      icon: <AddCircleOutlineOutlined />,
+      path: '/dashboard/jobs/multimd',
+      onclick: () => navigate('dashboard/jobs/multimd'),
       roles: ['user', 'manager']
     },
     {
@@ -133,6 +140,10 @@ export default function ClippedDrawer() {
 
   if (!enableBilboMdSANS) {
     menuItems = menuItems.filter((item) => item.text !== 'BilboMD SANS')
+  }
+
+  if (!enableBilboMdMulti) {
+    menuItems = menuItems.filter((item) => item.text !== 'BilboMD Multi')
   }
 
   const buttonContent = (

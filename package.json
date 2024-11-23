@@ -1,6 +1,6 @@
 {
   "name": "bilbomd-ui",
-  "version": "1.13.8",
+  "version": "1.14.1",
   "description": "Frontend Single Page Web Application for BilboMD",
   "private": true,
   "type": "module",
@@ -21,7 +21,7 @@
   ],
   "dependencies": {
     "@ant-design/colors": "^7.1.0",
-    "@bl1231/bilbomd-mongodb-schema": "^1.3.5",
+    "@bl1231/bilbomd-mongodb-schema": "^1.4.0",
     "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
@@ -53,7 +53,7 @@
     "react-spinners": "^0.14.1",
     "recharts": "^2.13.3",
     "rollup-plugin-visualizer": "^5.12.0",
-    "sass": "^1.80.7",
+    "sass": "^1.81.0",
     "yup": "^1.4.0"
   },
   "scripts": {
@@ -81,7 +81,7 @@
     ]
   },
   "devDependencies": {
-    "@eslint/js": "^9.14.0",
+    "@eslint/js": "^9.15.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
     "@types/eslint__js": "^8.42.3",
@@ -90,13 +90,13 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@types/react-redux": "^7.1.34",
-    "@typescript-eslint/eslint-plugin": "^8.14.0",
-    "@typescript-eslint/parser": "^8.14.0",
+    "@typescript-eslint/eslint-plugin": "^8.15.0",
+    "@typescript-eslint/parser": "^8.15.0",
     "@vitejs/plugin-react": "^4.3.3",
     "@vitest/browser": "^2.1.5",
     "@vitest/coverage-v8": "^2.1.5",
     "@vitest/ui": "^2.1.5",
-    "eslint": "^9.14.0",
+    "eslint": "^9.15.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-refresh": "^0.4.14",
     "globals": "^15.12.0",
@@ -106,7 +106,7 @@
     "redux-mock-store": "^1.5.5",
     "rimraf": "^6.0.1",
     "typescript": "^5.6.3",
-    "typescript-eslint": "^8.14.0",
+    "typescript-eslint": "^8.15.0",
     "vite": "^5.4.11",
     "vite-tsconfig-paths": "^5.1.2",
     "vitest": "^2.1.5"
