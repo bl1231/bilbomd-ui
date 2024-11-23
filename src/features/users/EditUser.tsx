@@ -4,10 +4,6 @@ import { useGetUsersQuery } from 'slices/usersApiSlice'
 import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
 
-// interface data {
-//   entities: [id: number]
-// }
-
 const EditUser = () => {
   useTitle('BilboMD: Edit User')
 
@@ -15,7 +11,6 @@ const EditUser = () => {
 
   const { user } = useGetUsersQuery('usersList', {
     selectFromResult: ({ data }) => ({
-      // user: data?.entities[id]
       user: data?.find((user) => user.id === id)
     })
   })
@@ -26,4 +21,5 @@ const EditUser = () => {
 
   return content
 }
+
 export default EditUser

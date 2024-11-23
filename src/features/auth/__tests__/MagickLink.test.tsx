@@ -2,7 +2,7 @@ import { screen, fireEvent, act } from '@testing-library/react'
 import { renderWithProviders } from 'test/test-utils'
 import { axiosInstance } from 'app/api/axios'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
-import MagickLink from './MagickLink'
+import MagickLink from '../MagickLink'
 
 // Mock the Config API slice for testing
 vi.mock('slices/configsApiSlice', () => ({

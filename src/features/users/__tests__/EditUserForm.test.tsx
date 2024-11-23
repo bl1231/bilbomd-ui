@@ -1,8 +1,7 @@
-// EditUserForm.test.tsx
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
-import EditUserForm from './EditUserForm'
-import { MemoryRouter } from 'react-router-dom'
+import { renderWithProviders } from 'test/test-utils'
+import { screen, fireEvent, waitFor } from '@testing-library/react'
+import { describe, it, expect, vi, afterEach } from 'vitest'
+import EditUserForm from '../EditUserForm'
 import {
   useUpdateUserMutation,
   useDeleteUserMutation
@@ -22,7 +21,7 @@ vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom')
   return {
     ...actual,
-    useNavigate: () => vi.fn()
+    useNavigate: vi.fn(() => vi.fn())
   }
 })
 
@@ -40,12 +39,12 @@ describe('EditUserForm Component', () => {
     UUID: '1234-5678'
   }
 
+  afterEach(() => {
+    vi.clearAllMocks()
+  })
+
   it('renders the form with initial values', () => {
-    render(
-      <MemoryRouter>
-        <EditUserForm user={user} />
-      </MemoryRouter>
-    )
+    renderWithProviders(<EditUserForm user={user} />)
 
     expect(screen.getByLabelText(/username/i)).toHaveValue(user.username)
     expect(screen.getByLabelText(/email/i)).toHaveValue(user.email)
@@ -53,11 +52,7 @@ describe('EditUserForm Component', () => {
   })
 
   it('opens delete confirmation dialog on delete button click', () => {
-    render(
-      <MemoryRouter>
-        <EditUserForm user={user} />
-      </MemoryRouter>
-    )
+    renderWithProviders(<EditUserForm user={user} />)
 
     fireEvent.click(screen.getByText(`Delete ${user.username}`))
     expect(screen.getByText(`Delete ${user.username} ?`)).toBeInTheDocument()
@@ -66,17 +61,12 @@ describe('EditUserForm Component', () => {
   it('handles form submission', async () => {
     const updateUserMock = vi.fn()
 
-    // Adjust the mock to return the mocked function
     vi.mocked(useUpdateUserMutation).mockReturnValue([
       updateUserMock,
       { reset: vi.fn() }
     ])
 
-    render(
-      <MemoryRouter>
-        <EditUserForm user={user} />
-      </MemoryRouter>
-    )
+    renderWithProviders(<EditUserForm user={user} />)
 
     fireEvent.change(screen.getByLabelText(/username/i), {
       target: { value: 'newusername' }
@@ -98,20 +88,14 @@ describe('EditUserForm Component', () => {
   it('handles delete user action', async () => {
     const deleteUserMock = vi.fn()
 
-    // Adjust the mock to return the mocked function
     vi.mocked(useDeleteUserMutation).mockReturnValue([
       deleteUserMock,
       { reset: vi.fn() }
     ])
 
-    render(
-      <MemoryRouter>
-        <EditUserForm user={user} />
-      </MemoryRouter>
-    )
+    renderWithProviders(<EditUserForm user={user} />)
 
     fireEvent.click(screen.getByText(`Delete ${user.username}`))
-
     fireEvent.click(screen.getByText('Delete'))
 
     await waitFor(() => {
