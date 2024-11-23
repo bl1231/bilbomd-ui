@@ -1,15 +1,15 @@
 import { screen, fireEvent, act, within } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest'
-import UserAccount from './UserAccount'
+import UserAccount from '../UserAccount'
 import { renderWithProviders } from 'test/test-utils'
 import * as useAuthModule from 'hooks/useAuth'
 import useLogout from 'hooks/useLogout'
-import * as userAccountApiSlice from '../../slices/userAccountApiSlice'
+import * as userAccountApiSlice from '../../../slices/userAccountApiSlice'
 
 // Mock the hooks and API mutations
 vi.mock('hooks/useAuth')
 vi.mock('hooks/useLogout')
-vi.mock('../../slices/userAccountApiSlice')
+vi.mock('../../../slices/userAccountApiSlice')
 
 describe('UserAccount Component', () => {
   let mockUpdateEmailMutation: Mock

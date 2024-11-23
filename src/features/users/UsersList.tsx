@@ -23,8 +23,7 @@ const UsersList = () => {
     data: users,
     isLoading,
     isSuccess,
-    isError,
-    error
+    isError
   } = useGetUsersQuery('usersList', {
     pollingInterval: 60000,
     refetchOnFocus: true,
@@ -38,7 +37,7 @@ const UsersList = () => {
   }
 
   if (isError) {
-    console.error('Error fetching users:', error)
+    // console.error('Error fetching users:', error)
     content = (
       <Alert severity='error' variant='outlined'>
         An error occurred while fetching users.
@@ -47,6 +46,7 @@ const UsersList = () => {
   }
 
   if (isSuccess && users && Array.isArray(users)) {
+    // console.log('Users:', users)
     const columns: GridColDef[] = [
       { field: 'username', headerName: 'Username' },
       { field: 'email', headerName: 'Email', width: 180 },
@@ -91,7 +91,7 @@ const UsersList = () => {
   }
 
   if (isSuccess && (!users || !Array.isArray(users))) {
-    console.warn('Unexpected data format for users:', users)
+    // console.warn('Unexpected data format for users:', users)
     content = (
       <Typography color='error'>
         No users available or data format is invalid.

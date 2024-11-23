@@ -1,7 +1,7 @@
 import { screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { renderWithProviders } from 'test/test-utils'
 import { axiosInstance } from 'app/api/axios'
-import Signup from './Signup'
+import Signup from '../Signup'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 
 // Mock the Config API slice for testing

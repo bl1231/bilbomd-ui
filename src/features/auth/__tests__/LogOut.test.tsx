@@ -1,6 +1,6 @@
 import { renderWithProviders } from 'test/test-utils'
 import { describe, it, expect, vi } from 'vitest'
-import LogOut from './LogOut'
+import LogOut from '../LogOut'
 import { beforeEach } from 'node:test'
 
 describe('LogOut Component', () => {

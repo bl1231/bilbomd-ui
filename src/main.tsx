@@ -10,12 +10,23 @@ import { StyledEngineProvider } from '@mui/system'
 import { ErrorBoundary } from 'react-error-boundary'
 import ErrorFallback from 'components/ErrorFallback'
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: '/*',
+      element: <App />
+    }
+  ],
   {
-    path: '/*',
-    element: <App />
+    future: {
+      v7_fetcherPersist: true,
+      v7_normalizeFormMethod: true,
+      v7_partialHydration: true,
+      v7_relativeSplatPath: true,
+      v7_skipActionErrorRevalidation: true
+    }
   }
-])
+)
 
 const rootElement = document.getElementById('root')
 if (rootElement) {
@@ -27,7 +38,10 @@ if (rootElement) {
         <StyledEngineProvider injectFirst>
           <ReduxProvider store={setupStore()}>
             <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {}}>
-              <RouterProvider router={router} />
+              <RouterProvider
+                router={router}
+                future={{ v7_startTransition: true }}
+              />
             </ErrorBoundary>
           </ReduxProvider>
         </StyledEngineProvider>
