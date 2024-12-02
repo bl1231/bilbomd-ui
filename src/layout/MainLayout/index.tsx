@@ -17,8 +17,7 @@ import {
   AutoAwesome
 } from '@mui/icons-material'
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
-import { useNavigate } from 'react-router-dom'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import useAuth from 'hooks/useAuth'
 

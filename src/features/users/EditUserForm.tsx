@@ -32,7 +32,7 @@ import {
 import { useGetJobsQuery } from 'slices/jobsApiSlice'
 import JobSummary from 'features/jobs/JobSummary'
 import { ROLES } from 'config/roles'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { editUserSchema } from 'schemas/ValidationSchemas'
 import { Box } from '@mui/system'
 import Paper from '@mui/material/Paper'
@@ -59,8 +59,9 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
 
   const { data: jobs } = useGetJobsQuery('jobsList', {})
 
-  const filteredJobs = jobs ? jobs.filter((job) => job.mongo.user === user.id) : [];
-
+  const filteredJobs = jobs
+    ? jobs.filter((job) => job.mongo.user === user.id)
+    : []
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -286,7 +287,7 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
 
       <Box sx={{ my: 1 }}>
         <HeaderBox>
-        <Chip label={`Jobs ${filteredJobs?.length || 0}`} color='success' />
+          <Chip label={`Jobs ${filteredJobs?.length || 0}`} color='success' />
         </HeaderBox>
         <Paper sx={{ p: 1 }}>
           {filteredJobs.length >= 1 ? (

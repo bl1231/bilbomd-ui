@@ -13,7 +13,7 @@ import {
 } from '@mui/material'
 import { green } from '@mui/material/colors'
 import { Box, Container, Grid } from '@mui/system'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from 'slices/authSlice'
 import { useRefreshMutation } from 'slices/authApiSlice'

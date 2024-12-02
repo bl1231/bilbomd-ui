@@ -18,7 +18,7 @@ import LogOut from 'features/auth/LogOut'
 import NightModeToggle from 'components/NightModeToggle'
 import PersonIcon from '@mui/icons-material/Person'
 import { useNavigate } from 'react-router'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import nerscLogo from 'assets/nersc-logo.png'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
