@@ -60,6 +60,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.15.0 (12/02/2024)
+  - Add clarifications to INP Jiffy
+  - Configure PAE Jiffy to allow single step increments for Cluster Weight
 - 1.14.1 (11/22/2024)
   - Add feature toggle to hide BilboMD if necessary
   - Add Alert warning if no jobs available for a BilboMD Multi run
