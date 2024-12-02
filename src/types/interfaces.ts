@@ -52,55 +52,6 @@ export interface BullMQJob {
   failedReason?: string
 }
 
-// interface IStepStatus {
-//   status: string
-//   message: string
-// }
-
-// interface IBilboMDSteps {
-//   pdb2crd: IStepStatus
-//   pae: IStepStatus
-//   autorg: IStepStatus
-//   minimize: IStepStatus
-//   initfoxs: IStepStatus
-//   heat: IStepStatus
-//   md: IStepStatus
-//   dcd2pdb: IStepStatus
-//   foxs: IStepStatus
-//   multifoxs: IStepStatus
-//   results: IStepStatus
-//   email: IStepStatus
-//   nersc_prepare_slurm_batch?: IStepStatus
-//   nersc_submit_slurm_batch?: IStepStatus
-//   nersc_job_status?: IStepStatus
-//   nersc_copy_results_to_cfs?: IStepStatus
-// }
-
-// export interface Job {
-//   id: string
-//   _id: string
-//   __t: string
-//   conformational_sampling: number
-//   const_inp_file: string
-//   crd_file: string
-//   createdAt: string
-//   data_file: string
-//   psf_file: string
-//   pdb_file: string
-//   rg_max: number
-//   rg_min: number
-//   status: string
-//   time_completed: string
-//   time_started: string
-//   time_submitted: string
-//   title: string
-//   updatedAt: string
-//   user: string
-//   uuid: string
-//   steps: IBilboMDSteps
-//   feedback: object
-// }
-
 export interface Queue {
   name: string
   queue_name: string
