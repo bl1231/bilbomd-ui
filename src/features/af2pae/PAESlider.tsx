@@ -3,6 +3,14 @@ import { Alert, Typography } from '@mui/material'
 import Box from '@mui/material/Box'
 import Slider from '@mui/material/Slider'
 
+interface PAESliderProps {
+  setFieldValue: (
+    field: string,
+    value: number | number[],
+    shouldValidate?: boolean
+  ) => void
+}
+
 const marks = [
   {
     value: 1.5,
@@ -10,15 +18,39 @@ const marks = [
   },
   {
     value: 2.0,
-    label: '2.0'
+    label: '2'
+  },
+  {
+    value: 3.0,
+    label: '3'
+  },
+  {
+    value: 4.0,
+    label: '4'
   },
   {
     value: 5.0,
-    label: '5.0'
+    label: '5'
+  },
+  {
+    value: 6.0,
+    label: '6'
+  },
+  {
+    value: 7.0,
+    label: '7'
+  },
+  {
+    value: 8.0,
+    label: '8'
+  },
+  {
+    value: 9.0,
+    label: '9'
   },
   {
     value: 10.0,
-    label: '10.0'
+    label: '10'
   }
 ]
 
@@ -26,8 +58,8 @@ function valuetext(value: number) {
   return `${value}`
 }
 
-export default function PAESlider({ setFieldValue }) {
-  const handleChange = (event, newValue) => {
+export default function PAESlider({ setFieldValue }: PAESliderProps) {
+  const handleChange = (_event: Event, newValue: number | number[]) => {
     // Update the 'pae_power' field value in Formik 'values' object
     setFieldValue('pae_power', newValue)
   }
@@ -48,8 +80,8 @@ export default function PAESlider({ setFieldValue }) {
         step={null}
         min={1.0}
         max={10.5}
-        valueLabelDisplay='auto'
         marks={marks}
+        valueLabelDisplay='auto'
         onChange={handleChange}
       />
       <Alert severity='info'>
