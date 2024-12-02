@@ -10,7 +10,7 @@ import {
 } from '@mui/material'
 import NightModeToggle from 'components/NightModeToggle'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import nerscLogo from 'assets/nersc-logo.png'
 

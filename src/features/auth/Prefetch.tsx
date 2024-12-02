@@ -3,7 +3,7 @@ import { jobsApiSlice } from 'slices/jobsApiSlice'
 import { usersApiSlice } from 'slices/usersApiSlice'
 import { bullmqApiSlice } from 'features/bullmq/bullmqApiSlice'
 import { useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router'
 
 const Prefetch = () => {
   useEffect(() => {

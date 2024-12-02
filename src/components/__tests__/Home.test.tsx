@@ -5,11 +5,11 @@ import { useSelector } from 'react-redux'
 import { selectCurrentToken } from 'slices/authSlice'
 import { useRefreshMutation } from 'slices/authApiSlice'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 // Mock react-router-dom
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom')
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router')
   return {
     ...actual,
     useNavigate: vi.fn(), // Mock the navigation function
