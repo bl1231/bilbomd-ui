@@ -1,14 +1,23 @@
 import { Fragment } from 'react'
-import { useFormikContext, FieldArray, FormikValues } from 'formik'
-import { Button } from '@mui/material'
+import { useFormikContext, FieldArray, FieldArrayRenderProps } from 'formik'
+import { Button, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import AddIcon from '@mui/icons-material/Add'
 import { Box } from '@mui/system'
+import { lightBlue } from '@mui/material/colors'
 import Domain from './Domain'
-import * as PropTypes from 'prop-types'
+import type { Chain, RigidBody, RigidDomain } from 'types/interfaces'
 
-const RigidBody = ({ rigidBodyIndex }) => {
-  const { values } = useFormikContext<FormikValues>()
+// Define form values interface
+interface FormValues {
+  pdb_file: {
+    rigid_bodies: RigidBody[] // Array of rigid bodies
+    chains: Chain[] // Array of chains
+  }
+}
+
+const RigidBody = ({ rigidBodyIndex }: { rigidBodyIndex: number }) => {
+  const { values } = useFormikContext<FormValues>()
 
   return (
     <>
@@ -28,10 +37,10 @@ const RigidBody = ({ rigidBodyIndex }) => {
             <FieldArray
               name={`pdb_file.rigid_bodies[${rigidBodyIndex}].domains`}
             >
-              {(arrayHelpers) => (
+              {(arrayHelpers: FieldArrayRenderProps) => (
                 <>
                   {values.pdb_file.rigid_bodies[rigidBodyIndex].domains.map(
-                    (domain, index) => (
+                    (domain: RigidDomain, index: number) => (
                       <Fragment key={index}>
                         <Grid
                           sx={{
@@ -55,10 +64,11 @@ const RigidBody = ({ rigidBodyIndex }) => {
                           <Button
                             variant='contained'
                             color='error'
+                            size='small'
                             onClick={() => arrayHelpers.remove(index)}
                             // sx={{ alignItems: 'flex-end' }}
                           >
-                            Delete
+                            Delete Segment
                           </Button>
                         </Grid>
                       </Fragment>
@@ -67,24 +77,36 @@ const RigidBody = ({ rigidBodyIndex }) => {
                   <Grid sx={{ flex: '1 1 auto', alignItems: 'center' }}>
                     <Box sx={{ justifyContent: 'flex-end', m: 1 }}>
                       <Grid container justifyContent='flex-end'>
-                        <Button
-                          variant='contained'
-                          // onClick={handleAddNewRigidDomain}
-                          onClick={() => {
-                            console.log('Add Rigid Domain')
-
-                            const new_domain = {
-                              chainid: values.pdb_file.chains[0].id,
-                              start: values.pdb_file.chains[0].first_res,
-                              end: values.pdb_file.chains[0].last_res
-                            }
-                            arrayHelpers.push(new_domain)
-                          }}
-                          startIcon={<AddIcon />}
-                          size='small'
-                        >
-                          Add Rigid Domain
-                        </Button>
+                        <Grid sx={{ mx: 2 }}>
+                          <Typography>
+                            If you want to add another <b>Rigid Body</b> please
+                            use the big blue button below.
+                          </Typography>
+                        </Grid>
+                        <Grid>
+                          <Button
+                            variant='contained'
+                            onClick={() => {
+                              const new_domain = {
+                                chainid: values.pdb_file.chains[0].id,
+                                start: values.pdb_file.chains[0].first_res,
+                                end: values.pdb_file.chains[0].last_res
+                              }
+                              arrayHelpers.push(new_domain)
+                            }}
+                            startIcon={<AddIcon />}
+                            size='small'
+                            sx={{
+                              backgroundColor: lightBlue[50],
+                              color: 'black',
+                              '&:hover': {
+                                backgroundColor: lightBlue[200]
+                              }
+                            }}
+                          >
+                            Add New Rigid Segment
+                          </Button>
+                        </Grid>
                       </Grid>
                     </Box>
                   </Grid>
@@ -98,8 +120,8 @@ const RigidBody = ({ rigidBodyIndex }) => {
   )
 }
 
-RigidBody.propTypes = {
-  rigidBodyIndex: PropTypes.number.isRequired
-}
+// RigidBody.propTypes = {
+//   rigidBodyIndex: PropTypes.number.isRequired
+// }
 
 export default RigidBody

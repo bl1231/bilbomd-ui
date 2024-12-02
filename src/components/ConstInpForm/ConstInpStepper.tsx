@@ -25,7 +25,13 @@ const ConstInpStepper = () => {
   const [skipped, setSkipped] = useState(new Set())
   const [stepIsValid, setStepIsValid] = useState(false)
 
-  function renderStepContent(step) {
+  interface RenderStepContentProps {
+    step: number
+  }
+
+  function renderStepContent(
+    step: RenderStepContentProps['step']
+  ): JSX.Element {
     switch (step) {
       case 0:
         return <UploadForm setStepIsValid={setStepIsValid} />

@@ -112,7 +112,7 @@ const validationSchemas = [
                 )
                 .test(
                   'check-for-overlap',
-                  'Please select residue not already in another domain',
+                  'Please select residue not already in another segment',
                   (value, ctx) => {
                     if (!ctx.from) {
                       return false
@@ -140,7 +140,7 @@ const validationSchemas = [
                 )
                 .test(
                   'check-for-overlap-in-other-rigid-bodies',
-                  'Please ensure no overlap with other Rigid Domains',
+                  'Please ensure no overlap with other Rigid Bodies',
                   (value, ctx) => {
                     if (!ctx.from) {
                       return false
@@ -206,7 +206,7 @@ const validationSchemas = [
                 )
                 .test(
                   'check-for-overlap',
-                  'Please select residue not already in another domain',
+                  'Please select residue not already in another segment',
                   (value, ctx) => {
                     if (!ctx.from) {
                       return false
@@ -233,7 +233,7 @@ const validationSchemas = [
                 )
                 .test(
                   'check-for-overlap-in-other-rigid-bodies',
-                  'Please ensure no overlap with other Rigid Domains',
+                  'Please ensure no overlap with other Rigid Bodies or Segments',
                   (value, ctx) => {
                     if (!ctx.from) {
                       return false

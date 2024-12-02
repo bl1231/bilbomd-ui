@@ -59,7 +59,7 @@ const Domain: FC<DomainProps> = ({
     (chain) => chain.id === currentChainId
   )
 
-  const customColors = {
+  const customColors: Record<string, string> = {
     PRO: theme.palette.mode === 'light' ? '#E6A8A8' : '#b76e79',
     DNA: theme.palette.mode === 'light' ? '#E9D8A6' : '#b3a272',
     RNA: theme.palette.mode === 'light' ? '#B5E3D8' : '#6daba4',
@@ -170,23 +170,23 @@ const Domain: FC<DomainProps> = ({
               sx={{
                 display: 'flex',
                 flexDirection: 'row',
+                alignItems: 'center',
                 border: 1,
                 borderColor: 'grey.400',
                 backgroundColor: cardBackgroundColor || '#f6ffed',
                 borderRadius: 2,
                 ml: 1,
                 px: 1,
-                py: 3
+                py: 2
               }}
             >
               <Typography
-                variant='h5'
                 sx={{
                   mx: 2,
                   color: 'black'
                 }}
               >
-                {domain.chainid} - Rigid Domain #{didx + 1}:
+                Chain: <b>{domain.chainid}</b> Segment: <b>#{didx + 1}</b>:
               </Typography>
               <Chip
                 label={`${domain.start} - ${domain.end}`}

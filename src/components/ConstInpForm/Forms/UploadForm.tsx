@@ -97,7 +97,11 @@ const carbResidues = new Set([
   'SLB'
 ])
 
-const UploadForm = ({ setStepIsValid }) => {
+const UploadForm = ({
+  setStepIsValid
+}: {
+  setStepIsValid: (isValid: boolean) => void
+}) => {
   useTitle('BilboMD: Upload PDB file')
   const theme = useTheme()
   const { values, setFieldValue, setFieldError, isValid, dirty, errors } =
@@ -283,7 +287,7 @@ const UploadForm = ({ setStepIsValid }) => {
     setStepIsValid(isValid && dirty)
   }, [isValid, dirty])
 
-  const customColors = {
+  const customColors: Record<string, string> = {
     PRO: theme.palette.mode === 'light' ? '#E6A8A8' : '#b76e79',
     DNA: theme.palette.mode === 'light' ? '#E9D8A6' : '#b3a272',
     RNA: theme.palette.mode === 'light' ? '#B5E3D8' : '#6daba4',
