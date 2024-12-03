@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import validationSchemas from './validationSchemas'
+import validationSchemas from '../validationSchemas'
 
 describe('validationSchemas', () => {
   const [fileUploadSchema, rigidDomainsSchema] = validationSchemas

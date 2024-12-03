@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import formModel from './formModel'
+import formModel from '../formModel'
 
 describe('formModel', () => {
   it('should have the correct formId', () => {

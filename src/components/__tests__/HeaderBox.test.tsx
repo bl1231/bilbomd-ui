@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import HeaderBox from './HeaderBox'
+import HeaderBox from '../HeaderBox'
 
 describe('HeaderBox', () => {
   it('renders children correctly', () => {

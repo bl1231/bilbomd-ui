@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import ErrorFallback from './ErrorFallback'
+import ErrorFallback from '../ErrorFallback'
 
 test('renders error message and alert role', () => {
   // Mock error object

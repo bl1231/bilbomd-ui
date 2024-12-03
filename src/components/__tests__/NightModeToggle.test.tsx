@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import NightModeToggle from './NightModeToggle' // Adjust the path as necessary
+import NightModeToggle from '../NightModeToggle' // Adjust the path as necessary
 
 // Mock the useThemeContext hook
 vi.mock('../themes/ThemeContext', () => ({

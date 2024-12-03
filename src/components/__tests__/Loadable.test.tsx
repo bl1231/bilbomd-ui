@@ -1,10 +1,10 @@
 import { Suspense, lazy } from 'react'
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
-import Loadable from './Loadable'
-import Loader from './Loader'
+import Loadable from '../Loadable'
+import Loader from '../Loader'
 
-vi.mock('./Loader', () => ({
+vi.mock('../Loader', () => ({
   __esModule: true,
   default: () => <div>Loading...</div>
 }))

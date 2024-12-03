@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { vi, Mock } from 'vitest'
-import { useAppSelector } from 'app/hooks'
-import useAuth from './useAuth'
+import { useAppSelector } from '../../app/hooks'
+import useAuth from '../useAuth'
 
 // Mock dependencies
 vi.mock('app/hooks', () => ({

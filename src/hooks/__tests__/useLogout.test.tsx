@@ -2,7 +2,7 @@ import { renderHook, act } from '@testing-library/react'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import { useNavigate } from 'react-router'
 import { useSendLogoutMutation } from 'slices/authApiSlice'
-import useLogout from './useLogout'
+import useLogout from '../useLogout'
 
 // Mock dependencies
 vi.mock('react-router', () => ({

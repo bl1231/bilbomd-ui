@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import MissingJob from './MissingJob' // Adjust the path as necessary
+import MissingJob from '../MissingJob' // Adjust the path as necessary
 
 // Mock the useTitle hook
 vi.mock('../hooks/useTitle', () => ({

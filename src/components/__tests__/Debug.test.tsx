@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import { Debug } from './Debug' // Assuming Debug component is in the same folder
+import { Debug } from '../Debug' // Assuming Debug component is in the same folder
 import { FormikContext, FormikContextType } from 'formik'
 
 // Mock the useTheme hook

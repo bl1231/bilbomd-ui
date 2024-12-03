@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import initialValues from './formInitialValues'
-import formModel from './formModel'
+import initialValues from '../formInitialValues'
+import formModel from '../formModel'
 
 describe('forminitialValues', () => {
   const {

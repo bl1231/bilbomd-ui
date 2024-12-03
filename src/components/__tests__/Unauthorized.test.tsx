@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
-import Unauthorized from './Unauthorized'
+import Unauthorized from '../Unauthorized'
 
 describe('Unauthorized Component', () => {
   it('renders an alert with the correct title and message', () => {

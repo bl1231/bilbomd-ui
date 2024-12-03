@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react'
 import { describe, it, expect, beforeEach } from 'vitest'
-import usePersist from './usePersist'
+import usePersist from '../usePersist'
 
 describe('usePersist', () => {
   beforeEach(() => {
