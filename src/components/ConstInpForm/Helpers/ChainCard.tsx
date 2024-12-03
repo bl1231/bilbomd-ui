@@ -22,7 +22,7 @@ const ChainCard = ({ chain }: ChainCardProps) => {
   const theme = useTheme()
 
   // Define background colors for different chain types
-  const customColors = {
+  const customColors: Record<string, string> = {
     PRO: theme.palette.mode === 'light' ? '#E6A8A8' : '#b76e79',
     DNA: theme.palette.mode === 'light' ? '#E9D8A6' : '#b3a272',
     RNA: theme.palette.mode === 'light' ? '#B5E3D8' : '#6daba4',

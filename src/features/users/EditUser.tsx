@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import EditUserForm from './EditUserForm'
 import { useGetUsersQuery } from 'slices/usersApiSlice'
 import PulseLoader from 'react-spinners/PulseLoader'

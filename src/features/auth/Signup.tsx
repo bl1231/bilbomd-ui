@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Formik, Form } from 'formik'
 import { userRegisterSchema } from 'schemas/ValidationSchemas'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import IconButton from '@mui/material/IconButton'

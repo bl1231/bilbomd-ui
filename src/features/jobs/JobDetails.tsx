@@ -1,6 +1,6 @@
 import InfoIcon from '@mui/icons-material/Info'
 import { IconButton, Tooltip } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 interface JobDetailsProps {
   id: string

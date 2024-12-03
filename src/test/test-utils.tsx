@@ -3,7 +3,7 @@ import type { RenderOptions } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { setupStore } from 'app/store'
 import type { AppStore, RootState } from 'app/store'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router'
 import { ThemeProvider, createTheme, Theme } from '@mui/material'
 
 // This type interface extends the default options for render from RTL, as well

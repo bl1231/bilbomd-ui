@@ -2,12 +2,12 @@ import { renderWithProviders } from 'test/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import EditUser from '../EditUser'
 import * as usersApiSlice from '../../../slices/usersApiSlice'
-import * as reactRouterDom from 'react-router-dom'
+import * as reactRouterDom from 'react-router'
 import { screen } from '@testing-library/react'
 import EditUserForm from '../EditUserForm'
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom')
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router')
   return {
     ...actual,
     useParams: vi.fn()

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from 'slices/authSlice'
 import { useLoginMutation } from 'slices/authApiSlice'

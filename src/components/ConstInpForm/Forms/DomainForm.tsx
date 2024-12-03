@@ -9,9 +9,13 @@ import AddIcon from '@mui/icons-material/Add'
 import useTitle from 'hooks/useTitle'
 import HeaderBox from 'components/HeaderBox'
 import RigidBody from '../Helpers/RigidBody'
-import { Chain } from 'types/interfaces'
+import type { Chain, RigidBody as IRigidBody } from 'types/interfaces'
 
-const DomainForm = ({ setStepIsValid }) => {
+const DomainForm = ({
+  setStepIsValid
+}: {
+  setStepIsValid: (isValid: boolean) => void
+}) => {
   useTitle('BilboMD: Define domains')
   const theme = useTheme()
   const { values, isValid } = useFormikContext<FormikValues>()
@@ -19,7 +23,7 @@ const DomainForm = ({ setStepIsValid }) => {
   const effectRan = useRef(false)
 
   // Define background colors for different chain types
-  const customColors = {
+  const customColors: Record<string, string> = {
     PRO: theme.palette.mode === 'light' ? '#E6A8A8' : '#b76e79',
     DNA: theme.palette.mode === 'light' ? '#E9D8A6' : '#b3a272',
     RNA: theme.palette.mode === 'light' ? '#B5E3D8' : '#6daba4',
@@ -55,7 +59,7 @@ const DomainForm = ({ setStepIsValid }) => {
           <Paper sx={{ p: 1 }}>
             <Box>
               <Typography variant='h4' sx={{ m: 1 }}>
-                Define your Rigid Bodies & Rigid Domains
+                Define Rigid Bodies
               </Typography>
               <Typography sx={{ m: 1 }}>
                 This is pretty straight forward. You need to define which ranges
@@ -66,13 +70,13 @@ const DomainForm = ({ setStepIsValid }) => {
                 <li>
                   <Typography>
                     You need at least one Rigid Body (we&apos;ll call this your{' '}
-                    <b>PRIMARY</b> Rigid Body). The Rigid Domains defined as
+                    <b>PRIMARY</b> Rigid Body). The Rigid Segments defined as
                     part of your Primary Rigid Body will remain fixed.
                   </Typography>
                 </li>
                 <li>
                   <Typography>
-                    Rigid Domains in subsequently defined Rigid Bodies will be
+                    Segments in subsequently defined Rigid Bodies will be
                     dynamic.
                   </Typography>
                 </li>
@@ -84,7 +88,7 @@ const DomainForm = ({ setStepIsValid }) => {
                 </li>
                 <li>
                   <Typography>
-                    Leave at least <b>one residue</b> between Rigid Domains to
+                    Leave at least <b>one residue</b> between Rigid Segments to
                     allow for efficient conformational sampling.
                   </Typography>
                 </li>
@@ -140,7 +144,7 @@ const DomainForm = ({ setStepIsValid }) => {
                     <>
                       {values.pdb_file.rigid_bodies.length > 0 &&
                         values.pdb_file.rigid_bodies.map(
-                          (rigid_body, index) => (
+                          (rigid_body: IRigidBody, index: number) => (
                             <Fragment key={index}>
                               <Grid sx={{ mb: 4, py: 1 }}>
                                 <Grid
@@ -157,22 +161,16 @@ const DomainForm = ({ setStepIsValid }) => {
                                   </Typography>
                                   {values.pdb_file.rigid_bodies[index]?.id ===
                                   'PRIMARY' ? (
-                                    <Alert
-                                      severity='warning'
-                                      sx={{ ml: 2, width: '70%' }}
-                                    >
-                                      Rigid Domains in the <b>PRIMARY</b> Rigid
-                                      Body will remain absolutely fixed during
-                                      the Molecular Dynamics steps.
+                                    <Alert severity='warning' sx={{ ml: 2 }}>
+                                      Segments in the <b>PRIMARY</b> Rigid Body
+                                      will remain <b>fixed</b> during the
+                                      Molecular Dynamics steps.
                                     </Alert>
                                   ) : (
-                                    <Alert
-                                      severity='warning'
-                                      sx={{ ml: 2, width: '70%' }}
-                                    >
-                                      Rigid Domains in <b>{rigid_body.id}</b>{' '}
-                                      will move relative to the <b>PRIMARY</b>{' '}
-                                      Rigid Body.
+                                    <Alert severity='warning' sx={{ ml: 2 }}>
+                                      Segments in <b>{rigid_body.id}</b> will
+                                      move together <b>and</b> relative to the{' '}
+                                      <b>PRIMARY</b> Rigid Body.
                                     </Alert>
                                   )}
                                 </Grid>
@@ -202,32 +200,41 @@ const DomainForm = ({ setStepIsValid }) => {
                             </Fragment>
                           )
                         )}
-                      <Grid
-                        size={{ xs: 12 }}
-                        sx={{ display: 'flex', justifyContent: 'flex-end' }}
-                      >
-                        <Button
-                          variant='contained'
-                          onClick={() => {
-                            incrementRigidBodyIndex()
-                            const new_rigid_body = {
-                              id: 'RIGID ' + rigidBodyIndex,
-                              domains: [
-                                {
-                                  chainid: values.pdb_file.chains[0].id,
-                                  start: values.pdb_file.chains[0].first_res,
-                                  end: values.pdb_file.chains[0].last_res
-                                }
-                              ]
-                            }
-                            arrayHelpers.push(new_rigid_body)
+                      <Grid container justifyContent='flex-end'>
+                        <Grid
+                          size={{ xs: 12 }}
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-start',
+                            alignItems: 'center'
                           }}
-                          startIcon={<AddIcon />}
-                          size='large'
-                          sx={{}}
                         >
-                          Add Rigid Body
-                        </Button>
+                          <Button
+                            variant='contained'
+                            onClick={() => {
+                              incrementRigidBodyIndex()
+                              const new_rigid_body = {
+                                id: 'RIGID ' + rigidBodyIndex,
+                                domains: [
+                                  {
+                                    chainid: values.pdb_file.chains[0].id,
+                                    start: values.pdb_file.chains[0].first_res,
+                                    end: values.pdb_file.chains[0].last_res
+                                  }
+                                ]
+                              }
+                              arrayHelpers.push(new_rigid_body)
+                            }}
+                            startIcon={<AddIcon />}
+                            size='large'
+                            sx={{}}
+                          >
+                            Add Rigid Body
+                          </Button>
+                          <Typography sx={{ ml: 2 }}>
+                            This is likely what you are wanting
+                          </Typography>
+                        </Grid>
                       </Grid>
                     </>
                   )}

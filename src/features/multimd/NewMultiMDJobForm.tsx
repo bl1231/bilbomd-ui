@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router'
 import * as Yup from 'yup'
 import { useGetJobsQuery, useAddNewMultiJobMutation } from 'slices/jobsApiSlice'
 import {

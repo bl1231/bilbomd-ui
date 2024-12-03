@@ -4,11 +4,11 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import MagickLinkAuth from '../MagickLinkAuth'
 import { useLoginMutation } from 'slices/authApiSlice'
 // import { setCredentials } from 'slices/authSlice'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router'
 import { useDispatch } from 'react-redux'
 
-vi.mock('react-router-dom', async () => {
-  const actual = await import('react-router-dom')
+vi.mock('react-router', async () => {
+  const actual = await import('react-router')
   return {
     ...actual,
     useParams: vi.fn(),
