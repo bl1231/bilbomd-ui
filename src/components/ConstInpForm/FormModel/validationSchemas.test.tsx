@@ -104,9 +104,7 @@ describe('validationSchemas', () => {
       )
     })
 
-    // shpuld require chain ID in domains need to write a test case
-
-    // should require start residue in domains need to write a test case
+    // Add test cases for chain ID and start residue requirements
 
     it('should ensure end residue is greater than start residue', async () => {
       const invalidData = JSON.parse(JSON.stringify(validRigidDomainData))
@@ -127,7 +125,7 @@ describe('validationSchemas', () => {
       })
       await expect(
         rigidDomainsSchema.validate(overlappingDomainsData)
-      ).rejects.toThrow('Please select residue not already in another domain')
+      ).rejects.toThrow('Please select residue not already in another segment')
     })
 
     it('should ensure no overlap across different rigid bodies', async () => {
@@ -146,7 +144,9 @@ describe('validationSchemas', () => {
       })
       await expect(
         rigidDomainsSchema.validate(overlappingRigidBodiesData)
-      ).rejects.toThrow('Please ensure no overlap with other Rigid Domains')
+      ).rejects.toThrow(
+        'Please ensure no overlap with other Rigid Bodies or Segments'
+      )
     })
   })
 })
