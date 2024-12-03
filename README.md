@@ -60,6 +60,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.15.2 (12/03/2024)
+  - Update dependencies
+  - Filter visible jobs in BilboMD Multi form for Admins and Managers
 - 1.15.0 (12/02/2024)
   - Add clarifications to INP Jiffy
   - Configure PAE Jiffy to allow single step increments for Cluster Weight
