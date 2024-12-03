@@ -232,7 +232,7 @@ const DomainForm = ({
                             Add Rigid Body
                           </Button>
                           <Typography sx={{ ml: 2 }}>
-                            This is likey what you are wanting
+                            This is likely what you are wanting
                           </Typography>
                         </Grid>
                       </Grid>
