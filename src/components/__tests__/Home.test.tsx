@@ -7,7 +7,7 @@ import { useRefreshMutation } from 'slices/authApiSlice'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useNavigate } from 'react-router'
 
-// Mock react-router-dom
+// Mock react-router
 vi.mock('react-router', async () => {
   const actual = await vi.importActual('react-router')
   return {
