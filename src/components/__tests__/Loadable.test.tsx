@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import Loadable from '../Loadable'
 import Loader from '../Loader'
@@ -12,9 +12,12 @@ vi.mock('../Loader', () => ({
 // Create a mock component to test with Loadable
 const MockComponent = () => <div>Mock Component Loaded</div>
 
-// Lazy load the mock component for testing
-const LazyMockComponent = lazy(() =>
-  Promise.resolve({ default: MockComponent })
+// Lazy load the mock component for testing with a delay
+const LazyMockComponent = lazy(
+  () =>
+    new Promise<{ default: typeof MockComponent }>((resolve) =>
+      setTimeout(() => resolve({ default: MockComponent }), 100)
+    )
 )
 
 describe('Loadable Component', () => {
@@ -30,6 +33,11 @@ describe('Loadable Component', () => {
 
     // Check if Loader is displayed initially
     expect(screen.getByText('Loading...')).toBeInTheDocument()
+
+    // Wait for the component to load
+    await waitFor(() => {
+      expect(screen.getByText('Mock Component Loaded')).toBeInTheDocument()
+    })
   })
 
   it('renders the component once loaded', async () => {
@@ -42,7 +50,8 @@ describe('Loadable Component', () => {
     )
 
     // Wait for the mock component to load and verify its content
-    await screen.findByText('Mock Component Loaded')
-    expect(screen.getByText('Mock Component Loaded')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('Mock Component Loaded')).toBeInTheDocument()
+    })
   })
 })
