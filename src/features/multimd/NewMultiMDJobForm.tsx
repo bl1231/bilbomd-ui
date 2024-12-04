@@ -29,6 +29,7 @@ import HeaderBox from 'components/HeaderBox'
 import { Instructions } from './Instructions.tsx'
 import { Formik, Form, Field } from 'formik'
 import { Debug } from 'components/Debug'
+import useAuth from 'hooks/useAuth'
 
 interface SubmitValues {
   title: string
@@ -45,7 +46,7 @@ interface ApiError {
 
 const NewMultiMDJobForm: React.FC = () => {
   const [addNewJob, { isSuccess }] = useAddNewMultiJobMutation()
-
+  const { username } = useAuth()
   const {
     data: jobs,
     isLoading,
@@ -220,8 +221,11 @@ const NewMultiMDJobForm: React.FC = () => {
                               </TableHead>
                               <TableBody>
                                 {jobs
-                                  .filter(
-                                    (job: BilboMDJob) =>
+                                  .filter((job: BilboMDJob) => {
+                                    if (job.username !== username) {
+                                      return false
+                                    }
+                                    return (
                                       job.mongo.status === 'Completed' &&
                                       [
                                         'BilboMdPDB',
@@ -229,7 +233,8 @@ const NewMultiMDJobForm: React.FC = () => {
                                         'BilboMdAuto',
                                         'BilboMdAlphaFold'
                                       ].includes(job.mongo.__t)
-                                  )
+                                    )
+                                  })
                                   .map((job: BilboMDJob) => (
                                     <TableRow key={job.mongo.uuid}>
                                       <TableCell>
@@ -292,8 +297,11 @@ const NewMultiMDJobForm: React.FC = () => {
                                   ))}
 
                                 {/* Render an alert when no jobs are available */}
-                                {jobs.filter(
-                                  (job: BilboMDJob) =>
+                                {jobs.filter((job: BilboMDJob) => {
+                                  if (job.username !== username) {
+                                    return false
+                                  }
+                                  return (
                                     job.mongo.status === 'Completed' &&
                                     [
                                       'BilboMdPDB',
@@ -301,7 +309,8 @@ const NewMultiMDJobForm: React.FC = () => {
                                       'BilboMdAuto',
                                       'BilboMdAlphaFold'
                                     ].includes(job.mongo.__t)
-                                ).length === 0 && (
+                                  )
+                                }).length === 0 && (
                                   <TableRow>
                                     <TableCell colSpan={7}>
                                       <Alert severity='warning'>
