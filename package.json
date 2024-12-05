@@ -19,6 +19,27 @@
       "email": "ShreyasPrabhakar@lbl.gov"
     }
   ],
+  "scripts": {
+    "clean": "rimraf dist/*",
+    "dev": "GIT_HASH=$(git rev-parse --short HEAD) vite",
+    "prebuild": "tsc",
+    "build": "vite build",
+    "lint": "eslint",
+    "preview": "vite preview",
+    "optimize": "vite optimize",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "coverage": "vitest --coverage",
+    "prepare": "husky install",
+    "related": "vitest related"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx}": [
+      "vitest related --run",
+      "eslint --fix",
+      "git add"
+    ]
+  },
   "dependencies": {
     "@ant-design/colors": "^7.1.0",
     "@bl1231/bilbomd-mongodb-schema": "^1.4.1",
@@ -56,18 +77,6 @@
     "sass": "^1.82.0",
     "yup": "^1.5.0"
   },
-  "scripts": {
-    "clean": "rimraf dist/*",
-    "dev": "GIT_HASH=$(git rev-parse --short HEAD) vite",
-    "prebuild": "tsc",
-    "build": "vite build",
-    "lint": "eslint",
-    "preview": "vite preview",
-    "optimize": "vite optimize",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "coverage": "vitest --coverage"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -100,7 +109,9 @@
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-refresh": "^0.4.16",
     "globals": "^15.13.0",
+    "husky": "^9.1.7",
     "jsdom": "^25.0.1",
+    "lint-staged": "^15.2.10",
     "msw": "^2.6.6",
     "prettier": "^3.4.2",
     "redux-mock-store": "^1.5.5",
