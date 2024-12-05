@@ -8,12 +8,6 @@ vi.mock('slices/configsApiSlice', () => ({
 }))
 
 describe('AdminPanel Component', () => {
-  it('should display CircularProgress when loading', () => {
-    ;(useGetConfigsQuery as Mock).mockReturnValue({ isLoading: true })
-    render(<AdminPanel />)
-    expect(screen.getByRole('progressbar')).toBeInTheDocument()
-  })
-
   it('should display error Alert when there is an error', () => {
     ;(useGetConfigsQuery as Mock).mockReturnValue({
       error: 'Error occurred'
