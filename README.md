@@ -60,6 +60,10 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.15.3 (12/05/2024)
+  - Add more vitest unit tests
+  - Bump NodeJS to v22
+  - Show MolStar viewer for Scoper jobs
 - 1.15.2 (12/03/2024)
   - Update dependencies
   - Filter visible jobs in BilboMD Multi form for Admins and Managers
