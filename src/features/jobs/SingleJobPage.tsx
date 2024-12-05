@@ -163,7 +163,7 @@ const SingleJobPage = () => {
       }
     }
 
-    // Check if status is defined and exists in the statusColors object
+    // Check if status is defined and exists in the statusColors object.
     if (status in statusColors) {
       return statusColors[status]
     }
