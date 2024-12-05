@@ -1,4 +1,10 @@
-const ErrorFallback = ({ error }) => {
+import React from 'react'
+
+interface ErrorFallbackProps {
+  error: Error
+}
+
+const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error }) => {
   return (
     <div role='alert'>
       <p>
