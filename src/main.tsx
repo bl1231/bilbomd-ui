@@ -37,10 +37,18 @@ if (rootElement) {
       <ThemeContextProvider>
         <StyledEngineProvider injectFirst>
           <ReduxProvider store={setupStore()}>
-            <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {}}>
+            <ErrorBoundary
+              FallbackComponent={ErrorFallback}
+              onReset={() => {}}
+              onError={(error, info) => {
+                console.error('Caught by ErrorBoundary:', error)
+                console.error('Component stack:', info.componentStack)
+                // Optionally send error details to an error tracking service
+              }}
+            >
               <RouterProvider
                 router={router}
-                future={{ v7_startTransition: true }}
+                // future={{ v7_startTransition: true }}
               />
             </ErrorBoundary>
           </ReduxProvider>
