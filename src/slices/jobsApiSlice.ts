@@ -127,6 +127,27 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
         body: newJob
       }),
       invalidatesTags: [{ type: 'Job', id: 'LIST' }]
+    }),
+    af2PaeJiffy: builder.mutation({
+      query: (formData: FormData) => ({
+        url: '/af2pae',
+        method: 'POST',
+        body: formData
+      })
+    }),
+    getAf2PaeConstFile: builder.query({
+      query: (uuid) => ({
+        url: `af2pae?uuid=${uuid}`,
+        method: 'GET',
+        // `fetchBaseQuery` returns a Response object by default.
+        // We can transform the response in the `transformResponse` option,
+        // or handle it after the query returns.
+        responseHandler: (response) => response.blob()
+      }),
+      async transformResponse(baseQueryReturnValue: Blob) {
+        const text = await baseQueryReturnValue.text()
+        return text
+      }
     })
   })
 })
@@ -143,7 +164,9 @@ export const {
   useAddNewAlphaFoldJobMutation,
   useAddNewSANSJobMutation,
   useAddNewScoperJobMutation,
-  useAddNewMultiJobMutation
+  useAddNewMultiJobMutation,
+  useAf2PaeJiffyMutation,
+  useGetAf2PaeConstFileQuery
 } = jobsApiSlice
 
 // returns the query result object

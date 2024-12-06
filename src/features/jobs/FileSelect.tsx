@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react'
+import { ChangeEvent } from 'react'
 import {
   Button,
   FormControl,
@@ -10,6 +10,7 @@ import {
 import Grid from '@mui/material/Grid2'
 
 interface FileSelectProps extends FormControlProps {
+  value: File
   fileType: string
   fileExt: string
   id: string
@@ -29,8 +30,9 @@ interface FileSelectProps extends FormControlProps {
 }
 
 const FileSelect = (props: FileSelectProps) => {
-  const [fileName, setFileName] = useState('')
-
+  // const [fileName, setFileName] = useState('')
+  const file = props.value
+  const fileName = file?.name || ''
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
     const file = event.target.files?.[0]
@@ -38,7 +40,7 @@ const FileSelect = (props: FileSelectProps) => {
       const reader = new FileReader()
 
       reader.onload = () => {
-        setFileName(file.name)
+        // setFileName(file.name)
         props.setFieldValue(props.name, file, true)
         props.setFieldTouched(props.name, true, false)
         // Needed for example to trigger AutoRg calculations when saxs data

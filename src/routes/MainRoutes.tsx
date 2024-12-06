@@ -30,9 +30,7 @@ const NewMultiJob = Loadable(
 const ConstInpStepper = Loadable(
   lazy(() => import('components/ConstInpForm/ConstInpStepper'))
 )
-const AF2PAEJiffy = Loadable(
-  lazy(() => import('features/af2pae/Alphafold2PAEJiffy'))
-)
+const AF2PAEJiffy = Loadable(lazy(() => import('features/af2pae/PAEJiffy')))
 const Jobs = Loadable(lazy(() => import('features/jobs/Jobs')))
 const SingleJobPage = Loadable(
   lazy(() => import('features/jobs/SingleJobPage'))
