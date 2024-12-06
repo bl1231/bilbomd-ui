@@ -25,12 +25,13 @@ import { Debug } from 'components/Debug'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { axiosInstance } from 'app/api/axios'
 import Download from './DownladAF2PAEfile'
 import CopyToClipboardButton from 'components/Common/CopyToClipboardButton'
 import { Box } from '@mui/system'
-import { useSelector } from 'react-redux'
-import { selectCurrentToken } from '../../slices/authSlice'
+import {
+  useAf2PaeJiffyMutation,
+  useGetAf2PaeConstFileQuery
+} from 'slices/jobsApiSlice'
 import LinearProgress from '@mui/material/LinearProgress'
 import HeaderBox from 'components/HeaderBox'
 import PAESlider from './PAESlider'
@@ -49,7 +50,12 @@ interface FormValues {
 }
 
 const Alphafold2PAEJiffy = () => {
-  const token = useSelector(selectCurrentToken)
+  const [originalFiles, setOriginalFiles] = useState<{
+    pdb_file: FileWithDeets | null
+    pae_file: FileWithDeets | null
+  }>({ pdb_file: null, pae_file: null })
+
+  const [calculateAf2PaeJiffy, { error, isError }] = useAf2PaeJiffyMutation({})
   const navigate = useNavigate()
   const { email } = useAuth()
   const [formValues, setFormValues] = useState<FormValues | null>(null)
@@ -58,40 +64,30 @@ const Alphafold2PAEJiffy = () => {
   const [constfile, setConstfile] = useState('')
   const [shapeCount, setShapeCount] = useState(0)
 
-  const initialValues: FormValues = {
-    pdb_file: null,
-    pae_file: null,
-    pae_power: '',
-    plddt_cutoff: '50',
+  const [formInitialValues, setFormInitialValues] = useState<FormValues>({
+    pdb_file: originalFiles.pdb_file,
+    pae_file: originalFiles.pae_file,
+    pae_power: '0.5', // starting value
+    plddt_cutoff: '70', // starting value
     email: email
-  }
+  })
 
   const onSubmit = async (values: FormValues) => {
     const form = new FormData()
-    if (values.pdb_file) {
-      form.append('pdb_file', values.pdb_file)
+    if (!values.pdb_file || !values.pae_file) {
+      // Handle error or return early
+      return
     }
-    if (values.pae_file) {
-      form.append('pae_file', values.pae_file)
-    }
+    form.append('pdb_file', values.pdb_file, values.pdb_file.name)
+    form.append('pae_file', values.pae_file, values.pae_file.name)
     form.append('pae_power', values.pae_power)
     form.append('plddt_cutoff', values.plddt_cutoff)
     form.append('email', values.email)
     setFormValues(values)
     try {
-      const response = await axiosInstance.post('/af2pae', form, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      if (response.status === 200) {
-        const data = response.data
-        console.log(data)
-        setUuid(data.uuid)
-        setSuccess(true)
-      } else {
-        console.log('API request failed')
-      }
+      const response = await calculateAf2PaeJiffy(form).unwrap()
+      setUuid(response.uuid)
+      setSuccess(true)
     } catch (error) {
       console.error('Error submitting form:', error)
     }
@@ -102,36 +98,24 @@ const Alphafold2PAEJiffy = () => {
     navigate('/dashboard/af2pae')
   }
 
+  // We don't want to run the query if there's no UUID
+  const skipQuery = !uuid
+
+  const {
+    data: constInpData,
+    error: fileError,
+    isLoading: constFileIsLoading
+  } = useGetAf2PaeConstFileQuery(uuid, {
+    skip: skipQuery
+  })
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (!uuid) {
-          return // Don't make the request if uuid is undefined
-        }
-
-        const response = await axiosInstance.get(`af2pae?uuid=${uuid}`, {
-          responseType: 'blob',
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-
-        if (!response.data) {
-          throw new Error('Failed to fetch file content')
-        }
-
-        const blob = response.data
-        const text = await new Response(blob).text()
-        const shapeCount = (text.match(/shape/g) || []).length
-        setShapeCount(shapeCount)
-        setConstfile(text)
-      } catch (error) {
-        console.error('Error fetching file content:', error)
-      }
+    if (constInpData) {
+      const shapeCount = (constInpData.match(/shape/g) || []).length
+      setShapeCount(shapeCount)
+      setConstfile(constInpData)
     }
-
-    fetchData()
-  }, [uuid, token])
+  }, [constInpData])
 
   const content = (
     <>
@@ -241,6 +225,14 @@ const Alphafold2PAEJiffy = () => {
           <Paper sx={{ p: 1 }}>
             {success ? (
               <>
+                {constFileIsLoading && (
+                  <Typography>Loading const.inp file...</Typography>
+                )}
+                {fileError && (
+                  <Typography color='error'>
+                    Error fetching const.inp file
+                  </Typography>
+                )}
                 <Alert severity={shapeCount >= 20 ? 'error' : 'success'}>
                   <AlertTitle>
                     {shapeCount >= 20 ? 'Error' : 'Success'}
@@ -255,16 +247,6 @@ const Alphafold2PAEJiffy = () => {
                     <>
                       <TableContainer sx={{ width: '400px' }}>
                         <Table aria-label='simple table'>
-                          {/* <TableHead>
-                            <TableRow>
-                              <TableCell>
-                                <b>Field</b>
-                              </TableCell>
-                              <TableCell align='right'>
-                                <b>Value</b>
-                              </TableCell>
-                            </TableRow>
-                          </TableHead> */}
                           <TableBody>
                             <TableRow>
                               <TableCell>
@@ -325,6 +307,21 @@ const Alphafold2PAEJiffy = () => {
                 <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                   <Download uuid={uuid} />
                   <Button
+                    variant='contained'
+                    onClick={() => {
+                      setSuccess(false)
+                      setFormInitialValues((prevValues) => ({
+                        ...prevValues,
+                        pae_power: '2.0',
+                        plddt_cutoff: '51',
+                        pdb_file: originalFiles.pdb_file,
+                        pae_file: originalFiles.pae_file
+                      }))
+                    }}
+                  >
+                    Try New Parameters
+                  </Button>
+                  <Button
                     variant='outlined'
                     type='button'
                     onClick={handleReset}
@@ -335,9 +332,10 @@ const Alphafold2PAEJiffy = () => {
               </>
             ) : (
               <Formik
-                initialValues={initialValues}
+                initialValues={formInitialValues}
                 validationSchema={af2paeJiffySchema}
                 onSubmit={onSubmit}
+                enableReinitialize={true}
               >
                 {({
                   values,
@@ -355,6 +353,12 @@ const Alphafold2PAEJiffy = () => {
                       direction='column'
                       sx={{ display: 'flex' }}
                     >
+                      {isError && (
+                        <Typography color='error'>
+                          An error occurred while submitting your job:{' '}
+                          {error && error.toString()}
+                        </Typography>
+                      )}
                       <Field
                         name='pdb_file'
                         id='pdb-file-upload'
@@ -367,6 +371,17 @@ const Alphafold2PAEJiffy = () => {
                         errorMessage={errors.pdb_file ? errors.pdb_file : ''}
                         fileType='AlphaFold2 PDB *.pdb'
                         fileExt='.pdb'
+                        onFileChange={(file: FileWithDeets) => {
+                          setFieldValue('pdb_file', file)
+                          setOriginalFiles((prev) => ({
+                            ...prev,
+                            pdb_file: file
+                          }))
+                          setFormInitialValues((prev) => ({
+                            ...prev,
+                            pdb_file: file
+                          }))
+                        }}
                       />
                       <Field
                         name='pae_file'
@@ -380,6 +395,17 @@ const Alphafold2PAEJiffy = () => {
                         errorMessage={errors.pae_file ? errors.pae_file : ''}
                         fileType='AlphaFold2 PAE *.json'
                         fileExt='.json'
+                        onFileChange={(file: FileWithDeets) => {
+                          setFieldValue('pae_file', file)
+                          setOriginalFiles((prev) => ({
+                            ...prev,
+                            pae_file: file
+                          }))
+                          setFormInitialValues((prev) => ({
+                            ...prev,
+                            pae_file: file
+                          }))
+                        }}
                       />
                       <Field
                         name='pae_power'
