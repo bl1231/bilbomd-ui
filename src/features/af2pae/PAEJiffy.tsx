@@ -21,7 +21,6 @@ import { Debug } from 'components/Debug'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import Download from './DownladAF2PAEfile'
-import CopyToClipboardButton from 'components/Common/CopyToClipboardButton'
 import { Box } from '@mui/system'
 import {
   useAf2PaeJiffyMutation,
@@ -32,6 +31,7 @@ import HeaderBox from 'components/HeaderBox'
 import PAESlider from './PAESlider'
 import PlddtSlider from './PlddtSlider'
 import PAEJiffyInstructions from './PAEJiffyInstructions'
+import ConstInpFile from './ConstInpFile'
 
 interface FileWithDeets extends File {
   name: string
@@ -63,8 +63,8 @@ const Alphafold2PAEJiffy = () => {
   const [formInitialValues, setFormInitialValues] = useState<FormValues>({
     pdb_file: originalFiles.pdb_file,
     pae_file: originalFiles.pae_file,
-    pae_power: '0.5', // starting value
-    plddt_cutoff: '70', // starting value
+    pae_power: '2.0',
+    plddt_cutoff: '50',
     email: email
   })
 
@@ -94,7 +94,6 @@ const Alphafold2PAEJiffy = () => {
     navigate('/dashboard/af2pae')
   }
 
-  // We don't want to run the query if there's no UUID
   const skipQuery = !uuid
 
   const {
@@ -114,139 +113,146 @@ const Alphafold2PAEJiffy = () => {
   }, [constInpData])
 
   const content = (
-    <>
-      <Grid container spacing={3}>
-        <Grid size={{ xs: 12 }}>
-          <PAEJiffyInstructions />
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <HeaderBox>
-            <Typography>Create const.inp from AlphaFold PAE</Typography>
-          </HeaderBox>
-          <Paper sx={{ p: 1 }}>
-            {success ? (
-              <>
-                {constFileIsLoading && (
-                  <Typography>Loading const.inp file...</Typography>
-                )}
-                {fileError && (
-                  <Typography color='error'>
-                    Error fetching const.inp file
-                  </Typography>
-                )}
-                <Alert severity={shapeCount >= 20 ? 'error' : 'success'}>
-                  <AlertTitle>
-                    {shapeCount >= 20 ? 'Error' : 'Success'}
-                  </AlertTitle>
-                  Your CHARMM-compatible <code>const.inp</code> file was
-                  successfully created!{' '}
-                  {formValues && shapeCount >= 20
-                    ? `But with Clustering Weight = ${parseFloat(formValues.pae_power).toFixed(1)} there are ${shapeCount} rigid bodies which is too many for CHARMM to handle.`
-                    : ''}
-                  <br />
-                  {formValues && (
-                    <>
-                      <TableContainer sx={{ width: '400px' }}>
-                        <Table aria-label='simple table'>
-                          <TableBody>
-                            <TableRow>
-                              <TableCell>
-                                <b>PDB File</b>
-                              </TableCell>
-                              <TableCell align='right'>
-                                {formValues.pdb_file?.name}
-                              </TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell>
-                                <b>PAE File</b>
-                              </TableCell>
-                              <TableCell align='right'>
-                                {formValues.pae_file?.name}
-                              </TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell>
-                                <b>Clustering Weight</b>
-                              </TableCell>
-                              <TableCell align='right'>
-                                {parseFloat(formValues.pae_power).toFixed(1)}
-                              </TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell>
-                                <b>CHARMM shapes (max 20)</b>
-                              </TableCell>
-                              <TableCell align='right'>{shapeCount}</TableCell>
-                            </TableRow>
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </>
-                  )}
-                </Alert>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'start',
-                    borderRadius: '4px',
-                    p: 2,
-                    my: 1,
-                    backgroundColor: '#bae0ff',
-                    color: 'black'
-                  }}
-                >
-                  <Typography style={{ whiteSpace: 'pre-line' }}>
-                    {constfile}
-                  </Typography>
-                  <Box>
-                    <CopyToClipboardButton text={constfile} />
-                  </Box>
-                </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                  <Download uuid={uuid} />
-                  <Button
-                    variant='contained'
-                    onClick={() => {
-                      setSuccess(false)
-                      setFormInitialValues((prevValues) => ({
-                        ...prevValues,
-                        pae_power: '2.0',
-                        plddt_cutoff: '51',
-                        pdb_file: originalFiles.pdb_file,
-                        pae_file: originalFiles.pae_file
-                      }))
-                    }}
-                  >
-                    Try New Parameters
-                  </Button>
-                  <Button
-                    variant='outlined'
-                    type='button'
-                    onClick={handleReset}
-                  >
-                    Reset
-                  </Button>
-                </Box>
-              </>
-            ) : (
-              <Formik
-                initialValues={formInitialValues}
-                validationSchema={af2paeJiffySchema}
-                onSubmit={onSubmit}
-                enableReinitialize={true}
-              >
-                {({
-                  values,
-                  touched,
-                  errors,
-                  isValid,
-                  isSubmitting,
-                  setFieldValue,
-                  setFieldTouched
-                }) => (
+    <Grid container spacing={3}>
+      <Grid size={{ xs: 12 }}>
+        <PAEJiffyInstructions />
+      </Grid>
+
+      <Grid size={{ xs: 12 }}>
+        <HeaderBox>
+          <Typography>Create const.inp from AlphaFold PAE</Typography>
+        </HeaderBox>
+        <Paper sx={{ p: 1 }}>
+          <Formik
+            initialValues={formInitialValues}
+            validationSchema={af2paeJiffySchema}
+            onSubmit={onSubmit}
+            // enableReinitialize={true}
+          >
+            {({
+              values,
+              touched,
+              errors,
+              isValid,
+              isSubmitting,
+              setFieldValue,
+              setFieldTouched,
+              resetForm
+            }) => {
+              if (success) {
+                return (
+                  <>
+                    {constFileIsLoading && (
+                      <Typography>Loading const.inp file...</Typography>
+                    )}
+                    {fileError && (
+                      <Typography color='error'>
+                        Error fetching const.inp file
+                      </Typography>
+                    )}
+
+                    <Alert severity={shapeCount >= 20 ? 'error' : 'success'}>
+                      <AlertTitle>
+                        {shapeCount >= 20 ? 'Error' : 'Success'}
+                      </AlertTitle>
+                      Your CHARMM-compatible <code>const.inp</code> file was
+                      successfully created!{' '}
+                      {formValues && shapeCount >= 20
+                        ? `But with Clustering Weight = ${parseFloat(formValues.pae_power).toFixed(1)} there are ${shapeCount} rigid bodies which is too many for CHARMM to handle.`
+                        : ''}
+                      <br />
+                      {formValues && (
+                        <>
+                          <TableContainer sx={{ width: '400px' }}>
+                            <Table aria-label='simple table'>
+                              <TableBody>
+                                <TableRow>
+                                  <TableCell>
+                                    <b>PDB File</b>
+                                  </TableCell>
+                                  <TableCell align='right'>
+                                    {formValues.pdb_file?.name}
+                                  </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                  <TableCell>
+                                    <b>PAE File</b>
+                                  </TableCell>
+                                  <TableCell align='right'>
+                                    {formValues.pae_file?.name}
+                                  </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                  <TableCell>
+                                    <b>Clustering Weight</b>
+                                  </TableCell>
+                                  <TableCell align='right'>
+                                    {parseFloat(formValues.pae_power).toFixed(
+                                      1
+                                    )}
+                                  </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                  <TableCell>
+                                    <b>pLDDT Cutoff</b>
+                                  </TableCell>
+                                  <TableCell align='right'>
+                                    {parseFloat(
+                                      formValues.plddt_cutoff
+                                    ).toFixed(1)}
+                                  </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                  <TableCell>
+                                    <b>CHARMM shapes (max 20)</b>
+                                  </TableCell>
+                                  <TableCell align='right'>
+                                    {shapeCount}
+                                  </TableCell>
+                                </TableRow>
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                        </>
+                      )}
+                    </Alert>
+
+                    <ConstInpFile constfile={constfile} />
+
+                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                      <Download uuid={uuid} />
+                      <Button
+                        variant='contained'
+                        onClick={() => {
+                          console.log('Resetting form')
+                          console.log('formValues:', formValues)
+                          const newInitial = {
+                            ...formInitialValues,
+                            pae_power: formValues?.pae_power || '2.0',
+                            plddt_cutoff: formValues?.plddt_cutoff || '50',
+                            pdb_file: originalFiles.pdb_file,
+                            pae_file: originalFiles.pae_file
+                          }
+                          setFormInitialValues(newInitial)
+                          resetForm({ values: newInitial })
+                          handleReset()
+                        }}
+                      >
+                        Try New Parameters
+                      </Button>
+                      <Button
+                        variant='outlined'
+                        type='button'
+                        onClick={handleReset}
+                        sx={{ ml: 2 }}
+                      >
+                        Reset
+                      </Button>
+                    </Box>
+                  </>
+                )
+              } else {
+                return (
                   <Form>
                     <Grid
                       container
@@ -256,8 +262,7 @@ const Alphafold2PAEJiffy = () => {
                     >
                       {isError && (
                         <Typography color='error'>
-                          An error occurred while submitting your job:{' '}
-                          {error && error.toString()}
+                          An error occurred: {error && error.toString()}
                         </Typography>
                       )}
                       <Field
@@ -345,13 +350,13 @@ const Alphafold2PAEJiffy = () => {
                       {process.env.NODE_ENV === 'development' ? <Debug /> : ''}
                     </Grid>
                   </Form>
-                )}
-              </Formik>
-            )}
-          </Paper>
-        </Grid>
+                )
+              }
+            }}
+          </Formik>
+        </Paper>
       </Grid>
-    </>
+    </Grid>
   )
 
   return content
