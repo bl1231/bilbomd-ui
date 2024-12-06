@@ -6,7 +6,6 @@ import {
   AccordionDetails
 } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import HeaderBox from 'components/HeaderBox'
 
 const PAEJiffyInstructions = () => (
   <Accordion defaultExpanded={false}>
@@ -16,12 +15,20 @@ const PAEJiffyInstructions = () => (
         backgroundColor: '#888',
         borderTopLeftRadius: 4,
         borderTopRightRadius: 4,
-        pl: 0
+        pl: 1
       }}
     >
-      <HeaderBox sx={{ py: 0 }}>
-        <Typography>Instructions</Typography>
-      </HeaderBox>
+      <Typography
+        sx={{
+          textTransform: 'uppercase',
+          fontSize: '0.875rem',
+          fontWeight: 400,
+          color: '#fff',
+          letterSpacing: '1px'
+        }}
+      >
+        Instructions
+      </Typography>
     </AccordionSummary>
     <AccordionDetails>
       <Typography sx={{ mx: 1 }}>

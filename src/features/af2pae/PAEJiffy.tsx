@@ -141,7 +141,7 @@ const Alphafold2PAEJiffy = () => {
   }, [formInitialValues])
 
   const content = (
-    <Grid container spacing={3}>
+    <Grid container spacing={2}>
       <Grid size={{ xs: 12 }}>
         <PAEJiffyInstructions />
       </Grid>

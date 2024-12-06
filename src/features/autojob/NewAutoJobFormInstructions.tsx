@@ -29,7 +29,7 @@ const NewAutoJobFormInstructions = () => (
           letterSpacing: '1px'
         }}
       >
-        BilboMD Auto Instructions
+        Instructions
       </Typography>
     </AccordionSummary>
     <AccordionDetails>
