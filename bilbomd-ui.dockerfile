@@ -1,11 +1,11 @@
 # -----------------------------------------------------------------------------
 # Build stage
-FROM node:20-alpine AS build-stage
+FROM node:22-alpine AS build-stage
 ARG GITHUB_TOKEN
 ARG BILBOMD_UI_VERSION
 ARG BILBOMD_UI_GIT_HASH
 
-RUN npm install -g npm@10.9.0
+# RUN npm install -g npm@10.9.0
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ COPY package*.json ./
 RUN echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" > /root/.npmrc
 
 # Install dependencies
-RUN npm ci --no-audit
+RUN npm ci
 
 # Remove .npmrc file for security
 RUN rm /root/.npmrc
