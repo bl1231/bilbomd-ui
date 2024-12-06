@@ -15,6 +15,16 @@ export default function Accordion(theme: Theme) {
           padding: '0px'
         }
       }
+    },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: {
+          flexDirection: 'row-reverse' // Move the expandIcon to the left
+        },
+        expandIconWrapper: {
+          marginRight: '8px' // Adjust spacing between icon and text
+        }
+      }
     }
   }
 }
