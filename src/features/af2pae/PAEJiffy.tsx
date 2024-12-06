@@ -45,7 +45,7 @@ interface FormValues {
   email: string
 }
 
-const Alphafold2PAEJiffy = () => {
+const PAEJiffy = () => {
   const [originalFiles, setOriginalFiles] = useState<{
     pdb_file: FileWithDeets | null
     pae_file: FileWithDeets | null
@@ -369,4 +369,4 @@ const Alphafold2PAEJiffy = () => {
   return content
 }
 
-export default Alphafold2PAEJiffy
+export default PAEJiffy
