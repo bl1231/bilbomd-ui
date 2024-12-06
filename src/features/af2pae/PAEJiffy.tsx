@@ -11,7 +11,7 @@ import {
   TableRow
 } from '@mui/material'
 import Grid from '@mui/material/Grid2'
-import { Form, Formik, Field } from 'formik'
+import { Form, Formik, Field, FormikHelpers } from 'formik'
 import useAuth from 'hooks/useAuth'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
@@ -88,6 +88,23 @@ const Alphafold2PAEJiffy = () => {
     }
   }
 
+  const handleTryNewParameters = (
+    values: FormValues,
+    resetForm: FormikHelpers<FormValues>['resetForm']
+  ) => {
+    const newInitial = {
+      ...formInitialValues,
+      pae_power: values.pae_power,
+      plddt_cutoff: values.plddt_cutoff,
+      pdb_file: originalFiles.pdb_file,
+      pae_file: originalFiles.pae_file
+    }
+    console.log('New Initial Values:', newInitial)
+    setFormInitialValues(newInitial)
+    resetForm({ values: newInitial })
+    setSuccess(false)
+  }
+
   const handleReset = () => {
     setSuccess(false)
     navigate('/dashboard/af2pae')
@@ -110,6 +127,18 @@ const Alphafold2PAEJiffy = () => {
       setConstfile(constInpData)
     }
   }, [constInpData])
+
+  useEffect(() => {
+    setFormInitialValues((prev) => ({
+      ...prev,
+      pdb_file: originalFiles.pdb_file,
+      pae_file: originalFiles.pae_file
+    }))
+  }, [originalFiles])
+
+  useEffect(() => {
+    console.log('Updated formInitialValues:', formInitialValues)
+  }, [formInitialValues])
 
   const content = (
     <Grid container spacing={3}>
@@ -218,21 +247,9 @@ const Alphafold2PAEJiffy = () => {
                       <Download uuid={uuid} />
                       <Button
                         variant='contained'
-                        onClick={() => {
-                          console.log('Resetting form')
-                          console.log('values:', values)
-                          const newInitial = {
-                            ...formInitialValues,
-                            pae_power: values.pae_power,
-                            plddt_cutoff: values.plddt_cutoff,
-                            pdb_file: originalFiles.pdb_file,
-                            pae_file: originalFiles.pae_file
-                          }
-                          console.log('newInitial:', newInitial)
-                          setSuccess(false)
-                          setFormInitialValues(newInitial)
-                          resetForm({ values: newInitial })
-                        }}
+                        onClick={() =>
+                          handleTryNewParameters(values, resetForm)
+                        }
                       >
                         Try New Parameters
                       </Button>
@@ -279,10 +296,6 @@ const Alphafold2PAEJiffy = () => {
                             ...prev,
                             pdb_file: file
                           }))
-                          setFormInitialValues((prev) => ({
-                            ...prev,
-                            pdb_file: file
-                          }))
                         }}
                       />
                       <Field
@@ -303,10 +316,6 @@ const Alphafold2PAEJiffy = () => {
                             ...prev,
                             pae_file: file
                           }))
-                          setFormInitialValues((prev) => ({
-                            ...prev,
-                            pae_file: file
-                          }))
                         }}
                       />
                       <Field
@@ -314,12 +323,14 @@ const Alphafold2PAEJiffy = () => {
                         id='pae-power-slider'
                         as={PAESlider}
                         setFieldValue={setFieldValue}
+                        value={values.pae_power}
                       />
                       <Field
                         name='plddt_cutoff'
                         id='plddt-cutoff-slider'
                         as={PlddtSlider}
                         setFieldValue={setFieldValue}
+                        value={values.plddt_cutoff}
                       />
                       {isSubmitting && (
                         <Box sx={{ mt: 1, width: '420px' }}>

@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { Alert, Chip, Typography } from '@mui/material'
 import Box from '@mui/material/Box'
 import Slider from '@mui/material/Slider'
@@ -10,23 +9,23 @@ interface PlddtSliderProps {
     value: number | number[],
     shouldValidate?: boolean
   ) => void
+  value: number
 }
 
 function valuetext(value: number) {
   return `${value}`
 }
 
-export default function PlddtSlider({ setFieldValue }: PlddtSliderProps) {
-  const [currentValue, setCurrentValue] = useState<number>(50)
+export default function PlddtSlider({
+  setFieldValue,
+  value
+}: PlddtSliderProps) {
   const handleChange = (_event: Event, newValue: number | number[]) => {
-    const value = Array.isArray(newValue) ? newValue[0] : newValue
-    setCurrentValue(value)
-    setFieldValue('plddt_cutoff', value)
+    const valueToSet = Array.isArray(newValue) ? newValue[0] : newValue
+
+    setFieldValue('plddt_cutoff', valueToSet)
   }
-  useEffect(() => {
-    // Set the default value when the component mounts
-    setFieldValue('plddt_cutoff', 50)
-  }, [setFieldValue])
+
   return (
     <Box sx={{ width: 420, mt: 4 }}>
       <Typography sx={{ mb: 1 }}>
@@ -35,7 +34,7 @@ export default function PlddtSlider({ setFieldValue }: PlddtSliderProps) {
       <Grid container spacing={2} alignItems='center'>
         <Grid>
           <Chip
-            label={currentValue}
+            label={value}
             variant='outlined'
             color='success'
             sx={{
@@ -46,8 +45,7 @@ export default function PlddtSlider({ setFieldValue }: PlddtSliderProps) {
         </Grid>
         <Grid sx={{ flex: 1 }}>
           <Slider
-            defaultValue={50}
-            value={currentValue}
+            value={value}
             valueLabelFormat={valuetext}
             getAriaValueText={valuetext}
             step={1}
