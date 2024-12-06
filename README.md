@@ -60,6 +60,10 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.16.0 (12/06/2024)
+  - Add pre-commit hooks to run vitest
+  - Add new RTK Query mutations for new PAE Jiffy with pLDDT cutoff slider
+  - New PAE Jiffy with user-definable values for pLDDT cutoff
 - 1.15.3 (12/05/2024)
   - Add more vitest unit tests
   - Bump NodeJS to v22
