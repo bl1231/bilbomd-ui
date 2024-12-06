@@ -34,6 +34,7 @@ import { selectCurrentToken } from '../../slices/authSlice'
 import LinearProgress from '@mui/material/LinearProgress'
 import HeaderBox from 'components/HeaderBox'
 import PAESlider from './PAESlider'
+import PlddtSlider from './PlddtSlider'
 
 interface FileWithDeets extends File {
   name: string
@@ -43,6 +44,7 @@ interface FormValues {
   pdb_file: FileWithDeets | null
   pae_file: FileWithDeets | null
   pae_power: string
+  plddt_cutoff: string
   email: string
 }
 
@@ -60,6 +62,7 @@ const Alphafold2PAEJiffy = () => {
     pdb_file: null,
     pae_file: null,
     pae_power: '',
+    plddt_cutoff: '50',
     email: email
   }
 
@@ -72,6 +75,7 @@ const Alphafold2PAEJiffy = () => {
       form.append('pae_file', values.pae_file)
     }
     form.append('pae_power', values.pae_power)
+    form.append('plddt_cutoff', values.plddt_cutoff)
     form.append('email', values.email)
     setFormValues(values)
     try {
@@ -381,6 +385,12 @@ const Alphafold2PAEJiffy = () => {
                         name='pae_power'
                         id='pae-power-slider'
                         as={PAESlider}
+                        setFieldValue={setFieldValue}
+                      />
+                      <Field
+                        name='plddt_cutoff'
+                        id='plddt-cutoff-slider'
+                        as={PlddtSlider}
                         setFieldValue={setFieldValue}
                       />
                       {isSubmitting && (
