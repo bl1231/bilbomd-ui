@@ -54,7 +54,6 @@ const Alphafold2PAEJiffy = () => {
   const [calculateAf2PaeJiffy, { error, isError }] = useAf2PaeJiffyMutation({})
   const navigate = useNavigate()
   const { email } = useAuth()
-  const [formValues, setFormValues] = useState<FormValues | null>(null)
   const [success, setSuccess] = useState(false)
   const [uuid, setUuid] = useState('')
   const [constfile, setConstfile] = useState('')
@@ -79,11 +78,11 @@ const Alphafold2PAEJiffy = () => {
     form.append('pae_power', values.pae_power)
     form.append('plddt_cutoff', values.plddt_cutoff)
     form.append('email', values.email)
-    setFormValues(values)
     try {
       const response = await calculateAf2PaeJiffy(form).unwrap()
       setUuid(response.uuid)
       setSuccess(true)
+      setFormInitialValues(values)
     } catch (error) {
       console.error('Error submitting form:', error)
     }
@@ -127,7 +126,7 @@ const Alphafold2PAEJiffy = () => {
             initialValues={formInitialValues}
             validationSchema={af2paeJiffySchema}
             onSubmit={onSubmit}
-            // enableReinitialize={true}
+            enableReinitialize={true}
           >
             {({
               values,
@@ -157,11 +156,11 @@ const Alphafold2PAEJiffy = () => {
                       </AlertTitle>
                       Your CHARMM-compatible <code>const.inp</code> file was
                       successfully created!{' '}
-                      {formValues && shapeCount >= 20
-                        ? `But with Clustering Weight = ${parseFloat(formValues.pae_power).toFixed(1)} there are ${shapeCount} rigid bodies which is too many for CHARMM to handle.`
+                      {values && shapeCount >= 20
+                        ? `But with Clustering Weight = ${parseFloat(values.pae_power).toFixed(1)} there are ${shapeCount} rigid bodies which is too many for CHARMM to handle.`
                         : ''}
                       <br />
-                      {formValues && (
+                      {values && (
                         <>
                           <TableContainer sx={{ width: '400px' }}>
                             <Table aria-label='simple table'>
@@ -171,7 +170,7 @@ const Alphafold2PAEJiffy = () => {
                                     <b>PDB File</b>
                                   </TableCell>
                                   <TableCell align='right'>
-                                    {formValues.pdb_file?.name}
+                                    {values.pdb_file?.name}
                                   </TableCell>
                                 </TableRow>
                                 <TableRow>
@@ -179,7 +178,7 @@ const Alphafold2PAEJiffy = () => {
                                     <b>PAE File</b>
                                   </TableCell>
                                   <TableCell align='right'>
-                                    {formValues.pae_file?.name}
+                                    {values.pae_file?.name}
                                   </TableCell>
                                 </TableRow>
                                 <TableRow>
@@ -187,9 +186,7 @@ const Alphafold2PAEJiffy = () => {
                                     <b>Clustering Weight</b>
                                   </TableCell>
                                   <TableCell align='right'>
-                                    {parseFloat(formValues.pae_power).toFixed(
-                                      1
-                                    )}
+                                    {parseFloat(values.pae_power).toFixed(1)}
                                   </TableCell>
                                 </TableRow>
                                 <TableRow>
@@ -197,9 +194,7 @@ const Alphafold2PAEJiffy = () => {
                                     <b>pLDDT Cutoff</b>
                                   </TableCell>
                                   <TableCell align='right'>
-                                    {parseFloat(
-                                      formValues.plddt_cutoff
-                                    ).toFixed(1)}
+                                    {parseFloat(values.plddt_cutoff).toFixed(1)}
                                   </TableCell>
                                 </TableRow>
                                 <TableRow>
@@ -225,17 +220,18 @@ const Alphafold2PAEJiffy = () => {
                         variant='contained'
                         onClick={() => {
                           console.log('Resetting form')
-                          console.log('formValues:', formValues)
+                          console.log('values:', values)
                           const newInitial = {
                             ...formInitialValues,
-                            pae_power: formValues?.pae_power || '2.0',
-                            plddt_cutoff: formValues?.plddt_cutoff || '50',
+                            pae_power: values.pae_power,
+                            plddt_cutoff: values.plddt_cutoff,
                             pdb_file: originalFiles.pdb_file,
                             pae_file: originalFiles.pae_file
                           }
+                          console.log('newInitial:', newInitial)
+                          setSuccess(false)
                           setFormInitialValues(newInitial)
                           resetForm({ values: newInitial })
-                          handleReset()
                         }}
                       >
                         Try New Parameters
