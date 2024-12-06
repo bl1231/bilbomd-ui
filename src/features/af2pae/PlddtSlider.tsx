@@ -53,15 +53,17 @@ export default function PlddtSlider({ setFieldValue }: PlddtSliderProps) {
             step={1}
             min={10}
             max={98}
-            // marks={marks}
             valueLabelDisplay='auto'
             onChange={handleChange}
             track={false}
           />
         </Grid>
         <Alert severity='info'>
-          A lower pLDDT cutoff will result in fewer clusters (i.e. rigid
-          shapes).
+          The pLDDT cutoff value is used to determine if a rigid domain
+          determined from the PAE matrix should be included in the{' '}
+          <b>const.inp</b> file. A <b>lower</b> pLDDT cutoff will result in more
+          rigid domains. A <b>higher</b> pLDDT cutoff will result in fewer rigid
+          domains.
         </Alert>
       </Grid>
     </Box>
