@@ -204,7 +204,7 @@ const NewMultiMDJobForm: React.FC = () => {
                         <Alert severity='error'>{error?.toString()}</Alert>
                       )}
                       {getJobsSuccess && jobs && (
-                        <Typography>
+                        <Box>
                           {' '}
                           <TableContainer>
                             <Table>
@@ -322,7 +322,7 @@ const NewMultiMDJobForm: React.FC = () => {
                               </TableBody>
                             </Table>
                           </TableContainer>
-                        </Typography>
+                        </Box>
                       )}
                       <Grid sx={{ mt: 2 }}>
                         {/* Backend Error Alert */}
@@ -339,11 +339,9 @@ const NewMultiMDJobForm: React.FC = () => {
                         {/* Form Validation Errors Alert */}
                         {Object.keys(errors).length > 0 ? (
                           <Alert severity='error' sx={{ mb: 2 }}>
-                            <Typography variant='body2'>
-                              {Object.values(errors).map((error, index) => (
-                                <div key={index}>{error}</div>
-                              ))}
-                            </Typography>
+                            {Object.values(errors).map((error, index) => (
+                              <div key={index}>{error}</div>
+                            ))}
                           </Alert>
                         ) : (
                           isFormValid(values) && (
