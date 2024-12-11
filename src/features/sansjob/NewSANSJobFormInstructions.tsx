@@ -3,7 +3,8 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  Typography
+  Typography,
+  Link
 } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
@@ -34,8 +35,16 @@ const NewSANSJobFormInstructions = () => (
       <Box>
         <Typography sx={{ m: 1 }}>
           <b>BilboMD SANS</b> will generate a metric ass-tonne of molecular
-          models and then do genetic algorithm awesomness to determine the best
-          models to explain your Small Angle Neutron Scattering data.
+          models and then do genetic algorithm awesomness{' '}
+          <Link
+            href='https://github.com/achicks15/GA-SAS'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            GA-SAS
+          </Link>{' '}
+          to determine the best models to explain your Small Angle Neutron
+          Scattering (SANS) data.
         </Typography>
       </Box>
     </AccordionDetails>
