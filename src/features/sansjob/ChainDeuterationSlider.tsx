@@ -11,7 +11,7 @@ interface FormikTouched {
   [key: string]: boolean | undefined
 }
 
-interface DynamicChainSlidersProps {
+interface ChainDeuterationSliderProps {
   chainIds: string[]
   values: NewSANSJobFormValues
   errors: FormikErrors
@@ -24,7 +24,7 @@ interface DynamicChainSlidersProps {
   ) => void
 }
 
-const DynamicChainSliders: React.FC<DynamicChainSlidersProps> = ({
+const ChainDeuterationSlider: React.FC<ChainDeuterationSliderProps> = ({
   chainIds,
   values,
   isSubmitting,
@@ -89,4 +89,4 @@ const DynamicChainSliders: React.FC<DynamicChainSlidersProps> = ({
   )
 }
 
-export default DynamicChainSliders
+export default ChainDeuterationSlider
