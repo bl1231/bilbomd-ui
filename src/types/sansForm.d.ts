@@ -2,6 +2,7 @@ export interface NewSANSJobFormValues {
   title: string
   pdb_file: string
   dat_file: string
+  rg: number
   rg_min: number
   rg_max: number
   inp_file: string

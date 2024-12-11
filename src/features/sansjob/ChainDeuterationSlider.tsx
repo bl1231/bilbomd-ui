@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Box, Typography, Chip, Slider } from '@mui/material'
+import { Typography, Chip, Slider } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { NewSANSJobFormValues } from 'types/sansForm'
 
@@ -11,7 +11,7 @@ interface FormikTouched {
   [key: string]: boolean | undefined
 }
 
-interface DynamicChainSlidersProps {
+interface ChainDeuterationSliderProps {
   chainIds: string[]
   values: NewSANSJobFormValues
   errors: FormikErrors
@@ -24,17 +24,16 @@ interface DynamicChainSlidersProps {
   ) => void
 }
 
-const DynamicChainSliders: React.FC<DynamicChainSlidersProps> = ({
+const ChainDeuterationSlider: React.FC<ChainDeuterationSliderProps> = ({
   chainIds,
   values,
-  errors,
-  touched,
   isSubmitting,
   setFieldValue
 }) => {
   useEffect(() => {
     chainIds.forEach((chainId) => {
-      const fieldName = `deuteration_fraction_${chainId}`
+      const fieldName =
+        `deuteration_fraction_${chainId}` as keyof NewSANSJobFormValues
       if (values[fieldName] === undefined) {
         setFieldValue(fieldName, 0)
       }
@@ -45,45 +44,49 @@ const DynamicChainSliders: React.FC<DynamicChainSlidersProps> = ({
     <>
       {chainIds.map((chainId) => (
         <Grid key={chainId} sx={{ my: 2, width: '520px' }}>
-          <Box display='flex' alignItems='center'>
-            <Typography
-              id={`deuteration-fraction-slider-${chainId}`}
-              gutterBottom
-            >
-              Deuteration Fraction for Chain {chainId}
-            </Typography>
-            <Chip
-              label={`${values[`deuteration_fraction_${chainId}`] || 0}%`}
-              sx={{ ml: 2 }}
-            />
-          </Box>
-          <Slider
-            aria-labelledby={`deuteration-fraction-slider-${chainId}`}
-            name={`deuteration_fraction_${chainId}`}
-            value={values[`deuteration_fraction_${chainId}`] || 0}
-            onChange={(event, value) => {
-              setFieldValue(
-                `deuteration_fraction_${chainId}`,
-                Array.isArray(value) ? value[0] : value
-              )
-            }}
-            min={0}
-            max={100}
-            step={1}
-            marks
-            valueLabelDisplay='off'
-            disabled={isSubmitting}
-          />
-          {errors[`deuteration_fraction_${chainId}`] &&
-          touched[`deuteration_fraction_${chainId}`] ? (
-            <Typography color='error'>
-              {errors[`deuteration_fraction_${chainId}`]}
-            </Typography>
-          ) : null}
+          <Typography
+            id={`deuteration-fraction-slider-${chainId}`}
+            gutterBottom
+          >
+            Deuteration Fraction for Chain {chainId}
+          </Typography>
+          <Grid container spacing={2} alignItems='center'>
+            <Grid>
+              <Chip
+                label={`${values[`deuteration_fraction_${chainId}`] || 0}%`}
+                variant='outlined'
+                color='success'
+                sx={{
+                  width: 60, // Set a fixed width
+                  justifyContent: 'center' // Center the label
+                }}
+              />
+            </Grid>
+
+            <Grid sx={{ flex: 1 }}>
+              <Slider
+                aria-labelledby={`deuteration-fraction-slider-${chainId}`}
+                name={`deuteration_fraction_${chainId}`}
+                value={values[`deuteration_fraction_${chainId}`] || 0}
+                onChange={(_event, value) => {
+                  setFieldValue(
+                    `deuteration_fraction_${chainId}`,
+                    Array.isArray(value) ? value[0] : value
+                  )
+                }}
+                min={0}
+                max={100}
+                step={1}
+                valueLabelDisplay='off'
+                disabled={isSubmitting}
+                track={false}
+              />
+            </Grid>
+          </Grid>
         </Grid>
       ))}
     </>
   )
 }
 
-export default DynamicChainSliders
+export default ChainDeuterationSlider

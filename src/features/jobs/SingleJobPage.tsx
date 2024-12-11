@@ -241,7 +241,7 @@ const SingleJobPage = () => {
           </Grid>
         )}
 
-        {/* Scoper steps.... who knows ? */}
+        {/* Scoper steps */}
         {job.scoper && (
           <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
@@ -252,10 +252,12 @@ const SingleJobPage = () => {
           </Grid>
         )}
 
+        {/* MongoDB Job Details */}
         <Grid size={{ xs: 12 }}>
           <JobDBDetails job={job} />
         </Grid>
 
+        {/* Scoper FoXS Analysis */}
         {job.mongo.status === 'Completed' && job.scoper && id && (
           <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
@@ -265,8 +267,12 @@ const SingleJobPage = () => {
           </Grid>
         )}
 
+        {/* FoXS Analysis */}
         {job.mongo.status === 'Completed' &&
-          (job.classic || job.auto || job.mongo.__t == 'BilboMdAlphaFold') &&
+          (job.mongo.__t === 'BilboMdPDB' ||
+            job.mongo.__t === 'BilboMdCRD' ||
+            job.mongo.__t === 'BilboMdAuto' ||
+            job.mongo.__t === 'BilboMdAlphaFold') &&
           id && (
             <Grid size={{ xs: 12 }}>
               <HeaderBox sx={{ py: '6px' }}>
