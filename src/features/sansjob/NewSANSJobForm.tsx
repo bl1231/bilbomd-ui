@@ -29,7 +29,7 @@ import { NewSANSJobFormValues } from '../../types/sansForm'
 import NewSANSJobFormInstructions from './NewSANSJobFormInstructions'
 import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
-import DynamicChainSliders from './ChainDeuterationSlider'
+import ChainDeuterationSlider from './ChainDeuterationSlider'
 
 const NewSANSJob = () => {
   useTitle('BilboMD: New SANS Job')
@@ -162,7 +162,7 @@ const NewSANSJob = () => {
           <Box display='flex' alignItems='center'>
             <Typography>BilboMD SANS Job Form</Typography>
             <Typography component='span' sx={{ color: 'yellow', ml: 1 }}>
-              *experimental - report problems to scott
+              *Experimental - Please report problems to Scott
             </Typography>
           </Box>
         </HeaderBox>
@@ -201,6 +201,7 @@ const NewSANSJob = () => {
                         onStatusCheck={handleStatusCheck}
                       />
                     )}
+
                     {/* Title */}
                     <Grid sx={{ my: 2, width: '520px' }}>
                       <Field
@@ -306,6 +307,8 @@ const NewSANSJob = () => {
                         <LinearProgress />
                       </Box>
                     )}
+
+                    {/* Rg Min */}
                     <Grid sx={{ my: 2, display: 'flex', width: '520px' }}>
                       <Field
                         label='Rg Min'
@@ -326,6 +329,8 @@ const NewSANSJob = () => {
                         inputProps={{ min: 10, max: 100 }}
                       />
                     </Grid>
+
+                    {/* rRg Max */}
                     <Grid sx={{ my: 2, display: 'flex', width: '520px' }}>
                       <Field
                         label='Rg Max'
@@ -346,6 +351,7 @@ const NewSANSJob = () => {
                         inputProps={{ min: 0, max: 100 }}
                       />
                     </Grid>
+
                     {/* const.inp file */}
                     <Grid>
                       <Field
@@ -406,7 +412,7 @@ const NewSANSJob = () => {
 
                     {/* Dynamic Deuteration Fraction Sliders */}
                     {chainIds.length > 0 && (
-                      <DynamicChainSliders
+                      <ChainDeuterationSlider
                         chainIds={chainIds}
                         values={values}
                         errors={errors}
@@ -422,6 +428,7 @@ const NewSANSJob = () => {
                         <LinearProgress />
                       </Box>
                     )}
+
                     {/* Submit Button */}
                     <Grid sx={{ mt: 2 }}>
                       <LoadingButton
