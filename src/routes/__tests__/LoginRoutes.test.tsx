@@ -4,7 +4,6 @@ import { LoginRoutes } from '../LoginRoutes'
 import Loadable from 'components/Loadable'
 import { lazy, ComponentType, LazyExoticComponent } from 'react'
 
-// Define type for Loadable HOC
 type LoadableComponent = LazyExoticComponent<ComponentType<unknown>>
 
 vi.mock('components/Loadable', () => ({
