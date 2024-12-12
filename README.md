@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.16.2 (12/12/2024)
+  - Improvements to BilboMD SANS
 - 1.16.1 (12/06/2024)
   - Move Accordian disclosure arrow to left of header bars
 - 1.16.0 (12/06/2024)
