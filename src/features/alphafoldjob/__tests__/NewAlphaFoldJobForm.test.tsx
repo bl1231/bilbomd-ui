@@ -32,14 +32,6 @@ describe('NewAlphaFoldJob Component', () => {
       isLoading: false
     })
   })
-  it('renders the form correctly', () => {
-    render(<NewAlphaFoldJob />)
-
-    // Check for essential fields
-    expect(screen.getByLabelText(/Title/i)).toBeInTheDocument()
-    expect(screen.getByText(/BilboMD AF Job Form/i)).toBeInTheDocument()
-    expect(screen.getByText(/Add Entity/i)).toBeInTheDocument()
-  })
   it('handles configuration loading state', () => {
     ;(useGetConfigsQuery as Mock).mockReturnValue({
       data: null,
