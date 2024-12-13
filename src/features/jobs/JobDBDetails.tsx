@@ -242,7 +242,6 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
                 right: 16,
                 top: 16
               }}
-              color='primary'
             >
               <ContentCopyIcon />
             </IconButton>
