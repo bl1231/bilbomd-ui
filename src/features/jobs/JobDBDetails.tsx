@@ -12,11 +12,14 @@ import {
   Box,
   Tooltip,
   IconButton,
-  Chip
+  Chip,
+  Snackbar,
+  Alert
 } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import VisibilityIcon from '@mui/icons-material/Visibility'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import HeaderBox from 'components/HeaderBox'
 import { format } from 'date-fns'
 import { BilboMDJob } from 'types/interfaces'
@@ -28,8 +31,16 @@ interface JobDBDetailsProps {
   job: BilboMDJob
 }
 
+type MongoDBProperty = {
+  label: string
+  value?: string | number | Date
+  suffix?: string
+  render?: () => React.ReactNode
+}
+
 const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
   const [open, setOpen] = useState(false)
+  const [toastOpen, setToastOpen] = useState(false)
   const [triggerGetFile, { data: fileContents, isLoading, error }] =
     useLazyGetFileByIdAndNameQuery()
 
@@ -42,6 +53,17 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
 
   const handleCloseModal = () => {
     setOpen(false)
+  }
+
+  const handleCopyToClipboard = () => {
+    if (fileContents) {
+      navigator.clipboard.writeText(fileContents)
+      setToastOpen(true) // Show the toast
+    }
+  }
+
+  const handleToastClose = () => {
+    setToastOpen(false) // Hide the toast
   }
 
   const jobTypeDisplayName: Record<string, string> = {
@@ -132,14 +154,7 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
     { label: 'ID', value: job.mongo.id }
   ]
 
-  type Property = {
-    label: string
-    value?: string | number | Date
-    suffix?: string
-    render?: () => React.ReactNode
-  }
-
-  const renderProperties = (props: Property[]) => (
+  const renderProperties = (props: MongoDBProperty[]) => (
     <Stack spacing={1}>
       <Box
         sx={{
@@ -205,8 +220,34 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
           </Grid>
         </AccordionDetails>
       </Accordion>
-      <Dialog open={open} onClose={handleCloseModal} fullWidth maxWidth='md'>
-        <DialogTitle>CHARMM Constraint File</DialogTitle>
+      <Dialog
+        open={open}
+        onClose={handleCloseModal}
+        fullWidth
+        maxWidth='md'
+        sx={{
+          '& .MuiPaper-root': {
+            backgroundColor: green[100],
+            color: 'black' // Adjust text color for better contrast
+          }
+        }}
+      >
+        <DialogTitle>
+          CHARMM Constraint File
+          <Tooltip title='Copy to clipboard'>
+            <IconButton
+              onClick={handleCopyToClipboard}
+              sx={{
+                position: 'absolute',
+                right: 16,
+                top: 16
+              }}
+              color='primary'
+            >
+              <ContentCopyIcon />
+            </IconButton>
+          </Tooltip>
+        </DialogTitle>
         <DialogContent>
           {isLoading ? (
             <Box
@@ -235,6 +276,34 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Snackbar for Toast */}
+      <Snackbar
+        open={toastOpen}
+        onClose={handleToastClose}
+        autoHideDuration={3000} // 3 seconds
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Anchor settings
+        // sx={{
+        //   '& .MuiSnackbarContent-root': {
+        //     position: 'fixed',
+        //     top: '50%',
+        //     left: '50%',
+        //     transform: 'translate(-50%, -50%)',
+        //     backgroundColor: 'success.main',
+        //     color: 'white',
+        //     textAlign: 'center',
+        //     boxShadow: 3
+        //   }
+        // }}
+      >
+        <Alert
+          onClose={handleToastClose}
+          severity='success'
+          sx={{ width: '100%' }}
+        >
+          File contents copied to clipboard!
+        </Alert>
+      </Snackbar>
     </Box>
   )
 }
