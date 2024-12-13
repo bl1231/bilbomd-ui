@@ -1,23 +1,49 @@
+import React, { useState } from 'react'
 import {
   Typography,
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Stack
+  Stack,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  CircularProgress,
+  Box,
+  Tooltip,
+  IconButton,
+  Chip
 } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 import HeaderBox from 'components/HeaderBox'
 import { format } from 'date-fns'
-import { Box } from '@mui/system'
 import { BilboMDJob } from 'types/interfaces'
 import CopyableChip from 'components/CopyableChip'
+import { useLazyGetFileByIdAndNameQuery } from 'slices/jobsApiSlice'
+import { green } from '@mui/material/colors'
 
 interface JobDBDetailsProps {
   job: BilboMDJob
 }
 
 const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
+  const [open, setOpen] = useState(false)
+  const [triggerGetFile, { data: fileContents, isLoading, error }] =
+    useLazyGetFileByIdAndNameQuery()
+
+  const handleOpenModal = () => {
+    setOpen(true)
+    if (job.mongo.const_inp_file) {
+      triggerGetFile({ id: job.mongo.id, filename: job.mongo.const_inp_file })
+    }
+  }
+
+  const handleCloseModal = () => {
+    setOpen(false)
+  }
+
   const jobTypeDisplayName: Record<string, string> = {
     BilboMdPDB: 'BilboMD Classic w/PDB',
     BilboMdAuto: 'BilboMD Auto',
@@ -43,7 +69,6 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
 
   const { stepSize, numSteps, numConformations, rgList } = getNumConformations()
 
-  // Define properties to render dynamically
   const properties = [
     { label: 'Pipeline', value: getJobTypeDisplayName(job.mongo.__t) },
     { label: 'Submitted', value: job.mongo.time_submitted },
@@ -53,7 +78,40 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
     { label: 'PSF file', value: job.mongo.psf_file },
     { label: 'CRD file', value: job.mongo.crd_file },
     { label: 'PDB file', value: job.mongo.pdb_file },
-    { label: 'CHARMM constraint file', value: job.mongo.const_inp_file },
+    {
+      label: 'CHARMM constraint file',
+      render: () => (
+        <Chip
+          label={
+            <Box style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ marginRight: '6px' }}>
+                {job.mongo.const_inp_file}
+              </span>
+              <Tooltip title={`Open ${job.mongo.const_inp_file}`}>
+                <IconButton
+                  size='small'
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleOpenModal()
+                  }}
+                  sx={{ padding: 0 }}
+                >
+                  <VisibilityIcon fontSize='small' />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          }
+          variant='outlined'
+          sx={{
+            fontSize: '0.875rem',
+            borderColor: 'primary.main',
+            backgroundColor: green[100],
+            cursor: 'pointer'
+          }}
+          onClick={handleOpenModal} // Optional: Allow clicking anywhere on the chip to open modal
+        />
+      )
+    },
     { label: 'Rg min', value: job.mongo.rg_min, suffix: 'Å' },
     { label: 'Rg max', value: job.mongo.rg_max, suffix: 'Å' },
     { label: 'Rg step size', value: stepSize, suffix: 'Å' },
@@ -81,7 +139,6 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
     render?: () => React.ReactNode
   }
 
-  // Helper function to render properties
   const renderProperties = (props: Property[]) => (
     <Stack spacing={1}>
       <Box
@@ -148,6 +205,36 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
           </Grid>
         </AccordionDetails>
       </Accordion>
+      <Dialog open={open} onClose={handleCloseModal} fullWidth maxWidth='md'>
+        <DialogTitle>CHARMM Constraint File</DialogTitle>
+        <DialogContent>
+          {isLoading ? (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '200px'
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          ) : error ? (
+            <Typography color='error'>Failed to load file contents.</Typography>
+          ) : (
+            <Typography
+              component='pre'
+              sx={{
+                whiteSpace: 'pre-wrap',
+                wordWrap: 'break-word',
+                fontFamily: 'monospace'
+              }}
+            >
+              {fileContents || 'No content available.'}
+            </Typography>
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   )
 }
