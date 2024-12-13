@@ -45,7 +45,7 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
 
   // Define properties to render dynamically
   const properties = [
-    { label: 'Job Type', value: getJobTypeDisplayName(job.mongo.__t) },
+    { label: 'Pipeline', value: getJobTypeDisplayName(job.mongo.__t) },
     { label: 'Submitted', value: job.mongo.time_submitted },
     { label: 'Started', value: job.mongo.time_started },
     { label: 'Completed', value: job.mongo.time_completed },
