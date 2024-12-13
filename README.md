@@ -60,6 +60,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.16.3 (12/12/2024)
+  - Show BilboMD AF for non-NERSC deployment w/ link to NERSC
+  - Improve BilboMD SANS info and instructions
 - 1.16.2 (12/12/2024)
   - Improvements to BilboMD SANS
 - 1.16.1 (12/06/2024)
