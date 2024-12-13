@@ -18,6 +18,18 @@ interface JobDBDetailsProps {
 }
 
 const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
+  const jobTypeDisplayName: Record<string, string> = {
+    BilboMdPDB: 'BilboMD Classic w/PDB',
+    BilboMdAuto: 'BilboMD Auto',
+    BilboMdAlphaFold: 'BilboMD AlphaFold',
+    BilboMdSANS: 'BilboMD SANS',
+    BilboMdCRD: 'BilboMD Classic w/CRD/PSF',
+    BilboMdScoper: 'BilboMD Scoper'
+  }
+
+  const getJobTypeDisplayName = (type: string | undefined) =>
+    type ? jobTypeDisplayName[type] || 'Unknown Job Type' : 'Unknown Job Type'
+
   const getNumConformations = () => {
     const { rg_min = 0, rg_max = 0, conformational_sampling } = job.mongo
     const stepSize = Math.max(Math.round((rg_max - rg_min) / 5), 1)
@@ -33,11 +45,11 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
 
   // Define properties to render dynamically
   const properties = [
-    { label: 'Job Type', value: job.mongo.__t },
-    { label: 'Submittedd', value: job.mongo.time_submitted },
+    { label: 'Job Type', value: getJobTypeDisplayName(job.mongo.__t) },
+    { label: 'Submitted', value: job.mongo.time_submitted },
     { label: 'Started', value: job.mongo.time_started },
     { label: 'Completed', value: job.mongo.time_completed },
-    { label: 'SAXS data', value: job.mongo.data_file },
+    { label: 'Data file', value: job.mongo.data_file },
     { label: 'PSF file', value: job.mongo.psf_file },
     { label: 'CRD file', value: job.mongo.crd_file },
     { label: 'PDB file', value: job.mongo.pdb_file },
