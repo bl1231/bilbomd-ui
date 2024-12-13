@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Chip, IconButton, Tooltip, Snackbar, Alert } from '@mui/material'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-
+import { Box } from '@mui/system'
+import { green } from '@mui/material/colors'
 interface CopyableChipProps {
   label: string
   value: string
@@ -29,8 +30,8 @@ const CopyableChip: React.FC<CopyableChipProps> = ({ label, value }) => {
     <>
       <Chip
         label={
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span style={{ marginRight: '8px' }}>{value}</span>
+          <Box style={{ display: 'flex', alignItems: 'center' }}>
+            <span style={{ marginRight: '6px' }}>{value}</span>
             <Tooltip title={`Copy ${label}`}>
               <IconButton
                 size='small'
@@ -43,13 +44,13 @@ const CopyableChip: React.FC<CopyableChipProps> = ({ label, value }) => {
                 <ContentCopyIcon fontSize='small' />
               </IconButton>
             </Tooltip>
-          </div>
+          </Box>
         }
         variant='outlined'
         sx={{
           fontSize: '0.875rem',
           borderColor: 'primary.main',
-          ml: 2
+          backgroundColor: green[100]
         }}
       />
       <Snackbar

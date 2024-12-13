@@ -45,7 +45,7 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
     { label: 'Rg min', value: job.mongo.rg_min, suffix: 'Å' },
     { label: 'Rg max', value: job.mongo.rg_max, suffix: 'Å' },
     { label: 'Rg step size', value: stepSize, suffix: 'Å' },
-    { label: 'Number of MD Runs', value: numSteps },
+    { label: 'Number of CHARMM MD Runs', value: numSteps },
     { label: 'Number of conformations', value: numConformations },
     {
       label: 'Rg List',
@@ -58,7 +58,8 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
           ))}
         </Typography>
       )
-    }
+    },
+    { label: 'ID', value: job.mongo.id }
   ]
 
   type Property = {
@@ -113,36 +114,29 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
   )
 
   return (
-    <Accordion defaultExpanded>
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
-        sx={{
-          backgroundColor: '#888',
-          borderTopLeftRadius: 4,
-          borderTopRightRadius: 4,
-          pl: 1
-        }}
-      >
-        <HeaderBox sx={{ py: 0 }}>
-          <Typography>Details</Typography>
-        </HeaderBox>
-      </AccordionSummary>
+    <Box sx={{ flexGrow: 1, width: '100%' }}>
+      <Accordion defaultExpanded>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
+          sx={{
+            backgroundColor: '#888',
+            borderTopLeftRadius: 4,
+            borderTopRightRadius: 4,
+            pl: 1
+          }}
+        >
+          <HeaderBox sx={{ py: 0 }}>
+            <Typography>Details</Typography>
+          </HeaderBox>
+        </AccordionSummary>
 
-      <AccordionDetails>
-        <Grid container spacing={2}>
-          <Grid>
-            <Box
-              sx={{
-                display: 'flex',
-                width: '100%'
-              }}
-            >
-              {renderProperties(properties)}
-            </Box>
+        <AccordionDetails>
+          <Grid container spacing={2}>
+            <Grid size={{ xs: 12 }}>{renderProperties(properties)}</Grid>
           </Grid>
-        </Grid>
-      </AccordionDetails>
-    </Accordion>
+        </AccordionDetails>
+      </Accordion>
+    </Box>
   )
 }
 
