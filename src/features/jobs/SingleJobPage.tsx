@@ -229,7 +229,7 @@ const SingleJobPage = () => {
 
         {/* New BilboMD Steps that uses mongo.steps object */}
         {job.mongo.steps && !useNersc && !job.scoper && (
-          <Grid size={{ xs: 12 }}>
+          <Grid size={{ xs: 8 }}>
             <BilboMDMongoSteps steps={job.mongo.steps} />
           </Grid>
         )}
@@ -253,7 +253,7 @@ const SingleJobPage = () => {
         )}
 
         {/* MongoDB Job Details */}
-        <Grid size={{ xs: 12 }}>
+        <Grid size={{ xs: 4 }}>
           <JobDBDetails job={job} />
         </Grid>
 

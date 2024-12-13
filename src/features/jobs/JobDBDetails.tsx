@@ -1,9 +1,9 @@
 import {
-  Divider,
   Typography,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
+  Stack
 } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -11,180 +11,136 @@ import HeaderBox from 'components/HeaderBox'
 import { format } from 'date-fns'
 import { Box } from '@mui/system'
 import { BilboMDJob } from 'types/interfaces'
+import CopyableChip from 'components/CopyableChip'
 
 interface JobDBDetailsProps {
   job: BilboMDJob
 }
 
-interface ConformationInfo {
-  stepSize: number
-  numSteps: number
-  numConformations: number
-  rgList: number[]
-}
-
-const JobDBDetails = (props: JobDBDetailsProps) => {
-  const { job } = props
-
-  const getNumConformations = (): ConformationInfo => {
-    const rgMin: number = job.mongo.rg_min
-    const rgMax: number = job.mongo.rg_max
-    const conformationalSampling: number = job.mongo.conformational_sampling
-    let numSteps: number = 0
+const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
+  const getNumConformations = () => {
+    const { rg_min = 0, rg_max = 0, conformational_sampling } = job.mongo
+    const stepSize = Math.max(Math.round((rg_max - rg_min) / 5), 1)
     const rgList: number[] = []
-    const stepSize = Math.max(Math.round((rgMax - rgMin) / 5), 1)
-    for (let rg: number = rgMin; rg <= rgMax; rg += stepSize) {
-      numSteps += 1
+    for (let rg = rg_min; rg <= rg_max; rg += stepSize) {
       rgList.push(rg)
     }
-    const numConformations: number = conformationalSampling * 200 * numSteps
-    return { stepSize, numSteps, numConformations, rgList }
+    const numConformations = conformational_sampling * 200 * rgList.length
+    return { stepSize, numSteps: rgList.length, numConformations, rgList }
   }
 
   const { stepSize, numSteps, numConformations, rgList } = getNumConformations()
 
-  // Helper function for conditional rendering
-  const renderJobProperty = (label, value, suffix = '') => {
-    if (value) {
-      return (
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Typography fontWeight={'bold'}>{label}:</Typography>
-          <Typography>
-            {value}
-            {suffix}
-          </Typography>
-        </Box>
+  // Define properties to render dynamically
+  const properties = [
+    { label: 'Job Type', value: job.mongo.__t },
+    { label: 'Submittedd', value: job.mongo.time_submitted },
+    { label: 'Started', value: job.mongo.time_started },
+    { label: 'Completed', value: job.mongo.time_completed },
+    { label: 'SAXS data', value: job.mongo.data_file },
+    { label: 'PSF file', value: job.mongo.psf_file },
+    { label: 'CRD file', value: job.mongo.crd_file },
+    { label: 'PDB file', value: job.mongo.pdb_file },
+    { label: 'CHARMM constraint file', value: job.mongo.const_inp_file },
+    { label: 'Rg min', value: job.mongo.rg_min, suffix: 'Å' },
+    { label: 'Rg max', value: job.mongo.rg_max, suffix: 'Å' },
+    { label: 'Rg step size', value: stepSize, suffix: 'Å' },
+    { label: 'Number of MD Runs', value: numSteps },
+    { label: 'Number of conformations', value: numConformations },
+    {
+      label: 'Rg List',
+      render: () => (
+        <Typography>
+          {rgList.map((rgValue, index) => (
+            <span key={index}>
+              {rgValue}&#8491; {index < rgList.length - 1 ? ', ' : ''}
+            </span>
+          ))}
+        </Typography>
       )
     }
-    return null
+  ]
+
+  type Property = {
+    label: string
+    value?: string | number | Date
+    suffix?: string
+    render?: () => React.ReactNode
   }
 
+  // Helper function to render properties
+  const renderProperties = (props: Property[]) => (
+    <Stack spacing={1}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}
+      >
+        <Typography fontWeight='bold'>UUID:</Typography>
+        <CopyableChip label='UUID' value={job.mongo.uuid} />
+      </Box>
+
+      {props.map(({ label, value, render, suffix = '' }) =>
+        render ? (
+          <Box
+            key={label}
+            sx={{ display: 'flex', justifyContent: 'space-between' }}
+          >
+            <Typography fontWeight='bold'>{label}:</Typography>
+            {render()}
+          </Box>
+        ) : (
+          value !== undefined && (
+            <Box
+              key={label}
+              sx={{ display: 'flex', justifyContent: 'space-between' }}
+            >
+              <Typography fontWeight='bold'>{label}:</Typography>
+              <Typography>
+                {value instanceof Date ||
+                (typeof value === 'string' && !isNaN(Date.parse(value)))
+                  ? format(new Date(value), 'MM/dd/yyyy HH:mm:ss')
+                  : value}
+                {suffix}
+              </Typography>
+            </Box>
+          )
+        )
+      )}
+    </Stack>
+  )
+
   return (
-    <Accordion>
+    <Accordion defaultExpanded>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
         sx={{
           backgroundColor: '#888',
           borderTopLeftRadius: 4,
           borderTopRightRadius: 4,
-          pl: 0
+          pl: 1
         }}
       >
         <HeaderBox sx={{ py: 0 }}>
-          <Typography>Job Database Details</Typography>
+          <Typography>Details</Typography>
         </HeaderBox>
       </AccordionSummary>
+
       <AccordionDetails>
-        <Grid container>
-          <Grid size={{ xs: 1 }}>
-            <Typography>
-              <b>Submitted: </b>
-            </Typography>
-          </Grid>
-          <Grid size={{ xs: 3 }}>
-            {job?.mongo?.time_submitted && (
-              <Typography sx={{ ml: 1 }}>
-                {format(
-                  new Date(job.mongo.time_submitted),
-                  'MM/dd/yyyy HH:mm:ss'
-                )}
-              </Typography>
-            )}
-          </Grid>
-          <Grid size={{ xs: 1 }}>
-            <Typography>
-              <b>Started: </b>
-            </Typography>
-          </Grid>
-          <Grid size={{ xs: 3 }}>
-            {job?.mongo?.time_started && (
-              <Typography sx={{ ml: 1 }}>
-                {format(
-                  new Date(job.mongo.time_started),
-                  'MM/dd/yyyy HH:mm:ss'
-                )}
-              </Typography>
-            )}
-          </Grid>
-          <Grid size={{ xs: 1 }}>
-            <Typography>
-              <b>Completed: </b>
-            </Typography>
-          </Grid>
-          <Grid size={{ xs: 3 }}>
-            {job?.mongo?.time_completed && (
-              <Typography sx={{ ml: 1 }}>
-                {format(
-                  new Date(job.mongo.time_completed),
-                  'MM/dd/yyyy HH:mm:ss'
-                )}
-              </Typography>
-            )}
-          </Grid>
-        </Grid>
-
-        <Divider sx={{ my: 1 }} />
-
         <Grid container spacing={2}>
-          <Grid size={{ xs: 8 }}>
+          <Grid>
             <Box
               sx={{
                 display: 'flex',
-                width: '100%',
-
-                ml: 0,
-                mr: 3,
-                my: 2
+                width: '100%'
               }}
             >
-              <div>
-                {/* Always displayed properties */}
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <Typography>
-                    <b>Job type:</b>
-                  </Typography>
-                  <Typography>{job.mongo.__t ?? 'unavailable'}</Typography>
-                </div>
-
-                {/* Conditionally displayed properties */}
-                {renderJobProperty('SAXS data', job.mongo.data_file)}
-                {renderJobProperty('PSF file', job.mongo.psf_file)}
-                {renderJobProperty('CRD file', job.mongo.crd_file)}
-                {renderJobProperty('PDB file', job.mongo.pdb_file)}
-                {renderJobProperty(
-                  'CHARMM constraint file',
-                  job.mongo.const_inp_file
-                )}
-                {renderJobProperty('Rg min', job.mongo.rg_min, 'Å')}
-                {renderJobProperty('Rg max', job.mongo.rg_max, 'Å')}
-                {renderJobProperty('Rg step size', stepSize, 'Å')}
-                {renderJobProperty('Number of MD Runs', numSteps)}
-                <Typography>
-                  {rgList.map((rgValue, index) => (
-                    <span key={index}>
-                      {rgValue}&#8491; {index < rgList.length - 1 ? ', ' : ''}
-                    </span>
-                  ))}
-                </Typography>
-                {renderJobProperty('Number of conformations', numConformations)}
-              </div>
+              {renderProperties(properties)}
             </Box>
           </Grid>
         </Grid>
-
-        <Divider sx={{ my: 2 }} />
-
-        <Typography sx={{ ml: 0 }}>
-          <b>MongoDB ID:</b> {job.mongo.id}
-        </Typography>
-        <Typography sx={{ ml: 0 }}>
-          <b>UUID:</b> {job.mongo.uuid}
-        </Typography>
       </AccordionDetails>
     </Accordion>
   )
