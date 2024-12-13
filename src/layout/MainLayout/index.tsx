@@ -133,9 +133,9 @@ export default function ClippedDrawer() {
     menuItems = menuItems.filter((item) => item.text !== 'Scoper')
   }
 
-  if (!useNersc) {
-    menuItems = menuItems.filter((item) => item.text !== 'BilboMD AF')
-  }
+  // if (!useNersc) {
+  //   menuItems = menuItems.filter((item) => item.text !== 'BilboMD AF')
+  // }
 
   if (!enableBilboMdSANS) {
     menuItems = menuItems.filter((item) => item.text !== 'BilboMD SANS')
