@@ -204,7 +204,7 @@ const SingleJobPage = () => {
           </Item>
         </Grid>
 
-        <Grid size={{ xs: 3 }}>
+        <Grid size={{ xs: 3 }} sx={{ minWidth: '160px' }}>
           <HeaderBox sx={{ py: '6px' }}>
             <Typography>Status</Typography>
           </HeaderBox>
@@ -238,7 +238,14 @@ const SingleJobPage = () => {
 
         {/* New BilboMD Steps that uses mongo.steps object */}
         {job.mongo.steps && !useNersc && !job.scoper && (
-          <Grid size={{ xs: 8 }}>
+          <Grid
+            size={{ xs: 12, sm: 6 }}
+            sx={{
+              flexGrow: 1, // Allows this component to grow or shrink
+              overflow: 'hidden', // Prevents content from breaking layout
+              minWidth: '550px'
+            }}
+          >
             <BilboMDMongoSteps steps={job.mongo.steps} />
           </Grid>
         )}
@@ -262,7 +269,15 @@ const SingleJobPage = () => {
         )}
 
         {/* MongoDB Job Details */}
-        <Grid size={{ xs: 4 }}>
+        <Grid
+          size={{ xs: 4 }}
+          sx={{
+            minWidth: '450px',
+            flexGrow: 1,
+
+            overflow: 'hidden'
+          }}
+        >
           {isMultiMDJob(job) ? (
             <MultiMDJobDBDetails job={job as BilboMDMultiJob} />
           ) : (
