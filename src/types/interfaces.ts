@@ -3,7 +3,8 @@ import {
   IBilboMDCRDJob,
   IBilboMDAutoJob,
   IBilboMDSANSJob,
-  IBilboMDAlphaFoldJob
+  IBilboMDAlphaFoldJob,
+  IMultiJob
 } from '@bl1231/bilbomd-mongodb-schema'
 
 export interface Chain {
@@ -126,4 +127,11 @@ export type BilboMDJob = {
   classic?: BilboMDSteps
   auto?: BilboMDSteps
   alphafold?: BilboMDAlphaFoldResults
+}
+
+export type BilboMDMultiJob = {
+  id: string
+  username: string
+  mongo: IMultiJob
+  bullmq: BilboMDBullMQ
 }

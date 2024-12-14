@@ -48,7 +48,8 @@ const CopyableChip: React.FC<CopyableChipProps> = ({ label, value }) => {
         }
         variant='outlined'
         sx={{
-          fontSize: '0.875rem',
+          fontSize: '0.80rem',
+          fontFamily: 'monospace',
           borderColor: 'primary.main',
           backgroundColor: green[100]
         }}

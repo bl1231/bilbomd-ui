@@ -24,6 +24,7 @@ import { BilboMDScoperSteps } from './BilboMDScoperSteps'
 import HeaderBox from 'components/HeaderBox'
 import JobError from './JobError'
 import JobDBDetails from './JobDBDetails'
+import MultiMDJobDBDetails from 'features/multimd/MultiMDJobDBDetails'
 import MolstarViewer from 'features/molstar/Viewer'
 import { BilboMDScoperTable } from '../scoperjob/BilboMDScoperTable'
 import ScoperFoXSAnalysis from 'features/scoperjob/ScoperFoXSAnalysis'
@@ -31,6 +32,7 @@ import FoXSAnalysis from './FoXSAnalysis'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useGetJobByIdQuery } from 'slices/jobsApiSlice'
 import BilboMdFeedback from 'features/analysis/BilboMdFeedback'
+import { BilboMDJob, BilboMDMultiJob } from 'types/interfaces'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -180,6 +182,12 @@ const SingleJobPage = () => {
     theme
   )
 
+  const isMultiMDJob = (
+    job: BilboMDJob | BilboMDMultiJob
+  ): job is BilboMDMultiJob => {
+    return !('__t' in job.mongo)
+  }
+
   // console.log('job', job)
 
   const content = job ? (
@@ -195,6 +203,7 @@ const SingleJobPage = () => {
             </Typography>
           </Item>
         </Grid>
+
         <Grid size={{ xs: 3 }}>
           <HeaderBox sx={{ py: '6px' }}>
             <Typography>Status</Typography>
@@ -254,7 +263,11 @@ const SingleJobPage = () => {
 
         {/* MongoDB Job Details */}
         <Grid size={{ xs: 4 }}>
-          <JobDBDetails job={job} />
+          {isMultiMDJob(job) ? (
+            <MultiMDJobDBDetails job={job as BilboMDMultiJob} />
+          ) : (
+            <JobDBDetails job={job as BilboMDJob} />
+          )}
         </Grid>
 
         {/* Scoper FoXS Analysis */}
@@ -282,6 +295,7 @@ const SingleJobPage = () => {
             </Grid>
           )}
 
+        {/* Feedback */}
         {job.mongo.status === 'Completed' &&
           (job.mongo.__t === 'BilboMdPDB' ||
             job.mongo.__t === 'BilboMdCRD' ||
@@ -296,6 +310,7 @@ const SingleJobPage = () => {
             </Grid>
           )}
 
+        {/* Molstar Viewer */}
         {job.mongo.status === 'Completed' &&
           (job.mongo.__t === 'BilboMdPDB' ||
             job.mongo.__t === 'BilboMdCRD' ||
@@ -318,6 +333,7 @@ const SingleJobPage = () => {
             </Grid>
           )}
 
+        {/* Download Results */}
         {job.mongo.status === 'Completed' && (
           <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>
