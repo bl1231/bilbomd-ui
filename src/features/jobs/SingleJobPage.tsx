@@ -185,7 +185,7 @@ const SingleJobPage = () => {
   const isMultiMDJob = (
     job: BilboMDJob | BilboMDMultiJob
   ): job is BilboMDMultiJob => {
-    return !('__t' in job.mongo)
+    return !('__t' in job.mongo) && 'bilbomd_uuids' in job.mongo
   }
 
   // console.log('job', job)
