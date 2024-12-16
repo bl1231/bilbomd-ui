@@ -20,6 +20,7 @@ import Grid from '@mui/material/Grid2'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import CloseIcon from '@mui/icons-material/Close'
 import HeaderBox from 'components/HeaderBox'
 import { format } from 'date-fns'
 import { BilboMDJob } from 'types/interfaces'
@@ -240,7 +241,7 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
               onClick={handleCopyToClipboard}
               sx={{
                 position: 'absolute',
-                right: 16,
+                right: 64,
                 top: 16
               }}
             >
@@ -248,6 +249,18 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
             </IconButton>
           </Tooltip>
         </DialogTitle>
+        <IconButton
+          aria-label='close'
+          onClick={handleCloseModal}
+          sx={(theme) => ({
+            position: 'absolute',
+            right: 16,
+            top: 16,
+            color: theme.palette.grey[500]
+          })}
+        >
+          <CloseIcon />
+        </IconButton>
         <DialogContent>
           {isLoading ? (
             <Box
