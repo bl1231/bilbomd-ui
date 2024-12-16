@@ -20,7 +20,7 @@ import FileSelect from 'features/jobs/FileSelect'
 import { Debug } from 'components/Debug'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
-import Download from './DownladAF2PAEfile'
+import Download from './DownloadAF2PAEfile'
 import { Box } from '@mui/system'
 import {
   useAf2PaeJiffyMutation,
