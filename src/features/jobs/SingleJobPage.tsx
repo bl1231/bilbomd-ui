@@ -24,6 +24,7 @@ import { BilboMDScoperSteps } from './BilboMDScoperSteps'
 import HeaderBox from 'components/HeaderBox'
 import JobError from './JobError'
 import JobDBDetails from './JobDBDetails'
+import MultiMDJobDBDetails from 'features/multimd/MultiMDJobDBDetails'
 import MolstarViewer from 'features/molstar/Viewer'
 import { BilboMDScoperTable } from '../scoperjob/BilboMDScoperTable'
 import ScoperFoXSAnalysis from 'features/scoperjob/ScoperFoXSAnalysis'
@@ -31,6 +32,7 @@ import FoXSAnalysis from './FoXSAnalysis'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useGetJobByIdQuery } from 'slices/jobsApiSlice'
 import BilboMdFeedback from 'features/analysis/BilboMdFeedback'
+import { BilboMDJob, BilboMDMultiJob } from 'types/interfaces'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -180,6 +182,12 @@ const SingleJobPage = () => {
     theme
   )
 
+  const isMultiMDJob = (
+    job: BilboMDJob | BilboMDMultiJob
+  ): job is BilboMDMultiJob => {
+    return !('__t' in job.mongo) && 'bilbomd_uuids' in job.mongo
+  }
+
   // console.log('job', job)
 
   const content = job ? (
@@ -195,7 +203,8 @@ const SingleJobPage = () => {
             </Typography>
           </Item>
         </Grid>
-        <Grid size={{ xs: 3 }}>
+
+        <Grid size={{ xs: 3 }} sx={{ minWidth: '160px' }}>
           <HeaderBox sx={{ py: '6px' }}>
             <Typography>Status</Typography>
           </HeaderBox>
@@ -229,7 +238,14 @@ const SingleJobPage = () => {
 
         {/* New BilboMD Steps that uses mongo.steps object */}
         {job.mongo.steps && !useNersc && !job.scoper && (
-          <Grid size={{ xs: 12 }}>
+          <Grid
+            size={{ xs: 12, sm: 6 }}
+            sx={{
+              flexGrow: 1, // Allows this component to grow or shrink
+              overflow: 'hidden', // Prevents content from breaking layout
+              minWidth: '550px'
+            }}
+          >
             <BilboMDMongoSteps steps={job.mongo.steps} />
           </Grid>
         )}
@@ -253,8 +269,20 @@ const SingleJobPage = () => {
         )}
 
         {/* MongoDB Job Details */}
-        <Grid size={{ xs: 12 }}>
-          <JobDBDetails job={job} />
+        <Grid
+          size={{ xs: 4 }}
+          sx={{
+            minWidth: '450px',
+            flexGrow: 1,
+
+            overflow: 'hidden'
+          }}
+        >
+          {isMultiMDJob(job) ? (
+            <MultiMDJobDBDetails job={job as BilboMDMultiJob} />
+          ) : (
+            <JobDBDetails job={job as BilboMDJob} />
+          )}
         </Grid>
 
         {/* Scoper FoXS Analysis */}
@@ -282,6 +310,7 @@ const SingleJobPage = () => {
             </Grid>
           )}
 
+        {/* Feedback */}
         {job.mongo.status === 'Completed' &&
           (job.mongo.__t === 'BilboMdPDB' ||
             job.mongo.__t === 'BilboMdCRD' ||
@@ -296,13 +325,13 @@ const SingleJobPage = () => {
             </Grid>
           )}
 
+        {/* Molstar Viewer */}
         {job.mongo.status === 'Completed' &&
           (job.mongo.__t === 'BilboMdPDB' ||
             job.mongo.__t === 'BilboMdCRD' ||
             job.mongo.__t === 'BilboMdAuto' ||
             job.mongo.__t === 'BilboMdAlphaFold' ||
-            job.mongo.__t === 'BilboMdScoper') &&
-          config.mode !== 'local' && (
+            job.mongo.__t === 'BilboMdScoper') && (
             <Grid size={{ xs: 12 }}>
               <HeaderBox sx={{ py: '6px' }}>
                 <Typography>
@@ -319,6 +348,7 @@ const SingleJobPage = () => {
             </Grid>
           )}
 
+        {/* Download Results */}
         {job.mongo.status === 'Completed' && (
           <Grid size={{ xs: 12 }}>
             <HeaderBox sx={{ py: '6px' }}>

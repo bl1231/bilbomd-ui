@@ -148,7 +148,20 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
         const text = await baseQueryReturnValue.text()
         return text
       }
-    })
+    }),
+    getFileByIdAndName: builder.query<string, { id: string; filename: string }>(
+      {
+        query: ({ id, filename }) => ({
+          url: `/jobs/${id}/${filename}`,
+          method: 'GET',
+          responseHandler: (response) => response.blob() // Return file as Blob
+        }),
+        async transformResponse(baseQueryReturnValue: Blob) {
+          const text = await baseQueryReturnValue.text()
+          return text // Transform the Blob to a string (assuming text file)
+        }
+      }
+    )
   })
 })
 
@@ -166,7 +179,9 @@ export const {
   useAddNewScoperJobMutation,
   useAddNewMultiJobMutation,
   useAf2PaeJiffyMutation,
-  useGetAf2PaeConstFileQuery
+  useGetAf2PaeConstFileQuery,
+  useGetFileByIdAndNameQuery,
+  useLazyGetFileByIdAndNameQuery
 } = jobsApiSlice
 
 // returns the query result object
