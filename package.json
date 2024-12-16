@@ -76,6 +76,9 @@
     "sass": "^1.83.0",
     "yup": "^1.5.0"
   },
+  "overrides": {
+    "react-is": "^19.0.0"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
