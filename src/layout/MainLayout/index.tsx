@@ -14,8 +14,8 @@ import PeopleIcon from '@mui/icons-material/People'
 import {
   AddCircleOutlineOutlined,
   SubjectOutlined,
-  AutoAwesome
-} from '@mui/icons-material'
+  AutoAwesome,
+  InfoOutlined} from '@mui/icons-material'
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import { Outlet, useLocation, useNavigate } from 'react-router'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
@@ -126,6 +126,13 @@ export default function ClippedDrawer() {
       path: '/admin',
       onclick: () => navigate('admin'),
       roles: ['admin']
+    },
+    {
+      text: 'About',
+      icon: <InfoOutlined />,
+      path: '/dashboard/about',
+      onclick: () => navigate('/dashboard/about'),
+      roles: ['user', 'manager', 'admin']
     }
   ]
 
