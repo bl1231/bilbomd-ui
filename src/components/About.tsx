@@ -1,196 +1,216 @@
-import { useEffect, useState } from 'react'
+import React from 'react'
 import {
   Typography,
   CircularProgress,
   Link,
   Alert,
-  List,
-  Paper,
-  Avatar,
-  ListItem,
-  ListItemAvatar,
-  ListItemText
+  Container
 } from '@mui/material'
-import { green } from '@mui/material/colors'
-import { Box, Container } from '@mui/system'
-import Grid from '@mui/material/Grid' // Corrected import
-import { useNavigate } from 'react-router'
-import { useSelector } from 'react-redux'
-import { selectCurrentToken } from 'slices/authSlice'
-import { useRefreshMutation } from 'slices/authApiSlice'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
-import usePersist from 'hooks/usePersist'
 import useTitle from 'hooks/useTitle'
-import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
+import useTheme from '@mui/material/styles/useTheme'
+import Introduction from './Shared/Introduction'
+import FeaturesList from './Shared/FeaturesList'
+import PipelineOptions from './Shared/PipelineOptions'
+import AdditionalInfo from './Shared/AdditionalInfo'
 
 const About = ({ title = 'About BilboMD' }) => {
   useTitle(title)
-
-  const { isLoading: configIsLoading, error: configError } = useGetConfigsQuery(
-    {}
-  )
-  const navigate = useNavigate()
-  const [persist] = usePersist()
-  const token = useSelector(selectCurrentToken)
-
-  const [trueSuccess, setTrueSuccess] = useState(false)
-  const [refresh, { isLoading, isSuccess }] = useRefreshMutation()
-
-  useEffect(() => {
-    const verifyRefreshToken = async () => {
-      try {
-        await refresh({})
-        setTrueSuccess(true)
-      } catch (error) {
-        console.error('verifyRefreshToken error:', error)
-      }
-    }
-    if (!token && persist) verifyRefreshToken()
-  }, [token, persist, refresh])
+  const { data: config, isLoading: configIsLoading } = useGetConfigsQuery({})
+  const theme = useTheme()
+  const isLightMode = theme.palette.mode === 'light'
 
   let content
 
-  if (isLoading || configIsLoading) {
+  if (configIsLoading) {
     content = <CircularProgress />
-  } else if (configError) {
-    content = <Alert severity='error'>Error loading configuration data</Alert>
-  } else if (isSuccess && trueSuccess) {
-    navigate('welcome')
   } else {
+    // Define the features
+    const features: React.ReactNode[] = [
+      'Registered users can submit BilboMD jobs to our server.',
+      <>
+        BilboMD jobs can be run in different modes depending on your input
+        preferences:
+        <ul>
+          <li>
+            <b>Classic (PDB)</b> mode where you supply a starting model in PDB
+            format and your own MD constraints file.
+          </li>
+          <li>
+            <b>Classic (CRD/PSF)</b> mode where you supply a parameterized model
+            with <code>.crd</code> and <code>.psf</code> files.
+          </li>
+          <li>
+            <b>Auto</b> mode where MD constraints are determined automatically
+            from AlphaFold PAE/pLDDT values, and you provide a starting model
+            obtained from AlphaFold.
+          </li>
+          <li>
+            <b>
+              AF (AlphaFold) - <em>at NERSC only</em>
+            </b>{' '}
+            mode where you provide the amino acid sequence and let BilboMD run
+            AlphaFold followed by the standard BilboMD pipeline.
+          </li>
+          <li>
+            <b>
+              SANS - <em>coming soon</em>
+            </b>{' '}
+            mode designed to run with SANS experimental data.
+          </li>
+          <li>
+            <b>
+              Scoper - <em>at BL12.3.1 only</em>
+            </b>{' '}
+            mode for RNA structure determination.
+          </li>
+        </ul>
+      </>,
+      'Sends an email notification when your job is complete.',
+      <>
+        Provides interactive tools to help you create CHARMM-compatible{' '}
+        <code>const.inp</code> files:
+        <ul>
+          <li>
+            Fully manual <b>inp Jiffy™</b> allows you to upload a PDB file and
+            will use validation tools to ensure you are able to create a fully
+            CHARMM-compatible constraint file.
+          </li>
+          <li>
+            Automagic <b>PAE Jiffy™</b> allows you to upload AlphaFold PDB and
+            PAE JSON files from AlphaFold.
+          </li>
+        </ul>
+      </>,
+      'You can see the status and history of your BilboMD jobs.',
+      'Provides a download link to retrieve the <code>results.tar.gz</code> file.',
+      'Currently we store BilboMD job results for 60 days, so be sure to download your results if they are important to you.'
+    ]
+
+    // Define the pipeline options
+    const pipelines = [
+      {
+        title: 'BilboMD Classic w/PDB',
+        description: 'Bring your own starting PDB model and constraints.',
+        imagePath: {
+          light: '/images/bilbomd-classic-pdb-schematic.png',
+          dark: '/images/bilbomd-classic-pdb-schematic.png'
+        }
+      },
+      {
+        title: 'BilboMD Classic w/CRD/PSF',
+        description: 'Bring your own parameterized model and constraints.',
+        imagePath: {
+          light: '/images/bilbomd-classic-crd-schematic.png',
+          dark: '/images/bilbomd-classic-crd-schematic.png'
+        }
+      },
+      {
+        title: 'BilboMD Auto',
+        description: 'Use AlphaFold models with automatic constraints.',
+        imagePath: {
+          light: '/images/bilbomd-auto-schematic.png',
+          dark: '/images/bilbomd-auto-schematic.png'
+        }
+      },
+      {
+        title: 'BilboMD AF - NERSC only',
+        description: 'Provide an amino acid sequence for full processing.',
+        imagePath: {
+          light: '/images/bilbomd-af-schematic.png',
+          dark: '/images/bilbomd-af-schematic.png'
+        }
+      }
+    ]
+
     content = (
       <Container>
-        <Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Typography variant='h1' sx={{ my: 3 }}>
-              About BilboMD
-            </Typography>
-          </Box>
-          <Box sx={{ m: 2 }}>
-            <Typography variant='body1' sx={{ my: 1 }}>
-              <b>BilboMD</b> is a cutting-edge tool designed for determining the
-              three-dimensional domain structure of proteins through
-              conformational sampling using a Molecular Dynamics (MD) approach.
-              It integrates tools like{' '}
-              <Link
-                href='https://academiccharmm.org/documentation'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                CHARMM
-              </Link>
-              ,{' '}
-              <Link
-                href='https://modbase.compbio.ucsf.edu/foxs/about'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                FoXS
-              </Link>
-              , and{' '}
-              <Link
-                href='https://modbase.compbio.ucsf.edu/multifoxs/'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                MultiFoXS
-              </Link>
-              .
-            </Typography>
+        <Introduction title='About BilboMD'>
+          <b>BilboMD</b> allows you to determine the three-dimensional domain
+          structure of proteins based on conformational sampling using a
+          Molecular Dynamics (MD) approach. Conformational sampling performed by{' '}
+          <Link
+            href='https://academiccharmm.org/documentation'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            CHARMM
+          </Link>{' '}
+          is followed by structure validation using{' '}
+          <Link
+            href='https://modbase.compbio.ucsf.edu/foxs/about'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            FoXS
+          </Link>{' '}
+          and ensemble analysis using Minimal Ensemble Search (MES) via{' '}
+          <Link
+            href='https://modbase.compbio.ucsf.edu/multifoxs/'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            MultiFoXS
+          </Link>
+          . Details are described in the following manuscript:
+          <Typography variant='body2' sx={{ mx: 5, my: 2 }}>
+            Pelikan M, Hura GL, Hammel M.{' '}
+            <b>
+              Structure and flexibility within proteins as identified through
+              small angle X-ray scattering.
+            </b>{' '}
+            Gen Physiol Biophys. 2009 Jun;28(2):174-89. doi:
+            10.4149/gpb_2009_02_174. PMID:{' '}
+            <Link
+              href='https://pubmed.ncbi.nlm.nih.gov/19592714/'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              19592714
+            </Link>
+            ; PMCID: PMC3773563.
+          </Typography>
+        </Introduction>
 
-            {/* Features Section */}
-            <Box sx={{ my: 3 }}>
-              <Typography variant='h2'>Features</Typography>
-              <ul>
-                <li>
-                  Submit jobs in various modes such as Classic (PDB), Classic
-                  (CRD/PSF), Auto mode with AlphaFold models, and more.
-                </li>
-                <li>
-                  Interactive tools to create CHARMM-compatible constraint
-                  files.
-                </li>
-                <li>Email notifications upon job completion.</li>
-                <li>
-                  Access job status and history with downloadable results.
-                </li>
-                <li>
-                  Support for SANS data analysis and RNA structure determination
-                  (upcoming).
-                </li>
-              </ul>
-            </Box>
+        {/* Config Alert */}
+        {config?.useNersc?.toLowerCase() === 'false' ? (
+          <Alert severity='info' variant='outlined'>
+            You are about to run <b>BilboMD</b> on SIBYLS servers. If you would
+            prefer to run on NERSC head over to:{' '}
+            <Link
+              href='https://bilbomd-nersc.bl1231.als.lbl.gov'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <b>bilbomd-nersc.bl1231.als.lbl.gov</b>
+            </Link>
+            .
+          </Alert>
+        ) : (
+          <Alert severity='info' variant='outlined'>
+            You are about to run <b>BilboMD</b> on NERSC. If you would prefer to
+            run on the SIBYLS Beamline servers head over to:{' '}
+            <Link
+              href='https://bilbomd.bl1231.als.lbl.gov'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <b>bilbomd.bl1231.als.lbl.gov</b>
+            </Link>
+            .
+          </Alert>
+        )}
 
-            {/* Pipeline Descriptions */}
-            <Box sx={{ my: 3 }}>
-              <Typography variant='h2'>Pipeline Options</Typography>
-              <List>
-                {[
-                  {
-                    title: 'BilboMD Classic w/PDB',
-                    description:
-                      'Bring your own starting PDB model and constraints.',
-                    imagePath: '/images/bilbomd-classic-pdb-schematic.png'
-                  },
-                  {
-                    title: 'BilboMD Classic w/CRD/PSF',
-                    description:
-                      'Bring your own parameterized model and constraints.',
-                    imagePath: '/images/bilbomd-classic-crd-schematic.png'
-                  },
-                  {
-                    title: 'BilboMD Auto',
-                    description:
-                      'Use AlphaFold models with automatic constraints.',
-                    imagePath: '/images/bilbomd-auto-schematic.png'
-                  },
-                  {
-                    title: 'BilboMD AF - NERSC only',
-                    description:
-                      'Provide an amino acid sequence for full processing.',
-                    imagePath: '/images/bilbomd-af-schematic.png'
-                  }
-                ].map((pipeline, index) => (
-                  <Paper key={index} className='bilbomd-pipeline'>
-                    <ListItem>
-                      <ListItemAvatar>
-                        <Avatar sx={{ backgroundColor: green[700] }}>
-                          <RocketLaunchIcon />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={pipeline.title}
-                        secondary={pipeline.description}
-                      />
-                      <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                          <img
-                            src={pipeline.imagePath}
-                            alt={`Overview of ${pipeline.title}`}
-                            style={{ maxWidth: '100%', height: 'auto' }}
-                          />
-                        </Grid>
-                      </Grid>
-                    </ListItem>
-                  </Paper>
-                ))}
-              </List>
-            </Box>
+        {/* Pipeline Options */}
+        <Typography variant='h2' sx={{ my: 3 }}>
+          Pipeline Options
+        </Typography>
+        <PipelineOptions pipelines={pipelines} isLightMode={isLightMode} />
 
-            {/* Additional Information */}
-            <Typography variant='body1' sx={{ my: 3 }}>
-              We are actively developing BilboMD and welcome feedback. Please
-              report issues or suggestions on our{' '}
-              <Link
-                href='https://github.com/bl1231/bilbomd-ui/'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                GitHub repository
-              </Link>
-              .
-            </Typography>
-          </Box>
-        </Box>
+        {/* Additional Information */}
+        <AdditionalInfo githubLink='https://github.com/bl1231/bilbomd-ui' />
+
+        <FeaturesList features={features} />
       </Container>
     )
   }
