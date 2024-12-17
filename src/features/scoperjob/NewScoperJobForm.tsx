@@ -25,8 +25,10 @@ import useAuth from 'hooks/useAuth'
 import { Debug } from 'components/Debug'
 import LinearProgress from '@mui/material/LinearProgress'
 import HeaderBox from 'components/HeaderBox'
+import useTitle from 'hooks/useTitle'
 
 const NewScoperJobForm = () => {
+  useTitle('BilboMD: New Scoper Job')
   const [addNewScoperJob, { isSuccess }] = useAddNewScoperJobMutation()
   const { email } = useAuth()
 

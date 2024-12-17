@@ -32,6 +32,7 @@ import PAESlider from './PAESlider'
 import PlddtSlider from './PlddtSlider'
 import PAEJiffyInstructions from './PAEJiffyInstructions'
 import ConstInpFile from './ConstInpFile'
+import useTitle from 'hooks/useTitle'
 
 interface FileWithDeets extends File {
   name: string
@@ -46,6 +47,7 @@ interface FormValues {
 }
 
 const Alphafold2PAEJiffy = () => {
+  useTitle('BilboMD: PAE Jiffy')
   const [originalFiles, setOriginalFiles] = useState<{
     pdb_file: FileWithDeets | null
     pae_file: FileWithDeets | null

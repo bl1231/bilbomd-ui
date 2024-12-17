@@ -30,6 +30,7 @@ import { Instructions } from './Instructions.tsx'
 import { Formik, Form, Field } from 'formik'
 import { Debug } from 'components/Debug'
 import useAuth from 'hooks/useAuth'
+import useTitle from 'hooks/useTitle'
 
 interface SubmitValues {
   title: string
@@ -45,6 +46,7 @@ interface ApiError {
 }
 
 const NewMultiMDJobForm: React.FC = () => {
+  useTitle('BilboMD: New MultiMD Job')
   const [addNewJob, { isSuccess }] = useAddNewMultiJobMutation()
   const { username } = useAuth()
   const {
