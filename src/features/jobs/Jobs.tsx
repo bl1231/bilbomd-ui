@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid'
 import { format, parseISO } from 'date-fns'
 import { useGetJobsQuery } from 'slices/jobsApiSlice'
@@ -22,7 +22,6 @@ import JobDetails from './JobDetails'
 import BullMQSummary from '../bullmq/BullMQSummary'
 import NerscStatus from '../nersc/NerscStatus'
 import HeaderBox from 'components/HeaderBox'
-import { BilboMDJob } from 'types/interfaces'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -48,6 +47,28 @@ const Jobs = () => {
     refetchOnMountOrArgChange: true
   })
   // console.log('jobs data --->', jobs)
+  const filteredRows = useMemo(() => {
+    if (!jobs) return [] // Safely return an empty array if jobs is undefined
+
+    const filteredJobs =
+      isManager || isAdmin
+        ? jobs // Managers and Admins get all jobs
+        : jobs.filter((job) => job.username === username)
+
+    return filteredJobs.map((job) => {
+      const nerscJobid = job.mongo.nersc?.jobid || ''
+      const nerscStatus = job.mongo.nersc?.state || ''
+
+      return {
+        ...job.mongo,
+        position: job.bullmq?.queuePosition ?? '',
+        username: job.username,
+        nerscJobid: nerscJobid,
+        nerscStatus: nerscStatus,
+        progress: job.mongo.progress
+      }
+    })
+  }, [jobs, isManager, isAdmin, username])
 
   const {
     data: config,
@@ -57,17 +78,8 @@ const Jobs = () => {
   if (configIsLoading) return <div>Loading config data...</div>
   if (configError) return <div>Error loading configuration data</div>
   if (!config) return <div>No configuration data available</div>
-  // console.log(`jobs --> config: ${JSON.stringify(config)}`)
-  const useNersc = config.useNersc?.toLowerCase() === 'true'
 
-  // useEffect(() => {
-  //   const logEnvVariables = () => {
-  //     Object.keys(import.meta.env).forEach((key) => {
-  //       console.log(`${key}: ${import.meta.env[key]}`)
-  //     })
-  //   }
-  //   logEnvVariables()
-  // }, [])
+  const useNersc = config.useNersc?.toLowerCase() === 'true'
 
   let content: ReactNode
 
@@ -106,29 +118,7 @@ const Jobs = () => {
   }
 
   if (isSuccess) {
-    let filteredIds: BilboMDJob[]
-
-    if (isManager || isAdmin) {
-      filteredIds = [...jobs]
-    } else {
-      filteredIds = jobs.filter((job) => job.username === username)
-    }
-
-    const rows = filteredIds.map((job) => {
-      const nerscJobid = job.mongo.nersc?.jobid || ''
-      const nerscStatus = job.mongo.nersc?.state || ''
-
-      return {
-        ...job.mongo,
-        position: job.bullmq?.queuePosition ?? '',
-        username: job.username,
-        nerscJobid: nerscJobid,
-        nerscStatus: nerscStatus,
-        progress: job.mongo.progress
-      }
-    })
-
-    // console.log('ROWS--->', rows)
+    // console.log('ROWS--->', filteredRows)
 
     const columns: GridColDef[] = [
       { field: 'title', headerName: 'Title', width: 180 },
@@ -142,7 +132,7 @@ const Jobs = () => {
             // Check if value is not empty or null
             return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
           } else {
-            return '' // Return empty string if value is empty or null
+            return ''
           }
         }
       },
@@ -156,7 +146,7 @@ const Jobs = () => {
             // Check if value is not empty or null
             return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
           } else {
-            return '' // Return empty string if value is empty or null
+            return ''
           }
         }
       },
@@ -184,7 +174,7 @@ const Jobs = () => {
         width: 150,
         renderCell: (params) => {
           if (params.value === undefined || params.value === null) {
-            return null // Hide progress bar if progress is not available
+            return null
           }
           const progressValue = Number(params.value)
           const displayProgress = Number.isNaN(progressValue)
@@ -284,7 +274,7 @@ const Jobs = () => {
           </Grid>
         )}
 
-        {rows.length !== 0 ? (
+        {filteredRows.length !== 0 ? (
           <Grid size={{ xs: 12 }}>
             <HeaderBox>
               <Typography>Jobs</Typography>
@@ -322,7 +312,7 @@ const Jobs = () => {
                   }}
                 >
                   <DataGrid
-                    rows={rows}
+                    rows={filteredRows}
                     columns={columns}
                     initialState={{
                       pagination: {
