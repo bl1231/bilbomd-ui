@@ -9,7 +9,6 @@ import {
   AccordionDetails
 } from '@mui/material'
 import Grid from '@mui/material/Grid2'
-import * as PropTypes from 'prop-types'
 import FileField from '../FormFields/FileField'
 import ChainSummary from '../Helpers/ChainSummary'
 import Paper from '@mui/material/Paper'
@@ -97,11 +96,13 @@ const carbResidues = new Set([
   'SLB'
 ])
 
+interface UploadFormProps {
+  setStepIsValid(...args: unknown[]): unknown;
+}
+
 const UploadForm = ({
   setStepIsValid
-}: {
-  setStepIsValid: (isValid: boolean) => void
-}) => {
+}: UploadFormProps) => {
   useTitle('BilboMD: Upload PDB file')
   const theme = useTheme()
   const { values, setFieldValue, setFieldError, isValid, dirty, errors } =
@@ -461,10 +462,6 @@ const UploadForm = ({
       </Grid>
     </>
   )
-}
-
-UploadForm.propTypes = {
-  setStepIsValid: PropTypes.func.isRequired
 }
 
 export default UploadForm

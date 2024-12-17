@@ -3,7 +3,6 @@ import { useFormikContext, FieldArray, FormikValues } from 'formik'
 import { Typography, Button, Chip, Box, Alert } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { useTheme } from '@mui/material/styles'
-import * as PropTypes from 'prop-types'
 import Paper from '@mui/material/Paper'
 import AddIcon from '@mui/icons-material/Add'
 import useTitle from 'hooks/useTitle'
@@ -11,11 +10,13 @@ import HeaderBox from 'components/HeaderBox'
 import RigidBody from '../Helpers/RigidBody'
 import type { Chain, RigidBody as IRigidBody } from 'types/interfaces'
 
+interface DomainFormProps {
+  setStepIsValid(...args: unknown[]): unknown;
+}
+
 const DomainForm = ({
   setStepIsValid
-}: {
-  setStepIsValid: (isValid: boolean) => void
-}) => {
+}: DomainFormProps) => {
   useTitle('BilboMD: Define domains')
   const theme = useTheme()
   const { values, isValid } = useFormikContext<FormikValues>()
@@ -246,10 +247,6 @@ const DomainForm = ({
       </Grid>
     </>
   )
-}
-
-DomainForm.propTypes = {
-  setStepIsValid: PropTypes.func.isRequired
 }
 
 export default DomainForm
