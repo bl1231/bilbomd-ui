@@ -1,4 +1,11 @@
-import { IJob, IMultiJob } from '@bl1231/bilbomd-mongodb-schema'
+import {
+  IBilboMDPDBJob,
+  IBilboMDCRDJob,
+  IBilboMDAutoJob,
+  IBilboMDSANSJob,
+  IBilboMDAlphaFoldJob,
+  IMultiJob
+} from '@bl1231/bilbomd-mongodb-schema'
 
 export interface Chain {
   id: string
@@ -109,10 +116,22 @@ export type BilboMDBullMQ = {
 export type BilboMDJob = {
   id: string
   username: string
-  mongo: IJob | IMultiJob
+  mongo:
+    | IBilboMDPDBJob
+    | IBilboMDCRDJob
+    | IBilboMDAutoJob
+    | IBilboMDSANSJob
+    | IBilboMDAlphaFoldJob
   bullmq: BilboMDBullMQ
   scoper?: BilboMDScoperSteps
   classic?: BilboMDSteps
   auto?: BilboMDSteps
   alphafold?: BilboMDAlphaFoldResults
+}
+
+export type BilboMDMultiJob = {
+  id: string
+  username: string
+  mongo: IMultiJob
+  bullmq: BilboMDBullMQ
 }

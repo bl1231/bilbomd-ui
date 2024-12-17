@@ -76,7 +76,7 @@ const BilboMDMongoSteps: React.FC<BilboMDMongoStepsProps> = ({ steps }) => {
           backgroundColor: '#888',
           borderTopLeftRadius: 4,
           borderTopRightRadius: 4,
-          pl: 0
+          pl: 1
         }}
       >
         <HeaderBox sx={{ py: 0 }}>

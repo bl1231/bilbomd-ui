@@ -60,6 +60,11 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.17.1 (12/16/2024)
+  - Fix flex layout for DB Details on NERSC
+- 1.17.0 (12/16/2024)
+  - Add refactored Job DB Detail component
+  - Can now see `const.inp` in a modal dialog
 - 1.16.3 (12/12/2024)
   - Show BilboMD AF for non-NERSC deployment w/ link to NERSC
   - Improve BilboMD SANS info and instructions
