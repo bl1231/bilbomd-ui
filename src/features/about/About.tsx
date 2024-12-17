@@ -9,10 +9,10 @@ import {
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import useTitle from 'hooks/useTitle'
 import useTheme from '@mui/material/styles/useTheme'
-import Introduction from './Shared/Introduction'
-import FeaturesList from './Shared/FeaturesList'
-import PipelineOptions from './Shared/PipelineOptions'
-import AdditionalInfo from './Shared/AdditionalInfo'
+import Introduction from '../shared/Introduction'
+import FeaturesList from '../shared/FeaturesList'
+import PipelineOptions from '../shared/PipelineOptions'
+import AdditionalInfo from '../shared/AdditionalInfo'
 
 const About = ({ title = 'About BilboMD' }) => {
   useTitle(title)

@@ -15,7 +15,7 @@ const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')))
 const NewAutoJob = Loadable(
   lazy(() => import('features/autojob/NewAutoJobForm'))
 )
-const About = Loadable(lazy(() => import('components/About')))
+const About = Loadable(lazy(() => import('features/about/About')))
 
 const NewAlphaFoldJob = Loadable(
   lazy(() => import('features/alphafoldjob/NewAlphaFoldJobForm'))
