@@ -29,7 +29,7 @@ import { NewSANSJobFormValues } from '../../types/sansForm'
 import NewSANSJobFormInstructions from './NewSANSJobFormInstructions'
 import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
-// import ChainDeuterationSlider from './ChainDeuterationSlider'
+import ChainDeuterationSlider from './ChainDeuterationSlider'
 
 const NewSANSJob = () => {
   useTitle('BilboMD: New SANS Job')
@@ -120,11 +120,11 @@ const NewSANSJob = () => {
   }
 
   const isFormValid = (values: NewSANSJobFormValues) => {
-    // const hasValidDeuteration = chainIds.every(
-    //   (chainId) =>
-    //     values[`deuteration_fraction_${chainId}`] >= 0 &&
-    //     values[`deuteration_fraction_${chainId}`] <= 100
-    // )
+    const hasValidDeuteration = chainIds.every(
+      (chainId) =>
+        values[`deuteration_fraction_${chainId}`] >= 0 &&
+        values[`deuteration_fraction_${chainId}`] <= 100
+    )
 
     return (
       !isPerlmutterUnavailable &&
@@ -133,8 +133,8 @@ const NewSANSJob = () => {
       values.dat_file !== '' &&
       values.inp_file !== '' &&
       values.d2o_fraction >= 0 &&
-      values.d2o_fraction <= 100
-      // hasValidDeuteration
+      values.d2o_fraction <= 100 &&
+      hasValidDeuteration
     )
   }
 
@@ -411,16 +411,18 @@ const NewSANSJob = () => {
                     </Grid>
 
                     {/* Dynamic Deuteration Fraction Sliders */}
-                    {/* {chainIds.length > 0 && (
-                      <ChainDeuterationSlider
-                        chainIds={chainIds}
-                        values={values}
-                        errors={errors}
-                        touched={touched}
-                        isSubmitting={isSubmitting}
-                        setFieldValue={setFieldValue}
-                      />
-                    )} */}
+                    {chainIds.length > 0 && (
+                      <div style={{ display: 'none' }}>
+                        <ChainDeuterationSlider
+                          chainIds={chainIds}
+                          values={values}
+                          errors={errors}
+                          touched={touched}
+                          isSubmitting={isSubmitting}
+                          setFieldValue={setFieldValue}
+                        />
+                      </div>
+                    )}
 
                     {/* Progress Bar */}
                     {isSubmitting && (
