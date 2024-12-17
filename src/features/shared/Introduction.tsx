@@ -12,10 +12,7 @@ const Introduction = ({ title, children }: IntroductionProps) => (
         {title}
       </Typography>
     </Box>
-    <Box sx={{ m: 2, p: 0 }}>
-      {/* Directly render children without wrapping in Typography */}
-      {children}
-    </Box>
+    <Box sx={{ m: 2, p: 0 }}>{children}</Box>
   </Box>
 )
 
