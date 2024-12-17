@@ -252,7 +252,14 @@ const SingleJobPage = () => {
 
         {/* New BilboMD Steps that uses mongo.steps object for NERSC jobs */}
         {job.mongo.steps && useNersc && (
-          <Grid size={{ xs: 12 }}>
+          <Grid
+            size={{ xs: 4 }}
+            sx={{
+              flexGrow: 1, // Allows this component to grow or shrink
+              overflow: 'hidden', // Prevents content from breaking layout
+              minWidth: '550px'
+            }}
+          >
             <BilboMDNerscSteps job={job} />
           </Grid>
         )}
