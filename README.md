@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.17.3 (12/18/2024)
+  - Include, but hide `ChainDeuterationSlider` since backend needs these values
 - 1.17.2 (12/17/2024)
   - Fix bug when attempting to submit a new BilboMD SANS jobs
 - 1.17.1 (12/16/2024)
