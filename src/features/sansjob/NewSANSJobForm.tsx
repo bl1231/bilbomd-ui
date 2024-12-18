@@ -29,7 +29,7 @@ import { NewSANSJobFormValues } from '../../types/sansForm'
 import NewSANSJobFormInstructions from './NewSANSJobFormInstructions'
 import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
-// import ChainDeuterationSlider from './ChainDeuterationSlider'
+import ChainDeuterationSlider from './ChainDeuterationSlider'
 
 const NewSANSJob = () => {
   useTitle('BilboMD: New SANS Job')
@@ -411,16 +411,18 @@ const NewSANSJob = () => {
                     </Grid>
 
                     {/* Dynamic Deuteration Fraction Sliders */}
-                    {/* {chainIds.length > 0 && (
-                      <ChainDeuterationSlider
-                        chainIds={chainIds}
-                        values={values}
-                        errors={errors}
-                        touched={touched}
-                        isSubmitting={isSubmitting}
-                        setFieldValue={setFieldValue}
-                      />
-                    )} */}
+                    {chainIds.length > 0 && (
+                      <div style={{ display: 'none' }}>
+                        <ChainDeuterationSlider
+                          chainIds={chainIds}
+                          values={values}
+                          errors={errors}
+                          touched={touched}
+                          isSubmitting={isSubmitting}
+                          setFieldValue={setFieldValue}
+                        />
+                      </div>
+                    )}
 
                     {/* Progress Bar */}
                     {isSubmitting && (
