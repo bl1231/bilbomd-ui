@@ -38,6 +38,7 @@ import Paper from '@mui/material/Paper'
 import Chip from '@mui/material/Chip'
 import HeaderBox from 'components/HeaderBox'
 import { IUser } from '@bl1231/bilbomd-mongodb-schema'
+import CopyableChip from 'components/CopyableChip'
 
 interface EditUserFormProps {
   user: IUser
@@ -62,11 +63,11 @@ const MenuProps = {
 }
 
 const EditUserForm = ({ user }: EditUserFormProps) => {
-  console.log('user', user)
+  // console.log('user', user)
   const [open, setOpen] = useState(false)
 
   const { data: jobs } = useGetJobsQuery('jobsList', {})
-  console.log('jobs', jobs)
+  // console.log('jobs', jobs)
   const filteredJobs = jobs
     ? jobs.filter((job) => job.mongo.user === user.id)
     : []
@@ -290,7 +291,7 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
               : 'N/A'}
           </Typography>
           <Typography>
-            <b>UUID:</b> {user.UUID}
+            <CopyableChip label='UUID' value={user.UUID} />
           </Typography>
         </Paper>
       </Box>
