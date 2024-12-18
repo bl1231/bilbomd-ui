@@ -25,12 +25,11 @@ import EditIcon from '@mui/icons-material/Edit'
 import { Field, Form, Formik } from 'formik'
 import { format } from 'date-fns'
 import {
-  User,
   useUpdateUserMutation,
   useDeleteUserMutation
 } from 'slices/usersApiSlice'
 import { useGetJobsQuery } from 'slices/jobsApiSlice'
-import JobSummary from 'features/jobs/JobSummary'
+import JobSummary from 'features/users/JobSummary'
 import { ROLES } from 'config/roles'
 import { useNavigate } from 'react-router'
 import { editUserSchema } from 'schemas/ValidationSchemas'
@@ -38,9 +37,17 @@ import { Box } from '@mui/system'
 import Paper from '@mui/material/Paper'
 import Chip from '@mui/material/Chip'
 import HeaderBox from 'components/HeaderBox'
+import { IUser } from '@bl1231/bilbomd-mongodb-schema'
 
 interface EditUserFormProps {
-  user: User
+  user: IUser
+}
+
+interface SubmitValues {
+  username: string
+  email: string
+  active: boolean
+  roles: string[]
 }
 
 const ITEM_HEIGHT = 48
@@ -55,10 +62,11 @@ const MenuProps = {
 }
 
 const EditUserForm = ({ user }: EditUserFormProps) => {
+  console.log('user', user)
   const [open, setOpen] = useState(false)
 
   const { data: jobs } = useGetJobsQuery('jobsList', {})
-
+  console.log('jobs', jobs)
   const filteredJobs = jobs
     ? jobs.filter((job) => job.mongo.user === user.id)
     : []
@@ -112,7 +120,7 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
     }
   }, [updateResult.isSuccess, deleteResult.isSuccess, navigate])
 
-  const myOnSubmit = async (values) => {
+  const myOnSubmit = async (values: SubmitValues) => {
     // console.log(values)
     await updateUser({
       id: user.id,
@@ -277,7 +285,9 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
           </Typography>
           <Typography>
             <b>Last Modified:</b>{' '}
-            {format(new Date(user.updatedAt), 'MM/dd/yyyy HH:mm:ss')}
+            {user.updatedAt
+              ? format(new Date(user.updatedAt), 'MM/dd/yyyy HH:mm:ss')
+              : 'N/A'}
           </Typography>
           <Typography>
             <b>UUID:</b> {user.UUID}

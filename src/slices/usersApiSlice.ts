@@ -1,23 +1,12 @@
-// import { createEntityAdapter } from '@reduxjs/toolkit'
-// import { UseQueryState } from '@reduxjs/toolkit/dist/query/react/buildHooks'
 import { createEntityAdapter } from '@reduxjs/toolkit'
 import { apiSlice } from 'app/api/apiSlice'
-// import type { RootState } from '../../app/store'
+import { IUser as OriginalIUser } from '@bl1231/bilbomd-mongodb-schema'
 
-export type User = {
+interface IUser extends OriginalIUser {
   id: string
-  _id: string
-  UUID: string
-  active: boolean
-  createdAt: string
-  email: string
-  status: string
-  updatedAt: string
-  username: string
-  roles: string[]
 }
 
-const usersAdapter = createEntityAdapter<User>({})
+const usersAdapter = createEntityAdapter<IUser>({})
 
 const initialState = usersAdapter.getInitialState()
 
@@ -30,10 +19,13 @@ export const usersApiSlice = apiSlice.injectEndpoints({
           return response.status === 200 && !result.isError
         }
       }),
-      transformResponse: (responseData: { success: boolean; data: User[] }) => {
+      transformResponse: (responseData: {
+        success: boolean
+        data: IUser[]
+      }) => {
         // Access the `data` field from the response
         const loadedUsers = responseData.data.map((user) => {
-          user.id = user._id // Assign 'id' for each user
+          user.id = user._id as string // Assign 'id' for each user
           return user
         })
         usersAdapter.setAll(initialState, loadedUsers)
@@ -68,14 +60,14 @@ export const usersApiSlice = apiSlice.injectEndpoints({
           ...initialUserData
         }
       }),
-      invalidatesTags: (result, error, arg) => [{ type: 'User', id: arg.id }]
+      invalidatesTags: (_result, _error, arg) => [{ type: 'User', id: arg.id }]
     }),
     deleteUser: builder.mutation({
       query: ({ id }) => ({
         url: `/users/${id}`,
         method: 'DELETE'
       }),
-      invalidatesTags: (result, error, arg) => [{ type: 'User', id: arg.id }]
+      invalidatesTags: (_result, _error, arg) => [{ type: 'User', id: arg.id }]
     })
   })
 })
