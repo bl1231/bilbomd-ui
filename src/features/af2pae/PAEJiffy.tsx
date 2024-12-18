@@ -138,9 +138,9 @@ const Alphafold2PAEJiffy = () => {
     }))
   }, [originalFiles])
 
-  useEffect(() => {
-    console.log('Updated formInitialValues:', formInitialValues)
-  }, [formInitialValues])
+  // useEffect(() => {
+  //   console.log('Updated formInitialValues:', formInitialValues)
+  // }, [formInitialValues])
 
   const content = (
     <Grid container spacing={2}>
