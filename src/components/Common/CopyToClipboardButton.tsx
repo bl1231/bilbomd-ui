@@ -2,7 +2,11 @@ import { useState } from 'react'
 import { Snackbar, Button } from '@mui/material'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 
-const CopyToClipboardButton = ({ text }) => {
+interface CopyToClipboardButtonProps {
+  text: string
+}
+
+const CopyToClipboardButton = ({ text }: CopyToClipboardButtonProps) => {
   const [open, setOpen] = useState(false)
 
   const handleClick = () => {
