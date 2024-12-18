@@ -241,7 +241,7 @@ const About = ({ title = 'BilboMD: About' }) => {
         <PipelineOptions pipelines={pipelines} isLightMode={isLightMode} />
 
         {/* Additional Information */}
-        <AdditionalInfo githubLink='https://github.com/bl1231/bilbomd-ui' />
+        <AdditionalInfo />
 
         <FeaturesList features={features} />
       </Container>
