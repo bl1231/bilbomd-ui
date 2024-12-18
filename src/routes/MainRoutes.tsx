@@ -88,7 +88,7 @@ const ProtectedMainRoutes = {
                     { path: '', element: <Welcome /> },
                     {
                       path: 'about',
-                      element: <About title='About BilboMD' />
+                      element: <About title='BilboMD: About' />
                     },
                     {
                       element: (
