@@ -94,7 +94,7 @@ const About = ({ title = 'About BilboMD' }) => {
         description: 'Bring your own starting PDB model and constraints.',
         imagePath: {
           light: '/images/bilbomd-classic-pdb-schematic.png',
-          dark: '/images/bilbomd-classic-pdb-schematic.png'
+          dark: '/images/bilbomd-classic-pdb-schematic-dark.png'
         }
       },
       {
@@ -102,7 +102,7 @@ const About = ({ title = 'About BilboMD' }) => {
         description: 'Bring your own parameterized model and constraints.',
         imagePath: {
           light: '/images/bilbomd-classic-crd-schematic.png',
-          dark: '/images/bilbomd-classic-crd-schematic.png'
+          dark: '/images/bilbomd-classic-crd-schematic-dark.png'
         }
       },
       {
@@ -110,7 +110,7 @@ const About = ({ title = 'About BilboMD' }) => {
         description: 'Use AlphaFold models with automatic constraints.',
         imagePath: {
           light: '/images/bilbomd-auto-schematic.png',
-          dark: '/images/bilbomd-auto-schematic.png'
+          dark: '/images/bilbomd-auto-schematic-dark.png'
         }
       },
       {
@@ -118,7 +118,7 @@ const About = ({ title = 'About BilboMD' }) => {
         description: 'Provide an amino acid sequence for full processing.',
         imagePath: {
           light: '/images/bilbomd-af-schematic.png',
-          dark: '/images/bilbomd-af-schematic.png'
+          dark: '/images/bilbomd-af-schematic-dark.png'
         }
       }
     ]
