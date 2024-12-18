@@ -14,8 +14,8 @@ import FeaturesList from '../shared/FeaturesList'
 import PipelineOptions from '../shared/PipelineOptions'
 import AdditionalInfo from '../shared/AdditionalInfo'
 
-const About = ({ title = 'About BilboMD' }) => {
-  useTitle(title)
+const About = () => {
+  useTitle('BilboMD: About')
   const { data: config, isLoading: configIsLoading } = useGetConfigsQuery({})
   const theme = useTheme()
   const isLightMode = theme.palette.mode === 'light'
