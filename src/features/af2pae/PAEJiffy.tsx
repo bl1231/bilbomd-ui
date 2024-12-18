@@ -101,7 +101,7 @@ const Alphafold2PAEJiffy = () => {
       pdb_file: originalFiles.pdb_file,
       pae_file: originalFiles.pae_file
     }
-    console.log('New Initial Values:', newInitial)
+    // console.log('New Initial Values:', newInitial)
     setFormInitialValues(newInitial)
     resetForm({ values: newInitial })
     setSuccess(false)
