@@ -27,22 +27,35 @@ const About = ({ title = 'BilboMD: About' }) => {
   } else {
     // Define the features
     const features: React.ReactNode[] = [
-      'Registered users can submit BilboMD jobs to our server.',
+      <>
+        Registered users can submit <b>BilboMD</b> jobs to our server.
+      </>,
       <>
         BilboMD jobs can be run in different modes depending on your input
         preferences:
         <ul>
           <li>
             <b>Classic (PDB)</b> mode where you supply a starting model in PDB
-            format and your own MD constraints file.
+            format and your own MD constraints file and have more control over
+            the settings
           </li>
           <li>
-            <b>Classic (CRD/PSF)</b> mode where you supply a parameterized model
-            with <code>.crd</code> and <code>.psf</code> files.
+            <b>Classic (CRD/PSF)</b> mode where you supply a starting model that
+            has already been parameterized for CHARMM as a *.crd and *.psf
+            files. This is typically done with{' '}
+            <Link
+              href='https://www.charmm-gui.org/'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              CHARMM-GUI
+            </Link>
+            . You also provide your own MD constraints file and have more
+            control over the settings
           </li>
           <li>
-            <b>Auto</b> mode where MD constraints are determined automatically
-            from AlphaFold PAE/pLDDT values, and you provide a starting model
+            <b>Auto</b> mode where MD constraints are determined automagically
+            from Alphafold PAE/pLDDT values, and you provide a starting model
             obtained from AlphaFold.
           </li>
           <li>
@@ -56,35 +69,54 @@ const About = ({ title = 'BilboMD: About' }) => {
             <b>
               SANS - <em>coming soon</em>
             </b>{' '}
-            mode designed to run with SANS experimental data.
+            mode which has been designed to run the Classic BilboMD pipeline
+            with SANS experimental data. BilboMD SANS uses Pepsi-SANS to
+            calculate theoretical SANS scattering curves from the MD models and
+            then a genetic algorithm to fit the theoretical curves to the
+            experimental data.
           </li>
           <li>
             <b>
               Scoper - <em>at BL12.3.1 only</em>
             </b>{' '}
-            mode for RNA structure determination.
+            mode where you provide an RNA pdb file. Scoper is a novel data
+            analysis pipeline that uses a combination of classical algorithms
+            and deep-learning techniques to find structures, along with
+            magnesium ion binding sites that fit a given SAXS profile, given an
+            initial structure to work with.
           </li>
         </ul>
       </>,
       'Sends an email notification when your job is complete.',
       <>
-        Provides interactive tools to help you create CHARMM-compatible{' '}
-        <code>const.inp</code> files:
+        Provides an two interactive tools (Jiffys) to help you create
+        CHARMM-compatible <code>const.inp</code> files.
         <ul>
           <li>
-            Fully manual <b>inp Jiffy™</b> allows you to upload a PDB file and
-            will use validation tools to ensure you are able to create a fully
-            CHARMM-compatible constraint file.
+            Fully manual <b>inp Jiffy{'\u2122'}</b> allows you to upload a PDB
+            file and will use validation tools to ensure you are able to create
+            a fully CHARMM-compatible constraint file.
           </li>
           <li>
-            Automagic <b>PAE Jiffy™</b> allows you to upload AlphaFold PDB and
-            PAE JSON files from AlphaFold.
+            Automagic <b>PAE Jiffy{'\u2122'}</b> allows you to upload Alphafold
+            PDB and PAE JSON files from Alphafold. This Jiffy will then use a
+            community clustering algorithm along with the pLDDT values in the
+            Alphafold PDB file B-factor column to automagically determine
+            optimal rigid and flexible regions of your model.
           </li>
         </ul>
       </>,
-      'You can see the status and history of your BilboMD jobs.',
-      'Provides a download link to retrieve the <code>results.tar.gz</code> file.',
-      'Currently we store BilboMD job results for 60 days, so be sure to download your results if they are important to you.'
+      <>
+        You can see the status and history of your <b>BilboMD</b> jobs.
+      </>,
+      <>
+        Provides a download link to retrieve the <code>results.tar.gz</code>{' '}
+        file.
+      </>,
+      <>
+        Currently we store <b>BilboMD</b> job results for <b>60 days</b>, so be
+        sure to download your results if they are important to you.
+      </>
     ]
 
     // Define the pipeline options
@@ -152,7 +184,8 @@ const About = ({ title = 'BilboMD: About' }) => {
           >
             MultiFoXS
           </Link>
-          . Details are described in the following manuscript:
+          .Details of the implementation and integration of these tools into{' '}
+          <b>BilboMD</b> are described in the following manuscript:
           <Typography variant='body2' sx={{ mx: 5, my: 2 }}>
             Pelikan M, Hura GL, Hammel M.{' '}
             <b>
