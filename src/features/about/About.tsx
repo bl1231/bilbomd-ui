@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import {
   Typography,
   CircularProgress,
@@ -6,50 +6,23 @@ import {
   Alert,
   Container
 } from '@mui/material'
-import { useNavigate } from 'react-router'
-import { useSelector } from 'react-redux'
-import { selectCurrentToken } from 'slices/authSlice'
-import { useRefreshMutation } from 'slices/authApiSlice'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
-import usePersist from 'hooks/usePersist'
 import useTitle from 'hooks/useTitle'
 import useTheme from '@mui/material/styles/useTheme'
-import Introduction from '../features/shared/Introduction'
-import FeaturesList from '../features/shared/FeaturesList'
-import PipelineOptions from '../features/shared/PipelineOptions'
-import AdditionalInfo from '../features/shared/AdditionalInfo'
+import Introduction from '../shared/Introduction'
+import FeaturesList from '../shared/FeaturesList'
+import PipelineOptions from '../shared/PipelineOptions'
+import AdditionalInfo from '../shared/AdditionalInfo'
 
-const Home = ({ title = 'BilboMD' }) => {
+const About = ({ title = 'BilboMD: About' }) => {
   useTitle(title)
   const { data: config, isLoading: configIsLoading } = useGetConfigsQuery({})
   const theme = useTheme()
   const isLightMode = theme.palette.mode === 'light'
-  const navigate = useNavigate()
-  const [persist] = usePersist()
-  const token = useSelector(selectCurrentToken)
-  const [trueSuccess, setTrueSuccess] = useState<boolean>(false)
-  const [refresh, { isUninitialized, isLoading, isSuccess }] =
-    useRefreshMutation()
-
-  useEffect(() => {
-    const verifyRefreshToken = async () => {
-      try {
-        await refresh({})
-        setTrueSuccess(true)
-      } catch (error) {
-        console.error('verifyRefreshToken error:', error)
-      }
-    }
-    if (!token && persist) verifyRefreshToken()
-  }, [token, persist, refresh])
 
   let content
 
-  if (isLoading || configIsLoading) {
-    content = <CircularProgress />
-  } else if (isSuccess && trueSuccess) {
-    navigate('welcome')
-  } else if (token && isUninitialized) {
+  if (configIsLoading) {
     content = <CircularProgress />
   } else {
     // Define the features
@@ -184,7 +157,7 @@ const Home = ({ title = 'BilboMD' }) => {
 
     content = (
       <Container>
-        <Introduction title='Welcome to BilboMD'>
+        <Introduction title='About BilboMD'>
           <b>BilboMD</b> allows you to determine the three-dimensional domain
           structure of proteins based on conformational sampling using a
           Molecular Dynamics (MD) approach. Conformational sampling performed by{' '}
@@ -211,7 +184,7 @@ const Home = ({ title = 'BilboMD' }) => {
           >
             MultiFoXS
           </Link>
-          . Details of the implementation and integration of these tools into{' '}
+          .Details of the implementation and integration of these tools into{' '}
           <b>BilboMD</b> are described in the following manuscript:
           <Typography variant='body2' sx={{ mx: 5, my: 2 }}>
             Pelikan M, Hura GL, Hammel M.{' '}
@@ -270,7 +243,6 @@ const Home = ({ title = 'BilboMD' }) => {
         {/* Additional Information */}
         <AdditionalInfo />
 
-        {/* Features List */}
         <FeaturesList features={features} />
       </Container>
     )
@@ -279,4 +251,4 @@ const Home = ({ title = 'BilboMD' }) => {
   return content
 }
 
-export default Home
+export default About
