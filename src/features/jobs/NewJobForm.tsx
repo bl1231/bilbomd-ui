@@ -10,7 +10,8 @@ import {
   Paper,
   FormGroup,
   FormControlLabel,
-  Divider
+  Divider,
+  LinearProgress
 } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { Link as RouterLink } from 'react-router'
@@ -31,15 +32,17 @@ import SendIcon from '@mui/icons-material/Send'
 import { expdataSchema } from 'schemas/ExpdataSchema'
 import { BilboMDClassicJobSchema } from 'schemas/BilboMDClassicJobSchema'
 import useAuth from 'hooks/useAuth'
-import LinearProgress from '@mui/material/LinearProgress'
 import HeaderBox from 'components/HeaderBox'
 import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import FileSelect from './FileSelect'
 import { Debug } from 'components/Debug'
 import NewJobFormInstructions from './NewJobFormInstructions'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
+import { useTheme } from '@mui/material/styles'
 
 const NewJobForm = () => {
+  const theme = useTheme()
+  const isDarkMode = theme.palette.mode === 'dark'
   const [addNewJob, { isSuccess }] = useAddNewJobMutation()
   const [calculateAutoRg, { isLoading }] = useCalculateAutoRgMutation()
   const { email } = useAuth()
@@ -100,7 +103,6 @@ const NewJobForm = () => {
 
     try {
       const newJob = await addNewJob(form).unwrap()
-      // setJobid(newJob.jobid)
       setStatus(newJob)
     } catch (error) {
       console.error('rejected', error)
@@ -145,7 +147,7 @@ const NewJobForm = () => {
       // Delay validation to ensure form state has been updated
       setTimeout(() => {
         validateForm()
-      }, 0) // You can adjust the timeout, but even a 0ms timeout can be enough to push to the next event loop
+      }, 0)
     }
 
   const isFormValid = (values: typeof initialValues) => {
@@ -180,8 +182,12 @@ const NewJobForm = () => {
           <img
             src={
               selectedMode === 'pdb'
-                ? '/images/bilbomd-classic-pdb-schematic.png'
-                : '/images/bilbomd-classic-crd-schematic.png'
+                ? isDarkMode
+                  ? '/images/bilbomd-classic-pdb-schematic-dark.png'
+                  : '/images/bilbomd-classic-pdb-schematic.png'
+                : isDarkMode
+                  ? '/images/bilbomd-classic-crd-schematic-dark.png'
+                  : '/images/bilbomd-classic-crd-schematic.png'
             }
             alt={
               selectedMode === 'pdb'
@@ -450,12 +456,14 @@ const NewJobForm = () => {
                           file.
                           {values.bilbomd_mode === 'pdb' ? (
                             <>
+                              {' '}
                               For example, Protein Chain ID <b>A</b> will be
                               converted to segid <b>PROA</b> and DNA Chain ID{' '}
-                              <b>G</b> will be converted to segid <b>DNAG</b>
+                              <b>G</b> will be converted to segid <b>DNAG</b>.
                             </>
                           ) : (
                             <>
+                              {' '}
                               Keeping in mind that CHARMM-GUI creates segid
                               names in a unique way.
                             </>
