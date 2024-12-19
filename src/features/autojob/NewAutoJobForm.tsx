@@ -23,6 +23,7 @@ import HeaderBox from 'components/HeaderBox'
 import useTitle from 'hooks/useTitle'
 import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
+import { useTheme } from '@mui/material/styles'
 
 interface SubmitValues {
   title: string
@@ -31,17 +32,22 @@ interface SubmitValues {
   dat_file: string
   email: string
 }
+
 const NewAutoJobForm = () => {
   useTitle('BilboMD: New Auto Job')
   const [addNewAutoJob, { isSuccess }] = useAddNewAutoJobMutation()
   const { email } = useAuth()
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
+
   // Fetch the configuration object
   const {
     data: config,
     error: configError,
     isLoading: configIsLoading
   } = useGetConfigsQuery({})
+
+  const theme = useTheme()
+  const isDarkMode = theme.palette.mode === 'dark'
 
   if (configIsLoading) return <LinearProgress />
   if (configError)
@@ -53,7 +59,8 @@ const NewAutoJobForm = () => {
     // Update the state based on the system's availability
     setIsPerlmutterUnavailable(isUnavailable)
   }
-  const initialValues = {
+
+  const initialValues: SubmitValues = {
     title: '',
     pdb_file: '',
     pae_file: '',
@@ -103,7 +110,11 @@ const NewAutoJobForm = () => {
           </HeaderBox>
           <Paper sx={{ p: 2 }}>
             <img
-              src='/images/bilbomd-auto-schematic.png'
+              src={
+                isDarkMode
+                  ? '/images/bilbomd-auto-schematic-dark.png'
+                  : '/images/bilbomd-auto-schematic.png'
+              }
               alt='Overview of BilboMD Auto pipeline'
               style={{ maxWidth: '100%', height: 'auto' }}
             />
