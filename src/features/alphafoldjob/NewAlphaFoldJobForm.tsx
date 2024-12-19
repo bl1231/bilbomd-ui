@@ -36,6 +36,7 @@ import { Entity, NewAlphaFoldJobFormValues } from 'types/alphafoldForm'
 import NewAlphaFoldJobFormInstructions from './NewAlphaFoldJobFormInstructions'
 import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
+import { useTheme } from '@mui/material/styles'
 
 const Instructions = () => (
   <Grid size={{ xs: 12 }}>
@@ -43,14 +44,18 @@ const Instructions = () => (
   </Grid>
 )
 
-const PipelineSchematic = () => (
+const PipelineSchematic = ({ isDarkMode }: { isDarkMode: boolean }) => (
   <Grid size={{ xs: 12 }}>
     <HeaderBox>
       <Typography>BilboMD AF Schematic</Typography>
     </HeaderBox>
     <Paper sx={{ p: 2 }}>
       <img
-        src='/images/bilbomd-af-schematic.png'
+        src={
+          isDarkMode
+            ? '/images/bilbomd-af-schematic-dark.png'
+            : '/images/bilbomd-af-schematic.png'
+        }
         alt='Overview of BilboMD AF pipeline'
         style={{ maxWidth: '100%', height: 'auto' }}
       />
@@ -130,10 +135,10 @@ const EntitiesFieldArray = ({
                     }}
                   >
                     <MenuItem value='Protein'>Protein</MenuItem>
-                    <MenuItem value='DNA' disabled={true}>
+                    <MenuItem value='DNA' disabled>
                       DNA - pending AF3 availability
                     </MenuItem>
-                    <MenuItem value='RNA' disabled={true}>
+                    <MenuItem value='RNA' disabled>
                       RNA - pending AF3 availability
                     </MenuItem>
                   </TextField>
@@ -178,9 +183,6 @@ const EntitiesFieldArray = ({
                     multiline
                     variant='outlined'
                     minRows={1}
-                    // InputProps={{
-                    //   sx: { height: '50px' }
-                    // }}
                     value={values.entities[index].sequence || ''}
                     error={
                       touched.entities &&
@@ -279,12 +281,16 @@ const NewAlphaFoldJob = () => {
   const [addNewAlphaFoldJob, { isSuccess }] = useAddNewAlphaFoldJobMutation()
   const { email } = useAuth()
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
+
   // Fetch the configuration object
   const {
     data: config,
     error: configError,
     isLoading: configIsLoading
   } = useGetConfigsQuery({})
+
+  const theme = useTheme()
+  const isDarkMode = theme.palette.mode === 'dark'
 
   if (configIsLoading) return <LinearProgress />
   if (configError)
@@ -296,7 +302,8 @@ const NewAlphaFoldJob = () => {
     // Update the state based on the system's availability
     setIsPerlmutterUnavailable(isUnavailable)
   }
-  const initialValues = {
+
+  const initialValues: NewAlphaFoldJobFormValues = {
     title: '',
     dat_file: '',
     email: email,
@@ -327,10 +334,6 @@ const NewAlphaFoldJob = () => {
       form.append(`entities[${index}][type]`, entity.type)
       form.append(`entities[${index}][copies]`, entity.copies.toString())
     })
-    // Log the form data to check if entities are appended
-    // for (const pair of form.entries()) {
-    //   console.log(`${pair[0]}, ${pair[1]}`)
-    // }
     try {
       const newJob = await addNewAlphaFoldJob(form).unwrap()
       setStatus(newJob)
@@ -338,6 +341,7 @@ const NewAlphaFoldJob = () => {
       console.error('rejected', error)
     }
   }
+
   const isFormValid = (values: NewAlphaFoldJobFormValues) => {
     return (
       !isPerlmutterUnavailable && values.title !== '' && values.dat_file !== ''
@@ -348,7 +352,7 @@ const NewAlphaFoldJob = () => {
     <Grid container spacing={2}>
       <Instructions />
 
-      <PipelineSchematic />
+      <PipelineSchematic isDarkMode={isDarkMode} />
 
       <Grid size={{ xs: 12 }}>
         <HeaderBox>
