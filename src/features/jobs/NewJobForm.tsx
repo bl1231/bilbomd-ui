@@ -40,6 +40,42 @@ import NewJobFormInstructions from './NewJobFormInstructions'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useTheme } from '@mui/material/styles'
 
+const PipelineSchematic = ({
+  isDarkMode,
+  pipeline
+}: {
+  isDarkMode: boolean
+  pipeline: string
+}) => (
+  <Grid size={{ xs: 12 }}>
+    <HeaderBox>
+      <Typography>
+        BilboMD Classic Schematic -{' '}
+        {pipeline === 'pdb' ? 'PDB inputs' : 'CRD/PSF inputs'}
+      </Typography>
+    </HeaderBox>
+    <Paper sx={{ p: 2 }}>
+      <img
+        src={
+          pipeline === 'pdb'
+            ? isDarkMode
+              ? '/images/bilbomd-classic-pdb-schematic-dark.png'
+              : '/images/bilbomd-classic-pdb-schematic.png'
+            : isDarkMode
+              ? '/images/bilbomd-classic-crd-schematic-dark.png'
+              : '/images/bilbomd-classic-crd-schematic.png'
+        }
+        alt={
+          pipeline === 'pdb'
+            ? 'Overview of BilboMD PDB pipeline'
+            : 'Overview of BilboMD CRD/PSF pipeline'
+        }
+        style={{ maxWidth: '100%', height: 'auto' }}
+      />
+    </Paper>
+  </Grid>
+)
+
 const NewJobForm = () => {
   const theme = useTheme()
   const isDarkMode = theme.palette.mode === 'dark'
@@ -171,33 +207,7 @@ const NewJobForm = () => {
         <NewJobFormInstructions />
       </Grid>
 
-      <Grid size={{ xs: 12 }}>
-        <HeaderBox>
-          <Typography>
-            BilboMD Classic Schematic -{' '}
-            {selectedMode === 'pdb' ? 'PDB inputs' : 'CRD/PSF inputs'}
-          </Typography>
-        </HeaderBox>
-        <Paper sx={{ p: 2 }}>
-          <img
-            src={
-              selectedMode === 'pdb'
-                ? isDarkMode
-                  ? '/images/bilbomd-classic-pdb-schematic-dark.png'
-                  : '/images/bilbomd-classic-pdb-schematic.png'
-                : isDarkMode
-                  ? '/images/bilbomd-classic-crd-schematic-dark.png'
-                  : '/images/bilbomd-classic-crd-schematic.png'
-            }
-            alt={
-              selectedMode === 'pdb'
-                ? 'Overview of BilboMD PDB pipeline'
-                : 'Overview of BilboMD CRD/PSF pipeline'
-            }
-            style={{ maxWidth: '100%', height: 'auto' }}
-          />
-        </Paper>
-      </Grid>
+      <PipelineSchematic isDarkMode={isDarkMode} pipeline={selectedMode} />
 
       <Grid size={{ xs: 12 }}>
         <HeaderBox>

@@ -33,6 +33,25 @@ interface SubmitValues {
   email: string
 }
 
+const PipelineSchematic = ({ isDarkMode }: { isDarkMode: boolean }) => (
+  <Grid size={{ xs: 12 }}>
+    <HeaderBox>
+      <Typography>BilboMD SANS Schematic</Typography>
+    </HeaderBox>
+    <Paper sx={{ p: 2 }}>
+      <img
+        src={
+          isDarkMode
+            ? '/images/bilbomd-auto-schematic-dark.png'
+            : '/images/bilbomd-auto-schematic.png'
+        }
+        alt='Overview of BilboMD AF pipeline'
+        style={{ maxWidth: '100%', height: 'auto' }}
+      />
+    </Paper>
+  </Grid>
+)
+
 const NewAutoJobForm = () => {
   useTitle('BilboMD: New Auto Job')
   const [addNewAutoJob, { isSuccess }] = useAddNewAutoJobMutation()
@@ -104,22 +123,9 @@ const NewAutoJobForm = () => {
         <Grid size={{ xs: 12 }}>
           <NewAutoJobFormInstructions />
         </Grid>
-        <Grid size={{ xs: 12 }}>
-          <HeaderBox>
-            <Typography>BilboMD Auto Schematic</Typography>
-          </HeaderBox>
-          <Paper sx={{ p: 2 }}>
-            <img
-              src={
-                isDarkMode
-                  ? '/images/bilbomd-auto-schematic-dark.png'
-                  : '/images/bilbomd-auto-schematic.png'
-              }
-              alt='Overview of BilboMD Auto pipeline'
-              style={{ maxWidth: '100%', height: 'auto' }}
-            />
-          </Paper>
-        </Grid>
+
+        <PipelineSchematic isDarkMode={isDarkMode} />
+
         <Grid size={{ xs: 12 }}>
           <HeaderBox>
             <Typography>BilboMD Auto Job Form</Typography>
