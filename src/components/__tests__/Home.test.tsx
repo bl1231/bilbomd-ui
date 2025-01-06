@@ -60,15 +60,18 @@ describe('Home Component', () => {
         return null // Simulate no token (unauthenticated)
       }
     })
+
     vi.mocked(useGetConfigsQuery).mockReturnValue({
       data: { mode: 'production', useNersc: 'false' },
       error: null,
       isLoading: false,
       refetch: vi.fn()
     })
+
     await act(async () => {
       renderWithProviders(<Home />)
     })
+
     // Assert the welcome message is displayed for unauthenticated users
     expect(screen.getByText(/Welcome to BilboMD/i)).toBeInTheDocument()
   })
@@ -91,14 +94,12 @@ describe('Home Component', () => {
       renderWithProviders(<Home />)
     })
 
-    // Assert the loading spinner is shown
     expect(screen.getByRole('progressbar')).toBeInTheDocument()
   })
 
   it('navigates to welcome page on successful refresh', async () => {
     const mockNavigate = vi.fn()
 
-    // Mock useSelector to return null (unauthenticated state)
     vi.mocked(useSelector).mockImplementation((selector) => {
       if (selector === selectCurrentToken) {
         return null // Simulate no token (unauthenticated)

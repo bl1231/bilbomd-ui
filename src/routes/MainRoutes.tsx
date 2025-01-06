@@ -15,6 +15,8 @@ const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')))
 const NewAutoJob = Loadable(
   lazy(() => import('features/autojob/NewAutoJobForm'))
 )
+const About = Loadable(lazy(() => import('features/about/About')))
+
 const NewAlphaFoldJob = Loadable(
   lazy(() => import('features/alphafoldjob/NewAlphaFoldJobForm'))
 )
@@ -84,6 +86,10 @@ const ProtectedMainRoutes = {
                   path: 'dashboard',
                   children: [
                     { path: '', element: <Welcome /> },
+                    {
+                      path: 'about',
+                      element: <About title='BilboMD: About' />
+                    },
                     {
                       element: (
                         <RequireAuth

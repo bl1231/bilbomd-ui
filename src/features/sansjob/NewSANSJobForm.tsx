@@ -29,7 +29,27 @@ import { NewSANSJobFormValues } from '../../types/sansForm'
 import NewSANSJobFormInstructions from './NewSANSJobFormInstructions'
 import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
-// import ChainDeuterationSlider from './ChainDeuterationSlider'
+import ChainDeuterationSlider from './ChainDeuterationSlider'
+import { useTheme } from '@mui/material/styles'
+
+const PipelineSchematic = ({ isDarkMode }: { isDarkMode: boolean }) => (
+  <Grid size={{ xs: 12 }}>
+    <HeaderBox>
+      <Typography>BilboMD SANS Schematic</Typography>
+    </HeaderBox>
+    <Paper sx={{ p: 2 }}>
+      <img
+        src={
+          isDarkMode
+            ? '/images/bilbomd-sans-schematic-dark.png'
+            : '/images/bilbomd-sans-schematic.png'
+        }
+        alt='Overview of BilboMD AF pipeline'
+        style={{ maxWidth: '100%', height: 'auto' }}
+      />
+    </Paper>
+  </Grid>
+)
 
 const NewSANSJob = () => {
   useTitle('BilboMD: New SANS Job')
@@ -38,6 +58,9 @@ const NewSANSJob = () => {
   const { email } = useAuth()
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
   const [chainIds, setChainIds] = useState<string[]>([])
+
+  const theme = useTheme()
+  const isDarkMode = theme.palette.mode === 'dark'
 
   // Fetch the configuration object
   const {
@@ -144,18 +167,7 @@ const NewSANSJob = () => {
         <NewSANSJobFormInstructions />
       </Grid>
 
-      <Grid size={{ xs: 12 }}>
-        <HeaderBox>
-          <Typography>BilboMD SANS Schematic</Typography>
-        </HeaderBox>
-        <Paper sx={{ p: 2 }}>
-          <img
-            src='/images/bilbomd-sans-schematic.png'
-            alt='Overview of BilboMD SANS pipeline'
-            style={{ maxWidth: '100%', height: 'auto' }}
-          />
-        </Paper>
-      </Grid>
+      <PipelineSchematic isDarkMode={isDarkMode} />
 
       <Grid size={{ xs: 12 }}>
         <HeaderBox>
@@ -411,16 +423,18 @@ const NewSANSJob = () => {
                     </Grid>
 
                     {/* Dynamic Deuteration Fraction Sliders */}
-                    {/* {chainIds.length > 0 && (
-                      <ChainDeuterationSlider
-                        chainIds={chainIds}
-                        values={values}
-                        errors={errors}
-                        touched={touched}
-                        isSubmitting={isSubmitting}
-                        setFieldValue={setFieldValue}
-                      />
-                    )} */}
+                    {chainIds.length > 0 && (
+                      <div style={{ display: 'none' }}>
+                        <ChainDeuterationSlider
+                          chainIds={chainIds}
+                          values={values}
+                          errors={errors}
+                          touched={touched}
+                          isSubmitting={isSubmitting}
+                          setFieldValue={setFieldValue}
+                        />
+                      </div>
+                    )}
 
                     {/* Progress Bar */}
                     {isSubmitting && (

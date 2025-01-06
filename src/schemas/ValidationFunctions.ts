@@ -157,7 +157,7 @@ const noSpaces = (file: File): Promise<boolean> => {
 const isSaxsData = (
   file: File
 ): Promise<{ valid: boolean; message?: string }> => {
-  console.log(`validate if ${file.name} isSaxsData`)
+  // console.log(`validate if ${file.name} isSaxsData`)
   const sciNotation = /-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?/g
 
   return new Promise((resolve) => {
