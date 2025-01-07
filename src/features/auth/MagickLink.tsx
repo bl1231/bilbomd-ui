@@ -22,13 +22,20 @@ const VERIFICATION_CODE_URL = '/verify/resend'
 
 const MagickLink = () => {
   useTitle('BilboMD: Get a MagickLink')
+
   const [success, setSuccess] = useState(null)
   const [error, setError] = useState('')
   const [verified, setVerified] = useState(false)
   const [verifyEmail, setVerifyEmail] = useState('')
 
-  const { data: config, error: configError, isLoading } = useGetConfigsQuery({})
+  const {
+    data: config,
+    error: configError,
+    isLoading
+  } = useGetConfigsQuery('configData')
+
   if (isLoading) return <div>Loading config data...</div>
+
   if (configError) {
     let errorMessage = 'An unexpected error occurred'
 
@@ -52,8 +59,19 @@ const MagickLink = () => {
   }
   if (!config) return <div>No configuration data available</div>
 
-  const onSubmit = async (values, { setStatus, resetForm, setSubmitting }) => {
-    setStatus({ success: 'Splinching the data...', css: 'sending' })
+  const onSubmit = async (
+    values: { email: string },
+    {
+      setStatus,
+      resetForm,
+      setSubmitting
+    }: {
+      setStatus: (status: string | null) => void
+      resetForm: () => void
+      setSubmitting: (isSubmitting: boolean) => void
+    }
+  ) => {
+    setStatus('Splinching the data...')
     const response = await axiosInstance
       .post(MAGICKLINK_URL, values, {
         headers: { 'Content-Type': 'application/json' },
@@ -69,7 +87,7 @@ const MagickLink = () => {
           //console.log(err.response)
           setError(err.response.data.message)
           setSuccess(null)
-          setStatus({ error: err, css: 'error' })
+          setStatus(err)
           // console.log(err.response.data.message)
           // console.log(err.response.status)
           // console.log(err.response.headers)
@@ -83,7 +101,7 @@ const MagickLink = () => {
     }
   }
 
-  const resendVerificationCode = async (email) => {
+  const resendVerificationCode = async (email: string) => {
     // console.log('resend code for:', email)
     await axiosInstance
       .post(
