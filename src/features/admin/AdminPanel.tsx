@@ -1,4 +1,3 @@
-
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
@@ -12,14 +11,16 @@ import Paper from '@mui/material/Paper'
 import useTitle from 'hooks/useTitle'
 
 const AdminPanel = () => {
-useTitle(`BilboMD: Admin Panel`)
+  useTitle(`BilboMD: Admin Panel`)
   const bullBoardUrl = '/admin/bullmq'
 
   const {
     data: config,
     error: configError,
     isLoading: configIsLoading
-  } = useGetConfigsQuery({})
+  } = useGetConfigsQuery('configData', {
+    pollingInterval: 10000
+  })
 
   if (configIsLoading) return <CircularProgress />
   if (configError)

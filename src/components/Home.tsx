@@ -21,7 +21,8 @@ import AdditionalInfo from '../features/shared/AdditionalInfo'
 
 const Home = ({ title = 'BilboMD' }) => {
   useTitle(title)
-  const { data: config, isLoading: configIsLoading } = useGetConfigsQuery({})
+  const { data: config, isLoading: configIsLoading } =
+    useGetConfigsQuery('configData')
   const theme = useTheme()
   const isLightMode = theme.palette.mode === 'light'
   const navigate = useNavigate()

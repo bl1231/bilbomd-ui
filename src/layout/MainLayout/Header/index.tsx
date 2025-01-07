@@ -148,7 +148,7 @@ const Header = () => {
     data: config,
     isLoading: configIsLoading,
     error: configError
-  } = useGetConfigsQuery({})
+  } = useGetConfigsQuery('configData')
 
   useEffect(() => {
     const interval = setInterval(() => {

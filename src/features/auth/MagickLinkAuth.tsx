@@ -48,45 +48,42 @@ const MagickLinkAuth = () => {
   }, [login, otp, persist, setPersist, navigate, dispatch])
 
   const content = (
-    <>
+    <Grid
+      container
+      columns={12}
+      direction='row'
+      sx={{ height: '100vh' }}
+      alignItems='center'
+      justifyContent='center'
+    >
       <Grid
-        container
-        columns={12}
-        direction='row'
-        sx={{ height: '100vh' }}
-        alignItems='center'
-        justifyContent='center'
+        size={{ xs: 6 }}
+        sx={{
+          p: 2,
+          bgcolor: 'background.paper',
+          border: 1,
+          borderRadius: 1
+        }}
       >
-        <Grid
-          size={{ xs: 6 }}
-          sx={{
-            p: 2,
-            bgcolor: 'background.paper',
-            border: 1,
-            borderRadius: 1
-          }}
-        >
-          {isLoading ? (
-            <CircularProgress />
-          ) : success ? (
-            <Alert severity='success'>
-              <AlertTitle>Woot!</AlertTitle>Your OTP has been successfully
-              validated. You will be forwarded to your dashboard in a few
-              seconds.
-            </Alert>
-          ) : (
-            <Alert severity='warning'>
-              <AlertTitle>Warning!</AlertTitle>Hmmmmm. Maybe your
-              MagickLink&#8482; has expired? Please try{' '}
-              <Link to='../../magicklink'>generating another</Link>. If that
-              doesn&apos;t work please contact us.
-              <br />
-              <p>{authErrorMsg}</p>
-            </Alert>
-          )}
-        </Grid>
+        {isLoading ? (
+          <CircularProgress />
+        ) : success ? (
+          <Alert severity='success'>
+            <AlertTitle>Woot!</AlertTitle>Your OTP has been successfully
+            validated. You will be forwarded to your dashboard in a few seconds.
+          </Alert>
+        ) : (
+          <Alert severity='warning'>
+            <AlertTitle>Warning!</AlertTitle>Hmmmmm. Maybe your
+            MagickLink&#8482; has expired? Please try{' '}
+            <Link to='../../magicklink'>generating another</Link>. If that
+            doesn&apos;t work please contact us.
+            <br />
+            <p>{authErrorMsg}</p>
+          </Alert>
+        )}
       </Grid>
-    </>
+    </Grid>
   )
 
   return content

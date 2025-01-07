@@ -16,7 +16,8 @@ import AdditionalInfo from '../shared/AdditionalInfo'
 
 const About = ({ title = 'BilboMD: About' }) => {
   useTitle(title)
-  const { data: config, isLoading: configIsLoading } = useGetConfigsQuery({})
+  const { data: config, isLoading: configIsLoading } =
+    useGetConfigsQuery('configData')
   const theme = useTheme()
   const isLightMode = theme.palette.mode === 'light'
 

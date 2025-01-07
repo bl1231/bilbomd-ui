@@ -15,14 +15,17 @@ export const authApiSlice = apiSlice.injectEndpoints({
         url: '/auth/logout',
         method: 'POST'
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled
           dispatch(logOut())
-          dispatch(apiSlice.util.resetApiState())
+          // Dave Gray suggests this timeout to give components time to unmount before resetting state
+          setTimeout(() => {
+            dispatch(apiSlice.util.resetApiState())
+          }, 1000)
           console.log('Logout succeeded with response:', data)
-        } catch (err) {
-          console.log(err)
+        } catch (error) {
+          console.log(error)
         }
       }
     }),
@@ -31,14 +34,14 @@ export const authApiSlice = apiSlice.injectEndpoints({
         url: '/auth/refresh',
         method: 'GET'
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled
           //console.log(data)
           const { accessToken } = data
           dispatch(setCredentials({ accessToken }))
-        } catch (err) {
-          console.log(err)
+        } catch (error) {
+          console.log(error)
         }
       }
     })

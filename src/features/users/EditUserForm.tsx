@@ -54,13 +54,20 @@ const MenuProps = {
   }
 }
 
+interface EditUserFormValues {
+  username: string
+  email: string
+  active: boolean
+  roles: string[]
+}
+
 const EditUserForm = ({ user }: EditUserFormProps) => {
   const [open, setOpen] = useState(false)
 
-  const { data: jobs } = useGetJobsQuery('jobsList', {})
+  const { data: jobs } = useGetJobsQuery('jobsList')
 
   const filteredJobs = jobs
-    ? jobs.filter((job) => job.mongo.user === user.id)
+    ? jobs.filter((job) => job.mongo.user._id === user.id)
     : []
 
   const handleClickOpen = () => {
@@ -112,7 +119,7 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
     }
   }, [updateResult.isSuccess, deleteResult.isSuccess, navigate])
 
-  const myOnSubmit = async (values) => {
+  const myOnSubmit = async (values: EditUserFormValues) => {
     // console.log(values)
     await updateUser({
       id: user.id,

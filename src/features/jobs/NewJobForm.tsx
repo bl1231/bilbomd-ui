@@ -91,7 +91,7 @@ const NewJobForm = () => {
     data: config,
     error: configError,
     isLoading: configIsLoading
-  } = useGetConfigsQuery({})
+  } = useGetConfigsQuery('configData')
 
   if (configIsLoading) return <LinearProgress />
   if (configError)

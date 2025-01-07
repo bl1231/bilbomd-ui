@@ -67,7 +67,7 @@ const NewSANSJob = () => {
     data: config,
     error: configError,
     isLoading: configIsLoading
-  } = useGetConfigsQuery({})
+  } = useGetConfigsQuery('configData')
 
   if (configIsLoading) return <LinearProgress />
 
