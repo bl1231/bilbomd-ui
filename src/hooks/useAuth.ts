@@ -30,7 +30,6 @@ const useAuth = () => {
     if (isManager) status = 'Manager'
     if (isAdmin) status = 'Admin'
 
-    //console.log('aueAuth2:', username, roles, status, isManager, isAdmin, email)
     return { username, roles, status, isManager, isAdmin, email }
   }
   // Returned if we do not have a token
