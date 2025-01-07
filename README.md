@@ -60,6 +60,10 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.17.4 (1/7/2025)
+  - Add an About page
+  - Upgrade to React v19
+  - Refactor and cleanup RTK Query code
 - 1.17.3 (12/18/2024)
   - Include, but hide `ChainDeuterationSlider` since backend needs these values
 - 1.17.2 (12/17/2024)
