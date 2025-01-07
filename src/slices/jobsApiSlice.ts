@@ -183,21 +183,3 @@ export const {
   useGetFileByIdAndNameQuery,
   useLazyGetFileByIdAndNameQuery
 } = jobsApiSlice
-
-// returns the query result object
-// export const selectJobsResult = jobsApiSlice.endpoints.getJobs.select({})
-// export const selectJobsResult = jobsApiSlice.endpoints.getJobs.select()
-
-// creates memoized selector
-// const selectJobsData = createSelector(
-//   selectJobsResult,
-//   (jobsResult) => jobsResult.data // normalized state object with ids & entities
-// )
-
-//getSelectors creates these selectors and we rename them with aliases using destructuring
-// export const {
-//   selectAll: selectAllJobs,
-//   selectById: selectJobById,
-//   selectIds: selectJobIds
-//   // Pass in a selector that returns the jobs slice of state
-// } = jobsAdapter.getSelectors((state: RootState) => selectJobsData(state) ?? initialState)

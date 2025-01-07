@@ -20,11 +20,9 @@ const PersistLogin = () => {
 
   useEffect(() => {
     const verifyRefreshToken = async () => {
-      // console.log('verifying refresh token')
+      console.log('verifying refresh token')
       try {
-        //const response =
         await refresh({})
-        //const { accessToken } = response.data
         // needed to differentiate the isSuccess from refresh
         setTrueSuccess(true)
       } catch (error) {
@@ -43,15 +41,12 @@ const PersistLogin = () => {
 
   if (!persist) {
     // persist: no
-    // console.log('no persist')
     content = <Outlet />
   } else if (isLoading) {
     //persist: yes, token: no
-    // console.log('loading')
     content = <CircularProgress />
   } else if (isError) {
     //persist: yes, token: no
-    // console.log('error')
     content = (
       <Grid
         container
@@ -62,11 +57,7 @@ const PersistLogin = () => {
         justifyContent='center'
       >
         <Grid sx={{ width: '300px' }}>
-          <Alert
-            variant='outlined'
-            severity='error'
-            // sx={{ backgroundColor: '#ffa39e', color: 'black' }}
-          >
+          <Alert variant='outlined' severity='error'>
             {error ? 'Session has expired' : ''}
           </Alert>
           <Button
@@ -90,7 +81,7 @@ const PersistLogin = () => {
     content = <Outlet />
   } else if (token && isUninitialized) {
     //persist: yes, token: yes
-    // console.log('token and uninit')
+    // console.log('token and uninitialized')
     // console.log('isUninitialized:', isUninitialized)
     content = <Outlet />
   }
