@@ -64,9 +64,7 @@ interface EditUserFormValues {
 const EditUserForm = ({ user }: EditUserFormProps) => {
   const [open, setOpen] = useState(false)
 
-  const { data: jobs } = useGetJobsQuery('jobsList', {})
-
-  console.log('jobs:', jobs)
+  const { data: jobs } = useGetJobsQuery('jobsList')
 
   const filteredJobs = jobs
     ? jobs.filter((job) => job.mongo.user._id === user.id)
