@@ -6,7 +6,8 @@ export const configApiSlice = apiSlice.injectEndpoints({
       query: () => ({
         url: '/configs',
         method: 'GET'
-      })
+      }),
+      providesTags: ['Config']
     })
   })
 })
