@@ -287,7 +287,7 @@ const NewAlphaFoldJob = () => {
     data: config,
     error: configError,
     isLoading: configIsLoading
-  } = useGetConfigsQuery({})
+  } = useGetConfigsQuery('configData')
 
   const theme = useTheme()
   const isDarkMode = theme.palette.mode === 'dark'

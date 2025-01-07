@@ -33,8 +33,7 @@ export default function ClippedDrawer() {
     data: config,
     error: configError,
     isLoading: configIsLoading
-  } = useGetConfigsQuery({})
-  // console.log(`config: ${JSON.stringify(config)}`)
+  } = useGetConfigsQuery('configData')
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -140,10 +139,6 @@ export default function ClippedDrawer() {
   if (useNersc) {
     menuItems = menuItems.filter((item) => item.text !== 'Scoper')
   }
-
-  // if (!useNersc) {
-  //   menuItems = menuItems.filter((item) => item.text !== 'BilboMD AF')
-  // }
 
   if (!enableBilboMdSANS) {
     menuItems = menuItems.filter((item) => item.text !== 'BilboMD SANS')

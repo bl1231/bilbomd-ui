@@ -25,7 +25,11 @@ const Signup = () => {
   useTitle('BilboMD: Signup')
   const [success, setSuccess] = useState(null)
   const [error, setError] = useState('')
-  const { data: config, error: configError, isLoading } = useGetConfigsQuery({})
+  const {
+    data: config,
+    error: configError,
+    isLoading
+  } = useGetConfigsQuery('configData')
   if (isLoading) return <div>Loading config data...</div>
   if (configError) return <div>Error loading configuration data</div>
   if (!config) return <div>No configuration data available</div>

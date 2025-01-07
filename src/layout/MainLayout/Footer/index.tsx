@@ -11,7 +11,7 @@ const Footer = () => {
     data: config,
     error: configError,
     isLoading: configIsLoading
-  } = useGetConfigsQuery({})
+  } = useGetConfigsQuery('configData')
   if (configIsLoading) return <div>Loading config data...</div>
   if (configError) return <div>Error loading configuration data</div>
   if (!config) return <div>No configuration data available</div>

@@ -62,7 +62,7 @@ const SingleJobPage = () => {
     data: config,
     error: configError,
     isLoading: configIsLoading
-  } = useGetConfigsQuery({})
+  } = useGetConfigsQuery('configData')
 
   const getProgressValue = () => {
     if (job?.scoper) {

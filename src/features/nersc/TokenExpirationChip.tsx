@@ -12,7 +12,7 @@ import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
 const TokenExpirationChip = () => {
   const now = new Date()
-  const { data, error, isLoading } = useGetConfigsQuery({})
+  const { data, error, isLoading } = useGetConfigsQuery('configData')
 
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error loading configuration data</div>

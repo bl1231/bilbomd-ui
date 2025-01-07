@@ -13,7 +13,7 @@ const Welcome = () => {
     data: config,
     error: configError,
     isLoading: configIsLoading
-  } = useGetConfigsQuery({})
+  } = useGetConfigsQuery('configData')
 
   const content = (
     <Box>
