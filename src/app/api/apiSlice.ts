@@ -27,7 +27,7 @@ const baseQueryWithReauth: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
-  // Ensure `args` is of type FetchArgs
+  // This guard ensures `args` is of type FetchArgs
   const fetchArgs: FetchArgs =
     typeof args === 'string'
       ? { url: args }
@@ -61,17 +61,11 @@ const baseQueryWithReauth: BaseQueryFn<
     return refreshResult
   }
 
-  // if (result?.error?.status === 401) {
-  //   console.error('Unauthorized - consider logging out the user')
-  //   // Optionally dispatch a logout or show a notification
-  // }
-
   return result
 }
 
-// initialize an empty api service that we'll inject endpoints into later as needed
 export const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Job', 'User', 'FoxsAnalysis'],
+  tagTypes: ['Job', 'User', 'Config', 'FoxsAnalysis'],
   endpoints: () => ({})
 })
