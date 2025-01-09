@@ -16,6 +16,8 @@ interface FeedbackProps {
 }
 
 const BilboMdFeedback = ({ feedback }: FeedbackProps) => {
+  const bestModel = feedback.best_model_dat_file || feedback.best_model || ''
+
   const getChipProps = (value: number) => {
     // console.log('value:', value)
     if (value < 1.2) {
@@ -60,7 +62,7 @@ const BilboMdFeedback = ({ feedback }: FeedbackProps) => {
       >
         <Grid size={{ xs: 10 }}>
           <Typography sx={{ fontSize: '1.7em' }}>
-            SAXS Model Analysis Report: <b>{feedback.best_model}</b>
+            SAXS Model Analysis Report for <b>{bestModel}</b>
           </Typography>
         </Grid>
         {/* Best Chi-Square and Multi-State Info */}
