@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.17.5 (1/9/2025)
+  - Adjust Feedback component to accomodate new MW calculations
 - 1.17.4 (1/7/2025)
   - Add an About page
   - Upgrade to React v19
