@@ -22,11 +22,18 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import CloseIcon from '@mui/icons-material/Close'
 import HeaderBox from 'components/HeaderBox'
+import { displayPropertiesByJobType } from './JobDBDisplayProperties'
 import { format } from 'date-fns'
 import { BilboMDJob } from 'types/interfaces'
 import CopyableChip from 'components/CopyableChip'
 import { useLazyGetFileByIdAndNameQuery } from 'slices/jobsApiSlice'
 import { green } from '@mui/material/colors'
+import {
+  IBilboMDPDBJob,
+  IBilboMDCRDJob,
+  IBilboMDAutoJob,
+  IBilboMDSANSJob
+} from '@bl1231/bilbomd-mongodb-schema'
 
 interface JobDBDetailsProps {
   job: BilboMDJob
@@ -40,7 +47,6 @@ type MongoDBProperty = {
 }
 
 const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
-  // console.log('JobDBDetails: job:', job)
   const [open, setOpen] = useState(false)
   const [toastOpen, setToastOpen] = useState(false)
   const [triggerGetFile, { data: fileContents, isLoading, error }] =
@@ -48,25 +54,28 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
 
   const handleOpenModal = () => {
     setOpen(true)
-    if (job.mongo.const_inp_file) {
-      triggerGetFile({ id: job.mongo.id, filename: job.mongo.const_inp_file })
+    if (
+      job.mongo.__t === 'BilboMdPDB' ||
+      job.mongo.__t === 'BilboMdCRD' ||
+      job.mongo.__t === 'BilboMdAuto'
+    ) {
+      triggerGetFile({
+        id: job.mongo.id,
+        filename: job.mongo.const_inp_file || '' // Ensure filename is a string
+      })
     }
   }
 
-  const handleCloseModal = () => {
-    setOpen(false)
-  }
+  const handleCloseModal = () => setOpen(false)
 
   const handleCopyToClipboard = () => {
     if (fileContents) {
       navigator.clipboard.writeText(fileContents)
-      setToastOpen(true) // Show the toast
+      setToastOpen(true)
     }
   }
 
-  const handleToastClose = () => {
-    setToastOpen(false) // Hide the toast
-  }
+  const handleToastClose = () => setToastOpen(false)
 
   const jobTypeDisplayName: Record<string, string> = {
     BilboMdPDB: 'BilboMD Classic w/PDB',
@@ -80,8 +89,10 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
   const getJobTypeDisplayName = (type: string | undefined) =>
     type ? jobTypeDisplayName[type] || 'Unknown Job Type' : 'Unknown Job Type'
 
-  const getNumConformations = () => {
-    const { rg_min = 0, rg_max = 0, conformational_sampling } = job.mongo
+  const getNumConformations = (
+    job: IBilboMDPDBJob | IBilboMDCRDJob | IBilboMDAutoJob | IBilboMDSANSJob
+  ) => {
+    const { rg_min = 0, rg_max = 0, conformational_sampling } = job
     const stepSize = Math.max(Math.round((rg_max - rg_min) / 5), 1)
     const rgList: number[] = []
     for (let rg = rg_min; rg <= rg_max; rg += stepSize) {
@@ -91,69 +102,135 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
     return { stepSize, numSteps: rgList.length, numConformations, rgList }
   }
 
-  const { stepSize, numSteps, numConformations, rgList } = getNumConformations()
-
-  const properties = [
+  const baseProperties: MongoDBProperty[] = [
+    { label: 'MongoDB ID', value: job.mongo.id },
     { label: 'Pipeline', value: getJobTypeDisplayName(job.mongo.__t) },
     { label: 'Submitted', value: job.mongo.time_submitted },
     { label: 'Started', value: job.mongo.time_started },
     { label: 'Completed', value: job.mongo.time_completed },
-    { label: 'Data file', value: job.mongo.data_file },
-    { label: 'PSF file', value: job.mongo.psf_file },
-    { label: 'CRD file', value: job.mongo.crd_file },
-    { label: 'PDB file', value: job.mongo.pdb_file },
-    {
-      label: 'CHARMM constraint file',
-      render: () => (
-        <Chip
-          label={
-            <Box style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ marginRight: '6px' }}>
-                {job.mongo.const_inp_file}
-              </span>
-              <Tooltip title={`Open ${job.mongo.const_inp_file}`}>
-                <IconButton
-                  size='small'
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleOpenModal()
-                  }}
-                  sx={{ padding: 0 }}
-                >
-                  <VisibilityIcon fontSize='small' />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          }
-          variant='outlined'
-          sx={{
-            fontSize: '0.875rem',
-            borderColor: 'primary.main',
-            backgroundColor: green[100],
-            cursor: 'pointer'
-          }}
-          onClick={handleOpenModal} // Optional: Allow clicking anywhere on the chip to open modal
-        />
+    { label: 'Data file', value: job.mongo.data_file }
+  ]
+
+  const getJobSpecificProperties = (): MongoDBProperty[] => {
+    const allowedLabels = displayPropertiesByJobType[job.mongo.__t] || []
+
+    // Filter base properties
+    const staticProperties = baseProperties.filter((prop) =>
+      allowedLabels.includes(prop.label)
+    )
+
+    // Add dynamic properties
+    const dynamicProperties: MongoDBProperty[] = []
+    if (job.mongo.__t === 'BilboMdSANS') {
+      const specificJob = job.mongo as IBilboMDSANSJob
+
+      const { stepSize, numSteps, numConformations, rgList } =
+        getNumConformations(specificJob)
+      dynamicProperties.push(
+        { label: 'PDB file', value: specificJob.pdb_file },
+        { label: 'Rg min', value: specificJob.rg_min, suffix: 'Å' },
+        { label: 'Rg max', value: specificJob.rg_max, suffix: 'Å' },
+        { label: 'Rg step size', value: stepSize, suffix: 'Å' },
+        { label: 'Number of CHARMM MD Runs', value: numSteps },
+        { label: 'Number of conformations', value: numConformations },
+        {
+          label: 'Rg List',
+          render: () => (
+            <Typography>
+              {rgList?.map((rgValue, index) => (
+                <span key={index}>
+                  {rgValue}&#8491; {index < rgList.length - 1 ? ', ' : ''}
+                </span>
+              ))}
+            </Typography>
+          )
+        },
+        {
+          label: 'Solvent D20 Fraction',
+          value: specificJob.d2o_fraction,
+          suffix: '%'
+        }
       )
-    },
-    { label: 'Rg min', value: job.mongo.rg_min, suffix: 'Å' },
-    { label: 'Rg max', value: job.mongo.rg_max, suffix: 'Å' },
-    { label: 'Rg step size', value: stepSize, suffix: 'Å' },
-    { label: 'Number of CHARMM MD Runs', value: numSteps },
-    { label: 'Number of conformations', value: numConformations },
-    {
-      label: 'Rg List',
-      render: () => (
-        <Typography>
-          {rgList.map((rgValue, index) => (
-            <span key={index}>
-              {rgValue}&#8491; {index < rgList.length - 1 ? ', ' : ''}
-            </span>
-          ))}
-        </Typography>
+    }
+    if (job.mongo.__t === 'BilboMdScoper') {
+      dynamicProperties.push({ label: 'PDB file', value: job.mongo.pdb_file })
+    }
+    if (
+      job.mongo.__t === 'BilboMdPDB' ||
+      job.mongo.__t === 'BilboMdCRD' ||
+      job.mongo.__t === 'BilboMdAuto'
+    ) {
+      const specificJob = job.mongo as
+        | IBilboMDPDBJob
+        | IBilboMDCRDJob
+        | IBilboMDAutoJob
+      const { stepSize, numSteps, numConformations, rgList } =
+        getNumConformations(specificJob)
+      dynamicProperties.push(
+        { label: 'PDB file', value: specificJob.pdb_file },
+        { label: 'PSF file', value: specificJob.psf_file },
+        { label: 'CRD file', value: specificJob.crd_file },
+
+        {
+          label: 'CHARMM constraint file',
+          render: () => (
+            <Chip
+              label={
+                <Box style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ marginRight: '6px' }}>
+                    {specificJob.const_inp_file}
+                  </span>
+                  <Tooltip title={`Open ${specificJob.const_inp_file}`}>
+                    <IconButton
+                      size='small'
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleOpenModal()
+                      }}
+                      sx={{ padding: 0 }}
+                    >
+                      <VisibilityIcon fontSize='small' />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              }
+              variant='outlined'
+              sx={{
+                fontSize: '0.875rem',
+                borderColor: 'primary.main',
+                backgroundColor: green[100],
+                cursor: 'pointer'
+              }}
+              onClick={handleOpenModal}
+            />
+          )
+        },
+        { label: 'Rg min', value: specificJob.rg_min, suffix: 'Å' },
+        { label: 'Rg max', value: specificJob.rg_max, suffix: 'Å' },
+        { label: 'Rg step size', value: stepSize, suffix: 'Å' },
+        { label: 'Number of CHARMM MD Runs', value: numSteps },
+        { label: 'Number of conformations', value: numConformations },
+        {
+          label: 'Rg List',
+          render: () => (
+            <Typography>
+              {rgList?.map((rgValue, index) => (
+                <span key={index}>
+                  {rgValue}&#8491; {index < rgList.length - 1 ? ', ' : ''}
+                </span>
+              ))}
+            </Typography>
+          )
+        }
       )
-    },
-    { label: 'ID', value: job.mongo.id }
+    }
+
+    return [...staticProperties, ...dynamicProperties]
+  }
+
+  const filteredProperties: MongoDBProperty[] = [
+    ...baseProperties,
+    ...getJobSpecificProperties()
   ]
 
   const renderProperties = (props: MongoDBProperty[]) => (
@@ -218,7 +295,9 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
 
         <AccordionDetails>
           <Grid container spacing={2}>
-            <Grid size={{ xs: 12 }}>{renderProperties(properties)}</Grid>
+            <Grid size={{ xs: 12 }}>
+              {renderProperties(filteredProperties)}
+            </Grid>
           </Grid>
         </AccordionDetails>
       </Accordion>
@@ -230,7 +309,7 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
         sx={{
           '& .MuiPaper-root': {
             backgroundColor: green[100],
-            color: 'black' // Adjust text color for better contrast
+            color: 'black'
           }
         }}
       >
@@ -290,24 +369,11 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
         </DialogContent>
       </Dialog>
 
-      {/* Snackbar for Toast */}
       <Snackbar
         open={toastOpen}
         onClose={handleToastClose}
-        autoHideDuration={3000} // 3 seconds
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Anchor settings
-        // sx={{
-        //   '& .MuiSnackbarContent-root': {
-        //     position: 'fixed',
-        //     top: '50%',
-        //     left: '50%',
-        //     transform: 'translate(-50%, -50%)',
-        //     backgroundColor: 'success.main',
-        //     color: 'white',
-        //     textAlign: 'center',
-        //     boxShadow: 3
-        //   }
-        // }}
+        autoHideDuration={3000}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert
           onClose={handleToastClose}

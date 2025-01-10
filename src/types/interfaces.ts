@@ -3,6 +3,7 @@ import {
   IBilboMDCRDJob,
   IBilboMDAutoJob,
   IBilboMDSANSJob,
+  IBilboMDScoperJob,
   IBilboMDAlphaFoldJob,
   IMultiJob
 } from '@bl1231/bilbomd-mongodb-schema'
@@ -122,11 +123,12 @@ export type BilboMDJob = {
     | IBilboMDAutoJob
     | IBilboMDSANSJob
     | IBilboMDAlphaFoldJob
+    | IBilboMDScoperJob
   bullmq: BilboMDBullMQ
   scoper?: BilboMDScoperSteps
-  classic?: BilboMDSteps
-  auto?: BilboMDSteps
-  alphafold?: BilboMDAlphaFoldResults
+  // classic?: BilboMDSteps
+  // auto?: BilboMDSteps
+  // alphafold?: BilboMDAlphaFoldResults
 }
 
 export type BilboMDMultiJob = {
