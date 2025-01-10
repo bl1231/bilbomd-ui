@@ -57,7 +57,8 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
     if (
       job.mongo.__t === 'BilboMdPDB' ||
       job.mongo.__t === 'BilboMdCRD' ||
-      job.mongo.__t === 'BilboMdAuto'
+      job.mongo.__t === 'BilboMdAuto' ||
+      job.mongo.__t === 'BilboMdSANS'
     ) {
       triggerGetFile({
         id: job.mongo.id,
@@ -128,6 +129,45 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
         getNumConformations(specificJob)
       dynamicProperties.push(
         { label: 'PDB file', value: specificJob.pdb_file },
+        {
+          label: 'Solvent D20 Fraction',
+          value: specificJob.d2o_fraction,
+          suffix: '%'
+        },
+        {
+          label: 'CHARMM constraint file',
+          render: () => (
+            <Chip
+              label={
+                <Box style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ marginRight: '6px' }}>
+                    {specificJob.const_inp_file}
+                  </span>
+                  <Tooltip title={`Open ${specificJob.const_inp_file}`}>
+                    <IconButton
+                      size='small'
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleOpenModal()
+                      }}
+                      sx={{ padding: 0 }}
+                    >
+                      <VisibilityIcon fontSize='small' />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              }
+              variant='outlined'
+              sx={{
+                fontSize: '0.875rem',
+                borderColor: 'primary.main',
+                backgroundColor: green[100],
+                cursor: 'pointer'
+              }}
+              onClick={handleOpenModal}
+            />
+          )
+        },
         { label: 'Rg min', value: specificJob.rg_min, suffix: 'Å' },
         { label: 'Rg max', value: specificJob.rg_max, suffix: 'Å' },
         { label: 'Rg step size', value: stepSize, suffix: 'Å' },
@@ -144,11 +184,6 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
               ))}
             </Typography>
           )
-        },
-        {
-          label: 'Solvent D20 Fraction',
-          value: specificJob.d2o_fraction,
-          suffix: '%'
         }
       )
     }
@@ -170,7 +205,6 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
         { label: 'PDB file', value: specificJob.pdb_file },
         { label: 'PSF file', value: specificJob.psf_file },
         { label: 'CRD file', value: specificJob.crd_file },
-
         {
           label: 'CHARMM constraint file',
           render: () => (
