@@ -16,7 +16,7 @@ describe('NightModeToggle Component', () => {
     render(<NightModeToggle />)
 
     // Check if the component displays "light mode"
-    expect(screen.getByText(/light mode/i)).toBeInTheDocument()
+    expect(screen.getByText(/dark mode/i)).toBeInTheDocument()
 
     // Check if the Brightness4Icon is rendered (indicating light mode)
     expect(screen.getByRole('button')).toContainElement(

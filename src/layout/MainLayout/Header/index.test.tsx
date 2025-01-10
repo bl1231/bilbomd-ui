@@ -10,6 +10,7 @@ import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 interface ConfigData {
   useNersc: string
   mode: string
+  deploySite: string
 }
 
 interface AuthState {
@@ -65,7 +66,8 @@ function renderWithProvider(ui: React.ReactElement) {
 describe('Header Component', () => {
   const mockConfig: ConfigData = {
     useNersc: 'true',
-    mode: 'development'
+    mode: 'development',
+    deploySite: 'nersc'
   }
 
   beforeEach(() => {

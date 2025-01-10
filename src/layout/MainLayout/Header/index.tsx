@@ -12,7 +12,7 @@ import {
   Alert,
   Box
 } from '@mui/material'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import useAuth from 'hooks/useAuth'
 import LogOut from 'features/auth/LogOut'
 import NightModeToggle from 'components/NightModeToggle'
@@ -21,6 +21,12 @@ import { useNavigate } from 'react-router'
 import { Link } from 'react-router'
 import nerscLogo from 'assets/nersc-logo.png'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
+
+// interface Config {
+//   useNersc?: string
+//   mode?: string
+//   deploySite?: string
+// }
 
 interface UserMenuProps {
   anchorElUser: HTMLElement | null
@@ -77,63 +83,47 @@ const UserMenu = ({
   </>
 )
 
-interface NerscLogoProps {
-  useNersc: boolean
+interface DeploySiteProps {
+  deploySite: string
+}
+
+const DeploySite = ({ deploySite }: DeploySiteProps) => (
+  <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%' }}>
+    {deploySite === 'nersc' && (
+      <img src={nerscLogo} alt='NERSC Logo' style={{ height: '30px' }} />
+    )}
+    {deploySite === 'local' && (
+      <Typography variant='h5' component='span' sx={{ ml: 1 }}>
+        LOCAL
+      </Typography>
+    )}
+    {deploySite === 'bl1231' && (
+      <Typography variant='h5' component='span' sx={{ ml: 1, pb: 0 }}>
+        BL12.3.1
+      </Typography>
+    )}
+  </Box>
+)
+
+interface DevModeProps {
   mode: string
 }
 
-const NerscLogo = ({ useNersc, mode }: NerscLogoProps) =>
-  useNersc && (
-    <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', p: 1 }}>
-      <img src={nerscLogo} alt='NERSC Logo' style={{ height: '30px' }} />
-      {mode === 'development' && (
-        <Typography
-          variant='h5'
-          component='span'
-          sx={{ ml: 1, pb: 0.2, color: 'yellow' }}
-        >
-          DEVELOPMENT
-        </Typography>
-      )}
-    </Box>
-  )
-
-const ModeDisplay = ({ useNersc, mode }: NerscLogoProps) =>
-  !useNersc && (
-    <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', p: 1 }}>
-      {mode !== 'local' && (
-        <Typography variant='h5' component='span' sx={{ ml: 1, pb: 0.2 }}>
-          BL12.3.1
-        </Typography>
-      )}
-      {mode === 'development' && (
-        <Typography
-          variant='h5'
-          component='span'
-          sx={{ ml: 1, pb: 0.2, color: 'yellow' }}
-        >
-          DEVELOPMENT
-        </Typography>
-      )}
-      {mode === 'local' && (
-        <Box>
-          <Typography variant='h5' component='span' sx={{ ml: 1, pb: 0.2 }}>
-            LOCAL
-          </Typography>
-          <Typography
-            variant='h5'
-            component='span'
-            sx={{ ml: 1, pb: 0.2, color: 'yellow' }}
-          >
-            DEVELOPMENT
-          </Typography>
-        </Box>
-      )}
-    </Box>
-  )
+const DevMode = ({ mode }: DevModeProps) => (
+  <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%' }}>
+    {mode === 'development' && (
+      <Typography
+        variant='h5'
+        component='span'
+        sx={{ ml: 1, pb: 0, color: 'yellow' }}
+      >
+        DEVELOPMENT
+      </Typography>
+    )}
+  </Box>
+)
 
 const Header = () => {
-  const [time, setTime] = useState('')
   const navigate = useNavigate()
   const { username, status } = useAuth()
   const [anchorElUser, setAnchorElUser] = useState<HTMLElement | null>(null)
@@ -150,28 +140,14 @@ const Header = () => {
     error: configError
   } = useGetConfigsQuery('configData')
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const date = new Date()
-      const today = new Intl.DateTimeFormat('en-US', {
-        dateStyle: 'full',
-        timeStyle: 'short'
-      }).format(date)
-      setTime(today)
-    }, 1000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [])
-
   if (configIsLoading) return <CircularProgress />
   if (configError)
     return <Alert severity='error'>Error loading configuration data</Alert>
   if (!config)
     return <Alert severity='warning'>No configuration data available</Alert>
 
-  const useNersc = config.useNersc?.toLowerCase() === 'true'
-  const mode = config.mode || 'nope'
+  const mode = config.mode || ''
+  const deploySite = config.deploySite || ''
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget)
@@ -187,11 +163,7 @@ const Header = () => {
     fontWeight: 900,
     fontSize: '3em',
     letterSpacing: '.3rem',
-    // background: 'linear-gradient(to right, #ff7e5f, #feb47b)', // Gradient colors
     background: 'linear-gradient(to top, #00c9ff, #92fe9d)', // Blue to Light Green
-    // background: 'linear-gradient(to right, #6a11cb, #2575fc)', // Purple to Blue
-    // background: 'linear-gradient(to right, #36d1dc, #5b86e5)', // Cyan to Blue ***
-    // background: 'linear-gradient(to right, #ff6a88, #bb4e75)', // Light Pink to Purple
     WebkitBackgroundClip: 'text', // Ensures gradient is applied only to the text
     WebkitTextFillColor: 'transparent', // Makes the text transparent so gradient shows
     color: 'transparent', // Fallback for other browsers
@@ -207,36 +179,45 @@ const Header = () => {
           elevation={0}
           sx={{ height: '70px', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         >
-          <Toolbar sx={{ m: 0 }}>
-            <Link to='/welcome' style={linkStyles}>
-              BilboMD
-            </Link>
-            <NerscLogo useNersc={useNersc} mode={mode} />
-            <ModeDisplay useNersc={useNersc} mode={mode} />
-            <Typography
-              variant='h5'
-              sx={{ display: { xs: 'none', sm: 'flex' }, ml: 8 }}
-            >
-              {time}
-            </Typography>
-            <Typography
-              variant='h5'
+          <Toolbar sx={{ display: 'flex', alignItems: 'center', m: 0 }}>
+            {/* Left Side: Logo and Mode Display */}
+            <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 0 }}>
+              <Link to='/welcome' style={linkStyles}>
+                BilboMD
+              </Link>
+            </Box>
+            <Box
               sx={{
                 display: 'flex',
-                flexGrow: 8,
-                justifyContent: 'flex-end',
-                mx: 2
+                alignItems: 'flex-end',
+                flexGrow: 1,
+                pt: 1.5
               }}
             >
-              {status}: {username}
-            </Typography>
-            <UserMenu
-              anchorElUser={anchorElUser}
-              handleOpenUserMenu={handleOpenUserMenu}
-              handleCloseUserMenu={handleCloseUserMenu}
-              settings={settings}
-            />
-            <NightModeToggle />
+              <DeploySite deploySite={deploySite} />
+              <DevMode mode={mode} />
+            </Box>
+
+            {/* Right Side: Night Mode Toggle, User Info, and Menu */}
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <NightModeToggle sx={{ mr: 2 }} />
+              <Typography
+                variant='h5'
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  mx: 2
+                }}
+              >
+                {status}: {username}
+              </Typography>
+              <UserMenu
+                anchorElUser={anchorElUser}
+                handleOpenUserMenu={handleOpenUserMenu}
+                handleCloseUserMenu={handleCloseUserMenu}
+                settings={settings}
+              />
+            </Box>
           </Toolbar>
         </AppBar>
       </Box>
