@@ -6,65 +6,67 @@ import {
   Typography,
   Link
 } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 const NewSANSJobFormInstructions = () => (
-  <Accordion>
-    <AccordionSummary
-      expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
-      sx={{
-        backgroundColor: '#888',
-        borderTopLeftRadius: 4,
-        borderTopRightRadius: 4,
-        pl: 1
-      }}
-    >
-      <Typography
+  <Grid size={{ xs: 12 }}>
+    <Accordion>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
         sx={{
-          textTransform: 'uppercase',
-          fontSize: '0.875rem',
-          fontWeight: 400,
-          color: '#fff',
-          letterSpacing: '1px'
+          backgroundColor: '#888',
+          borderTopLeftRadius: 4,
+          borderTopRightRadius: 4,
+          pl: 1
         }}
       >
-        Instructions
-      </Typography>
-    </AccordionSummary>
-    <AccordionDetails>
-      <Box>
-        <Typography sx={{ m: 1 }}>
-          <b>BilboMD SANS</b> is a data analysis pipeline that uses a minimal MD
-          step with CHARMM to generate thousands of molecular models.
-          Theoretical SANS scattering curves are then calculated from these
-          models using{' '}
-          <Link
-            href='https://team.inria.fr/nano-d/software/pepsi-sans/'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <b>Pepsi-SANS</b>
-          </Link>
-          . The models are then analyzed using a genetic algorithm developed by
-          Alan Hicks called{' '}
-          <Link
-            href='https://github.com/achicks15/GA-SAS'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <b>GA-SAS</b>
-          </Link>{' '}
-          to determine the best multi-state models to explain your Small Angle
-          Neutron Scattering (SANS) data.
+        <Typography
+          sx={{
+            textTransform: 'uppercase',
+            fontSize: '0.875rem',
+            fontWeight: 400,
+            color: '#fff',
+            letterSpacing: '1px'
+          }}
+        >
+          Instructions
         </Typography>
-        <Typography variant='h5' sx={{ mx: 1, my: 3 }}>
-          Acknowledgements:
-        </Typography>
-        <Typography sx={{ m: 1 }}>
-          Please Acknowledge the following manuscripts if you use{' '}
-          <b>BilboMD SANS</b>:
-        </Typography>
-        {/* <Typography variant='body2' sx={{ mx: 1, my: 2 }}>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Box>
+          <Typography sx={{ m: 1 }}>
+            <b>BilboMD SANS</b> is a data analysis pipeline that uses a minimal
+            MD step with CHARMM to generate thousands of molecular models.
+            Theoretical SANS scattering curves are then calculated from these
+            models using{' '}
+            <Link
+              href='https://team.inria.fr/nano-d/software/pepsi-sans/'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <b>Pepsi-SANS</b>
+            </Link>
+            . The models are then analyzed using a genetic algorithm developed
+            by Alan Hicks called{' '}
+            <Link
+              href='https://github.com/achicks15/GA-SAS'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <b>GA-SAS</b>
+            </Link>{' '}
+            to determine the best multi-state models to explain your Small Angle
+            Neutron Scattering (SANS) data.
+          </Typography>
+          <Typography variant='h5' sx={{ mx: 1, my: 3 }}>
+            Acknowledgements:
+          </Typography>
+          <Typography sx={{ m: 1 }}>
+            Please Acknowledge the following manuscripts if you use{' '}
+            <b>BilboMD SANS</b>:
+          </Typography>
+          {/* <Typography variant='body2' sx={{ mx: 1, my: 2 }}>
           Pelikan M, Hura GL, Hammel M.{' '}
           <b>
             Structure and flexibility within proteins as identified through
@@ -81,11 +83,12 @@ const NewSANSJobFormInstructions = () => (
           </Link>
           ; PMCID: PMC3773563.
         </Typography> */}
-        <Typography sx={{ mx: 1, my: 2 }}>Ref1</Typography>
-        <Typography sx={{ mx: 1, my: 2 }}>Ref2</Typography>
-      </Box>
-    </AccordionDetails>
-  </Accordion>
+          <Typography sx={{ mx: 1, my: 2 }}>Ref1</Typography>
+          <Typography sx={{ mx: 1, my: 2 }}>Ref2</Typography>
+        </Box>
+      </AccordionDetails>
+    </Accordion>
+  </Grid>
 )
 
 export default NewSANSJobFormInstructions

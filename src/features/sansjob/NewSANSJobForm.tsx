@@ -163,9 +163,7 @@ const NewSANSJob = () => {
 
   const content = (
     <Grid container spacing={2}>
-      <Grid size={{ xs: 12 }}>
-        <NewSANSJobFormInstructions />
-      </Grid>
+      <NewSANSJobFormInstructions />
 
       <PipelineSchematic isDarkMode={isDarkMode} />
 

@@ -1,31 +1,31 @@
-import { Box, IconButton } from '@mui/material'
+import { Button, ButtonProps } from '@mui/material'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
 import { useThemeContext } from '../themes/ThemeContext'
 
-const NightModeToggle = () => {
+const NightModeToggle: React.FC<ButtonProps> = ({ sx, ...props }) => {
   const { mode, toggleColorMode } = useThemeContext()
 
   return (
-    <Box
+    <Button
+      onClick={toggleColorMode}
+      color='inherit'
+      size='large'
+      endIcon={mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
       sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        bgcolor: 'background.default',
-        color: 'text.primary',
-        borderColor: 'text.primary',
-        border: '1px solid',
-        borderRadius: 2,
-        pl: 2,
-        mx: 2
+        backgroundColor: mode === 'dark' ? 'grey.800' : 'grey.200',
+        color: mode === 'dark' ? 'grey.200' : 'grey.800',
+        '&:hover': {
+          backgroundColor: mode === 'dark' ? 'grey.700' : 'grey.300'
+        },
+        borderRadius: '20px', // Optional: adds a rounded look
+        px: 2, // Optional: padding for a better button size
+        ...sx
       }}
+      {...props}
     >
-      {mode} mode
-      <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color='inherit'>
-        {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-      </IconButton>
-    </Box>
+      {mode === 'dark' ? `light mode` : `dark mode`}
+    </Button>
   )
 }
 
