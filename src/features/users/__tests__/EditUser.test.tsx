@@ -55,7 +55,7 @@ describe('EditUser Component', () => {
 
     expect(EditUserForm).toHaveBeenCalledWith(
       { user: { id: '1', name: 'John Doe' } },
-      expect.anything() // Ignore the second argument
+      expect.anything()
     )
   })
 
