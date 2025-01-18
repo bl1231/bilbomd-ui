@@ -1,18 +1,29 @@
 import React, { useState } from 'react'
 import { Chip, IconButton, Tooltip, Snackbar, Alert } from '@mui/material'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import LaunchIcon from '@mui/icons-material/Launch'
 import { Box } from '@mui/system'
 import { green } from '@mui/material/colors'
+import { useNavigate } from 'react-router'
+
 interface CopyableChipProps {
   label: string
-  value: string
+  value?: string
+  url?: string
 }
 
-const CopyableChip: React.FC<CopyableChipProps> = ({ label, value }) => {
+const CopyableChipRedirection: React.FC<CopyableChipProps> = ({
+  label,
+  value,
+  url
+}) => {
   const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(value)
+    if (value) {
+      navigator.clipboard.writeText(value)
+    }
     setOpen(true)
   }
 
@@ -26,11 +37,21 @@ const CopyableChip: React.FC<CopyableChipProps> = ({ label, value }) => {
     setOpen(false)
   }
 
+  const handleLaunch = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (url) {
+      navigate(`/dashboard/jobs/${url}`)
+    }
+  }
+
   return (
     <>
       <Chip
         label={
-          <Box style={{ display: 'flex', alignItems: 'center' }}>
+          <Box
+            component='span'
+            sx={{ display: 'inline-flex', alignItems: 'center' }}
+          >
             <span style={{ marginRight: '6px' }}>{value}</span>
             <Tooltip title={`Copy ${label}`}>
               <IconButton
@@ -44,6 +65,17 @@ const CopyableChip: React.FC<CopyableChipProps> = ({ label, value }) => {
                 <ContentCopyIcon fontSize='small' />
               </IconButton>
             </Tooltip>
+            {url && (
+              <Tooltip title={`Go to Job ${url}`}>
+                <IconButton
+                  size='small'
+                  onClick={handleLaunch}
+                  sx={{ padding: 0 }}
+                >
+                  <LaunchIcon fontSize='small' />
+                </IconButton>
+              </Tooltip>
+            )}
           </Box>
         }
         variant='outlined'
@@ -68,4 +100,4 @@ const CopyableChip: React.FC<CopyableChipProps> = ({ label, value }) => {
   )
 }
 
-export default CopyableChip
+export default CopyableChipRedirection
