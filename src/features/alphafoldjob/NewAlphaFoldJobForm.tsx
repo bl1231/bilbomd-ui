@@ -98,6 +98,12 @@ const EntitiesFieldArray = ({
           }, 0)
           return (highestId + 1).toString() // Increment the highest `id` for the new one
         }
+        const totalCharactersWithCopies = values.entities.reduce(
+          (acc, entity) =>
+            acc + (entity.sequence?.length || 0) * (entity.copies || 1),
+          0
+        )
+
         return (
           <Grid container direction='column'>
             <Box>
@@ -225,6 +231,7 @@ const EntitiesFieldArray = ({
                   </IconButton>
                 </Box>
               ))}
+              <p> Total characters {totalCharactersWithCopies}</p>
               <Button
                 variant='contained'
                 color='primary'
@@ -425,7 +432,6 @@ const NewAlphaFoldJob = () => {
                         value={values.title || ''}
                       />
                     </Grid>
-
                     {/* Entities */}
                     <Grid>
                       <EntitiesFieldArray
