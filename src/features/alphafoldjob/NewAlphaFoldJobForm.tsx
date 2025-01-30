@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import {
   Box,
   TextField,
@@ -184,7 +184,7 @@ const EntitiesFieldArray = ({
                   <Field
                     as={TextField}
                     name={`entities.${index}.sequence`}
-                    label='Amino Acid Sequence'
+                    label={`Amino Acid Sequence (${values.entities[index].sequence?.length || 0})`}
                     fullWidth
                     multiline
                     variant='outlined'
@@ -204,7 +204,13 @@ const EntitiesFieldArray = ({
                       marginRight: 2
                     }}
                     InputLabelProps={{
-                      shrink: true // Ensures the label is displayed properly with outlined variant
+                      shrink: true
+                    }}
+                    onChange={(e: ChangeEvent<Element>) => {
+                      handleChange(e)
+                      const sequence =
+                        (e.target as HTMLInputElement).value || ''
+                      setFieldValue(`entities.${index}.sequence`, sequence)
                     }}
                   />
 
