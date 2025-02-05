@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, FocusEvent, useState, useEffect } from 'react'
 import {
   Box,
   TextField,
@@ -38,6 +38,118 @@ import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useTheme } from '@mui/material/styles'
 
+/* --------------------------------------------------------------------------
+   New: Custom AminoAcidField Component that shows chunked text when not focused
+   -------------------------------------------------------------------------- */
+function toSuperscript(num: number): string {
+  const map: { [digit: string]: string } = {
+    '0': '⁰',
+    '1': '¹',
+    '2': '²',
+    '3': '³',
+    '4': '⁴',
+    '5': '⁵',
+    '6': '⁶',
+    '7': '⁷',
+    '8': '⁸',
+    '9': '⁹'
+  }
+  return num
+    .toString()
+    .split('')
+    .map((digit) => map[digit] ?? digit)
+    .join('')
+}
+
+function chunkSequence(seq: string): string {
+  if (!seq) return ''
+  const chunkSize = 10
+  let out = ''
+  for (let i = 0; i < seq.length; i++) {
+    out += seq[i]
+    if ((i + 1) % chunkSize === 0) {
+      out += toSuperscript(i + 1) + ' '
+    }
+  }
+  // leftover chunk superscript if length not multiple of 10
+  if (seq.length > 0 && seq.length % chunkSize !== 0) {
+    out += toSuperscript(seq.length)
+  }
+  return out
+}
+
+/* --------------------------------------------------------------------------
+   New: Custom AminoAcidField Component that shows chunked text when not focused
+   -------------------------------------------------------------------------- */
+function AminoAcidField(props: {
+  label: string
+  name: string
+  rawValue: string
+  touched?: boolean
+  error?: string
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void
+  onBlur: (e: FocusEvent<HTMLInputElement>) => void
+  disabled?: boolean
+}) {
+  const { label, name, rawValue, touched, error, onChange, onBlur, disabled } =
+    props
+
+  // Local display value (chunked when not editing)
+  const [displayValue, setDisplayValue] = useState(rawValue)
+  // Track focus state
+  const [isFocused, setIsFocused] = useState(false)
+
+  // When the raw value is updated externally and the field isn’t focused,
+  // update the displayed (chunked) text.
+  useEffect(() => {
+    if (!isFocused) {
+      setDisplayValue(chunkSequence(rawValue))
+    }
+  }, [rawValue, isFocused])
+
+  const handleFocus = () => {
+    setIsFocused(true)
+    // Show raw text for editing.
+    setDisplayValue(rawValue)
+  }
+
+  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
+    setIsFocused(false)
+    onBlur(e)
+    setDisplayValue(chunkSequence(e.target.value))
+  }
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setDisplayValue(e.target.value)
+    // Pass the raw value to Formik.
+    onChange(e)
+  }
+
+  return (
+    <TextField
+      fullWidth
+      multiline
+      variant='outlined'
+      label={label}
+      name={name}
+      value={displayValue}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
+      disabled={disabled}
+      error={Boolean(error && touched)}
+      helperText={error && touched ? error : ''}
+      sx={{
+        letterSpacing: '0.15em', // Slight letter spacing for clarity
+        fontFamily: 'monospace'
+      }}
+      InputLabelProps={{
+        shrink: true
+      }}
+    />
+  )
+}
+
 const Instructions = () => (
   <Grid size={{ xs: 12 }}>
     <NewAlphaFoldJobFormInstructions />
@@ -74,8 +186,8 @@ const EntitiesFieldArray = ({
   values: NewAlphaFoldJobFormValues
   errors: FormikErrors<NewAlphaFoldJobFormValues>
   touched: FormikTouched<NewAlphaFoldJobFormValues>
-  handleBlur: (e: React.FocusEvent) => void
-  handleChange: (e: React.ChangeEvent) => void
+  handleBlur: (e: FocusEvent<Element>) => void
+  handleChange: (e: ChangeEvent<Element>) => void
   setFieldValue: (
     field: string,
     value: string,
@@ -107,136 +219,136 @@ const EntitiesFieldArray = ({
         return (
           <Grid container direction='column'>
             <Box>
-              {values.entities.map((entity, index) => (
-                <Box key={index} mb={2} display='flex' alignItems='start'>
-                  {/* Molecule Type */}
-                  <TextField
-                    select
-                    name={`entities.${index}.type`}
-                    label='Molecule Type'
-                    fullWidth
-                    variant='outlined'
-                    value={entity.type || 'Protein'}
-                    onChange={(e) => {
-                      handleChange(e)
-                      // Update the name based on type and id whenever the type changes
-                      const newName = generateName(e.target.value, entity.id)
-                      setFieldValue(`entities.${index}.name`, newName)
-                    }}
-                    error={
-                      touched.entities &&
-                      touched.entities[index] &&
-                      Boolean(
-                        errors.entities &&
-                          (errors.entities as FormikErrors<Entity>[])[index]
-                            ?.type
-                      )
-                    }
-                    sx={{
-                      width: '200px',
-                      marginRight: 2
-                    }}
-                    slotProps={{
-                      input: { style: { height: '54px' } }
-                    }}
-                  >
-                    <MenuItem value='Protein'>Protein</MenuItem>
-                    <MenuItem value='DNA' disabled>
-                      DNA - pending AF3 availability
-                    </MenuItem>
-                    <MenuItem value='RNA' disabled>
-                      RNA - pending AF3 availability
-                    </MenuItem>
-                  </TextField>
+              {values.entities.map((entity, index) => {
+                // Get any validation errors for the sequence field.
+                const seqError =
+                  errors.entities &&
+                  errors.entities[index] &&
+                  typeof errors.entities[index] !== 'string' &&
+                  (errors.entities[index] as FormikErrors<Entity>).sequence
+                const seqTouched =
+                  touched.entities &&
+                  touched.entities[index] &&
+                  typeof touched.entities[index] !== 'string' &&
+                  (touched.entities[index] as FormikTouched<Entity>).sequence
 
-                  {/* Copies Field */}
-                  <Field
-                    as={TextField}
-                    name={`entities.${index}.copies`}
-                    label='Copies'
-                    type='number'
-                    InputProps={{
-                      inputProps: { min: 1, step: 1 },
-                      sx: { height: '100%' } // Ensure full height usage
-                    }}
-                    fullWidth
-                    variant='outlined'
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.entities[index].copies || 1}
-                    error={
-                      touched.entities &&
-                      touched.entities[index] &&
-                      Boolean(
-                        errors.entities &&
-                          (errors.entities as FormikErrors<Entity>[])[index]
-                            ?.copies
-                      )
-                    }
-                    sx={{
-                      width: '100px',
-                      marginRight: 2,
-                      height: '54px'
-                    }} // Fixed height
-                  />
-
-                  {/* Sequence */}
-                  <Field
-                    as={TextField}
-                    name={`entities.${index}.sequence`}
-                    label={`Amino Acid Sequence (${values.entities[index].sequence?.length || 0})`}
-                    fullWidth
-                    multiline
-                    variant='outlined'
-                    minRows={1}
-                    value={values.entities[index].sequence || ''}
-                    error={
-                      touched.entities &&
-                      touched.entities[index] &&
-                      Boolean(
-                        errors.entities &&
-                          (errors.entities as FormikErrors<Entity>[])[index]
-                            ?.sequence
-                      )
-                    }
-                    sx={{
-                      width: '100%',
-                      marginRight: 2
-                    }}
-                    InputLabelProps={{
-                      shrink: true
-                    }}
-                    onChange={(e: ChangeEvent<Element>) => {
-                      handleChange(e)
-                      const sequence =
-                        (e.target as HTMLInputElement).value || ''
-                      setFieldValue(`entities.${index}.sequence`, sequence)
-                    }}
-                  />
-
-                  <IconButton
-                    onClick={() => {
-                      if (values.entities.length === 1) {
-                        // If there's only one entity, reset it with a new blank entity
-                        remove(index)
-                        push({
-                          id: `${index + 1}`,
-                          name: generateName('Protein', `${index + 1}`),
-                          sequence: '',
-                          type: 'Protein',
-                          copies: 1
-                        })
-                      } else {
-                        // Remove the entity as usual
-                        remove(index)
+                return (
+                  <Box key={index} mb={2} display='flex' alignItems='start'>
+                    {/* Molecule Type */}
+                    <TextField
+                      select
+                      name={`entities.${index}.type`}
+                      label='Molecule Type'
+                      fullWidth
+                      variant='outlined'
+                      value={entity.type || 'Protein'}
+                      onChange={(e) => {
+                        handleChange(e)
+                        // Update the name based on type and id whenever the type changes
+                        const newName = generateName(e.target.value, entity.id)
+                        setFieldValue(`entities.${index}.name`, newName)
+                      }}
+                      error={
+                        touched.entities &&
+                        touched.entities[index] &&
+                        Boolean(
+                          errors.entities &&
+                            (errors.entities as FormikErrors<Entity>[])[index]
+                              ?.type
+                        )
                       }
-                    }}
-                    sx={{ marginLeft: 1 }}
-                  >
-                    <Delete />
-                  </IconButton>
-                </Box>
-              ))}
+                      sx={{
+                        width: '200px',
+                        marginRight: 2
+                      }}
+                      slotProps={{
+                        input: { style: { height: '54px' } }
+                      }}
+                    >
+                      <MenuItem value='Protein'>Protein</MenuItem>
+                      <MenuItem value='DNA' disabled>
+                        DNA - pending AF3 availability
+                      </MenuItem>
+                      <MenuItem value='RNA' disabled>
+                        RNA - pending AF3 availability
+                      </MenuItem>
+                    </TextField>
+
+                    {/* Copies Field */}
+                    <Field
+                      as={TextField}
+                      name={`entities.${index}.copies`}
+                      label='Copies'
+                      type='number'
+                      InputProps={{
+                        inputProps: { min: 1, step: 1 },
+                        sx: { height: '100%' } // Ensure full height usage
+                      }}
+                      fullWidth
+                      variant='outlined'
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.entities[index].copies || 1}
+                      error={
+                        touched.entities &&
+                        touched.entities[index] &&
+                        Boolean(
+                          errors.entities &&
+                            (errors.entities as FormikErrors<Entity>[])[index]
+                              ?.copies
+                        )
+                      }
+                      sx={{
+                        width: '100px',
+                        marginRight: 2,
+                        height: '54px'
+                      }} // Fixed height
+                    />
+
+                    <Box flex={1} marginRight={2}>
+                      <AminoAcidField
+                        label={`Amino Acid Sequence (${
+                          entity.sequence?.length || 0
+                        })`}
+                        name={`entities.${index}.sequence`}
+                        rawValue={entity.sequence || ''}
+                        error={seqError as string}
+                        touched={Boolean(seqTouched)}
+                        // Pass the raw value to Formik
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                          setFieldValue(
+                            `entities.${index}.sequence`,
+                            e.target.value
+                          )
+                        }}
+                        onBlur={handleBlur}
+                      />
+                    </Box>
+
+                    <IconButton
+                      onClick={() => {
+                        if (values.entities.length === 1) {
+                          // If there's only one entity, reset it with a new blank entity
+                          remove(index)
+                          push({
+                            id: `${index + 1}`,
+                            name: generateName('Protein', `${index + 1}`),
+                            sequence: '',
+                            type: 'Protein',
+                            copies: 1
+                          })
+                        } else {
+                          // Remove the entity as usual
+                          remove(index)
+                        }
+                      }}
+                      sx={{ marginLeft: 1 }}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </Box>
+                )
+              })}
               <p> Total characters {totalCharactersWithCopies}</p>
               <Button
                 variant='contained'
