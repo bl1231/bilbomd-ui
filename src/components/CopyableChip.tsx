@@ -12,11 +12,7 @@ interface CopyableChipProps {
   url?: string
 }
 
-const CopyableChipRedirection: React.FC<CopyableChipProps> = ({
-  label,
-  value,
-  url
-}) => {
+const CopyableChip: React.FC<CopyableChipProps> = ({ label, value, url }) => {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
 
@@ -40,7 +36,7 @@ const CopyableChipRedirection: React.FC<CopyableChipProps> = ({
   const handleLaunch = (e: React.MouseEvent) => {
     e.stopPropagation()
     if (url) {
-      navigate(`/dashboard/jobs/${url}`)
+      navigate(url)
     }
   }
 
@@ -66,7 +62,7 @@ const CopyableChipRedirection: React.FC<CopyableChipProps> = ({
               </IconButton>
             </Tooltip>
             {url && (
-              <Tooltip title={`Go to Job ${url}`}>
+              <Tooltip title={`Go to ${url}`}>
                 <IconButton
                   size='small'
                   onClick={handleLaunch}
@@ -100,4 +96,4 @@ const CopyableChipRedirection: React.FC<CopyableChipProps> = ({
   )
 }
 
-export default CopyableChipRedirection
+export default CopyableChip
