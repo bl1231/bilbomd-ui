@@ -52,7 +52,7 @@ describe('EditUser Component', () => {
     })
 
     renderWithProviders(<EditUser />)
-
+    // Assert that EditUserForm was called with the correct props
     expect(EditUserForm).toHaveBeenCalledWith(
       { user: { id: '1', name: 'John Doe' } },
       undefined
