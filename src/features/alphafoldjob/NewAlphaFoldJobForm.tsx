@@ -336,7 +336,9 @@ const NewAlphaFoldJob = () => {
     })
     try {
       const newJob = await addNewAlphaFoldJob(form).unwrap()
-      setStatus(newJob)
+      // setStatus(newJob)
+      // ✅ Set only a string value
+      setStatus(`Job Submitted: ${newJob.jobid}`)
     } catch (error) {
       console.error('rejected', error)
     }
