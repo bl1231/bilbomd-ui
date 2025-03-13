@@ -52,7 +52,6 @@
     "@mui/system": "^6.4.7",
     "@mui/x-data-grid": "^7.27.3",
     "@reduxjs/toolkit": "^2.6.1",
-    "@types/node": "^22.13.10",
     "axios": "^1.8.3",
     "axios-retry": "^4.5.0",
     "clsx": "^2.1.1",
