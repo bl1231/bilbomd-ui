@@ -146,6 +146,18 @@ const MagickLink = () => {
   } else {
     content = (
       <>
+        {/* Notification about user database loss */}
+        <Grid container justifyContent='center'>
+          <Grid>
+            <Alert severity='error' variant='filled' sx={{ my: 2 }}>
+              <AlertTitle>Important Notice</AlertTitle>
+              An unplanned power outage on Feb 15th has resulted in the{' '}
+              <strong>loss of all user accounts</strong>. If you had an account,
+              you will need to <strong>register again</strong>. We sincerely
+              apologize for the inconvenience.
+            </Alert>
+          </Grid>
+        </Grid>
         <Grid
           container
           columns={12}
