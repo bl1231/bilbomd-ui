@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.17.9 (2/24/2025)
+  - Add ability to configure the login page alert message
 - 1.17.8 (3/13/2025)
   - Fix bug in AlphaFold Job `onSumbit` handler
 - 1.17.6 (1/10/2025)
