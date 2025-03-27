@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import FoXSChart from './FoXSChart'
 import { Alert, AlertTitle } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import { useGetFoxsAnalysisByIdQuery } from 'slices/jobsApiSlice'

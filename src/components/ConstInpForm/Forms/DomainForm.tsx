@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, Fragment } from 'react'
 import { useFormikContext, FieldArray, FormikValues } from 'formik'
 import { Typography, Button, Chip, Box, Alert } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import { useTheme } from '@mui/material/styles'
 import Paper from '@mui/material/Paper'
 import AddIcon from '@mui/icons-material/Add'

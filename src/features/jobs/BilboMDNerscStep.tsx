@@ -3,7 +3,7 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
 import DirectionsRunRoundedIcon from '@mui/icons-material/DirectionsRunRounded'
 import ErrorIcon from '@mui/icons-material/Error'
 import { Chip, Typography } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import Tooltip from '@mui/material/Tooltip'
 
 interface BilboMDStepProps {

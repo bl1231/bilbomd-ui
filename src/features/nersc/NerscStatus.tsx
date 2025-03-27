@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Alert, Divider, Typography, Paper, IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import NerscSystemStatuses from './SystemStatuses'
 import ProjectHours from './ProjectHours'
 import TokenExpirationChip from './TokenExpirationChip'

@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { selectCurrentToken } from 'slices/authSlice'
 import { useEffect, useState } from 'react'
 import { Box } from '@mui/system'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 
 interface JobProps {
   job: BilboMDJob

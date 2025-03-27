@@ -9,7 +9,7 @@ import {
   Box,
   CircularProgress
 } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import LinearProgress from '@mui/material/LinearProgress'
 import Paper from '@mui/material/Paper'
 import { styled, useTheme, Theme } from '@mui/material/styles'

@@ -1,7 +1,7 @@
 import { Chip, Divider, Typography } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import FeedbackChart from './FeedbackChart'
 import { IFeedbackData } from '@bl1231/bilbomd-mongodb-schema'
 

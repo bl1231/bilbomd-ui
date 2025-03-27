@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useFormikContext, FormikValues } from 'formik'
 import { Typography } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import useTitle from 'hooks/useTitle'
 import { Box } from '@mui/system'

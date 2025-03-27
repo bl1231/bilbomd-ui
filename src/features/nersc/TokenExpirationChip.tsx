@@ -1,5 +1,5 @@
 import Chip from '@mui/material/Chip'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import {
   formatDistanceToNow,

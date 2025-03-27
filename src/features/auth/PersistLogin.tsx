@@ -5,7 +5,7 @@ import usePersist from '../../hooks/usePersist'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../../slices/authSlice'
 import { Alert, Button, CircularProgress } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 
 const PersistLogin = () => {

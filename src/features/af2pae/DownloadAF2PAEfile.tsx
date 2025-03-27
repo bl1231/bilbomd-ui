@@ -1,5 +1,5 @@
 import { Button } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import { Box } from '@mui/system'
 import { axiosInstance } from 'app/api/axios'
 import { useSelector } from 'react-redux'

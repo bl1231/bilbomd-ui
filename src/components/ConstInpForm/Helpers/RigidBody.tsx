@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 import { useFormikContext, FieldArray, FieldArrayRenderProps } from 'formik'
 import { Button, Typography } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import AddIcon from '@mui/icons-material/Add'
 import { Box } from '@mui/system'
 import { lightBlue } from '@mui/material/colors'

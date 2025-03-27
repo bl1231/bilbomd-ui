@@ -15,7 +15,7 @@ import {
   TextField,
   Typography
 } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import useTitle from 'hooks/useTitle'
 import { axiosInstance, isAxiosError } from 'app/api/axios'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
