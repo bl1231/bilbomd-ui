@@ -5,7 +5,7 @@ import { useGetJobsQuery } from 'slices/jobsApiSlice'
 import useTitle from 'hooks/useTitle'
 import { clsx } from 'clsx'
 import { Box } from '@mui/system'
-import { green, red, amber } from '@mui/material/colors'
+import { green, red, amber, grey } from '@mui/material/colors'
 import useAuth from 'hooks/useAuth'
 import {
   Alert,
@@ -55,20 +55,11 @@ const Jobs = () => {
     isLoading: configIsLoading
   } = useGetConfigsQuery('configData')
 
-  if (configIsLoading) return <div>Loading config data...</div>
+  if (configIsLoading) return <div>Loading config data...jobs</div>
   if (configError) return <div>Error loading configuration data</div>
   if (!config) return <div>No configuration data available</div>
   // console.log(`jobs --> config: ${JSON.stringify(config)}`)
   const useNersc = config.useNersc?.toLowerCase() === 'true'
-
-  // useEffect(() => {
-  //   const logEnvVariables = () => {
-  //     Object.keys(import.meta.env).forEach((key) => {
-  //       console.log(`${key}: ${import.meta.env[key]}`)
-  //     })
-  //   }
-  //   logEnvVariables()
-  // }, [])
 
   let content: ReactNode
 
@@ -168,14 +159,16 @@ const Jobs = () => {
         headerName: 'Status',
         width: 90,
         cellClassName: (params) => {
-          if (params.value == null) {
-            return ''
-          }
+          if (params.value == null) return ''
           return clsx('bilbomd', {
             submitted: params.value === 'Submitted',
             running: params.value === 'Running',
             error: params.value === 'Error',
-            completed: params.value === 'Completed'
+            completed: params.value === 'Completed',
+            pending: params.value === 'Pending',
+            failed: params.value === 'Failed',
+            cancelled: params.value === 'Cancelled',
+            unknown: params.value === 'Unknown'
           })
         }
       },
@@ -312,6 +305,27 @@ const Jobs = () => {
                     backgroundColor: amber[100],
                     color: '#1a3e72',
                     fontWeight: '600'
+                  },
+                  '& .bilbomd.pending': {
+                    backgroundColor: amber[50],
+                    color: '#1a3e72',
+                    fontWeight: '500'
+                  },
+                  '& .bilbomd.failed': {
+                    backgroundColor: red[300],
+                    color: '#1a3e72',
+                    fontWeight: '600'
+                  },
+                  '& .bilbomd.cancelled': {
+                    backgroundColor: grey[200],
+                    color: '#616161',
+                    fontStyle: 'italic',
+                    fontWeight: '500'
+                  },
+                  '& .bilbomd.unknown': {
+                    backgroundColor: '#f3e5f5',
+                    color: '#4a148c',
+                    fontWeight: '500'
                   }
                 }}
               >
