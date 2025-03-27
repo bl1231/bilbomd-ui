@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import { Chain } from 'types/interfaces'
 import ChainCard from './ChainCard'
 

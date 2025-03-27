@@ -2,7 +2,7 @@ import useAuth from 'hooks/useAuth'
 import useTitle from 'hooks/useTitle'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { Alert, Typography, Link } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import NerscSystemStatuses from 'features/nersc/SystemStatuses'
 import { Box } from '@mui/system'
 

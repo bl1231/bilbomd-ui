@@ -21,7 +21,7 @@ import {
   Radio
 } from '@mui/material'
 import LinearProgress from '@mui/material/LinearProgress'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import { BilboMDJob } from 'types/interfaces'

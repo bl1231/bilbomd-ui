@@ -1,7 +1,7 @@
 import { Alert, Typography } from '@mui/material'
 import Box from '@mui/material/Box'
 import Slider from '@mui/material/Slider'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import Chip from '@mui/material/Chip'
 
 interface PAESliderProps {
