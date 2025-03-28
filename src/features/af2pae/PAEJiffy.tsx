@@ -10,7 +10,7 @@ import {
   TableContainer,
   TableRow
 } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import { Form, Formik, Field, FormikHelpers } from 'formik'
 import useAuth from 'hooks/useAuth'
 import { useState, useEffect } from 'react'

@@ -1,5 +1,5 @@
 import { Alert, AlertTitle } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import { axiosInstance } from 'app/api/axios'
 import { useState, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router'

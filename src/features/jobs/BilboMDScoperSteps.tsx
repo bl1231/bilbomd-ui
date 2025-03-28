@@ -2,7 +2,7 @@ import { BilboMDJob } from 'types/interfaces'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import { Alert, Chip } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import BilboMDScoperStep from './BilboMDScoperStep'
 
 const Item = styled(Paper)(({ theme }) => ({

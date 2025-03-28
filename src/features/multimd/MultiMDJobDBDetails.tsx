@@ -7,7 +7,7 @@ import {
   Stack,
   Box
 } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import HeaderBox from 'components/HeaderBox'
 import { format } from 'date-fns'
@@ -37,7 +37,11 @@ const MultiMDJobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
         <Typography>
           {job.mongo.bilbomd_uuids.map((uuid, index) => (
             <Box key={index} sx={{ my: 1 }}>
-              <CopyableChip label='UUID' value={uuid} />
+              <CopyableChip
+                label='UUID'
+                value={uuid}
+                // Should add something like this   url={job.mongo._id as string} by updating the schema to store the object id
+              />
             </Box>
           ))}
         </Typography>

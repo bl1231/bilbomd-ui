@@ -12,7 +12,7 @@ import {
   Link
 } from '@mui/material'
 import { Add, Delete } from '@mui/icons-material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import { Link as RouterLink } from 'react-router'
 import {
   Form,
@@ -24,7 +24,7 @@ import {
 } from 'formik'
 import FileSelect from 'features/jobs/FileSelect'
 import { useAddNewAlphaFoldJobMutation } from 'slices/jobsApiSlice'
-import LoadingButton from '@mui/lab/LoadingButton'
+// import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import { BilboMDAlphaFoldJobSchema } from 'schemas/BilboMDAlphaFoldJobSchema'
 import useAuth from 'hooks/useAuth'
@@ -386,7 +386,7 @@ const SubmitButton = ({
   status: string | undefined
 }) => (
   <Grid sx={{ mt: 2 }}>
-    <LoadingButton
+    <Button
       type='submit'
       disabled={!isValid || isSubmitting || !isFormValid}
       loading={isSubmitting}
@@ -396,7 +396,7 @@ const SubmitButton = ({
       sx={{ width: '110px' }}
     >
       <span>Submit</span>
-    </LoadingButton>
+    </Button>
     {status && <Alert severity='success'>{status}</Alert>}
   </Grid>
 )
@@ -461,9 +461,14 @@ const NewAlphaFoldJob = () => {
     })
     try {
       const newJob = await addNewAlphaFoldJob(form).unwrap()
-      setStatus(newJob)
+      // setStatus(newJob)
+      // ✅ Set only a string value
+      setStatus(`Job Submitted: ${newJob.jobid}`)
     } catch (error) {
       console.error('rejected', error)
+      setTimeout(() => {
+        throw error
+      })
     }
   }
 

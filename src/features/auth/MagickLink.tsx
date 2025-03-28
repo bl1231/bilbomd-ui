@@ -8,7 +8,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import { Alert, AlertTitle, TextField, Typography } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import Divider from '@mui/material/Divider'
 import { Link } from 'react-router'
 import useTitle from 'hooks/useTitle'
@@ -146,6 +146,20 @@ const MagickLink = () => {
   } else {
     content = (
       <>
+        {/* Configurable Alert on Login Page */}
+        <Grid container justifyContent='center'>
+          {config.enableHomePageAlert === 'true' && (
+            <Grid>
+              <Alert severity='error' variant='filled' sx={{ my: 2 }}>
+                <AlertTitle>Important Notice</AlertTitle>
+                An unplanned power outage on Feb 15th has resulted in the{' '}
+                <strong>loss of all user accounts</strong>. If you had an
+                account, you will need to <strong>register again</strong>. We
+                sincerely apologize for the inconvenience.
+              </Alert>
+            </Grid>
+          )}
+        </Grid>
         <Grid
           container
           columns={12}

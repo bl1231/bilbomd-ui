@@ -8,7 +8,7 @@ import {
 } from '@mui/material'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import useTitle from 'hooks/useTitle'
-import useTheme from '@mui/material/styles/useTheme'
+import { useTheme } from '@mui/material/styles'
 import Introduction from '../shared/Introduction'
 import FeaturesList from '../shared/FeaturesList'
 import PipelineOptions from '../shared/PipelineOptions'

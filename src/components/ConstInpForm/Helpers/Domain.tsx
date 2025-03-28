@@ -8,7 +8,7 @@ import {
   MenuItem,
   AlertProps
 } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import { Box } from '@mui/system'
 import { Chain, RigidBody, RigidDomain } from 'types/interfaces'
 import { useTheme } from '@mui/material/styles'
