@@ -287,7 +287,7 @@ const Jobs = () => {
               <Box
                 sx={{
                   '& .bilbomd.completed': {
-                    backgroundColor: green[400],
+                    backgroundColor: green[500],
                     color: '#1a3e72',
                     fontWeight: '800'
                   },
@@ -307,7 +307,7 @@ const Jobs = () => {
                     fontWeight: '600'
                   },
                   '& .bilbomd.pending': {
-                    backgroundColor: amber[50],
+                    backgroundColor: green[100],
                     color: '#1a3e72',
                     fontWeight: '500'
                   },
