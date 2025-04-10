@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import {
   Box,
+  Button,
   TextField,
   Typography,
   Alert,
@@ -15,7 +16,6 @@ import { Form, Formik, Field } from 'formik'
 import FileSelect from 'features/jobs/FileSelect'
 import { useAddNewSANSJobMutation } from 'slices/jobsApiSlice'
 import { useCalculateAutoRgMutation } from 'slices/jobsApiSlice'
-import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import { BilboMDSANSJobSchema } from 'schemas/BilboMDSANSJobSchema'
 import { expdataSchema } from 'schemas/ExpdataSchema'
@@ -443,7 +443,7 @@ const NewSANSJob = () => {
 
                     {/* Submit Button */}
                     <Grid sx={{ mt: 2 }}>
-                      <LoadingButton
+                      <Button
                         type='submit'
                         disabled={
                           !isValid || isSubmitting || !isFormValid(values)
@@ -455,7 +455,7 @@ const NewSANSJob = () => {
                         sx={{ width: '110px' }}
                       >
                         <span>Submit</span>
-                      </LoadingButton>
+                      </Button>
 
                       {isSuccess ? (
                         <Alert severity='success'>{status}</Alert>

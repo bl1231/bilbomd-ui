@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import {
   Box,
+  Button,
   TextField,
   Typography,
   Alert,
@@ -12,7 +13,6 @@ import { Link as RouterLink } from 'react-router'
 import { Form, Formik, Field } from 'formik'
 import FileSelect from 'features/jobs/FileSelect'
 import { useAddNewAutoJobMutation } from '../../slices/jobsApiSlice'
-import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import NewAutoJobFormInstructions from './NewAutoJobFormInstructions'
 import { BilboMDAutoJobSchema } from 'schemas/BilboMDAutoJobSchema'
@@ -237,7 +237,7 @@ const NewAutoJobForm = () => {
                         </Box>
                       )}
                       <Grid sx={{ mt: 2 }}>
-                        <LoadingButton
+                        <Button
                           type='submit'
                           disabled={
                             !isValid || isSubmitting || !isFormValid(values)
@@ -249,7 +249,7 @@ const NewAutoJobForm = () => {
                           sx={{ width: '110px' }}
                         >
                           <span>Submit</span>
-                        </LoadingButton>
+                        </Button>
 
                         {isSuccess ? (
                           <Alert severity='success'>{status}</Alert>

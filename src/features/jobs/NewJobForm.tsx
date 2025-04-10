@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import {
   Box,
+  Button,
   Checkbox,
   TextField,
   MenuItem,
@@ -27,7 +28,6 @@ import {
   useAddNewJobMutation,
   useCalculateAutoRgMutation
 } from 'slices/jobsApiSlice'
-import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import { expdataSchema } from 'schemas/ExpdataSchema'
 import { BilboMDClassicJobSchema } from 'schemas/BilboMDClassicJobSchema'
@@ -617,7 +617,7 @@ const NewJobForm = () => {
                       </Box>
                     )}
                     <Grid size={{ xs: 6 }} sx={{ my: 2 }}>
-                      <LoadingButton
+                      <Button
                         type='submit'
                         disabled={
                           !isValid || isSubmitting || !isFormValid(values)
@@ -629,7 +629,7 @@ const NewJobForm = () => {
                         sx={{ width: '110px' }}
                       >
                         <span>Submit</span>
-                      </LoadingButton>
+                      </Button>
 
                       {isSuccess ? (
                         <Alert severity='success'>{status}</Alert>
