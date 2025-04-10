@@ -152,7 +152,7 @@ const Jobs = () => {
         field: 'time_submitted',
         headerName: 'Submitted',
         type: 'dateTime',
-        width: 150,
+        width: 135,
         valueFormatter: (value) => {
           if (value) {
             return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
@@ -165,7 +165,7 @@ const Jobs = () => {
         field: 'time_completed',
         headerName: 'Completed',
         type: 'dateTime',
-        width: 150,
+        width: 135,
         valueFormatter: (value) => {
           if (value) {
             return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
@@ -206,7 +206,7 @@ const Jobs = () => {
       {
         field: 'progress',
         headerName: 'Progress',
-        width: 150,
+        width: 140,
         renderCell: (params) => {
           if (params.value === undefined || params.value === null) {
             return null
@@ -245,12 +245,12 @@ const Jobs = () => {
       {
         field: 'nerscJobid',
         headerName: 'NERSC JobID',
-        width: 110
+        width: 100
       },
       {
         field: 'nerscStatus',
         headerName: 'NERSC Status',
-        width: 110
+        width: 100
       },
 
       {
