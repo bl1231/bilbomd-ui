@@ -4,6 +4,7 @@ import * as Yup from 'yup'
 import { useGetJobsQuery, useAddNewMultiJobMutation } from 'slices/jobsApiSlice'
 import {
   Box,
+  Button,
   Checkbox,
   CircularProgress,
   Table,
@@ -22,7 +23,6 @@ import {
 } from '@mui/material'
 import LinearProgress from '@mui/material/LinearProgress'
 import Grid from '@mui/material/Grid'
-import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import { BilboMDJob } from 'types/interfaces'
 import HeaderBox from 'components/HeaderBox'
@@ -352,7 +352,7 @@ const NewMultiMDJobForm: React.FC = () => {
                             </Alert>
                           )
                         )}
-                        <LoadingButton
+                        <Button
                           type='submit'
                           disabled={!isValid || isSubmitting}
                           loading={isSubmitting}
@@ -362,7 +362,7 @@ const NewMultiMDJobForm: React.FC = () => {
                           sx={{ width: '110px' }}
                         >
                           <span>Submit</span>
-                        </LoadingButton>
+                        </Button>
 
                         {isSuccess ? (
                           <Alert severity='success'>{status}</Alert>

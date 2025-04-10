@@ -53,7 +53,7 @@ export const nerscApiSlice = superfacilityApiSlice.injectEndpoints({
       }),
       providesTags: ['Outages']
     }),
-    getProjectHours: builder.query<ProjectHours, void>({
+    getProjectHours: builder.query<ProjectHours, string>({
       query: (projectCode) => ({
         url: `account/projects/${projectCode}`,
         method: 'GET'

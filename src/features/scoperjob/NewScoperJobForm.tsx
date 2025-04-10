@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   TextField,
   Typography,
   Alert,
@@ -17,7 +18,6 @@ import { Link as RouterLink } from 'react-router'
 import { Form, Formik, Field, FormikHelpers } from 'formik'
 import FileSelect from 'features/jobs/FileSelect'
 import { useAddNewScoperJobMutation } from 'slices/jobsApiSlice'
-import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { bilbomdScoperJobSchema } from 'schemas/ScoperValidationSchema'
@@ -292,7 +292,7 @@ const NewScoperJobForm = () => {
                         </Box>
                       )}
                       <Grid sx={{ mt: 2 }}>
-                        <LoadingButton
+                        <Button
                           type='submit'
                           disabled={
                             !isValid ||
@@ -307,7 +307,7 @@ const NewScoperJobForm = () => {
                           sx={{ width: '110px' }}
                         >
                           <span>Submit</span>
-                        </LoadingButton>
+                        </Button>
 
                         {isSuccess ? (
                           <Alert severity='success'>{status}</Alert>
