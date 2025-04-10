@@ -24,12 +24,37 @@ import NerscStatus from '../nersc/NerscStatus'
 import HeaderBox from 'components/HeaderBox'
 import { BilboMDJob } from 'types/interfaces'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
+import { INerscInfo } from '@bl1231/bilbomd-mongodb-schema'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   borderTopLeftRadius: 0,
   borderTopRightRadius: 0
 }))
+
+const getHoursInQueue = (nersc: INerscInfo | undefined) => {
+  if (!nersc?.time_submitted) return ''
+  const start = new Date(nersc.time_submitted)
+  const end = nersc.time_started ? new Date(nersc.time_started) : new Date()
+
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) return ''
+
+  const diffMs = end.getTime() - start.getTime()
+  const diffHours = diffMs / (1000 * 60 * 60)
+  return diffHours.toFixed(2)
+}
+
+const getRunTimeInHours = (nersc: INerscInfo | undefined) => {
+  if (!nersc?.time_started || !nersc?.time_completed) return ''
+  const start = new Date(nersc.time_started)
+  const end = new Date(nersc.time_completed)
+
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) return ''
+
+  const diffMs = end.getTime() - start.getTime()
+  const diffHours = diffMs / (1000 * 60 * 60)
+  return diffHours.toFixed(2)
+}
 
 const Jobs = () => {
   useTitle('BilboMD: Jobs List')
@@ -58,7 +83,6 @@ const Jobs = () => {
   if (configIsLoading) return <div>Loading config data...jobs</div>
   if (configError) return <div>Error loading configuration data</div>
   if (!config) return <div>No configuration data available</div>
-  // console.log(`jobs --> config: ${JSON.stringify(config)}`)
   const useNersc = config.useNersc?.toLowerCase() === 'true'
 
   let content: ReactNode
@@ -71,12 +95,10 @@ const Jobs = () => {
 
     if (error && 'status' in error) {
       if (error.status === 204) {
-        // No jobs available, but user exists
         console.log(error)
         errorMessage = 'No jobs found. Please run some jobs first.'
         severity = 'info'
       } else if (error.status === 404) {
-        // User not found
         errorMessage = 'User not found. Please contact support.'
         severity = 'error'
       } else {
@@ -109,6 +131,8 @@ const Jobs = () => {
     const rows = filteredIds.map((job) => {
       const nerscJobid = job.mongo.nersc?.jobid || ''
       const nerscStatus = job.mongo.nersc?.state || ''
+      const queueHours = getHoursInQueue(job.mongo.nersc)
+      const runTimeHours = getRunTimeInHours(job.mongo.nersc)
 
       return {
         ...job.mongo,
@@ -116,11 +140,11 @@ const Jobs = () => {
         username: job.username,
         nerscJobid: nerscJobid,
         nerscStatus: nerscStatus,
+        queueHours: queueHours,
+        runTimeHours: runTimeHours,
         progress: job.mongo.progress
       }
     })
-
-    // console.log('ROWS--->', rows)
 
     const columns: GridColDef[] = [
       { field: 'title', headerName: 'Title', width: 180 },
@@ -131,10 +155,9 @@ const Jobs = () => {
         width: 150,
         valueFormatter: (value) => {
           if (value) {
-            // Check if value is not empty or null
             return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
           } else {
-            return '' // Return empty string if value is empty or null
+            return ''
           }
         }
       },
@@ -145,14 +168,22 @@ const Jobs = () => {
         width: 150,
         valueFormatter: (value) => {
           if (value) {
-            // Check if value is not empty or null
             return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
           } else {
-            return '' // Return empty string if value is empty or null
+            return ''
           }
         }
       },
-
+      {
+        field: 'queueHours',
+        headerName: 'Queue Time (hrs)',
+        width: 120
+      },
+      {
+        field: 'runTimeHours',
+        headerName: 'Run Time (hrs)',
+        width: 120
+      },
       { field: 'username', headerName: 'User' },
       {
         field: 'status',
@@ -178,7 +209,7 @@ const Jobs = () => {
         width: 150,
         renderCell: (params) => {
           if (params.value === undefined || params.value === null) {
-            return null // Hide progress bar if progress is not available
+            return null
           }
           const progressValue = Number(params.value)
           const displayProgress = Number.isNaN(progressValue)
@@ -342,18 +373,20 @@ const Jobs = () => {
                     initialState={{
                       pagination: {
                         paginationModel: {
-                          pageSize: 10
+                          pageSize: 20
                         }
                       },
                       columns: {
                         columnVisibilityModel: {
                           position: !useNersc,
                           nerscJobid: useNersc,
-                          nerscStatus: useNersc
+                          nerscStatus: useNersc,
+                          queueHours: useNersc,
+                          runTimeHours: useNersc
                         }
                       }
                     }}
-                    pageSizeOptions={[5, 10, 15, 25]}
+                    pageSizeOptions={[5, 10, 20, 40]}
                   />
                 </Box>
               </Box>
