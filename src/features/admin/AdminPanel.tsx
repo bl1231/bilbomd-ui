@@ -1,17 +1,12 @@
-import Alert from '@mui/material/Alert'
-import CircularProgress from '@mui/material/CircularProgress'
+import { Alert, CircularProgress, Typography, Box } from '@mui/material'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableCell from '@mui/material/TableCell'
-import TableRow from '@mui/material/TableRow'
-import Paper from '@mui/material/Paper'
+import { useGetStatsQuery } from 'slices/statsApiSlice'
 import useTitle from 'hooks/useTitle'
+import StatsPanel from './BilboMDStats'
+import ConfigPanel from './ConfigPanel'
 
 const AdminPanel = () => {
-  useTitle(`BilboMD: Admin Panel`)
+  useTitle('BilboMD: Admin Panel')
   const bullBoardUrl = '/admin/bullmq'
 
   const {
@@ -22,43 +17,65 @@ const AdminPanel = () => {
     pollingInterval: 10000
   })
 
-  if (configIsLoading) return <CircularProgress />
-  if (configError)
-    return <Alert severity='error'>Error loading configuration data</Alert>
-  if (!config)
+  const {
+    data: stats,
+    error: statsError,
+    isLoading: statsIsLoading
+  } = useGetStatsQuery('statsData', {
+    pollingInterval: 10000
+  })
+
+  // Combined loading state
+  if (configIsLoading || statsIsLoading) {
+    return (
+      <Box display='flex' justifyContent='center' mt={4}>
+        <CircularProgress />
+      </Box>
+    )
+  }
+
+  // Combined error state
+  if (configError || statsError) {
+    return (
+      <Alert severity='error'>
+        Error loading data: {configError ? 'configuration' : ''}{' '}
+        {configError && statsError ? 'and' : ''}{' '}
+        {statsError ? 'statistics' : ''}
+      </Alert>
+    )
+  }
+
+  // Handle empty/fallback data
+  if (!config) {
     return <Alert severity='warning'>No configuration data available</Alert>
+  }
+
+  if (!stats) {
+    return <Alert severity='warning'>No statistics data available</Alert>
+  }
 
   return (
     <>
-      <h2>Admin Panel - Config</h2>
+      <Typography variant='h4' gutterBottom>
+        Admin Panel - Stats
+      </Typography>
+      <StatsPanel stats={stats} />
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Key</TableCell>
-              <TableCell>Value</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {Object.entries(config).map(([key, value]) => (
-              <TableRow key={key}>
-                <TableCell>{key}</TableCell>
-                <TableCell>{value as React.ReactNode}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Typography variant='h4' gutterBottom mt={4}>
+        Admin Panel - Configuration
+      </Typography>
+      <ConfigPanel config={config} />
 
-      <h2>Admin Panel - Job Queue Management</h2>
+      <Typography variant='h4' gutterBottom mt={4}>
+        Admin Panel - Job Queue Management
+      </Typography>
       <iframe
         src={bullBoardUrl}
         width='100%'
-        height='800' // Adjust the height as necessary
+        height='800'
         style={{ border: 'none' }}
         title='BullBoard'
-      ></iframe>
+      />
     </>
   )
 }
