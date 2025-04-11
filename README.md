@@ -60,6 +60,10 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.17.11 (4/10/2025)
+  - Improvements to NERSC Status Component
+  - Add NERSC queue information to job table
+  - Update all npm dependencies
 - 1.17.10 (3/31/2025)
   - Improve Job Table status and colors for NERSC Jobs
 - 1.17.9 (2/24/2025)

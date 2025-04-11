@@ -9,7 +9,7 @@ import {
 import Grid from '@mui/material/Grid'
 type ContentType = React.ReactNode | string
 
-const ProjectHours = ({ projectCode }) => {
+const ProjectHours = ({ projectCode }: { projectCode: string }) => {
   const {
     data: project,
     isSuccess,
@@ -26,8 +26,8 @@ const ProjectHours = ({ projectCode }) => {
   // console.log('project:', project)
   if (isSuccess) {
     // Calculate percentages for CPU and GPU usage
-    const cpuUsagePercent =
-      (project.cpu_hours_used / project.cpu_hours_given) * 100
+    // const cpuUsagePercent =
+    //   (project.cpu_hours_used / project.cpu_hours_given) * 100
     const gpuUsagePercent =
       (project.gpu_hours_used / project.gpu_hours_given) * 100
     content = (
@@ -46,62 +46,6 @@ const ProjectHours = ({ projectCode }) => {
             variant='outlined'
             style={{ backgroundColor: 'black', color: '#bae637' }}
           />
-        </Grid>
-
-        {/* Top Row: CPU Hours */}
-        <Grid sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography sx={{ mx: 1 }}>
-            <b>CPU Hours Available:</b>
-          </Typography>
-          <Chip
-            label={project.cpu_hours_given}
-            sx={{
-              mx: 0.5,
-              fontSize: '0.9rem',
-              fontWeight: 'bold',
-              width: '60px'
-            }}
-            variant='outlined'
-            style={{ backgroundColor: 'black', color: '#bae637' }}
-          />
-          <Typography sx={{ mx: 1 }}>
-            <b>CPU Hours Used:</b>
-          </Typography>
-          <Chip
-            label={project.cpu_hours_used.toFixed(1)}
-            sx={{
-              mx: 0.5,
-              fontSize: '0.9rem',
-              fontWeight: 'bold',
-              width: '60px'
-            }}
-            variant='outlined'
-            style={{ backgroundColor: 'black', color: '#bae637' }}
-          />
-
-          {/* CPU Usage Meter */}
-          <Typography sx={{ mx: 1 }}>
-            <b>CPU Usage:</b>
-          </Typography>
-
-          <LinearProgress
-            variant='determinate'
-            value={cpuUsagePercent}
-            sx={{
-              flexGrow: 1,
-              height: 16,
-              borderRadius: 0.8,
-              backgroundColor: '#ddd',
-              '& .MuiLinearProgress-bar1Determinate': {
-                backgroundColor: 'green',
-                borderRadius: 0.8
-              }
-            }}
-          />
-
-          <Typography sx={{ ml: 1 }}>
-            <b>{cpuUsagePercent.toFixed(2)}%</b>
-          </Typography>
         </Grid>
 
         {/* Bottom Row: GPU Hours */}

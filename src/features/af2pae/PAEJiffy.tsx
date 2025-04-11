@@ -18,7 +18,6 @@ import { useNavigate } from 'react-router'
 import { af2paeJiffySchema } from 'schemas/Alphafold2PAEValidationSchema'
 import FileSelect from 'features/jobs/FileSelect'
 import { Debug } from 'components/Debug'
-import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import Download from './DownloadAF2PAEfile'
 import { Box } from '@mui/system'
@@ -338,7 +337,7 @@ const Alphafold2PAEJiffy = () => {
                         </Box>
                       )}
                       <Grid size={{ xs: 6 }} sx={{ my: 2 }}>
-                        <LoadingButton
+                        <Button
                           type='submit'
                           disabled={
                             !isValid ||
@@ -352,7 +351,7 @@ const Alphafold2PAEJiffy = () => {
                           sx={{ width: '110px' }}
                         >
                           <span>Submit</span>
-                        </LoadingButton>
+                        </Button>
                       </Grid>
                       {process.env.NODE_ENV === 'development' ? <Debug /> : ''}
                     </Grid>
