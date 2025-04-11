@@ -60,6 +60,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.17.12 (4/11/2025)
+  - Add improved form entry for Alphafold jobs to display input Amino Acid sequence in
+    10aa chunked layout.
 - 1.17.11 (4/10/2025)
   - Improvements to NERSC Status Component
   - Add NERSC queue information to job table
