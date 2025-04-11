@@ -1,29 +1,46 @@
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableCell from '@mui/material/TableCell'
-import TableRow from '@mui/material/TableRow'
-import Paper from '@mui/material/Paper'
+import {
+  Table,
+  TableBody,
+  TableContainer,
+  TableHead,
+  TableCell,
+  TableRow,
+  Paper,
+  Typography
+} from '@mui/material'
 
-const ConfigPanel = ({ config }: { config: Record<string, unknown> }) => {
+export interface ConfigPanelProps {
+  config: Record<string, unknown> | null
+}
+
+const formatValue = (value: unknown): string => {
+  if (value === null || value === undefined) return '—'
+  if (typeof value === 'boolean') return value ? 'true' : 'false'
+  if (typeof value === 'object') return JSON.stringify(value)
+  return String(value)
+}
+
+const ConfigPanel = ({ config }: ConfigPanelProps) => {
   if (!config) return null
 
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table>
+      <Typography variant='h6' gutterBottom>
+        Configuration
+      </Typography>
+      <TableContainer component={Paper} sx={{ maxHeight: 500 }}>
+        <Table stickyHeader size='small'>
           <TableHead>
             <TableRow>
-              <TableCell>Key</TableCell>
-              <TableCell>Value</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Key</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Value</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {Object.entries(config).map(([key, value]) => (
               <TableRow key={key}>
                 <TableCell>{key}</TableCell>
-                <TableCell>{value as React.ReactNode}</TableCell>
+                <TableCell>{formatValue(value)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

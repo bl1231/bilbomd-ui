@@ -15,7 +15,7 @@ export interface StatsPanelProps {
     jobCount: number
     totalJobsFromUsers: number
     jobTypes: Record<string, number>
-  }
+  } | null
 }
 
 const StatsPanel = ({ stats }: StatsPanelProps) => {

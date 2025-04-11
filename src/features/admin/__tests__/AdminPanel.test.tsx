@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi, Mock } from 'vitest'
-import AdminPanel from './AdminPanel'
+import AdminPanel from '../AdminPanel'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useGetStatsQuery } from 'slices/statsApiSlice'
 
