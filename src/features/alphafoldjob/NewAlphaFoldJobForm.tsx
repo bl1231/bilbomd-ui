@@ -37,49 +37,34 @@ import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useTheme } from '@mui/material/styles'
 
-/* --------------------------------------------------------------------------
-   New: Custom AminoAcidField Component that shows chunked text when not focused
-   -------------------------------------------------------------------------- */
-function toSuperscript(num: number): string {
-  const map: { [digit: string]: string } = {
-    '0': '⁰',
-    '1': '¹',
-    '2': '²',
-    '3': '³',
-    '4': '⁴',
-    '5': '⁵',
-    '6': '⁶',
-    '7': '⁷',
-    '8': '⁸',
-    '9': '⁹'
-  }
-  return num
-    .toString()
-    .split('')
-    .map((digit) => map[digit] ?? digit)
-    .join('')
-}
-
-function chunkSequence(seq: string): string {
+// --------------------------------------------------------------------
+// Helpers for <sup> chunking
+// --------------------------------------------------------------------
+function chunkSequenceHTML(seq: string): string {
   if (!seq) return ''
   const chunkSize = 10
   let out = ''
-  for (let i = 0; i < seq.length; i++) {
-    out += seq[i]
-    if ((i + 1) % chunkSize === 0) {
-      out += toSuperscript(i + 1) + ' '
+  let i = 0
+
+  while (i < seq.length) {
+    const end = Math.min(i + chunkSize, seq.length)
+    const chunk = seq.slice(i, end)
+    // Insert chunk + real <sup> tag
+    out += `${chunk}<sup>${end}</sup>`
+    // Add a space if not at the end
+    if (end < seq.length) {
+      out += ' '
     }
-  }
-  // leftover chunk superscript if length not multiple of 10
-  if (seq.length > 0 && seq.length % chunkSize !== 0) {
-    out += toSuperscript(seq.length)
+    i = end
   }
   return out
 }
 
-/* --------------------------------------------------------------------------
-   New: Custom AminoAcidField Component that shows chunked text when not focused
-   -------------------------------------------------------------------------- */
+// --------------------------------------------------------------------
+// Single-Textbox AminoAcidField
+//  - On focus: shows raw text for editing
+//  - On blur: shows HTML-chunked <sup> preview
+// --------------------------------------------------------------------
 function AminoAcidField(props: {
   label: string
   name: string
@@ -93,60 +78,93 @@ function AminoAcidField(props: {
   const { label, name, rawValue, touched, error, onChange, onBlur, disabled } =
     props
 
-  // Local display value (chunked when not editing)
-  const [displayValue, setDisplayValue] = useState(rawValue)
   // Track focus state
   const [isFocused, setIsFocused] = useState(false)
+  // Local display value
+  const [displayValue, setDisplayValue] = useState(rawValue)
 
-  // When the raw value is updated externally and the field isn’t focused,
-  // update the displayed (chunked) text.
+  // Sync rawValue if it changes from outside
   useEffect(() => {
-    if (!isFocused) {
-      setDisplayValue(chunkSequence(rawValue))
-    }
-  }, [rawValue, isFocused])
+    setDisplayValue(rawValue)
+  }, [rawValue])
 
   const handleFocus = () => {
     setIsFocused(true)
-    // Show raw text for editing.
-    setDisplayValue(rawValue)
   }
 
   const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
     setIsFocused(false)
-    onBlur(e)
-    setDisplayValue(chunkSequence(e.target.value))
+    onBlur(e) // Let Formik know about blur
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setDisplayValue(e.target.value)
-    // Pass the raw value to Formik.
-    onChange(e)
+    onChange(e) // Pass raw text to Formik
   }
 
-  return (
-    <TextField
-      fullWidth
-      multiline
-      variant='outlined'
-      label={label}
-      name={name}
-      value={displayValue}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      onFocus={handleFocus}
-      disabled={disabled}
-      error={Boolean(error && touched)}
-      helperText={error && touched ? error : ''}
-      sx={{
-        letterSpacing: '0.15em', // Slight letter spacing for clarity
-        fontFamily: 'monospace'
-      }}
-      InputLabelProps={{
-        shrink: true
-      }}
-    />
-  )
+  // If focused, show editable text field; otherwise, show HTML preview
+  if (isFocused) {
+    return (
+      <Box sx={{ width: '100%' }}>
+        <TextField
+          fullWidth
+          multiline
+          variant='outlined'
+          label={label}
+          name={name}
+          value={displayValue}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
+          disabled={disabled}
+          error={Boolean(error && touched)}
+          helperText={error && touched ? error : ''}
+          sx={{
+            fontFamily: 'monospace',
+            whiteSpace: 'pre-wrap',
+            letterSpacing: '0.15em'
+          }}
+          InputLabelProps={{
+            shrink: true
+          }}
+        />
+      </Box>
+    )
+  } else {
+    // Show chunked HTML with <sup>
+    const chunkedHTML = chunkSequenceHTML(displayValue)
+
+    return (
+      <Box sx={{ width: '100%' }}>
+        {/* "Read-only" box, but clickable/focusable to edit */}
+        <Box
+          tabIndex={0}
+          onFocus={handleFocus}
+          onClick={() => setIsFocused(true)}
+          sx={{
+            minHeight: '56px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            p: 1,
+            cursor: 'text',
+            // Use a consistent font for better alignment
+            fontFamily: '"Roboto", "Noto Sans", sans-serif',
+            whiteSpace: 'pre-wrap',
+            letterSpacing: '0.05em',
+            fontSize: '1rem',
+            color: 'text.primary'
+          }}
+          dangerouslySetInnerHTML={{ __html: chunkedHTML }}
+        />
+        {/* Show error below if needed */}
+        {error && touched && (
+          <Typography variant='body2' color='error' sx={{ mt: 0.5 }}>
+            {error}
+          </Typography>
+        )}
+      </Box>
+    )
+  }
 }
 
 const Instructions = () => (
@@ -189,26 +207,28 @@ const EntitiesFieldArray = ({
   handleChange: (e: ChangeEvent<Element>) => void
   setFieldValue: (
     field: string,
-    value: string,
+    value: string | number,
     shouldValidate?: boolean
   ) => void
 }) => {
   return (
     <FieldArray name='entities'>
       {({ push, remove }) => {
-        // Helper function to generate name based on type and id
+        // Helper to generate name based on type + id
         const generateName = (type: string, id: string) => {
-          const typePrefix = type.toLowerCase().substring(0, 3) // Take the first 3 letters of the type
+          const typePrefix = type.toLowerCase().substring(0, 3)
           return `${typePrefix}-${id}`
         }
+
         // Find the highest current `id` in the entities array
         const getNextId = () => {
           const highestId = values.entities.reduce((maxId, entity) => {
-            const currentId = parseInt(entity.id, 10) // Ensure it's a number
+            const currentId = parseInt(entity.id, 10)
             return currentId > maxId ? currentId : maxId
           }, 0)
-          return (highestId + 1).toString() // Increment the highest `id` for the new one
+          return (highestId + 1).toString()
         }
+
         const totalCharactersWithCopies = values.entities.reduce(
           (acc, entity) =>
             acc + (entity.sequence?.length || 0) * (entity.copies || 1),
@@ -219,7 +239,6 @@ const EntitiesFieldArray = ({
           <Grid container direction='column'>
             <Box>
               {values.entities.map((entity, index) => {
-                // Get any validation errors for the sequence field.
                 const seqError =
                   errors.entities &&
                   errors.entities[index] &&
@@ -243,25 +262,16 @@ const EntitiesFieldArray = ({
                       value={entity.type || 'Protein'}
                       onChange={(e) => {
                         handleChange(e)
-                        // Update the name based on type and id whenever the type changes
                         const newName = generateName(e.target.value, entity.id)
                         setFieldValue(`entities.${index}.name`, newName)
                       }}
-                      error={
-                        touched.entities &&
-                        touched.entities[index] &&
-                        Boolean(
-                          errors.entities &&
-                            (errors.entities as FormikErrors<Entity>[])[index]
-                              ?.type
-                        )
-                      }
                       sx={{
                         width: '200px',
-                        marginRight: 2
-                      }}
-                      slotProps={{
-                        input: { style: { height: '54px' } }
+                        marginRight: 2,
+                        '& .MuiInputBase-root': {
+                          height: '54px',
+                          alignItems: 'center'
+                        }
                       }}
                     >
                       <MenuItem value='Protein'>Protein</MenuItem>
@@ -287,23 +297,11 @@ const EntitiesFieldArray = ({
                       variant='outlined'
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      value={values.entities[index].copies || 1}
-                      error={
-                        touched.entities &&
-                        touched.entities[index] &&
-                        Boolean(
-                          errors.entities &&
-                            (errors.entities as FormikErrors<Entity>[])[index]
-                              ?.copies
-                        )
-                      }
-                      sx={{
-                        width: '100px',
-                        marginRight: 2,
-                        height: '54px'
-                      }} // Fixed height
+                      value={entity.copies || 1}
+                      sx={{ width: '100px', marginRight: 2, height: '54px' }}
                     />
 
+                    {/* AminoAcidField */}
                     <Box flex={1} marginRight={2}>
                       <AminoAcidField
                         label={`Amino Acid Sequence (${
@@ -315,9 +313,12 @@ const EntitiesFieldArray = ({
                         touched={Boolean(seqTouched)}
                         // Pass the raw value to Formik
                         onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                          const newSeq = e.target.value
+                          setFieldValue(`entities.${index}.sequence`, newSeq)
+                          // Also update seq_length
                           setFieldValue(
-                            `entities.${index}.sequence`,
-                            e.target.value
+                            `entities.${index}.seq_length`,
+                            newSeq.length
                           )
                         }}
                         onBlur={handleBlur}
@@ -334,7 +335,8 @@ const EntitiesFieldArray = ({
                             name: generateName('Protein', `${index + 1}`),
                             sequence: '',
                             type: 'Protein',
-                            copies: 1
+                            copies: 1,
+                            seq_length: 0
                           })
                         } else {
                           // Remove the entity as usual
@@ -359,7 +361,8 @@ const EntitiesFieldArray = ({
                     name: generateName('Protein', getNextId()),
                     sequence: '',
                     type: 'Protein',
-                    copies: 1
+                    copies: 1,
+                    seq_length: 0
                   })
                 }
               >
@@ -406,7 +409,7 @@ const NewAlphaFoldJob = () => {
   const { email } = useAuth()
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
 
-  // Fetch the configuration object
+  // Fetch configuration object
   const {
     data: config,
     error: configError,
@@ -437,7 +440,8 @@ const NewAlphaFoldJob = () => {
         name: 'pro-1',
         sequence: '',
         type: 'Protein',
-        copies: 1
+        copies: 1,
+        seq_length: 0
       }
     ]
   }
@@ -480,9 +484,7 @@ const NewAlphaFoldJob = () => {
   const content = (
     <Grid container spacing={2}>
       <Instructions />
-
       <PipelineSchematic isDarkMode={isDarkMode} />
-
       <Grid size={{ xs: 12 }}>
         <HeaderBox>
           <Typography>BilboMD AF Job Form</Typography>
@@ -573,13 +575,19 @@ const NewAlphaFoldJob = () => {
                               error && (
                                 <Box key={idx} sx={{ my: 2 }}>
                                   {error.sequence && (
-                                    <Alert severity='error'>{`Entity ${idx + 1} sequence: ${error.sequence}`}</Alert>
+                                    <Alert severity='error'>{`Entity ${
+                                      idx + 1
+                                    } sequence: ${error.sequence}`}</Alert>
                                   )}
                                   {error.type && (
-                                    <Alert severity='error'>{`Entity ${idx + 1} type: ${error.type}`}</Alert>
+                                    <Alert severity='error'>{`Entity ${
+                                      idx + 1
+                                    } type: ${error.type}`}</Alert>
                                   )}
                                   {error.copies && (
-                                    <Alert severity='error'>{`Entity ${idx + 1} copies: ${error.copies}`}</Alert>
+                                    <Alert severity='error'>{`Entity ${
+                                      idx + 1
+                                    } copies: ${error.copies}`}</Alert>
                                   )}
                                 </Box>
                               )

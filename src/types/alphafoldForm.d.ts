@@ -4,6 +4,7 @@ export interface Entity {
   sequence: string
   type: string
   copies: number
+  seq_length?: number
 }
 
 export interface NewAlphaFoldJobFormValues {
