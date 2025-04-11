@@ -1,6 +1,7 @@
 import { ChangeEvent, FocusEvent, useState, useEffect } from 'react'
 import {
   Box,
+  Chip,
   TextField,
   Typography,
   Alert,
@@ -13,6 +14,8 @@ import {
 } from '@mui/material'
 import { Add, Delete } from '@mui/icons-material'
 import Grid from '@mui/material/Grid'
+import { grey } from '@mui/material/colors'
+import { Theme } from '@mui/material/styles'
 import { Link as RouterLink } from 'react-router'
 import {
   Form,
@@ -37,9 +40,6 @@ import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useTheme } from '@mui/material/styles'
 
-// --------------------------------------------------------------------
-// Helpers for <sup> chunking
-// --------------------------------------------------------------------
 function chunkSequenceHTML(seq: string): string {
   if (!seq) return ''
   const chunkSize = 10
@@ -49,9 +49,8 @@ function chunkSequenceHTML(seq: string): string {
   while (i < seq.length) {
     const end = Math.min(i + chunkSize, seq.length)
     const chunk = seq.slice(i, end)
-    // Insert chunk + real <sup> tag
-    out += `${chunk}<sup>${end}</sup>`
-    // Add a space if not at the end
+    const paddedEnd = String(end).padStart(3, '0')
+    out += `${chunk}<sup>${paddedEnd}</sup>`
     if (end < seq.length) {
       out += ' '
     }
@@ -60,11 +59,6 @@ function chunkSequenceHTML(seq: string): string {
   return out
 }
 
-// --------------------------------------------------------------------
-// Single-Textbox AminoAcidField
-//  - On focus: shows raw text for editing
-//  - On blur: shows HTML-chunked <sup> preview
-// --------------------------------------------------------------------
 function AminoAcidField(props: {
   label: string
   name: string
@@ -78,9 +72,7 @@ function AminoAcidField(props: {
   const { label, name, rawValue, touched, error, onChange, onBlur, disabled } =
     props
 
-  // Track focus state
   const [isFocused, setIsFocused] = useState(false)
-  // Local display value
   const [displayValue, setDisplayValue] = useState(rawValue)
 
   // Sync rawValue if it changes from outside
@@ -94,12 +86,12 @@ function AminoAcidField(props: {
 
   const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
     setIsFocused(false)
-    onBlur(e) // Let Formik know about blur
+    onBlur(e)
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setDisplayValue(e.target.value)
-    onChange(e) // Pass raw text to Formik
+    onChange(e)
   }
 
   // If focused, show editable text field; otherwise, show HTML preview
@@ -119,39 +111,28 @@ function AminoAcidField(props: {
           disabled={disabled}
           error={Boolean(error && touched)}
           helperText={error && touched ? error : ''}
-          sx={{
-            fontFamily: 'monospace',
-            whiteSpace: 'pre-wrap',
-            letterSpacing: '0.15em'
-          }}
-          InputLabelProps={{
-            shrink: true
-          }}
         />
       </Box>
     )
   } else {
-    // Show chunked HTML with <sup>
     const chunkedHTML = chunkSequenceHTML(displayValue)
 
     return (
       <Box sx={{ width: '100%' }}>
-        {/* "Read-only" box, but clickable/focusable to edit */}
         <Box
           tabIndex={0}
           onFocus={handleFocus}
           onClick={() => setIsFocused(true)}
           sx={{
-            minHeight: '56px',
-            border: '1px solid #ccc',
+            minHeight: '54px',
+            border: `1px solid ${grey[300]}`,
             borderRadius: '4px',
             p: 1,
             cursor: 'text',
-            // Use a consistent font for better alignment
-            fontFamily: '"Roboto", "Noto Sans", sans-serif',
+            fontFamily: 'monospace',
             whiteSpace: 'pre-wrap',
-            letterSpacing: '0.05em',
-            fontSize: '1rem',
+            letterSpacing: '0.08em',
+            fontSize: '0.9rem',
             color: 'text.primary'
           }}
           dangerouslySetInnerHTML={{ __html: chunkedHTML }}
@@ -192,6 +173,12 @@ const PipelineSchematic = ({ isDarkMode }: { isDarkMode: boolean }) => (
   </Grid>
 )
 
+const getChipColor = (count: number, theme: Theme): string => {
+  if (count <= 4000) return theme.palette.success.main
+  if (count <= 6000) return theme.palette.warning.main
+  return theme.palette.error.main
+}
+
 const EntitiesFieldArray = ({
   values,
   errors,
@@ -211,6 +198,7 @@ const EntitiesFieldArray = ({
     shouldValidate?: boolean
   ) => void
 }) => {
+  const theme = useTheme()
   return (
     <FieldArray name='entities'>
       {({ push, remove }) => {
@@ -350,7 +338,7 @@ const EntitiesFieldArray = ({
                   </Box>
                 )
               })}
-              <p> Total characters {totalCharactersWithCopies}</p>
+
               <Button
                 variant='contained'
                 color='primary'
@@ -368,6 +356,24 @@ const EntitiesFieldArray = ({
               >
                 Add Entity
               </Button>
+            </Box>
+            <Box>
+              <Chip
+                label={`Token count: ${totalCharactersWithCopies}`}
+                variant='outlined'
+                sx={{
+                  mt: 1,
+                  height: '36px',
+                  width: '150px',
+                  fontSize: '0.9rem',
+                  color: 'white',
+                  backgroundColor: getChipColor(
+                    totalCharactersWithCopies,
+                    theme
+                  ),
+                  borderColor: getChipColor(totalCharactersWithCopies, theme)
+                }}
+              />
             </Box>
           </Grid>
         )
