@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.18.1 (4/14/2025)
+  - Add multi-filter dropdowns to the Jobs table
 - 1.18.0 (4/11/2025)
   - Add BilboMD Job and User statistics to the Admin panel
 - 1.17.12 (4/11/2025)
