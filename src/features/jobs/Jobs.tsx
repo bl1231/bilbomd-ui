@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid'
 import { format, parseISO } from 'date-fns'
@@ -94,6 +94,8 @@ const Jobs = () => {
   const typeFilter = searchParams.get('type') || 'All'
   const statusFilter = searchParams.get('status') || 'All'
   const userFilter = searchParams.get('user') || 'All'
+  const pageParam = parseInt(searchParams.get('page') || '0', 10)
+  const [page, setPage] = useState(pageParam)
 
   const {
     data: jobs,
@@ -534,9 +536,14 @@ const Jobs = () => {
                     rows={rows}
                     columns={columns}
                     initialState={{
-                      pagination: { paginationModel: { pageSize: 20 } }
+                      pagination: { paginationModel: { pageSize: 20, page } }
                     }}
                     pageSizeOptions={[5, 10, 20, 40]}
+                    onPaginationModelChange={(model) => {
+                      setPage(model.page)
+                      searchParams.set('page', model.page.toString())
+                      setSearchParams(searchParams)
+                    }}
                   />
                 </Box>
               </Box>
