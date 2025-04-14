@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid'
 import { format, parseISO } from 'date-fns'
 import { useGetJobsQuery } from 'slices/jobsApiSlice'
@@ -13,7 +13,12 @@ import {
   CircularProgress,
   Paper,
   Typography,
-  LinearProgress
+  LinearProgress,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
+  SelectChangeEvent
 } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import { styled } from '@mui/material/styles'
@@ -24,7 +29,11 @@ import NerscStatus from '../nersc/NerscStatus'
 import HeaderBox from 'components/HeaderBox'
 import { BilboMDJob } from 'types/interfaces'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
-import { INerscInfo } from '@bl1231/bilbomd-mongodb-schema'
+import {
+  INerscInfo,
+  IJob,
+  jobTypeDisplayNames
+} from '@bl1231/bilbomd-mongodb-schema/frontend'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -60,6 +69,9 @@ const Jobs = () => {
   useTitle('BilboMD: Jobs List')
 
   const { username, isManager, isAdmin } = useAuth()
+  const [typeFilter, setTypeFilter] = useState<string>('All')
+  const [statusFilter, setStatusFilter] = useState<string>('All')
+  const [userFilter, setUserFilter] = useState<string>('All')
 
   const {
     data: jobs,
@@ -84,6 +96,91 @@ const Jobs = () => {
   if (configError) return <div>Error loading configuration data</div>
   if (!config) return <div>No configuration data available</div>
   const useNersc = config.useNersc?.toLowerCase() === 'true'
+
+  const availableJobTypes = Array.from(
+    new Set((jobs ?? []).map((job) => job.mongo?.__t).filter(Boolean))
+  ) as IJob['__t'][]
+
+  const jobTypes = ['All', ...availableJobTypes]
+
+  const handleTypeChange = (event: SelectChangeEvent<string>) => {
+    setTypeFilter(event.target.value)
+  }
+
+  const handleStatusChange = (event: SelectChangeEvent<string>) => {
+    setStatusFilter(event.target.value)
+  }
+
+  const handleUserChange = (event: SelectChangeEvent<string>) => {
+    setUserFilter(event.target.value)
+  }
+
+  const jobTypeFilterDropdown = (
+    <FormControl sx={{ m: 2, minWidth: 200 }} size='small'>
+      <InputLabel id='job-type-select-label'>Job Type</InputLabel>
+      <Select
+        labelId='job-type-select-label'
+        id='job-type-select'
+        value={typeFilter}
+        label='Job Type'
+        onChange={handleTypeChange}
+      >
+        {jobTypes.map((type) => (
+          <MenuItem key={type} value={type}>
+            {type === 'All'
+              ? 'All'
+              : (jobTypeDisplayNames[type as IJob['__t']] ?? type)}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  )
+
+  const availableStatuses = Array.from(
+    new Set((jobs ?? []).map((job) => job.mongo?.status).filter(Boolean))
+  ) as string[]
+
+  const statusFilterDropdown = (
+    <FormControl sx={{ m: 2, minWidth: 200 }} size='small'>
+      <InputLabel id='status-select-label'>Status</InputLabel>
+      <Select
+        labelId='status-select-label'
+        id='status-select'
+        value={statusFilter}
+        label='Status'
+        onChange={handleStatusChange}
+      >
+        {['All', ...availableStatuses].map((status) => (
+          <MenuItem key={status} value={status}>
+            {status}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  )
+
+  const availableUsers = Array.from(
+    new Set((jobs ?? []).map((job) => job.username).filter(Boolean))
+  )
+
+  const userFilterDropdown = (isAdmin || isManager) && (
+    <FormControl sx={{ m: 2, minWidth: 200 }} size='small'>
+      <InputLabel id='user-select-label'>User</InputLabel>
+      <Select
+        labelId='user-select-label'
+        id='user-select'
+        value={userFilter}
+        label='User'
+        onChange={handleUserChange}
+      >
+        {['All', ...availableUsers].map((user) => (
+          <MenuItem key={user} value={user}>
+            {user}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  )
 
   let content: ReactNode
 
@@ -126,6 +223,18 @@ const Jobs = () => {
       filteredIds = [...jobs]
     } else {
       filteredIds = jobs.filter((job) => job.username === username)
+    }
+
+    if (typeFilter !== 'All') {
+      filteredIds = filteredIds.filter((job) => job.mongo?.__t === typeFilter)
+    }
+    if (statusFilter !== 'All') {
+      filteredIds = filteredIds.filter(
+        (job) => job.mongo?.status === statusFilter
+      )
+    }
+    if ((isAdmin || isManager) && userFilter !== 'All') {
+      filteredIds = filteredIds.filter((job) => job.username === userFilter)
     }
 
     const rows = filteredIds.map((job) => {
@@ -174,16 +283,20 @@ const Jobs = () => {
           }
         }
       },
-      {
-        field: 'queueHours',
-        headerName: 'Queue Time (hrs)',
-        width: 120
-      },
-      {
-        field: 'runTimeHours',
-        headerName: 'Run Time (hrs)',
-        width: 120
-      },
+      ...(useNersc
+        ? [
+            {
+              field: 'queueHours',
+              headerName: 'Queue Time (hrs)',
+              width: 120
+            },
+            {
+              field: 'runTimeHours',
+              headerName: 'Run Time (hrs)',
+              width: 120
+            }
+          ]
+        : []),
       { field: 'username', headerName: 'User' },
       {
         field: 'status',
@@ -237,22 +350,26 @@ const Jobs = () => {
           )
         }
       },
-      {
-        field: 'position',
-        headerName: 'Position',
-        width: 150
-      },
-      {
-        field: 'nerscJobid',
-        headerName: 'NERSC JobID',
-        width: 100
-      },
-      {
-        field: 'nerscStatus',
-        headerName: 'NERSC Status',
-        width: 100
-      },
-
+      ...(useNersc
+        ? [
+            {
+              field: 'nerscJobid',
+              headerName: 'NERSC JobID',
+              width: 100
+            },
+            {
+              field: 'nerscStatus',
+              headerName: 'NERSC Status',
+              width: 100
+            }
+          ]
+        : [
+            {
+              field: 'position',
+              headerName: 'Position',
+              width: 150
+            }
+          ]),
       {
         field: 'actions',
         type: 'actions',
@@ -314,7 +431,11 @@ const Jobs = () => {
             <HeaderBox>
               <Typography>Jobs</Typography>
             </HeaderBox>
+
             <Item>
+              {jobTypeFilterDropdown}
+              {statusFilterDropdown}
+              {userFilterDropdown}
               <Box
                 sx={{
                   '& .bilbomd.completed': {
@@ -374,15 +495,6 @@ const Jobs = () => {
                       pagination: {
                         paginationModel: {
                           pageSize: 20
-                        }
-                      },
-                      columns: {
-                        columnVisibilityModel: {
-                          position: !useNersc,
-                          nerscJobid: useNersc,
-                          nerscStatus: useNersc,
-                          queueHours: useNersc,
-                          runTimeHours: useNersc
                         }
                       }
                     }}
