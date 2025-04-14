@@ -10,6 +10,8 @@ import useAuth from 'hooks/useAuth'
 import {
   Alert,
   AlertTitle,
+  Button,
+  Chip,
   CircularProgress,
   Paper,
   Typography,
@@ -65,6 +67,23 @@ const getRunTimeInHours = (nersc: INerscInfo | undefined) => {
   return diffHours.toFixed(2)
 }
 
+const filteredJobCountChip = (count: number) => {
+  return (
+    <Chip
+      label={`${count} job${count !== 1 ? 's' : ''} `}
+      sx={{
+        backgroundColor: '#262626',
+        color: '#bae637',
+        fontSize: '1.3em',
+        fontWeight: 'bold',
+        p: 1,
+        m: 1,
+        height: '36px'
+      }}
+    />
+  )
+}
+
 const Jobs = () => {
   useTitle('BilboMD: Jobs List')
 
@@ -113,6 +132,12 @@ const Jobs = () => {
 
   const handleUserChange = (event: SelectChangeEvent<string>) => {
     setUserFilter(event.target.value)
+  }
+
+  const resetFilters = () => {
+    setTypeFilter('All')
+    setStatusFilter('All')
+    setUserFilter('All')
   }
 
   const jobTypeFilterDropdown = (
@@ -426,16 +451,26 @@ const Jobs = () => {
           </Grid>
         )}
 
-        {rows.length !== 0 ? (
-          <Grid size={{ xs: 12 }}>
-            <HeaderBox>
-              <Typography>Jobs</Typography>
-            </HeaderBox>
+        <Grid size={{ xs: 12 }}>
+          <HeaderBox>
+            <Typography>Jobs</Typography>
+          </HeaderBox>
 
-            <Item>
-              {jobTypeFilterDropdown}
-              {statusFilterDropdown}
-              {userFilterDropdown}
+          <Item>
+            {jobTypeFilterDropdown}
+            {statusFilterDropdown}
+            {userFilterDropdown}
+            <Button
+              variant='contained'
+              color='primary'
+              onClick={resetFilters}
+              sx={{ m: 2, height: '36px' }}
+            >
+              Reset Filters
+            </Button>
+            {filteredJobCountChip(rows.length)}
+
+            {rows.length > 0 ? (
               <Box
                 sx={{
                   '& .bilbomd.completed': {
@@ -492,28 +527,20 @@ const Jobs = () => {
                     rows={rows}
                     columns={columns}
                     initialState={{
-                      pagination: {
-                        paginationModel: {
-                          pageSize: 20
-                        }
-                      }
+                      pagination: { paginationModel: { pageSize: 20 } }
                     }}
                     pageSizeOptions={[5, 10, 20, 40]}
                   />
                 </Box>
               </Box>
-            </Item>
-          </Grid>
-        ) : (
-          <Grid size={{ xs: 12 }}>
-            <HeaderBox>
-              <Typography>Jobs</Typography>
-            </HeaderBox>
-            <Alert severity='info' variant='outlined'>
-              <AlertTitle>No Jobs found.</AlertTitle>Run some jobs first
-            </Alert>
-          </Grid>
-        )}
+            ) : (
+              <Alert severity='info' variant='outlined' sx={{ mt: 2 }}>
+                <AlertTitle>No Jobs found.</AlertTitle>Try adjusting the filters
+                or running some jobs.
+              </Alert>
+            )}
+          </Item>
+        </Grid>
       </Grid>
     )
   }
