@@ -283,16 +283,20 @@ const Jobs = () => {
           }
         }
       },
-      {
-        field: 'queueHours',
-        headerName: 'Queue Time (hrs)',
-        width: 120
-      },
-      {
-        field: 'runTimeHours',
-        headerName: 'Run Time (hrs)',
-        width: 120
-      },
+      ...(useNersc
+        ? [
+            {
+              field: 'queueHours',
+              headerName: 'Queue Time (hrs)',
+              width: 120
+            },
+            {
+              field: 'runTimeHours',
+              headerName: 'Run Time (hrs)',
+              width: 120
+            }
+          ]
+        : []),
       { field: 'username', headerName: 'User' },
       {
         field: 'status',
@@ -346,22 +350,26 @@ const Jobs = () => {
           )
         }
       },
-      {
-        field: 'position',
-        headerName: 'Position',
-        width: 150
-      },
-      {
-        field: 'nerscJobid',
-        headerName: 'NERSC JobID',
-        width: 100
-      },
-      {
-        field: 'nerscStatus',
-        headerName: 'NERSC Status',
-        width: 100
-      },
-
+      ...(useNersc
+        ? [
+            {
+              field: 'nerscJobid',
+              headerName: 'NERSC JobID',
+              width: 100
+            },
+            {
+              field: 'nerscStatus',
+              headerName: 'NERSC Status',
+              width: 100
+            }
+          ]
+        : [
+            {
+              field: 'position',
+              headerName: 'Position',
+              width: 150
+            }
+          ]),
       {
         field: 'actions',
         type: 'actions',
@@ -487,15 +495,6 @@ const Jobs = () => {
                       pagination: {
                         paginationModel: {
                           pageSize: 20
-                        }
-                      },
-                      columns: {
-                        columnVisibilityModel: {
-                          position: !useNersc,
-                          nerscJobid: useNersc,
-                          nerscStatus: useNersc,
-                          queueHours: useNersc,
-                          runTimeHours: useNersc
                         }
                       }
                     }}
