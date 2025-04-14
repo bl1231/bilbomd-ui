@@ -77,7 +77,8 @@ const filteredJobCountChip = (count: number) => {
         fontSize: '1.3em',
         fontWeight: 'bold',
         p: 1,
-        mt: 2
+        m: 1,
+        height: '36px'
       }}
     />
   )
@@ -450,25 +451,26 @@ const Jobs = () => {
           </Grid>
         )}
 
-        {rows.length !== 0 ? (
-          <Grid size={{ xs: 12 }}>
-            <HeaderBox>
-              <Typography>Jobs</Typography>
-            </HeaderBox>
+        <Grid size={{ xs: 12 }}>
+          <HeaderBox>
+            <Typography>Jobs</Typography>
+          </HeaderBox>
 
-            <Item>
-              {jobTypeFilterDropdown}
-              {statusFilterDropdown}
-              {userFilterDropdown}
-              <Button
-                variant='outlined'
-                color='secondary'
-                onClick={resetFilters}
-                sx={{ m: 2 }}
-              >
-                Reset Filters
-              </Button>
-              {filteredJobCountChip(rows.length)}
+          <Item>
+            {jobTypeFilterDropdown}
+            {statusFilterDropdown}
+            {userFilterDropdown}
+            <Button
+              variant='contained'
+              color='primary'
+              onClick={resetFilters}
+              sx={{ m: 2, height: '36px' }}
+            >
+              Reset Filters
+            </Button>
+            {filteredJobCountChip(rows.length)}
+
+            {rows.length > 0 ? (
               <Box
                 sx={{
                   '& .bilbomd.completed': {
@@ -525,28 +527,20 @@ const Jobs = () => {
                     rows={rows}
                     columns={columns}
                     initialState={{
-                      pagination: {
-                        paginationModel: {
-                          pageSize: 20
-                        }
-                      }
+                      pagination: { paginationModel: { pageSize: 20 } }
                     }}
                     pageSizeOptions={[5, 10, 20, 40]}
                   />
                 </Box>
               </Box>
-            </Item>
-          </Grid>
-        ) : (
-          <Grid size={{ xs: 12 }}>
-            <HeaderBox>
-              <Typography>Jobs</Typography>
-            </HeaderBox>
-            <Alert severity='info' variant='outlined'>
-              <AlertTitle>No Jobs found.</AlertTitle>Run some jobs first
-            </Alert>
-          </Grid>
-        )}
+            ) : (
+              <Alert severity='info' variant='outlined' sx={{ mt: 2 }}>
+                <AlertTitle>No Jobs found.</AlertTitle>Try adjusting the filters
+                or running some jobs.
+              </Alert>
+            )}
+          </Item>
+        </Grid>
       </Grid>
     )
   }
