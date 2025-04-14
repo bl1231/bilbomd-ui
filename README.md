@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.18.2 (4/14/2025)
+  - Improvements to the new filter dropdowns
 - 1.18.1 (4/14/2025)
   - Add multi-filter dropdowns to the Jobs table
 - 1.18.0 (4/11/2025)
