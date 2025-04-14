@@ -10,6 +10,8 @@ import useAuth from 'hooks/useAuth'
 import {
   Alert,
   AlertTitle,
+  Button,
+  Chip,
   CircularProgress,
   Paper,
   Typography,
@@ -65,6 +67,22 @@ const getRunTimeInHours = (nersc: INerscInfo | undefined) => {
   return diffHours.toFixed(2)
 }
 
+const filteredJobCountChip = (count: number) => {
+  return (
+    <Chip
+      label={`${count} job${count !== 1 ? 's' : ''} `}
+      sx={{
+        backgroundColor: '#262626',
+        color: '#bae637',
+        fontSize: '1.3em',
+        fontWeight: 'bold',
+        p: 1,
+        mt: 2
+      }}
+    />
+  )
+}
+
 const Jobs = () => {
   useTitle('BilboMD: Jobs List')
 
@@ -113,6 +131,12 @@ const Jobs = () => {
 
   const handleUserChange = (event: SelectChangeEvent<string>) => {
     setUserFilter(event.target.value)
+  }
+
+  const resetFilters = () => {
+    setTypeFilter('All')
+    setStatusFilter('All')
+    setUserFilter('All')
   }
 
   const jobTypeFilterDropdown = (
@@ -436,6 +460,15 @@ const Jobs = () => {
               {jobTypeFilterDropdown}
               {statusFilterDropdown}
               {userFilterDropdown}
+              <Button
+                variant='outlined'
+                color='secondary'
+                onClick={resetFilters}
+                sx={{ m: 2 }}
+              >
+                Reset Filters
+              </Button>
+              {filteredJobCountChip(rows.length)}
               <Box
                 sx={{
                   '& .bilbomd.completed': {
