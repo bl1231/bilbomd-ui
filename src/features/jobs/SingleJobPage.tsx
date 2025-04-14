@@ -1,4 +1,4 @@
-import { useParams } from 'react-router'
+import { useParams, useLocation, useNavigate } from 'react-router'
 import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
 import {
@@ -11,13 +11,13 @@ import {
 } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import LinearProgress from '@mui/material/LinearProgress'
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
 import Paper from '@mui/material/Paper'
 import { styled, useTheme, Theme } from '@mui/material/styles'
 import { axiosInstance } from 'app/api/axios'
 import MissingJob from 'components/MissingJob'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from 'slices/authSlice'
-// import BilboMDSteps from './BilboMDSteps'
 import BilboMDNerscSteps from './BilboMDNerscSteps'
 import BilboMDMongoSteps from './BilboMDMongoSteps'
 import { BilboMDScoperSteps } from './BilboMDScoperSteps'
@@ -33,6 +33,7 @@ import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useGetJobByIdQuery } from 'slices/jobsApiSlice'
 import BilboMdFeedback from 'features/analysis/BilboMdFeedback'
 import { BilboMDJob, BilboMDMultiJob } from 'types/interfaces'
+import { JobStatusEnum } from '@bl1231/bilbomd-mongodb-schema/frontend'
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -40,13 +41,16 @@ const Item = styled(Paper)(({ theme }) => ({
   borderTopRightRadius: 0
 }))
 
-type JobStatus = 'Submitted' | 'Pending' | 'Running' | 'Completed' | 'Error'
+// type JobStatus = 'Submitted' | 'Pending' | 'Running' | 'Completed' | 'Error'
 
 const SingleJobPage = () => {
   useTitle('BilboMD: Job Details')
   const theme = useTheme()
   const token = useSelector(selectCurrentToken)
   const { id } = useParams()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const returnParams = location.state?.returnParams ?? ''
 
   const {
     data: job,
@@ -138,9 +142,9 @@ const SingleJobPage = () => {
     }
   }
 
-  const getStatusColors = (status: JobStatus, theme: Theme) => {
+  const getStatusColors = (status: JobStatusEnum, theme: Theme) => {
     const statusColors: Record<
-      JobStatus,
+      JobStatusEnum,
       { background: string; text: string }
     > = {
       Submitted: {
@@ -162,6 +166,14 @@ const SingleJobPage = () => {
       Error: {
         background: 'red',
         text: 'white'
+      },
+      Failed: {
+        background: 'red',
+        text: 'white'
+      },
+      Cancelled: {
+        background: '#d6e4ff',
+        text: theme.palette.mode === 'light' ? 'black' : 'white'
       }
     }
 
@@ -178,7 +190,7 @@ const SingleJobPage = () => {
   }
 
   const statusColors = getStatusColors(
-    (job?.mongo.status as JobStatus) || 'Pending',
+    (job?.mongo.status as JobStatusEnum) || 'Pending',
     theme
   )
 
@@ -193,14 +205,28 @@ const SingleJobPage = () => {
   const content = job ? (
     <>
       <Grid container spacing={2} rowSpacing={2}>
-        <Grid size={{ xs: 6 }}>
+        <Grid size={{ xs: 1 }}>
+          <HeaderBox sx={{ py: '6px' }}>
+            <Typography>Nav</Typography>
+          </HeaderBox>
+          <Item sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Button
+              variant='contained'
+              size='small'
+              startIcon={<KeyboardBackspaceIcon />}
+              onClick={() => navigate(`/dashboard/jobs${returnParams}`)}
+            >
+              Back
+            </Button>
+          </Item>
+        </Grid>
+
+        <Grid size={{ xs: 5 }}>
           <HeaderBox sx={{ py: '6px' }}>
             <Typography>Job Title</Typography>
           </HeaderBox>
-          <Item>
-            <Typography variant='h3' sx={{ ml: 1 }}>
-              {job.mongo.title}
-            </Typography>
+          <Item sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant='h3'>{job.mongo.title}</Typography>
           </Item>
         </Grid>
 

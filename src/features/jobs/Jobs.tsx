@@ -1,4 +1,5 @@
 import { ReactNode, useState } from 'react'
+import { useSearchParams } from 'react-router'
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid'
 import { format, parseISO } from 'date-fns'
 import { useGetJobsQuery } from 'slices/jobsApiSlice'
@@ -88,9 +89,13 @@ const Jobs = () => {
   useTitle('BilboMD: Jobs List')
 
   const { username, isManager, isAdmin } = useAuth()
-  const [typeFilter, setTypeFilter] = useState<string>('All')
-  const [statusFilter, setStatusFilter] = useState<string>('All')
-  const [userFilter, setUserFilter] = useState<string>('All')
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const typeFilter = searchParams.get('type') || 'All'
+  const statusFilter = searchParams.get('status') || 'All'
+  const userFilter = searchParams.get('user') || 'All'
+  const pageParam = parseInt(searchParams.get('page') || '0', 10)
+  const [page, setPage] = useState(pageParam)
 
   const {
     data: jobs,
@@ -123,21 +128,25 @@ const Jobs = () => {
   const jobTypes = ['All', ...availableJobTypes]
 
   const handleTypeChange = (event: SelectChangeEvent<string>) => {
-    setTypeFilter(event.target.value)
+    searchParams.set('type', event.target.value)
+    setSearchParams(searchParams)
   }
 
   const handleStatusChange = (event: SelectChangeEvent<string>) => {
-    setStatusFilter(event.target.value)
+    searchParams.set('status', event.target.value)
+    setSearchParams(searchParams)
   }
 
   const handleUserChange = (event: SelectChangeEvent<string>) => {
-    setUserFilter(event.target.value)
+    searchParams.set('user', event.target.value)
+    setSearchParams(searchParams)
   }
 
   const resetFilters = () => {
-    setTypeFilter('All')
-    setStatusFilter('All')
-    setUserFilter('All')
+    searchParams.delete('type')
+    searchParams.delete('status')
+    searchParams.delete('user')
+    setSearchParams(searchParams)
   }
 
   const jobTypeFilterDropdown = (
@@ -527,9 +536,14 @@ const Jobs = () => {
                     rows={rows}
                     columns={columns}
                     initialState={{
-                      pagination: { paginationModel: { pageSize: 20 } }
+                      pagination: { paginationModel: { pageSize: 20, page } }
                     }}
                     pageSizeOptions={[5, 10, 20, 40]}
+                    onPaginationModelChange={(model) => {
+                      setPage(model.page)
+                      searchParams.set('page', model.page.toString())
+                      setSearchParams(searchParams)
+                    }}
                   />
                 </Box>
               </Box>
