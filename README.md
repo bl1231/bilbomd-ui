@@ -60,6 +60,11 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.18.3 (4/14/2025)
+  - Persistant pagination
+  - Use `react-router` to "remember" the filter results so they are preserved when
+    navigating back to the Jobs table.
+  - Use `@bl1231/bilbomd-mongodb-schema` as source of JobStatus values.
 - 1.18.2 (4/14/2025)
   - Improvements to the new filter dropdowns
 - 1.18.1 (4/14/2025)
