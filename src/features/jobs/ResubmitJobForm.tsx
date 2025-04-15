@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Box,
   Button,
@@ -15,7 +15,7 @@ import {
   LinearProgress
 } from '@mui/material'
 import Grid from '@mui/material/Grid'
-import { Link as RouterLink } from 'react-router'
+import { Link as RouterLink, useParams } from 'react-router'
 import {
   Form,
   Formik,
@@ -26,7 +26,9 @@ import {
 } from 'formik'
 import {
   useAddNewJobMutation,
-  useCalculateAutoRgMutation
+  useCalculateAutoRgMutation,
+  useGetJobByIdQuery,
+  useCheckJobFilesQuery
 } from 'slices/jobsApiSlice'
 import SendIcon from '@mui/icons-material/Send'
 import { expdataSchema } from 'schemas/ExpdataSchema'
@@ -40,16 +42,17 @@ import NewJobFormInstructions from './NewJobFormInstructions'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useTheme } from '@mui/material/styles'
 import PipelineSchematic from './PipelineSchematic'
+import { BilboMDClassicJobFormValues } from '../../types/classicJobForm'
 
-const NewJobForm = () => {
+const ResubmitJobForm = () => {
   const theme = useTheme()
   const isDarkMode = theme.palette.mode === 'dark'
   const [addNewJob, { isSuccess }] = useAddNewJobMutation()
   const [calculateAutoRg, { isLoading }] = useCalculateAutoRgMutation()
   const { email } = useAuth()
-
+  const { id } = useParams()
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
-  const [selectedMode, setSelectedMode] = useState('pdb')
+  const [selectedMode, setSelectedMode] = useState<'pdb' | 'crd_psf'>('pdb')
 
   // Fetch the configuration object
   const {
@@ -69,37 +72,117 @@ const NewJobForm = () => {
     setIsPerlmutterUnavailable(isUnavailable)
   }
 
-  const initialValues = {
-    bilbomd_mode: 'pdb',
-    title: '',
-    psf_file: '',
-    crd_file: '',
-    pdb_file: '',
-    constinp: '',
-    expdata: '',
-    num_conf: '',
-    rg: '',
-    rg_min: '',
-    rg_max: '',
-    email: email
+  const {
+    data: jobdata,
+    isLoading: jobIsLoading,
+    isError: jobIsError
+  } = useGetJobByIdQuery(id, {})
+  if (jobIsLoading) return <LinearProgress />
+  if (jobIsError)
+    return <Alert severity='error'>Error loading configuration</Alert>
+  const job = jobdata?.mongo
+  const { data: fileCheckData, error: fileCheckError } = useCheckJobFilesQuery(
+    jobdata?.id ?? '',
+    {
+      skip: !jobdata?.id // avoids running until ID is available
+    }
+  )
+  const normalizedFileCheckData = fileCheckData
+    ? {
+        ...fileCheckData,
+        expdata: fileCheckData.data_file,
+        constinp: fileCheckData.const_inp_file
+      }
+    : {}
+
+  useEffect(() => {
+    if (!job) return
+    const derivedMode = job.__t === 'BilboMdCRD' ? 'crd_psf' : 'pdb'
+    setSelectedMode(derivedMode)
+  }, [job])
+
+  // console.log('job', job)
+  // console.log('fileCheckData', normalizedFileCheckData)
+
+  if (fileCheckError) {
+    console.log('fileCheckError', fileCheckError)
   }
 
+  const initialValues: BilboMDClassicJobFormValues = job
+    ? {
+        bilbomd_mode: selectedMode,
+        title: 'resubmit_' + job.title,
+        psf_file: job.psf_file ?? '',
+        crd_file: job.crd_file ?? '',
+        pdb_file: job.pdb_file ?? '',
+        constinp: job.const_inp_file ?? '',
+        expdata: job.data_file ?? '',
+        num_conf: job.conformational_sampling?.toString() ?? '',
+        rg: job.rg?.toString() ?? '',
+        rg_min: job.rg_min?.toString() ?? '',
+        rg_max: job.rg_max?.toString() ?? '',
+        email: email
+      }
+    : {
+        bilbomd_mode: 'pdb',
+        title: '',
+        psf_file: '',
+        crd_file: '',
+        pdb_file: '',
+        constinp: '',
+        expdata: '',
+        num_conf: '',
+        rg: '',
+        rg_min: '',
+        rg_max: '',
+        email: email
+      }
+
   const onSubmit = async (
-    values: typeof initialValues,
+    values: BilboMDClassicJobFormValues,
     { setStatus }: { setStatus: (status: string) => void }
   ) => {
     const form = new FormData()
     form.append('bilbomd_mode', values.bilbomd_mode)
     form.append('title', values.title)
-    form.append('psf_file', values.psf_file)
-    form.append('crd_file', values.crd_file)
-    form.append('pdb_file', values.pdb_file)
-    form.append('num_conf', values.num_conf)
+    form.append('resubmit', 'true')
+    if (job?.id) {
+      form.append('original_job_id', job.id)
+    }
+
+    if (values.psf_file instanceof File) {
+      form.append('psf_file', values.psf_file)
+    } else if (normalizedFileCheckData.psf_file) {
+      form.append('reuse_psf_file', 'true')
+    }
+    if (values.crd_file instanceof File) {
+      form.append('crd_file', values.crd_file)
+    } else if (normalizedFileCheckData.crd_file) {
+      form.append('reuse_crd_file', 'true')
+    }
+    if (values.pdb_file instanceof File) {
+      form.append('pdb_file', values.pdb_file)
+    } else if (normalizedFileCheckData.pdb_file) {
+      form.append('reuse_pdb_file', 'true')
+    }
+
+    form.append('num_conf', values.num_conf.toString())
     form.append('rg', values.rg)
     form.append('rg_min', values.rg_min)
     form.append('rg_max', values.rg_max)
-    form.append('expdata', values.expdata)
-    form.append('constinp', values.constinp)
+
+    if (values.expdata instanceof File) {
+      form.append('expdata', values.expdata)
+    } else if (normalizedFileCheckData.expdata) {
+      form.append('reuse_expdata', 'true')
+    }
+
+    if (values.constinp instanceof File) {
+      form.append('constinp', values.constinp)
+    } else if (normalizedFileCheckData.constinp) {
+      form.append('reuse_constinp', 'true')
+    }
+
     form.append('email', values.email)
 
     try {
@@ -108,6 +191,34 @@ const NewJobForm = () => {
     } catch (error) {
       console.error('rejected', error)
     }
+  }
+
+  const setMode = (
+    mode: 'pdb' | 'crd_psf',
+    resetForm: FormikHelpers<typeof initialValues>['resetForm'],
+    values: typeof initialValues,
+    touched: FormikTouched<typeof initialValues>,
+    validateForm: (
+      values?: Partial<typeof initialValues>
+    ) => Promise<FormikErrors<typeof initialValues>>
+  ) => {
+    setSelectedMode(mode)
+
+    if (mode === 'pdb') {
+      resetForm({
+        values: { ...values, crd_file: '', psf_file: '', bilbomd_mode: 'pdb' },
+        errors: {},
+        touched: { ...touched }
+      })
+    } else {
+      resetForm({
+        values: { ...values, pdb_file: '', bilbomd_mode: 'crd_psf' },
+        errors: {},
+        touched: { ...touched }
+      })
+    }
+
+    setTimeout(() => validateForm(), 0)
   }
 
   const handleCheckboxChange =
@@ -123,46 +234,31 @@ const NewJobForm = () => {
       const newBilboMDMode =
         event.target.name === 'pdb_inputs' ? 'pdb' : 'crd_psf'
 
-      setSelectedMode(newBilboMDMode)
-
-      if (newBilboMDMode === 'pdb') {
-        console.log('reset to PDB mode')
-        resetForm({
-          values: {
-            ...values,
-            crd_file: '',
-            psf_file: '',
-            bilbomd_mode: 'pdb'
-          },
-          errors: {},
-          touched: { ...touched }
-        })
-      } else {
-        console.log('reset to CRD/PSF mode')
-        resetForm({
-          values: { ...values, pdb_file: '', bilbomd_mode: 'crd_psf' },
-          errors: {},
-          touched: { ...touched }
-        })
-      }
-      // Delay validation to ensure form state has been updated
-      setTimeout(() => {
-        validateForm()
-      }, 0)
+      setMode(newBilboMDMode, resetForm, values, touched, validateForm)
     }
 
-  const isFormValid = (values: typeof initialValues) => {
+  const isFormValid = (
+    values: BilboMDClassicJobFormValues,
+    reuseFlags: typeof normalizedFileCheckData
+  ) => {
+    const hasPDB = values.pdb_file instanceof File || reuseFlags.pdb_file
+    const hasPSF = values.psf_file instanceof File || reuseFlags.psf_file
+    const hasCRD = values.crd_file instanceof File || reuseFlags.crd_file
+    const hasExpData = values.expdata instanceof File || reuseFlags.expdata
+    const hasConstInp = values.constinp instanceof File || reuseFlags.constinp
+
+    const hasTitle = values.title.trim() !== ''
+    const hasRgFields =
+      values.rg_min !== '' && values.rg_max !== '' && values.num_conf !== ''
+    const modeReady = values.bilbomd_mode === 'pdb' ? hasPDB : hasPSF && hasCRD
+
     return (
       !isPerlmutterUnavailable &&
-      values.title !== '' &&
-      values.constinp !== '' &&
-      values.expdata !== '' &&
-      values.rg_max !== '' &&
-      values.rg_min !== '' &&
-      values.num_conf !== '' &&
-      (values.bilbomd_mode === 'pdb'
-        ? values.pdb_file !== ''
-        : values.psf_file !== '' && values.crd_file !== '')
+      hasTitle &&
+      hasConstInp &&
+      hasExpData &&
+      hasRgFields &&
+      modeReady
     )
   }
 
@@ -176,7 +272,7 @@ const NewJobForm = () => {
 
       <Grid size={{ xs: 12 }}>
         <HeaderBox>
-          <Typography>BilboMD Classic Job Form</Typography>
+          <Typography>Resubmit BilboMD Classic Job Form {id}</Typography>
         </HeaderBox>
 
         <Paper sx={{ p: 2 }}>
@@ -189,8 +285,9 @@ const NewJobForm = () => {
               </Typography>
             </Alert>
           ) : (
-            <Formik
+            <Formik<BilboMDClassicJobFormValues>
               initialValues={initialValues}
+              enableReinitialize={true}
               validationSchema={BilboMDClassicJobSchema}
               onSubmit={onSubmit}
             >
@@ -313,6 +410,11 @@ const NewJobForm = () => {
                               id='crd-file-upload'
                               as={FileSelect}
                               title='Select File'
+                              existingFileName={
+                                normalizedFileCheckData.crd_file
+                                  ? job?.crd_file
+                                  : undefined
+                              }
                               disabled={isSubmitting}
                               setFieldValue={setFieldValue}
                               setFieldTouched={setFieldTouched}
@@ -340,6 +442,11 @@ const NewJobForm = () => {
                               id='psf-file-upload'
                               as={FileSelect}
                               title='Select File'
+                              existingFileName={
+                                normalizedFileCheckData.psf_file
+                                  ? job?.psf_file
+                                  : undefined
+                              }
                               disabled={isSubmitting}
                               setFieldValue={setFieldValue}
                               setFieldTouched={setFieldTouched}
@@ -371,6 +478,11 @@ const NewJobForm = () => {
                               id='pdb-file-upload'
                               as={FileSelect}
                               title='Select File'
+                              existingFileName={
+                                normalizedFileCheckData.pdb_file
+                                  ? job?.pdb_file
+                                  : undefined
+                              }
                               disabled={isSubmitting}
                               setFieldValue={setFieldValue}
                               setFieldTouched={setFieldTouched}
@@ -400,6 +512,11 @@ const NewJobForm = () => {
                           id='constinp-file-upload'
                           as={FileSelect}
                           title='Select File'
+                          existingFileName={
+                            normalizedFileCheckData.const_inp_file
+                              ? job?.const_inp_file
+                              : undefined
+                          }
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
@@ -461,6 +578,11 @@ const NewJobForm = () => {
                           id='expdata-file-upload'
                           as={FileSelect}
                           title='Select File'
+                          existingFileName={
+                            normalizedFileCheckData.data_file
+                              ? job?.data_file
+                              : undefined
+                          }
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
@@ -551,7 +673,7 @@ const NewJobForm = () => {
                         id='num_conf'
                         name='num_conf'
                         select
-                        defaultValue=''
+                        value={values.num_conf}
                         sx={{ width: '520px' }}
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -585,7 +707,8 @@ const NewJobForm = () => {
                       <Button
                         type='submit'
                         disabled={
-                          !isValid || isSubmitting || !isFormValid(values)
+                          !isFormValid(values, normalizedFileCheckData) ||
+                          !isValid
                         }
                         loading={isSubmitting}
                         endIcon={<SendIcon />}
@@ -616,4 +739,4 @@ const NewJobForm = () => {
   return content
 }
 
-export default NewJobForm
+export default ResubmitJobForm

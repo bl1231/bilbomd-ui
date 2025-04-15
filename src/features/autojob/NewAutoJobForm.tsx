@@ -24,6 +24,7 @@ import useTitle from 'hooks/useTitle'
 import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useTheme } from '@mui/material/styles'
+import PipelineSchematic from './PipelineSchematic'
 
 interface SubmitValues {
   title: string
@@ -32,25 +33,6 @@ interface SubmitValues {
   dat_file: string
   email: string
 }
-
-const PipelineSchematic = ({ isDarkMode }: { isDarkMode: boolean }) => (
-  <Grid size={{ xs: 12 }}>
-    <HeaderBox>
-      <Typography>BilboMD SANS Schematic</Typography>
-    </HeaderBox>
-    <Paper sx={{ p: 2 }}>
-      <img
-        src={
-          isDarkMode
-            ? '/images/bilbomd-auto-schematic-dark.png'
-            : '/images/bilbomd-auto-schematic.png'
-        }
-        alt='Overview of BilboMD AF pipeline'
-        style={{ maxWidth: '100%', height: 'auto' }}
-      />
-    </Paper>
-  </Grid>
-)
 
 const NewAutoJobForm = () => {
   useTitle('BilboMD: New Auto Job')

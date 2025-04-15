@@ -41,7 +41,14 @@ const Item = styled(Paper)(({ theme }) => ({
   borderTopRightRadius: 0
 }))
 
-// type JobStatus = 'Submitted' | 'Pending' | 'Running' | 'Completed' | 'Error'
+const jobTypeToRoute: Record<string, string> = {
+  BilboMdPDB: 'classic',
+  BilboMdCRD: 'classic',
+  BilboMdAuto: 'auto',
+  BilboMdScoper: 'scoper',
+  BilboMdAlphaFold: 'alphafold',
+  BilboMdSANS: 'sans'
+}
 
 const SingleJobPage = () => {
   useTitle('BilboMD: Job Details')
@@ -201,6 +208,10 @@ const SingleJobPage = () => {
   }
 
   // console.log('job', job)
+
+  const jobTypeRouteSegment = job
+    ? jobTypeToRoute[job.mongo.__t] || 'classic'
+    : 'classic'
 
   const content = job ? (
     <>
@@ -363,8 +374,7 @@ const SingleJobPage = () => {
           (job.mongo.__t === 'BilboMdPDB' ||
             job.mongo.__t === 'BilboMdCRD' ||
             job.mongo.__t === 'BilboMdAuto' ||
-            job.mongo.__t === 'BilboMdAlphaFold' ||
-            job.mongo.__t === 'BilboMdScoper') && (
+            job.mongo.__t === 'BilboMdAlphaFold') && (
             <Grid size={{ xs: 12 }}>
               <HeaderBox sx={{ py: '6px' }}>
                 <Typography>
@@ -393,9 +403,20 @@ const SingleJobPage = () => {
                 onClick={() => {
                   handleDownload(job.mongo.id)
                 }}
+                sx={{ mr: 2 }}
+              >
+                Download Results
+              </Button>
+              <Button
+                variant='contained'
+                onClick={() =>
+                  navigate(
+                    `/dashboard/jobs/${jobTypeRouteSegment}/resubmit/${job.id}`
+                  )
+                }
                 sx={{ my: 2 }}
               >
-                Download
+                Resubmit
               </Button>
               <Typography>
                 The{' '}

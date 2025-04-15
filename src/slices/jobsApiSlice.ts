@@ -81,6 +81,12 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (_, __, arg) => [{ type: 'Job', id: arg.id }]
     }),
+    checkJobFiles: builder.query({
+      query: (id: string) => ({
+        url: `/jobs/${id}/check-files`,
+        method: 'GET'
+      })
+    }),
     calculateAutoRg: builder.mutation({
       query: (formData: FormData) => ({
         url: '/autorg',
@@ -172,6 +178,7 @@ export const {
   useAddNewJobMutation,
   useUpdateJobMutation,
   useDeleteJobMutation,
+  useCheckJobFilesQuery,
   useCalculateAutoRgMutation,
   useAddNewAutoJobMutation,
   useAddNewAlphaFoldJobMutation,
