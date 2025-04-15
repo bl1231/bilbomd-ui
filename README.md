@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.18.4 (4/15/2025)
+  - Add `GitHub` link in footers
 - 1.18.3 (4/14/2025)
   - Persistant pagination
   - Use `react-router` to "remember" the filter results so they are preserved when
