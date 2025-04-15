@@ -2,6 +2,7 @@ import { Paper, Typography, Link } from '@mui/material'
 import { Box, Container } from '@mui/system'
 import { version } from '../../../../package.json'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
+import { blue } from '@mui/material/colors'
 // import { useTheme } from '@mui/material/styles'
 
 const Footer = () => {
@@ -44,7 +45,7 @@ const Footer = () => {
             mb: 1
           }}
         >
-          <Typography variant='caption' sx={{ wordBreak: 'break-all' }}>
+          <Typography sx={{ wordBreak: 'break-all' }}>
             Copyright ©{currentYear}.{' '}
             <Link
               href='https://bl1231.als.lbl.gov'
@@ -55,6 +56,32 @@ const Footer = () => {
               SIBYLS Beamline
             </Link>{' '}
             - BilboMD v{version}-{gitHash}
+          </Typography>
+          <Typography sx={{ wordBreak: 'break-all' }}>
+            <Link
+              href='https://github.com/bl1231/bilbomd-ui'
+              target='_blank'
+              rel='noopener noreferrer'
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                ml: 2,
+                fontWeight: 'bold'
+              }}
+            >
+              <img
+                src='/github-mark.svg'
+                alt='GitHub Repository'
+                width='20'
+                height='20'
+                style={{
+                  backgroundColor: blue[500],
+                  borderRadius: '10px',
+                  marginRight: '2px'
+                }}
+              />
+              GitHub
+            </Link>
           </Typography>
         </Box>
       </Container>
