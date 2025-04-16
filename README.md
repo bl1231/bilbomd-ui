@@ -60,6 +60,10 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.19.0 (4/16/2025)
+  - Add ability to Resubmit BilboMD Classic Jobs
+  - Add ability to Resubmit BilboMD Auto Jobs
+  - Streamlined yup validation logic with new helper functions
 - 1.18.4 (4/15/2025)
   - Add `GitHub` link in footers
 - 1.18.3 (4/14/2025)
