@@ -18,6 +18,7 @@ interface FileSelectProps extends FormControlProps {
   title: string
   error: boolean
   errorMessage?: string
+  existingFileName?: string
   setFieldValue: (field: string, value: File, shouldValidate?: boolean) => void
   onFileChange: (file: File) => void
   setFieldTouched: (
@@ -30,9 +31,9 @@ interface FileSelectProps extends FormControlProps {
 }
 
 const FileSelect = (props: FileSelectProps) => {
-  // const [fileName, setFileName] = useState('')
   const file = props.value
-  const fileName = file?.name || ''
+  const fileName =
+    file instanceof File ? file.name : props.existingFileName || ''
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
     const file = event.target.files?.[0]
@@ -40,7 +41,6 @@ const FileSelect = (props: FileSelectProps) => {
       const reader = new FileReader()
 
       reader.onload = () => {
-        // setFileName(file.name)
         props.setFieldValue(props.name, file, true)
         props.setFieldTouched(props.name, true, false)
         // Needed for example to trigger AutoRg calculations when saxs data
@@ -48,14 +48,13 @@ const FileSelect = (props: FileSelectProps) => {
         if (props.onFileChange) {
           props.onFileChange(file)
         }
-        // console.log('New fileName:', file.name)
       }
 
       reader.onerror = () => {
         console.error('Error reading file:', reader.error)
       }
 
-      reader.readAsDataURL(file) // Start reading the file as Data URL
+      reader.readAsDataURL(file)
     }
   }
 

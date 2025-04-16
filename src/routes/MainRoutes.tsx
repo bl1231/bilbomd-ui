@@ -12,8 +12,14 @@ import { ROLES } from 'config/roles'
 // render - dashboard
 const Prefetch = Loadable(lazy(() => import('features/auth/Prefetch')))
 const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')))
+const ResubmitJob = Loadable(
+  lazy(() => import('features/jobs/ResubmitJobForm'))
+)
 const NewAutoJob = Loadable(
   lazy(() => import('features/autojob/NewAutoJobForm'))
+)
+const ResubmitAutoJob = Loadable(
+  lazy(() => import('features/autojob/ResubmitAutoJobForm'))
 )
 const About = Loadable(lazy(() => import('features/about/About')))
 
@@ -126,8 +132,16 @@ const ProtectedMainRoutes = {
                       element: <NewJob />
                     },
                     {
+                      path: 'jobs/classic/resubmit/:id',
+                      element: <ResubmitJob />
+                    },
+                    {
                       path: 'jobs/auto',
                       element: <NewAutoJob />
+                    },
+                    {
+                      path: 'jobs/auto/resubmit/:id',
+                      element: <ResubmitAutoJob />
                     },
                     {
                       path: 'jobs/alphafold',

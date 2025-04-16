@@ -9,7 +9,7 @@ import { Box } from '@mui/system'
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
-const NewAutoJobFormInstructions = () => (
+const AutoJobFormInstructions = () => (
   <Accordion>
     <AccordionSummary
       expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}
@@ -88,4 +88,4 @@ const NewAutoJobFormInstructions = () => (
     </AccordionDetails>
   </Accordion>
 )
-export default NewAutoJobFormInstructions
+export default AutoJobFormInstructions

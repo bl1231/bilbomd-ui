@@ -1,12 +1,16 @@
 import { mixed, number, object, string } from 'yup'
 import {
-  isCRD,
-  isPsfData,
-  noSpaces,
-  isSaxsData,
-  containsChainId,
-  isValidConstInpFile
-} from './ValidationFunctions'
+  requiredFile,
+  fileExtTest,
+  fileSizeTest,
+  fileNameLengthTest,
+  noSpacesTest,
+  saxsCheck,
+  psfCheck,
+  crdCheck,
+  chainIdCheck,
+  constInpCheck
+} from './fieldTests/fieldTests'
 
 const BilboMDClassicJobSchema = object().shape({
   bilbomd_mode: string().required('Selection is required'),
@@ -14,313 +18,54 @@ const BilboMDClassicJobSchema = object().shape({
     .required('Please provide a title for your BilboMD Job.')
     .min(4, 'Title must contain at least 4 characters.')
     .max(24, 'Title must contain less than 24 characters.')
-    .matches(/^[\w\s-]+$/, 'no special characters allowed'),
+    .matches(/^[\w\s-]+$/, 'no spaces or special characters allowed'),
   psf_file: mixed().when('bilbomd_mode', {
     is: 'crd_psf',
     then: () =>
-      mixed()
-        .test(
-          'required',
-          'PSF file is required',
-          (file) => (file ? true : false) // Simplified return statement
-        )
-        .test('file-size-check', 'Max file size is 30MB', (file) => {
-          if (file instanceof File && file.size <= 30000000) {
-            return true
-          }
-          return false
-        })
-        .test('file-type-check', 'Only accepts a PSF file', (file) => {
-          if (
-            file instanceof File &&
-            file.name.split('.').pop()?.toUpperCase() === 'PSF'
-          ) {
-            return true
-          }
-          return false
-        })
-        .test(
-          'check-for-spaces',
-          'No spaces allowed in the file name.',
-          async (file) => {
-            if (file instanceof File) {
-              const spaceCheck = await noSpaces(file)
-              return spaceCheck
-            }
-            return false
-          }
-        )
-        .test(
-          'filename-length-check',
-          'Filename must be no longer than 30 characters.',
-          (file) => {
-            if (file && (file as File).name.length <= 30) {
-              return true
-            }
-            return false
-          }
-        )
-        .test(
-          'psf-data-check',
-          'If you are sure this is a valid PSF file contact Scott',
-          async (file) => {
-            if (file instanceof File) {
-              const isPsf = await isPsfData(file)
-              return isPsf
-            }
-            return false
-          }
-        ),
+      requiredFile('A PSF file is required')
+        .concat(fileSizeTest(30_000_000))
+        .concat(fileExtTest('psf'))
+        .concat(noSpacesTest())
+        .concat(fileNameLengthTest())
+        .concat(psfCheck()),
     otherwise: () => mixed().notRequired()
   }),
   crd_file: mixed().when('bilbomd_mode', {
     is: 'crd_psf',
     then: () =>
-      mixed()
-        .test('required', 'CRD file is required', (file) => {
-          if (file) return true
-          return false
-        })
-        .test('file-size-check', 'Max file size is 20MB', (file) => {
-          if (file && (file as File).size <= 20000000) {
-            // console.log(file.size)
-            return true
-          }
-          // console.log(file.size)
-          return false
-        })
-        .test('file-type-check', 'Only accepts a CRD file', (file) => {
-          if (
-            file &&
-            (file as File).name.split('.').pop()?.toUpperCase() === 'CRD'
-          ) {
-            // console.log(file.name.split('.').pop())
-            return true
-          }
-          return false
-        })
-        .test(
-          'crd-check',
-          'File does not appear to be a CRD file',
-          async (file) => {
-            if (file) {
-              const crd = await isCRD(file as File)
-              return crd
-            }
-            return false
-          }
-        )
-        .test(
-          'check-for-spaces',
-          'Only accept file with no spaces in the name.',
-          async (file) => {
-            if (file) {
-              const spaceCheck = await noSpaces(file as File)
-              // console.log(spaceCheck)
-              return spaceCheck
-            }
-            return false
-          }
-        )
-        .test(
-          'filename-length-check',
-          'Filename must be no longer than 30 characters.',
-          (file) => {
-            if (file && (file as File).name.length <= 30) {
-              return true
-            }
-            return false
-          }
-        ),
+      requiredFile('A CRD file is required')
+        .concat(fileSizeTest(20_000_000))
+        .concat(fileExtTest('crd'))
+        .concat(noSpacesTest())
+        .concat(fileNameLengthTest())
+        .concat(crdCheck()),
     otherwise: () => mixed().notRequired()
   }),
   pdb_file: mixed().when('bilbomd_mode', {
     is: 'pdb',
     then: () =>
-      mixed()
-        .required('gotta supply a PDB file')
-        .test(
-          'pdb-chainid-check',
-          'File must contain Chain IDs in column 22',
-          async (file) => {
-            if (file) {
-              const chainIDs = await containsChainId(file as File)
-              return chainIDs
-            }
-            return false
-          }
-        )
-        .test('file-type-check', 'Only accepts a PDB file.', (file) => {
-          if (
-            file &&
-            (file as File).name.split('.').pop()?.toUpperCase() === 'PDB'
-          ) {
-            // console.log(file.name.split('.').pop())
-            return true
-          }
-          return false
-        })
-        .test('file-size-check', 'Max file size is 10MB', (file) => {
-          if (file && (file as File).size <= 10000000) {
-            // console.log(file.size)
-            return true
-          }
-          // console.log(file.size)
-          return false
-        })
-        .test(
-          'check-for-spaces',
-          'Only accept file with no spaces in the name.',
-          async (file) => {
-            if (file) {
-              const spaceCheck = await noSpaces(file as File)
-              // console.log(spaceCheck)
-              return spaceCheck
-            }
-            return false
-          }
-        )
-        .test(
-          'filename-length-check',
-          'Filename must be no longer than 30 characters.',
-          (file) => {
-            if (file && (file as File).name.length <= 30) {
-              return true
-            }
-            return false
-          }
-        ),
+      requiredFile('A PDB file is required')
+        .concat(chainIdCheck())
+        .concat(fileExtTest('pdb'))
+        .concat(fileSizeTest(10_000_000))
+        .concat(noSpacesTest())
+        .concat(fileNameLengthTest()),
     otherwise: () => mixed().notRequired()
   }),
   constinp: mixed()
-    .required('A const.inp file is required')
-    .test(
-      'const-inp-file-check',
-      '', // Default error message, not used because we handle errors manually
-      async function (file, ctx) {
-        const bilbomd_mode = ctx?.options?.context?.bilbomd_mode
-        // Use a regular function instead of an arrow function to keep 'this' context
-        if (file) {
-          const validationResult = await isValidConstInpFile(
-            file as File,
-            bilbomd_mode
-          )
-          if (validationResult === true) {
-            return true
-          }
-          // Set the validation error message specifically
-          return this.createError({ message: validationResult })
-        }
-        return this.createError({
-          message: 'Yup Validation went bonkers. Call Scott'
-        })
-      }
-    )
-    .test('file-size-check', 'Max file size is 2MB', (file) => {
-      if (file && (file as File).size <= 2000000) {
-        // console.log(file.size)
-        return true
-      }
-      // console.log(file.size)
-      return false
-    })
-    .test('file-type-check', 'Only accepts a const.inp file.', (file) => {
-      if (
-        file &&
-        (file as File).name.split('.').pop()?.toUpperCase() === 'INP'
-      ) {
-        // console.log(file.name.split('.').pop())
-        return true
-      }
-      return false
-    })
-    .test(
-      'check-for-spaces',
-      'No spaces allowed in the file name.',
-      async (file) => {
-        if (file) {
-          const spaceCheck = await noSpaces(file as File)
-          // console.log(spaceCheck)
-          return spaceCheck
-        }
-        return false
-      }
-    )
-    .test(
-      'filename-length-check',
-      'Filename must be no longer than 30 characters.',
-      (file) => {
-        if (file && (file as File).name.length <= 30) {
-          return true
-        }
-        return false
-      }
-    ),
+    .concat(requiredFile('A CONST.INP file is required'))
+    .concat(constInpCheck())
+    .concat(fileSizeTest(2_000_000))
+    .concat(fileExtTest('inp'))
+    .concat(noSpacesTest())
+    .concat(fileNameLengthTest()),
   expdata: mixed()
-    .test('required', 'Experimental SAXS data is required', (file) => {
-      if (file) return true
-      return false
-    })
-    .test('file-size-check', 'Max file size is 2MB', (file) => {
-      if (file && (file as File).size <= 2000000) {
-        // console.log(file.size)
-        return true
-      }
-      // console.log(file.size)
-      return false
-    })
-    .test('file-type-check', 'Only accepts a *.dat file.', (file) => {
-      if (
-        file &&
-        (file as File).name.split('.').pop()?.toUpperCase() === 'DAT'
-      ) {
-        // console.log(file.name.split('.').pop())
-        return true
-      }
-      return false
-    })
-    .test(
-      'saxs-data-check',
-      'File does not appear to be SAXS data', // Default error message
-      async function (file) {
-        // Use regular function to keep 'this' context for Yup
-        if (file) {
-          const result = await isSaxsData(file as File)
-          // Check the 'valid' property and use 'message' for custom errors
-          if (result.valid) {
-            return true
-          } else {
-            return this.createError({ message: result.message })
-          }
-        }
-        // Fallback error message if no file is provided
-        return this.createError({
-          message: 'File is required but not provided.'
-        })
-      }
-    )
-    .test(
-      'check-for-spaces',
-      'Only accept file with no spaces in the name.',
-      async (file) => {
-        if (file) {
-          const spaceCheck = await noSpaces(file as File)
-          // console.log(spaceCheck)
-          return spaceCheck
-        }
-        return false
-      }
-    )
-    .test(
-      'filename-length-check',
-      'Filename must be no longer than 30 characters.',
-      (file) => {
-        if (file && (file as File).name.length <= 30) {
-          return true
-        }
-        return false
-      }
-    ),
+    .concat(requiredFile('A SAXS data file is required'))
+    .concat(fileSizeTest(2_000_000))
+    .concat(fileExtTest('dat'))
+    .concat(saxsCheck())
+    .concat(noSpacesTest())
+    .concat(fileNameLengthTest()),
   num_conf: number()
     .integer()
     .oneOf([1, 2, 3, 4])
