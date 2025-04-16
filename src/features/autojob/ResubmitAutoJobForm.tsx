@@ -9,12 +9,16 @@ import {
   Paper
 } from '@mui/material'
 import Grid from '@mui/material/Grid'
-import { Link as RouterLink } from 'react-router'
+import { Link as RouterLink, useParams } from 'react-router'
 import { Form, Formik, Field } from 'formik'
 import FileSelect from 'features/jobs/FileSelect'
-import { useAddNewAutoJobMutation } from '../../slices/jobsApiSlice'
+import {
+  useAddNewAutoJobMutation,
+  useGetJobByIdQuery,
+  useCheckJobFilesQuery
+} from '../../slices/jobsApiSlice'
 import SendIcon from '@mui/icons-material/Send'
-import NewAutoJobFormInstructions from './AutoJobFormInstructions'
+import AutoJobFormInstructions from './AutoJobFormInstructions'
 import { BilboMDAutoJobSchema } from 'schemas/BilboMDAutoJobSchema'
 import useAuth from 'hooks/useAuth'
 import { Debug } from 'components/Debug'
@@ -25,22 +29,16 @@ import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useTheme } from '@mui/material/styles'
 import PipelineSchematic from './PipelineSchematic'
+import { BilboMDAutoJobFormValues } from '../../types/autoJobForm'
+import { IBilboMDAutoJob } from '@bl1231/bilbomd-mongodb-schema'
 
-interface SubmitValues {
-  title: string
-  pdb_file: string
-  pae_file: string
-  dat_file: string
-  email: string
-}
-
-const NewAutoJobForm = () => {
-  useTitle('BilboMD: New Auto Job')
+const ResubmitAutoJobForm = () => {
+  useTitle('BilboMD: Resubmit Auto Job')
   const [addNewAutoJob, { isSuccess }] = useAddNewAutoJobMutation()
   const { email } = useAuth()
+  const { id } = useParams()
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
 
-  // Fetch the configuration object
   const {
     data: config,
     error: configError,
@@ -51,35 +49,112 @@ const NewAutoJobForm = () => {
   const isDarkMode = theme.palette.mode === 'dark'
 
   if (configIsLoading) return <LinearProgress />
+
   if (configError)
     return <Alert severity='error'>Error loading configuration</Alert>
 
   const useNersc = config.useNersc?.toLowerCase() === 'true'
 
   const handleStatusCheck = (isUnavailable: boolean) => {
-    // Update the state based on the system's availability
     setIsPerlmutterUnavailable(isUnavailable)
   }
 
-  const initialValues: SubmitValues = {
-    title: '',
-    pdb_file: '',
-    pae_file: '',
-    dat_file: '',
-    email: email
+  const {
+    data: jobdata,
+    isLoading: jobIsLoading,
+    isError: jobIsError
+  } = useGetJobByIdQuery(id, {})
+
+  if (jobIsLoading) return <LinearProgress />
+
+  if (jobIsError)
+    return <Alert severity='error'>Error retrieving parent job info</Alert>
+
+  if (!jobdata?.mongo) {
+    return <Alert severity='error'>Job data not found</Alert>
   }
 
+  const job = jobdata?.mongo as IBilboMDAutoJob
+
+  // console.log('job', job)
+
+  const jobId = jobdata?.id
+
+  const {
+    data: fileCheckData,
+    error: fileCheckError,
+    isLoading: fileCheckIsLoading
+  } = useCheckJobFilesQuery(jobId!, {
+    skip: !jobId
+  })
+
+  // console.log('fileCheckData', fileCheckData)
+
+  if (!jobdata?.mongo) {
+    return <Alert severity='error'>Job data not found</Alert>
+  }
+
+  if (fileCheckIsLoading) return <LinearProgress />
+
+  if (fileCheckError) {
+    return (
+      <Alert severity='error'>
+        Error checking job files:{' '}
+        {'message' in fileCheckError ? fileCheckError.message : 'Unknown error'}
+      </Alert>
+    )
+  }
+
+  const initialValues: BilboMDAutoJobFormValues = job
+    ? {
+        bilbomd_mode: 'auto',
+        title: 'resubmit_' + job.title,
+        pdb_file: job.pdb_file ?? '',
+        pae_file: job.pdb_file ?? '',
+        data_file: job.pdb_file ?? '',
+        email: email
+      }
+    : {
+        bilbomd_mode: 'auto',
+        title: '',
+        pdb_file: '',
+        pae_file: '',
+        data_file: '',
+        email: email
+      }
+
   const onSubmit = async (
-    values: SubmitValues,
+    values: BilboMDAutoJobFormValues,
     { setStatus }: { setStatus: (status: string) => void }
   ) => {
     const form = new FormData()
+    form.append('bilbomd_mode', values.bilbomd_mode)
     form.append('title', values.title)
-    form.append('pdb_file', values.pdb_file)
-    form.append('dat_file', values.dat_file)
-    form.append('pae_file', values.pae_file)
+
+    form.append('resubmit', 'true')
+    if (job?.id) {
+      form.append('original_job_id', job.id)
+    }
+
+    if (values.pdb_file instanceof File) {
+      form.append('pdb_file', values.pdb_file)
+    } else if (fileCheckData.pdb_file) {
+      form.append('reuse_pdb_file', 'true')
+    }
+
+    if (values.data_file instanceof File) {
+      form.append('data_file', values.data_file)
+    } else if (fileCheckData.data_file) {
+      form.append('reuse_data_file', 'true')
+    }
+
+    if (values.pae_file instanceof File) {
+      form.append('pae_file', values.pae_file)
+    } else if (fileCheckData.pae_file) {
+      form.append('reuse_pae_file', 'true')
+    }
+
     form.append('email', values.email)
-    form.append('bilbomd_mode', 'auto')
 
     try {
       const newJob = await addNewAutoJob(form).unwrap()
@@ -89,21 +164,22 @@ const NewAutoJobForm = () => {
     }
   }
 
-  const isFormValid = (values: SubmitValues) => {
-    return (
-      !isPerlmutterUnavailable &&
-      values.title !== '' &&
-      values.pdb_file !== '' &&
-      values.pae_file !== '' &&
-      values.dat_file !== ''
-    )
+  const isFormValid = (
+    values: BilboMDAutoJobFormValues,
+    reuseFlags: typeof fileCheckData
+  ) => {
+    const hasPDB = values.pdb_file instanceof File || reuseFlags.pdb_file
+    const hasDAT = values.data_file instanceof File || reuseFlags.data_file
+    const hasPAE = values.pae_file instanceof File || reuseFlags.pae_file
+    const hasTitle = values.title.trim() !== ''
+    return !isPerlmutterUnavailable && hasPDB && hasDAT && hasPAE && hasTitle
   }
 
   const content = (
     <>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12 }}>
-          <NewAutoJobFormInstructions />
+          <AutoJobFormInstructions />
         </Grid>
 
         <PipelineSchematic isDarkMode={isDarkMode} />
@@ -172,6 +248,9 @@ const NewAutoJobForm = () => {
                           id='pdb-file-upload'
                           as={FileSelect}
                           title='Select File'
+                          existingFileName={
+                            fileCheckData.pdb_file ? job?.pdb_file : undefined
+                          }
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
@@ -188,6 +267,9 @@ const NewAutoJobForm = () => {
                           id='pae-file-upload'
                           as={FileSelect}
                           title='Select File'
+                          existingFileName={
+                            fileCheckData.pae_file ? job?.pae_file : undefined
+                          }
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
@@ -199,15 +281,20 @@ const NewAutoJobForm = () => {
                       </Grid>
                       <Grid>
                         <Field
-                          name='dat_file'
+                          name='data_file'
                           id='dat-file-upload'
                           as={FileSelect}
                           title='Select File'
+                          existingFileName={
+                            fileCheckData.data_file ? job?.data_file : undefined
+                          }
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
-                          error={errors.dat_file && touched.dat_file}
-                          errorMessage={errors.dat_file ? errors.dat_file : ''}
+                          error={errors.data_file && touched.data_file}
+                          errorMessage={
+                            errors.data_file ? errors.data_file : ''
+                          }
                           fileType='experimental SAXS data *.dat'
                           fileExt='.dat'
                         />
@@ -222,7 +309,9 @@ const NewAutoJobForm = () => {
                         <Button
                           type='submit'
                           disabled={
-                            !isValid || isSubmitting || !isFormValid(values)
+                            !isValid ||
+                            isSubmitting ||
+                            !isFormValid(values, fileCheckData)
                           }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}
@@ -254,4 +343,4 @@ const NewAutoJobForm = () => {
   return content
 }
 
-export default NewAutoJobForm
+export default ResubmitAutoJobForm

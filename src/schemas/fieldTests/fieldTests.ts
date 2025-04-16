@@ -107,3 +107,22 @@ export const constInpCheck = () =>
     }
     return true
   })
+
+export const jsonFileCheck = () =>
+  mixed().test(
+    'is-json',
+    'Please select a PAE file in JSON format',
+    async (file) => {
+      if (file instanceof File && file.type === 'application/json') {
+        const content = await file.text()
+        try {
+          JSON.parse(content)
+          return true
+        } catch (error) {
+          console.log('Invalid JSON content:', error)
+          return false
+        }
+      }
+      return typeof file === 'string' // allow reuse of existing string
+    }
+  )

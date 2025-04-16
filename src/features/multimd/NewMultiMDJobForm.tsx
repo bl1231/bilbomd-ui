@@ -26,6 +26,7 @@ import Grid from '@mui/material/Grid'
 import SendIcon from '@mui/icons-material/Send'
 import { BilboMDJob } from 'types/interfaces'
 import HeaderBox from 'components/HeaderBox'
+import useTitle from 'hooks/useTitle'
 import { Instructions } from './Instructions.tsx'
 import { Formik, Form, Field } from 'formik'
 import { Debug } from 'components/Debug'
@@ -45,6 +46,7 @@ interface ApiError {
 }
 
 const NewMultiMDJobForm: React.FC = () => {
+  useTitle('BilboMD: New Multi Job')
   const [addNewJob, { isSuccess }] = useAddNewMultiJobMutation()
   const { username } = useAuth()
   const {

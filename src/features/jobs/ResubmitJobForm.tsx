@@ -35,6 +35,7 @@ import { expdataSchema } from 'schemas/ExpdataSchema'
 import { BilboMDClassicJobSchema } from 'schemas/BilboMDClassicJobSchema'
 import useAuth from 'hooks/useAuth'
 import HeaderBox from 'components/HeaderBox'
+import useTitle from 'hooks/useTitle'
 import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import FileSelect from './FileSelect'
 import { Debug } from 'components/Debug'
@@ -45,6 +46,7 @@ import PipelineSchematic from './PipelineSchematic'
 import { BilboMDClassicJobFormValues } from '../../types/classicJobForm'
 
 const ResubmitJobForm = () => {
+  useTitle('BilboMD: Resubmit Classic Job')
   const theme = useTheme()
   const isDarkMode = theme.palette.mode === 'dark'
   const [addNewJob, { isSuccess }] = useAddNewJobMutation()
@@ -78,7 +80,7 @@ const ResubmitJobForm = () => {
   } = useGetJobByIdQuery(id, {})
   if (jobIsLoading) return <LinearProgress />
   if (jobIsError)
-    return <Alert severity='error'>Error loading configuration</Alert>
+    return <Alert severity='error'>Error retrieving parent job info</Alert>
   const job = jobdata?.mongo
 
   const { data: fileCheckData, error: fileCheckError } = useCheckJobFilesQuery(

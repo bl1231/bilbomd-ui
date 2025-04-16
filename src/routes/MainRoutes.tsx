@@ -18,6 +18,9 @@ const ResubmitJob = Loadable(
 const NewAutoJob = Loadable(
   lazy(() => import('features/autojob/NewAutoJobForm'))
 )
+const ResubmitAutoJob = Loadable(
+  lazy(() => import('features/autojob/ResubmitAutoJobForm'))
+)
 const About = Loadable(lazy(() => import('features/about/About')))
 
 const NewAlphaFoldJob = Loadable(
@@ -135,6 +138,10 @@ const ProtectedMainRoutes = {
                     {
                       path: 'jobs/auto',
                       element: <NewAutoJob />
+                    },
+                    {
+                      path: 'jobs/auto/resubmit/:id',
+                      element: <ResubmitAutoJob />
                     },
                     {
                       path: 'jobs/alphafold',

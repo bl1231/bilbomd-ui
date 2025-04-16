@@ -9,11 +9,24 @@ const addNewlines = (str: string, everyN: number) => {
 }
 
 // Custom stringify function to handle newlines
-const customStringify = (obj, indent: number = 2) => {
+const customStringify = (obj: unknown, indent: number = 2) => {
   let json = JSON.stringify(obj, null, indent)
   // Replace escaped newlines with actual newlines
   json = json.replace(/\\n/g, '\n')
   return json
+}
+
+const summarizeFileField = (file: File | string | undefined) => {
+  if (typeof file === 'string') return file
+  if (file instanceof File) {
+    return {
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      src: 'Omitted for brevity'
+    }
+  }
+  return undefined
 }
 
 export const Debug = () => {
@@ -42,29 +55,23 @@ export const Debug = () => {
       </div>
       <FormikConsumer>
         {({ ...rest }) => {
-          // Check if pdb_file exists before attempting to modify it
-          const pdbFileExists = !!rest.values.pdb_file
-          const valuesWithModifiedPdbFile = pdbFileExists
-            ? {
-                ...rest.values,
-                pdb_file: {
-                  // Copy all properties except 'src'
-                  ...rest.values.pdb_file,
-                  src: 'Omitted for brevity' // Replace 'src' with a placeholder
-                }
-              }
-            : rest.values // Use the original values if pdb_file doesn't exist
+          const valuesWithModifiedPdbFile = {
+            ...rest.values,
+            pdb_file: summarizeFileField(rest.values.pdb_file)
+          }
 
           // Check if entities exist before attempting to modify them
           const entitiesWithModifiedSequences =
             valuesWithModifiedPdbFile.entities
-              ? valuesWithModifiedPdbFile.entities.map((entity) => ({
-                  ...entity,
-                  sequence:
-                    entity.sequence.length > 80
-                      ? addNewlines(entity.sequence, 80)
-                      : entity.sequence
-                }))
+              ? valuesWithModifiedPdbFile.entities.map(
+                  (entity: { sequence: string }) => ({
+                    ...entity,
+                    sequence:
+                      entity.sequence.length > 80
+                        ? addNewlines(entity.sequence, 80)
+                        : entity.sequence
+                  })
+                )
               : undefined // Keep entities undefined if they don't exist
 
           const displayContent = {
