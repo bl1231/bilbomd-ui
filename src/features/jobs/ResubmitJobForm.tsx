@@ -68,7 +68,6 @@ const ResubmitJobForm = () => {
   const useNersc = config.useNersc?.toLowerCase() === 'true'
 
   const handleStatusCheck = (isUnavailable: boolean) => {
-    // Update the state based on the system's availability
     setIsPerlmutterUnavailable(isUnavailable)
   }
 
@@ -81,12 +80,23 @@ const ResubmitJobForm = () => {
   if (jobIsError)
     return <Alert severity='error'>Error loading configuration</Alert>
   const job = jobdata?.mongo
+
   const { data: fileCheckData, error: fileCheckError } = useCheckJobFilesQuery(
     jobdata?.id ?? '',
     {
       skip: !jobdata?.id // avoids running until ID is available
     }
   )
+
+  if (fileCheckError) {
+    return (
+      <Alert severity='error'>
+        Error checking job files:{' '}
+        {'message' in fileCheckError ? fileCheckError.message : 'Unknown error'}
+      </Alert>
+    )
+  }
+
   const normalizedFileCheckData = fileCheckData
     ? {
         ...fileCheckData,
@@ -102,11 +112,6 @@ const ResubmitJobForm = () => {
   }, [job])
 
   // console.log('job', job)
-  // console.log('fileCheckData', normalizedFileCheckData)
-
-  if (fileCheckError) {
-    console.log('fileCheckError', fileCheckError)
-  }
 
   const initialValues: BilboMDClassicJobFormValues = job
     ? {
@@ -272,7 +277,7 @@ const ResubmitJobForm = () => {
 
       <Grid size={{ xs: 12 }}>
         <HeaderBox>
-          <Typography>Resubmit BilboMD Classic Job Form {id}</Typography>
+          <Typography>Resubmit - BilboMD Classic Job</Typography>
         </HeaderBox>
 
         <Paper sx={{ p: 2 }}>
@@ -285,451 +290,461 @@ const ResubmitJobForm = () => {
               </Typography>
             </Alert>
           ) : (
-            <Formik<BilboMDClassicJobFormValues>
-              initialValues={initialValues}
-              enableReinitialize={true}
-              validationSchema={BilboMDClassicJobSchema}
-              onSubmit={onSubmit}
-            >
-              {({
-                values,
-                errors,
-                touched,
-                isValid,
-                isSubmitting,
-                handleChange,
-                handleBlur,
-                status,
-                setFieldValue,
-                setFieldTouched,
-                resetForm,
-                validateForm
-              }) => (
-                <Form>
-                  <Grid
-                    container
-                    columns={12}
-                    direction='column'
-                    sx={{ display: 'flex' }}
-                  >
-                    {useNersc && (
-                      <NerscStatusChecker
-                        systemName='perlmutter'
-                        onStatusCheck={handleStatusCheck}
-                      />
-                    )}
-                    <Divider textAlign='left' sx={{ my: 1 }}>
-                      Model Inputs
-                    </Divider>
+            <>
+              <Alert severity='warning'>
+                Make adjustments to run parameters or input files before
+                resubmitting your job.
+              </Alert>
+              <Formik<BilboMDClassicJobFormValues>
+                initialValues={initialValues}
+                enableReinitialize={true}
+                validationSchema={BilboMDClassicJobSchema}
+                onSubmit={onSubmit}
+              >
+                {({
+                  values,
+                  errors,
+                  touched,
+                  isValid,
+                  isSubmitting,
+                  handleChange,
+                  handleBlur,
+                  status,
+                  setFieldValue,
+                  setFieldTouched,
+                  resetForm,
+                  validateForm
+                }) => (
+                  <Form>
                     <Grid
                       container
-                      direction='row'
-                      alignItems='center'
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        width: '520px'
-                      }}
+                      columns={12}
+                      direction='column'
+                      sx={{ display: 'flex' }}
                     >
-                      <Grid size={{ xs: 6 }}>
-                        <FormGroup sx={{ ml: 1 }}>
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={values.bilbomd_mode === 'pdb'}
-                                onChange={handleCheckboxChange(
-                                  resetForm,
-                                  values,
-                                  validateForm,
-                                  touched
-                                )}
-                                name='pdb_inputs'
-                              />
-                            }
-                            label='PDB file'
-                          />
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={values.bilbomd_mode === 'crd_psf'}
-                                onChange={handleCheckboxChange(
-                                  resetForm,
-                                  values,
-                                  validateForm,
-                                  touched
-                                )}
-                                name='crd_psf_inputs'
-                              />
-                            }
-                            label='CRD/PSF files'
-                          />
-                        </FormGroup>
+                      {useNersc && (
+                        <NerscStatusChecker
+                          systemName='perlmutter'
+                          onStatusCheck={handleStatusCheck}
+                        />
+                      )}
+                      <Divider textAlign='left' sx={{ my: 1 }}>
+                        Model Inputs
+                      </Divider>
+                      <Grid
+                        container
+                        direction='row'
+                        alignItems='center'
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          width: '520px'
+                        }}
+                      >
+                        <Grid size={{ xs: 6 }}>
+                          <FormGroup sx={{ ml: 1 }}>
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={values.bilbomd_mode === 'pdb'}
+                                  onChange={handleCheckboxChange(
+                                    resetForm,
+                                    values,
+                                    validateForm,
+                                    touched
+                                  )}
+                                  name='pdb_inputs'
+                                />
+                              }
+                              label='PDB file'
+                            />
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={values.bilbomd_mode === 'crd_psf'}
+                                  onChange={handleCheckboxChange(
+                                    resetForm,
+                                    values,
+                                    validateForm,
+                                    touched
+                                  )}
+                                  name='crd_psf_inputs'
+                                />
+                              }
+                              label='CRD/PSF files'
+                            />
+                          </FormGroup>
+                        </Grid>
+                        <Grid size={{ xs: 6 }}>
+                          <Alert severity='info'>
+                            If you used CHARMM-GUI to parameterize your inputs
+                            then please select the CRD/PSF option
+                          </Alert>
+                        </Grid>
                       </Grid>
-                      <Grid size={{ xs: 6 }}>
-                        <Alert severity='info'>
-                          If you used CHARMM-GUI to parameterize your inputs
-                          then please select the CRD/PSF option
-                        </Alert>
-                      </Grid>
-                    </Grid>
-                    <Divider textAlign='left' sx={{ my: 1 }}>
-                      Job Form
-                    </Divider>
-                    <Grid sx={{ my: 2, width: '520px' }}>
-                      <Field
-                        fullWidth
-                        label='Title'
-                        name='title'
-                        id='title'
-                        type='text'
-                        disabled={isSubmitting}
-                        as={TextField}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={errors.title && touched.title}
-                        helperText={
-                          errors.title && touched.title ? errors.title : ''
-                        }
-                        value={values.title || ''}
-                      />
-                    </Grid>
-                    {values.bilbomd_mode === 'crd_psf' && (
-                      <>
-                        <Grid
-                          container
-                          direction='row'
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            width: '520px'
-                          }}
-                        >
-                          <Grid>
-                            <Field
-                              name='crd_file'
-                              id='crd-file-upload'
-                              as={FileSelect}
-                              title='Select File'
-                              existingFileName={
-                                normalizedFileCheckData.crd_file
-                                  ? job?.crd_file
-                                  : undefined
-                              }
-                              disabled={isSubmitting}
-                              setFieldValue={setFieldValue}
-                              setFieldTouched={setFieldTouched}
-                              error={errors.crd_file && touched.crd_file}
-                              errorMessage={
-                                errors.crd_file ? errors.crd_file : ''
-                              }
-                              fileType='CHARMM-GUI *.crd'
-                              fileExt='.crd'
-                            />
-                          </Grid>
-                        </Grid>
-                        <Grid
-                          container
-                          direction='row'
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            width: '520px'
-                          }}
-                        >
-                          <Grid>
-                            <Field
-                              name='psf_file'
-                              id='psf-file-upload'
-                              as={FileSelect}
-                              title='Select File'
-                              existingFileName={
-                                normalizedFileCheckData.psf_file
-                                  ? job?.psf_file
-                                  : undefined
-                              }
-                              disabled={isSubmitting}
-                              setFieldValue={setFieldValue}
-                              setFieldTouched={setFieldTouched}
-                              error={errors.psf_file && touched.psf_file}
-                              errorMessage={
-                                errors.psf_file ? errors.psf_file : ''
-                              }
-                              fileType='CHARMM-GUI *.psf'
-                              fileExt='.psf'
-                            />
-                          </Grid>
-                        </Grid>
-                      </>
-                    )}
-                    {values.bilbomd_mode === 'pdb' && (
-                      <>
-                        <Grid
-                          container
-                          direction='row'
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            width: '520px'
-                          }}
-                        >
-                          <Grid>
-                            <Field
-                              name='pdb_file'
-                              id='pdb-file-upload'
-                              as={FileSelect}
-                              title='Select File'
-                              existingFileName={
-                                normalizedFileCheckData.pdb_file
-                                  ? job?.pdb_file
-                                  : undefined
-                              }
-                              disabled={isSubmitting}
-                              setFieldValue={setFieldValue}
-                              setFieldTouched={setFieldTouched}
-                              error={errors.pdb_file && touched.pdb_file}
-                              errorMessage={
-                                errors.pdb_file ? errors.pdb_file : ''
-                              }
-                              fileType=' *.pdb'
-                              fileExt='.pdb'
-                            />
-                          </Grid>
-                        </Grid>
-                      </>
-                    )}
-                    <Grid
-                      container
-                      direction='row'
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        width: '520px'
-                      }}
-                    >
-                      <Grid>
+                      <Divider textAlign='left' sx={{ my: 1 }}>
+                        Job Form
+                      </Divider>
+                      <Grid sx={{ my: 2, width: '520px' }}>
                         <Field
-                          name='constinp'
-                          id='constinp-file-upload'
-                          as={FileSelect}
-                          title='Select File'
-                          existingFileName={
-                            normalizedFileCheckData.const_inp_file
-                              ? job?.const_inp_file
-                              : undefined
-                          }
+                          fullWidth
+                          label='Title'
+                          name='title'
+                          id='title'
+                          type='text'
                           disabled={isSubmitting}
-                          setFieldValue={setFieldValue}
-                          setFieldTouched={setFieldTouched}
+                          as={TextField}
+                          onChange={handleChange}
                           onBlur={handleBlur}
-                          error={errors.constinp && touched.constinp}
-                          errorMessage={errors.constinp ? errors.constinp : ''}
-                          fileType='const.inp'
-                          fileExt='.inp'
+                          error={errors.title && touched.title}
+                          helperText={
+                            errors.title && touched.title ? errors.title : ''
+                          }
+                          value={values.title || ''}
                         />
                       </Grid>
-                    </Grid>
-                    <Grid
-                      container
-                      direction='row'
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        width: '520px'
-                      }}
-                    >
-                      <Alert severity='info'>
-                        <Typography component='div'>
-                          Be sure to verify that the chain identifiers (
-                          <b>segid</b>) and residue numbering in your{' '}
-                          <b>const.inp</b> are consistent with your{' '}
-                          <b>
-                            {values.bilbomd_mode === 'pdb' ? `*.pdb` : `*.crd`}
-                          </b>{' '}
-                          file.
-                          {values.bilbomd_mode === 'pdb' ? (
-                            <>
-                              {' '}
-                              For example, Protein Chain ID <b>A</b> will be
-                              converted to segid <b>PROA</b> and DNA Chain ID{' '}
-                              <b>G</b> will be converted to segid <b>DNAG</b>.
-                            </>
-                          ) : (
-                            <>
-                              {' '}
-                              Keeping in mind that CHARMM-GUI creates segid
-                              names in a unique way.
-                            </>
-                          )}
-                        </Typography>
-                      </Alert>
-                    </Grid>
-                    <Grid
-                      container
-                      direction='row'
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        width: '520px'
-                      }}
-                    >
-                      <Grid>
-                        <Field
-                          name='expdata'
-                          id='expdata-file-upload'
-                          as={FileSelect}
-                          title='Select File'
-                          existingFileName={
-                            normalizedFileCheckData.data_file
-                              ? job?.data_file
-                              : undefined
-                          }
-                          disabled={isSubmitting}
-                          setFieldValue={setFieldValue}
-                          setFieldTouched={setFieldTouched}
-                          error={errors.expdata && touched.expdata}
-                          errorMessage={errors.expdata ? errors.expdata : ''}
-                          fileType='experimental SAXS data'
-                          fileExt='.dat'
-                          onFileChange={async (selectedFile: File) => {
-                            const isExpdataValid =
-                              await expdataSchema.isValid(selectedFile)
-                            if (isExpdataValid) {
-                              const formData = new FormData()
-                              formData.append('email', email)
-                              formData.append('expdata', selectedFile)
-                              try {
-                                const { rg, rg_min, rg_max } =
-                                  await calculateAutoRg(formData).unwrap()
-                                setFieldValue('rg', rg)
-                                setFieldValue('rg_min', rg_min)
-                                setFieldValue('rg_max', rg_max)
-                              } catch (error) {
-                                console.error('Error:', error)
+                      {values.bilbomd_mode === 'crd_psf' && (
+                        <>
+                          <Grid
+                            container
+                            direction='row'
+                            sx={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              width: '520px'
+                            }}
+                          >
+                            <Grid>
+                              <Field
+                                name='crd_file'
+                                id='crd-file-upload'
+                                as={FileSelect}
+                                title='Select File'
+                                existingFileName={
+                                  normalizedFileCheckData.crd_file
+                                    ? job?.crd_file
+                                    : undefined
+                                }
+                                disabled={isSubmitting}
+                                setFieldValue={setFieldValue}
+                                setFieldTouched={setFieldTouched}
+                                error={errors.crd_file && touched.crd_file}
+                                errorMessage={
+                                  errors.crd_file ? errors.crd_file : ''
+                                }
+                                fileType='CHARMM-GUI *.crd'
+                                fileExt='.crd'
+                              />
+                            </Grid>
+                          </Grid>
+                          <Grid
+                            container
+                            direction='row'
+                            sx={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              width: '520px'
+                            }}
+                          >
+                            <Grid>
+                              <Field
+                                name='psf_file'
+                                id='psf-file-upload'
+                                as={FileSelect}
+                                title='Select File'
+                                existingFileName={
+                                  normalizedFileCheckData.psf_file
+                                    ? job?.psf_file
+                                    : undefined
+                                }
+                                disabled={isSubmitting}
+                                setFieldValue={setFieldValue}
+                                setFieldTouched={setFieldTouched}
+                                error={errors.psf_file && touched.psf_file}
+                                errorMessage={
+                                  errors.psf_file ? errors.psf_file : ''
+                                }
+                                fileType='CHARMM-GUI *.psf'
+                                fileExt='.psf'
+                              />
+                            </Grid>
+                          </Grid>
+                        </>
+                      )}
+                      {values.bilbomd_mode === 'pdb' && (
+                        <>
+                          <Grid
+                            container
+                            direction='row'
+                            sx={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              width: '520px'
+                            }}
+                          >
+                            <Grid>
+                              <Field
+                                name='pdb_file'
+                                id='pdb-file-upload'
+                                as={FileSelect}
+                                title='Select File'
+                                existingFileName={
+                                  normalizedFileCheckData.pdb_file
+                                    ? job?.pdb_file
+                                    : undefined
+                                }
+                                disabled={isSubmitting}
+                                setFieldValue={setFieldValue}
+                                setFieldTouched={setFieldTouched}
+                                error={errors.pdb_file && touched.pdb_file}
+                                errorMessage={
+                                  errors.pdb_file ? errors.pdb_file : ''
+                                }
+                                fileType=' *.pdb'
+                                fileExt='.pdb'
+                              />
+                            </Grid>
+                          </Grid>
+                        </>
+                      )}
+                      <Grid
+                        container
+                        direction='row'
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          width: '520px'
+                        }}
+                      >
+                        <Grid>
+                          <Field
+                            name='constinp'
+                            id='constinp-file-upload'
+                            as={FileSelect}
+                            title='Select File'
+                            existingFileName={
+                              normalizedFileCheckData.const_inp_file
+                                ? job?.const_inp_file
+                                : undefined
+                            }
+                            disabled={isSubmitting}
+                            setFieldValue={setFieldValue}
+                            setFieldTouched={setFieldTouched}
+                            onBlur={handleBlur}
+                            error={errors.constinp && touched.constinp}
+                            errorMessage={
+                              errors.constinp ? errors.constinp : ''
+                            }
+                            fileType='const.inp'
+                            fileExt='.inp'
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid
+                        container
+                        direction='row'
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          width: '520px'
+                        }}
+                      >
+                        <Alert severity='info'>
+                          <Typography component='div'>
+                            Be sure to verify that the chain identifiers (
+                            <b>segid</b>) and residue numbering in your{' '}
+                            <b>const.inp</b> are consistent with your{' '}
+                            <b>
+                              {values.bilbomd_mode === 'pdb'
+                                ? `*.pdb`
+                                : `*.crd`}
+                            </b>{' '}
+                            file.
+                            {values.bilbomd_mode === 'pdb' ? (
+                              <>
+                                {' '}
+                                For example, Protein Chain ID <b>A</b> will be
+                                converted to segid <b>PROA</b> and DNA Chain ID{' '}
+                                <b>G</b> will be converted to segid <b>DNAG</b>.
+                              </>
+                            ) : (
+                              <>
+                                {' '}
+                                Keeping in mind that CHARMM-GUI creates segid
+                                names in a unique way.
+                              </>
+                            )}
+                          </Typography>
+                        </Alert>
+                      </Grid>
+                      <Grid
+                        container
+                        direction='row'
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          width: '520px'
+                        }}
+                      >
+                        <Grid>
+                          <Field
+                            name='expdata'
+                            id='expdata-file-upload'
+                            as={FileSelect}
+                            title='Select File'
+                            existingFileName={
+                              normalizedFileCheckData.data_file
+                                ? job?.data_file
+                                : undefined
+                            }
+                            disabled={isSubmitting}
+                            setFieldValue={setFieldValue}
+                            setFieldTouched={setFieldTouched}
+                            error={errors.expdata && touched.expdata}
+                            errorMessage={errors.expdata ? errors.expdata : ''}
+                            fileType='experimental SAXS data'
+                            fileExt='.dat'
+                            onFileChange={async (selectedFile: File) => {
+                              const isExpdataValid =
+                                await expdataSchema.isValid(selectedFile)
+                              if (isExpdataValid) {
+                                const formData = new FormData()
+                                formData.append('email', email)
+                                formData.append('expdata', selectedFile)
+                                try {
+                                  const { rg, rg_min, rg_max } =
+                                    await calculateAutoRg(formData).unwrap()
+                                  setFieldValue('rg', rg)
+                                  setFieldValue('rg_min', rg_min)
+                                  setFieldValue('rg_max', rg_max)
+                                } catch (error) {
+                                  console.error('Error:', error)
+                                  setFieldValue('rg_min', '')
+                                  setFieldValue('rg_max', '')
+                                }
+                              } else {
                                 setFieldValue('rg_min', '')
                                 setFieldValue('rg_max', '')
                               }
-                            } else {
-                              setFieldValue('rg_min', '')
-                              setFieldValue('rg_max', '')
-                            }
-                          }}
+                            }}
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid sx={{ display: 'flex', width: '520px' }}>
+                        <Typography>
+                          <b>Rg Min</b> and <b>Rg Max</b> will be calculated
+                          automatically from the selected SAXS data file. Feel
+                          free to change the suggested values.
+                        </Typography>
+                      </Grid>
+                      {isLoading && (
+                        <Box sx={{ my: 1, width: '520px' }}>
+                          <LinearProgress />
+                        </Box>
+                      )}
+                      <Grid sx={{ my: 2, display: 'flex', width: '520px' }}>
+                        <Field
+                          label='Rg Min'
+                          fullWidth
+                          id='rg_min'
+                          name='rg_min'
+                          type='text'
+                          disabled={isSubmitting || isLoading}
+                          as={TextField}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.rg_min && touched.rg_min}
+                          helperText={
+                            errors.rg_min && touched.rg_min
+                              ? errors.rg_min
+                              : 'Min value of Rg ...(between 10 and 100)'
+                          }
                         />
                       </Grid>
-                    </Grid>
-                    <Grid sx={{ display: 'flex', width: '520px' }}>
-                      <Typography>
-                        <b>Rg Min</b> and <b>Rg Max</b> will be calculated
-                        automatically from the selected SAXS data file. Feel
-                        free to change the suggested values.
-                      </Typography>
-                    </Grid>
-                    {isLoading && (
-                      <Box sx={{ my: 1, width: '520px' }}>
-                        <LinearProgress />
-                      </Box>
-                    )}
-                    <Grid sx={{ my: 2, display: 'flex', width: '520px' }}>
-                      <Field
-                        label='Rg Min'
-                        fullWidth
-                        id='rg_min'
-                        name='rg_min'
-                        type='text'
-                        disabled={isSubmitting || isLoading}
-                        as={TextField}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={errors.rg_min && touched.rg_min}
-                        helperText={
-                          errors.rg_min && touched.rg_min
-                            ? errors.rg_min
-                            : 'Min value of Rg ...(between 10 and 100)'
-                        }
-                      />
-                    </Grid>
-                    <Grid sx={{ my: 2, display: 'flex', width: '520px' }}>
-                      <Field
-                        label='Rg Max'
-                        fullWidth
-                        id='rg_max'
-                        name='rg_max'
-                        type='text'
-                        disabled={isSubmitting || isLoading}
-                        as={TextField}
-                        error={errors.rg_max && touched.rg_max}
-                        helperText={
-                          errors.rg_max && touched.rg_max
-                            ? errors.rg_max
-                            : 'Max value of Rg ...(between 10 and 100)'
-                        }
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                      />
-                    </Grid>
-                    <Grid sx={{ my: 2, display: 'flex', width: '520px' }}>
-                      <TextField
-                        label='Conformations per Rg'
-                        variant='outlined'
-                        id='num_conf'
-                        name='num_conf'
-                        select
-                        value={values.num_conf}
-                        sx={{ width: '520px' }}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={Boolean(errors.num_conf && touched.num_conf)}
-                        helperText={
-                          errors.num_conf && touched.num_conf
-                            ? errors.num_conf
-                            : 'Number of conformations to sample per Rg'
-                        }
-                      >
-                        <MenuItem key={1} value={1}>
-                          200
-                        </MenuItem>
-                        <MenuItem key={2} value={2}>
-                          400
-                        </MenuItem>
-                        <MenuItem key={3} value={3}>
-                          600
-                        </MenuItem>
-                        <MenuItem key={4} value={4}>
-                          800
-                        </MenuItem>
-                      </TextField>
-                    </Grid>
-                    {isSubmitting && (
-                      <Box sx={{ width: '520px' }}>
-                        <LinearProgress />
-                      </Box>
-                    )}
-                    <Grid size={{ xs: 6 }} sx={{ my: 2 }}>
-                      <Button
-                        type='submit'
-                        disabled={
-                          !isFormValid(values, normalizedFileCheckData) ||
-                          !isValid
-                        }
-                        loading={isSubmitting}
-                        endIcon={<SendIcon />}
-                        loadingPosition='end'
-                        variant='contained'
-                        sx={{ width: '110px' }}
-                      >
-                        <span>Submit</span>
-                      </Button>
-
-                      {isSuccess ? (
-                        <Alert severity='success'>{status}</Alert>
-                      ) : (
-                        ''
+                      <Grid sx={{ my: 2, display: 'flex', width: '520px' }}>
+                        <Field
+                          label='Rg Max'
+                          fullWidth
+                          id='rg_max'
+                          name='rg_max'
+                          type='text'
+                          disabled={isSubmitting || isLoading}
+                          as={TextField}
+                          error={errors.rg_max && touched.rg_max}
+                          helperText={
+                            errors.rg_max && touched.rg_max
+                              ? errors.rg_max
+                              : 'Max value of Rg ...(between 10 and 100)'
+                          }
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                        />
+                      </Grid>
+                      <Grid sx={{ my: 2, display: 'flex', width: '520px' }}>
+                        <TextField
+                          label='Conformations per Rg'
+                          variant='outlined'
+                          id='num_conf'
+                          name='num_conf'
+                          select
+                          value={values.num_conf}
+                          sx={{ width: '520px' }}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={Boolean(errors.num_conf && touched.num_conf)}
+                          helperText={
+                            errors.num_conf && touched.num_conf
+                              ? errors.num_conf
+                              : 'Number of conformations to sample per Rg'
+                          }
+                        >
+                          <MenuItem key={1} value={1}>
+                            200
+                          </MenuItem>
+                          <MenuItem key={2} value={2}>
+                            400
+                          </MenuItem>
+                          <MenuItem key={3} value={3}>
+                            600
+                          </MenuItem>
+                          <MenuItem key={4} value={4}>
+                            800
+                          </MenuItem>
+                        </TextField>
+                      </Grid>
+                      {isSubmitting && (
+                        <Box sx={{ width: '520px' }}>
+                          <LinearProgress />
+                        </Box>
                       )}
+                      <Grid size={{ xs: 6 }} sx={{ my: 2 }}>
+                        <Button
+                          type='submit'
+                          disabled={
+                            !isFormValid(values, normalizedFileCheckData) ||
+                            !isValid
+                          }
+                          loading={isSubmitting}
+                          endIcon={<SendIcon />}
+                          loadingPosition='end'
+                          variant='contained'
+                          sx={{ width: '110px' }}
+                        >
+                          <span>Submit</span>
+                        </Button>
+
+                        {isSuccess ? (
+                          <Alert severity='success'>{status}</Alert>
+                        ) : (
+                          ''
+                        )}
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  {process.env.NODE_ENV === 'development' ? <Debug /> : ''}
-                </Form>
-              )}
-            </Formik>
+                    {process.env.NODE_ENV === 'development' ? <Debug /> : ''}
+                  </Form>
+                )}
+              </Formik>
+            </>
           )}
         </Paper>
       </Grid>
