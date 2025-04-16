@@ -407,17 +407,21 @@ const SingleJobPage = () => {
               >
                 Download Results
               </Button>
-              <Button
-                variant='contained'
-                onClick={() =>
-                  navigate(
-                    `/dashboard/jobs/${jobTypeRouteSegment}/resubmit/${job.id}`
-                  )
-                }
-                sx={{ my: 2 }}
-              >
-                Resubmit
-              </Button>
+              {(job.mongo.__t === 'BilboMdPDB' ||
+                job.mongo.__t === 'BilboMdCRD' ||
+                job.mongo.__t === 'BilboMdAuto') && (
+                <Button
+                  variant='contained'
+                  onClick={() =>
+                    navigate(
+                      `/dashboard/jobs/${jobTypeRouteSegment}/resubmit/${job.id}`
+                    )
+                  }
+                  sx={{ my: 2 }}
+                >
+                  Resubmit
+                </Button>
+              )}
               <Typography>
                 The{' '}
                 <span
