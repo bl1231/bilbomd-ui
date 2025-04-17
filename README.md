@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.19.1 (4/17/2025)
+  - Conditionally show/hide the Resubmit button
 - 1.19.0 (4/16/2025)
   - Add ability to Resubmit BilboMD Classic Jobs
   - Add ability to Resubmit BilboMD Auto Jobs
