@@ -5,7 +5,8 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  ListItemIcon
+  ListItemIcon,
+  Toolbar
 } from '@mui/material'
 import UserAvatar from './UserAvatar'
 import { useNavigate, Outlet, useLocation } from 'react-router'
@@ -51,11 +52,11 @@ const SettingsLayout = () => {
           [`& .MuiDrawer-paper`]: {
             width: drawerWidth,
             boxSizing: 'border-box',
-            top: '84px' // offset for fixed Header
+            top: '24px' // offset for fixed Header
           }
         }}
       >
-        {/* <Toolbar /> */}
+        <Toolbar />
         <UserAvatar
           username={user.username}
           email={user.email}
@@ -80,7 +81,7 @@ const SettingsLayout = () => {
         </List>
       </Drawer>
 
-      <Box component='main' sx={{ flexGrow: 1, px: 3, py: 2 }}>
+      <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
         <Outlet />
       </Box>
     </Box>

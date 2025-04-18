@@ -38,6 +38,7 @@ export default function ClippedDrawer() {
   const navigate = useNavigate()
   const location = useLocation()
   const theme = useTheme()
+  const isSettingsPage = location.pathname.startsWith('/settings')
 
   if (configIsLoading) return <CircularProgress />
   if (configError)
@@ -193,23 +194,25 @@ export default function ClippedDrawer() {
       </Box>
 
       <Box sx={{ display: 'flex', flexGrow: 1 }}>
-        <Drawer
-          variant='permanent'
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            [`& .MuiDrawer-paper`]: {
+        {!isSettingsPage && (
+          <Drawer
+            variant='permanent'
+            sx={{
               width: drawerWidth,
-              boxSizing: 'border-box'
-            }
-          }}
-        >
-          <Toolbar />
-          <Box sx={{ overflow: 'auto' }}>
-            <List>{buttonContent}</List>
-          </Box>
-        </Drawer>
-
+              flexShrink: 0,
+              [`& .MuiDrawer-paper`]: {
+                width: drawerWidth,
+                boxSizing: 'border-box',
+                top: '24px'
+              }
+            }}
+          >
+            <Toolbar />
+            <Box sx={{ overflow: 'auto' }}>
+              <List>{buttonContent}</List>
+            </Box>
+          </Drawer>
+        )}
         <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
           <Outlet />
         </Box>
