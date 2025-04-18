@@ -386,6 +386,16 @@ const UserAccount: React.FC = () => {
             </Box>
           </CardContent>
         </Card>
+        <Card>
+          <CardContent>
+            <SectionHeader title='API Token Management' />
+            <Box>
+              <Typography variant='body2' sx={{ p: 2 }}>
+                This feature is not available yet. Please check back later.
+              </Typography>
+            </Box>
+          </CardContent>
+        </Card>
 
         {/* Delete Account Confirmation Modal */}
         <CustomDialog

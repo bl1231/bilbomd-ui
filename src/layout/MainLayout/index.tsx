@@ -4,7 +4,6 @@ import Box from '@mui/material/Box'
 import Drawer from '@mui/material/Drawer'
 import Toolbar from '@mui/material/Toolbar'
 import List from '@mui/material/List'
-import Divider from '@mui/material/Divider'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
@@ -17,6 +16,7 @@ import {
   AutoAwesome,
   InfoOutlined
 } from '@mui/icons-material'
+import SettingsIcon from '@mui/icons-material/Settings'
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import { Outlet, useLocation, useNavigate } from 'react-router'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
@@ -25,7 +25,7 @@ import useAuth from 'hooks/useAuth'
 import Header from './Header'
 import Footer from './Footer'
 
-const drawerWidth = 170
+const drawerWidth = 190
 
 export default function ClippedDrawer() {
   const { isAdmin } = useAuth()
@@ -133,6 +133,13 @@ export default function ClippedDrawer() {
       path: '/dashboard/about',
       onclick: () => navigate('/dashboard/about'),
       roles: ['user']
+    },
+    {
+      text: 'Settings',
+      icon: <SettingsIcon />,
+      path: '/settings',
+      onclick: () => navigate('/settings'),
+      roles: ['user']
     }
   ]
 
@@ -200,14 +207,11 @@ export default function ClippedDrawer() {
           <Toolbar />
           <Box sx={{ overflow: 'auto' }}>
             <List>{buttonContent}</List>
-            <Divider />
-            {/** add more items to the drawer  */}
           </Box>
         </Drawer>
 
         <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
           <Outlet />
-          <Toolbar />
         </Box>
       </Box>
 

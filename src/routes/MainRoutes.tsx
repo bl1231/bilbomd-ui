@@ -9,6 +9,15 @@ import RequireAuth from 'features/auth/RequireAuth'
 import PersistLogin from 'features/auth/PersistLogin'
 import { ROLES } from 'config/roles'
 
+// settings-related components
+const SettingsLayout = Loadable(lazy(() => import('features/users/Settings')))
+const Preferences = Loadable(lazy(() => import('features/users/Preferences')))
+const Security = Loadable(lazy(() => import('features/users/Security')))
+const SafetyZone = Loadable(lazy(() => import('features/users/SafetyZone')))
+const APITokenManager = Loadable(
+  lazy(() => import('features/users/ApiTokenManagement'))
+)
+
 // render - dashboard
 const Prefetch = Loadable(lazy(() => import('features/auth/Prefetch')))
 const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')))
@@ -171,6 +180,17 @@ const ProtectedMainRoutes = {
                       path: 'account',
                       element: <UserAccount />
                     }
+                  ]
+                },
+                {
+                  path: 'settings',
+                  element: <SettingsLayout />,
+                  children: [
+                    { index: true, element: <Preferences /> },
+                    { path: 'preferences', element: <Preferences /> },
+                    { path: 'security', element: <Security /> },
+                    { path: 'safety', element: <SafetyZone /> },
+                    { path: 'api-tokens', element: <APITokenManager /> }
                   ]
                 },
                 {
