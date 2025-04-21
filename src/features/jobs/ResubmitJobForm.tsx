@@ -31,7 +31,7 @@ import {
   useCheckJobFilesQuery
 } from 'slices/jobsApiSlice'
 import SendIcon from '@mui/icons-material/Send'
-import { dat_fileSchema } from 'schemas/ExpdataSchema'
+import { expdataSchema } from 'schemas/ExpdataSchema'
 import { BilboMDClassicJobSchema } from 'schemas/BilboMDClassicJobSchema'
 import useAuth from 'hooks/useAuth'
 import HeaderBox from 'components/HeaderBox'
@@ -606,7 +606,7 @@ const ResubmitJobForm = () => {
                             fileExt='.dat'
                             onFileChange={async (selectedFile: File) => {
                               const isExpdataValid =
-                                await dat_fileSchema.isValid(selectedFile)
+                                await expdataSchema.isValid(selectedFile)
                               if (isExpdataValid) {
                                 const formData = new FormData()
                                 formData.append('email', email)
