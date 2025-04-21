@@ -20,7 +20,6 @@ import SendIcon from '@mui/icons-material/Send'
 import { BilboMDSANSJobSchema } from 'schemas/BilboMDSANSJobSchema'
 import { expdataSchema } from 'schemas/ExpdataSchema'
 import { pdbFileSchema } from 'schemas/PDBFileSchema'
-import useAuth from 'hooks/useAuth'
 import { Debug } from 'components/Debug'
 import LinearProgress from '@mui/material/LinearProgress'
 import HeaderBox from 'components/HeaderBox'
@@ -55,7 +54,6 @@ const NewSANSJob = () => {
   useTitle('BilboMD: New SANS Job')
   const [addNewSANSJob, { isSuccess }] = useAddNewSANSJobMutation()
   const [calculateAutoRg, { isLoading }] = useCalculateAutoRgMutation()
-  const { email } = useAuth()
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
   const [chainIds, setChainIds] = useState<string[]>([])
 
@@ -83,7 +81,6 @@ const NewSANSJob = () => {
 
   const initialValues = {
     bilbomd_mode: 'sans',
-    email: email,
     title: '',
     pdb_file: '',
     dat_file: '',
@@ -107,7 +104,6 @@ const NewSANSJob = () => {
     form.append('rg_max', values.rg_max.toString())
     form.append('inp_file', values.inp_file)
     form.append('d2o_fraction', values.d2o_fraction.toString())
-    form.append('email', values.email)
     form.append('bilbomd_mode', 'sans')
 
     chainIds.forEach((chainId) => {
@@ -283,8 +279,8 @@ const NewSANSJob = () => {
                             await expdataSchema.isValid(selectedFile)
                           if (isExpdataValid) {
                             const formData = new FormData()
-                            formData.append('email', email)
-                            formData.append('expdata', selectedFile)
+
+                            formData.append('dat_file', selectedFile)
                             try {
                               const { rg, rg_min, rg_max } =
                                 await calculateAutoRg(formData).unwrap()

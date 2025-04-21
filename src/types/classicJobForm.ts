@@ -4,11 +4,10 @@ export type BilboMDClassicJobFormValues = {
   psf_file: File | string
   crd_file: File | string
   pdb_file: File | string
-  constinp: File | string
-  expdata: File | string
+  inp_file: File | string
+  dat_file: File | string
   num_conf: string
   rg: string
   rg_min: string
   rg_max: string
-  email: string
 }

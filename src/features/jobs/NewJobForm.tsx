@@ -31,7 +31,6 @@ import {
 import SendIcon from '@mui/icons-material/Send'
 import { expdataSchema } from 'schemas/ExpdataSchema'
 import { BilboMDClassicJobSchema } from 'schemas/BilboMDClassicJobSchema'
-import useAuth from 'hooks/useAuth'
 import HeaderBox from 'components/HeaderBox'
 import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import FileSelect from './FileSelect'
@@ -46,8 +45,6 @@ const NewJobForm = () => {
   const isDarkMode = theme.palette.mode === 'dark'
   const [addNewJob, { isSuccess }] = useAddNewJobMutation()
   const [calculateAutoRg, { isLoading }] = useCalculateAutoRgMutation()
-  const { email } = useAuth()
-
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
   const [selectedMode, setSelectedMode] = useState('pdb')
 
@@ -75,13 +72,12 @@ const NewJobForm = () => {
     psf_file: '',
     crd_file: '',
     pdb_file: '',
-    constinp: '',
-    expdata: '',
+    inp_file: '',
+    dat_file: '',
     num_conf: '',
     rg: '',
     rg_min: '',
-    rg_max: '',
-    email: email
+    rg_max: ''
   }
 
   const onSubmit = async (
@@ -98,9 +94,8 @@ const NewJobForm = () => {
     form.append('rg', values.rg)
     form.append('rg_min', values.rg_min)
     form.append('rg_max', values.rg_max)
-    form.append('expdata', values.expdata)
-    form.append('constinp', values.constinp)
-    form.append('email', values.email)
+    form.append('dat_file', values.dat_file)
+    form.append('inp_file', values.inp_file)
 
     try {
       const newJob = await addNewJob(form).unwrap()
@@ -155,8 +150,8 @@ const NewJobForm = () => {
     return (
       !isPerlmutterUnavailable &&
       values.title !== '' &&
-      values.constinp !== '' &&
-      values.expdata !== '' &&
+      values.inp_file !== '' &&
+      values.dat_file !== '' &&
       values.rg_max !== '' &&
       values.rg_min !== '' &&
       values.num_conf !== '' &&
@@ -396,16 +391,16 @@ const NewJobForm = () => {
                     >
                       <Grid>
                         <Field
-                          name='constinp'
-                          id='constinp-file-upload'
+                          name='inp_file'
+                          id='inp_file-file-upload'
                           as={FileSelect}
                           title='Select File'
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
                           onBlur={handleBlur}
-                          error={errors.constinp && touched.constinp}
-                          errorMessage={errors.constinp ? errors.constinp : ''}
+                          error={errors.inp_file && touched.inp_file}
+                          errorMessage={errors.inp_file ? errors.inp_file : ''}
                           fileType='const.inp'
                           fileExt='.inp'
                         />
@@ -457,15 +452,15 @@ const NewJobForm = () => {
                     >
                       <Grid>
                         <Field
-                          name='expdata'
-                          id='expdata-file-upload'
+                          name='dat_file'
+                          id='dat_file-file-upload'
                           as={FileSelect}
                           title='Select File'
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
-                          error={errors.expdata && touched.expdata}
-                          errorMessage={errors.expdata ? errors.expdata : ''}
+                          error={errors.dat_file && touched.dat_file}
+                          errorMessage={errors.dat_file ? errors.dat_file : ''}
                           fileType='experimental SAXS data'
                           fileExt='.dat'
                           onFileChange={async (selectedFile: File) => {
@@ -473,8 +468,7 @@ const NewJobForm = () => {
                               await expdataSchema.isValid(selectedFile)
                             if (isExpdataValid) {
                               const formData = new FormData()
-                              formData.append('email', email)
-                              formData.append('expdata', selectedFile)
+                              formData.append('dat_file', selectedFile)
                               try {
                                 const { rg, rg_min, rg_max } =
                                   await calculateAutoRg(formData).unwrap()
