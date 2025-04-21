@@ -71,7 +71,7 @@
     "react-router": "^7.5.0",
     "react-smooth": "^4.0.4",
     "react-spinners": "^0.16.1",
-    "recharts": "^2.15.2",
+    "recharts": "^2.15.3",
     "rollup-plugin-visualizer": "^5.14.0",
     "sass": "^1.86.3",
     "yup": "^1.6.1"
