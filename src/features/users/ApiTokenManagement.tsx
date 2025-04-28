@@ -118,8 +118,6 @@ const APITokenManager = () => {
     }
   ]
 
-  console.log('Tokens:', tokens)
-
   const handleCreateToken = async (label: string, daysValid: number) => {
     const expiresAt = new Date()
     expiresAt.setDate(expiresAt.getDate() + daysValid)
