@@ -8,20 +8,20 @@ import {
   Button,
   Typography,
   Box,
-  List,
-  ListItem,
-  ListItemText,
+  Link,
   IconButton,
   Chip,
   Snackbar,
   Alert
 } from '@mui/material'
-import { purple, grey, blueGrey } from '@mui/material/colors'
+import { purple, grey, blueGrey, green } from '@mui/material/colors'
 import DeleteIcon from '@mui/icons-material/Delete'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import CloseIcon from '@mui/icons-material/Close'
 import { IAPIToken } from '@bl1231/bilbomd-mongodb-schema'
 import useAuth from 'hooks/useAuth'
+import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { format, parseISO, formatDistanceToNowStrict } from 'date-fns'
 
 const APITokenManager = () => {
   const { username } = useAuth()
@@ -32,6 +32,93 @@ const APITokenManager = () => {
   const [newToken, setNewToken] = useState<string | null>(null)
   const [copySuccess, setCopySuccess] = useState(false)
   const tokenLimit = 3
+
+  const rows = tokens.map((token) => ({
+    id: token._id?.toString() || '',
+    label: token.label,
+    createdAt: token.createdAt,
+    expiresAt: token.expiresAt,
+    expiresIn: token.expiresAt
+  }))
+
+  const columns: GridColDef[] = [
+    {
+      field: 'label',
+      headerName: 'Label',
+      width: 120,
+      renderCell: (params) => (
+        <Chip
+          label={params.row.label}
+          color={
+            params.row.label === 'green'
+              ? 'success'
+              : params.row.label === 'yellow'
+                ? 'warning'
+                : 'error'
+          }
+          size='small'
+          sx={{ fontWeight: 'bold', width: '80px' }}
+        />
+      )
+    },
+    {
+      field: 'createdAt',
+      headerName: 'Created',
+      type: 'dateTime',
+      width: 180,
+      valueFormatter: (value) => {
+        if (value) {
+          return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
+        } else {
+          return ''
+        }
+      }
+    },
+    {
+      field: 'expiresAt',
+      headerName: 'Expires',
+      type: 'dateTime',
+      width: 180,
+      valueFormatter: (value) => {
+        if (value) {
+          return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
+        } else {
+          return 'No expiration'
+        }
+      }
+    },
+    {
+      field: 'expiresIn',
+      headerName: 'Expires In',
+      width: 180,
+      valueFormatter: (value) => {
+        if (value) {
+          const expiresAt = parseISO(value)
+          if (expiresAt.getTime() < Date.now()) {
+            return 'Expired'
+          }
+          return `in ${formatDistanceToNowStrict(expiresAt)}`
+        } else {
+          return 'Never'
+        }
+      }
+    },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      width: 100,
+      renderCell: (params) => (
+        <IconButton
+          edge='end'
+          onClick={() => handleDelete(params.id.toString())}
+        >
+          <DeleteIcon />
+        </IconButton>
+      )
+    }
+  ]
+
+  console.log('Tokens:', tokens)
 
   const handleCreateToken = async (label: string, daysValid: number) => {
     const expiresAt = new Date()
@@ -85,7 +172,24 @@ const APITokenManager = () => {
       >
         <Typography variant='h4'>Create API Tokens</Typography>
       </Box>
-
+      <Box
+        sx={{
+          m: 2
+        }}
+      >
+        <Typography variant='body2'>
+          Need help? Check out our{' '}
+          <Link
+            href='/api-docs'
+            target='_blank'
+            rel='noopener noreferrer'
+            underline='hover'
+          >
+            API Documentation
+          </Link>
+          .
+        </Typography>
+      </Box>
       {newToken && (
         <Box
           sx={{
@@ -138,8 +242,7 @@ const APITokenManager = () => {
           />
         </Box>
       )}
-
-      <Box sx={{ px: 2, pt: 2 }}>
+      <Box sx={{ px: 2 }}>
         <Typography variant='body2' sx={{ mb: 2 }}>
           Choose a token &quot;flavor&quot; based on what you need:
           <br />
@@ -150,7 +253,6 @@ const APITokenManager = () => {
           <strong>Red:</strong> Full access (create + read jobs), valid 7 days.
         </Typography>
       </Box>
-
       {tokens.length >= tokenLimit ? (
         <Alert severity='warning' sx={{ mx: 2, mb: 3 }}>
           You have reached the maximum of 3 active API tokens. Please delete one
@@ -191,7 +293,6 @@ const APITokenManager = () => {
           </Button>
         </Box>
       )}
-
       {newToken && (
         <Snackbar
           open={copySuccess}
@@ -208,10 +309,6 @@ const APITokenManager = () => {
           </Alert>
         </Snackbar>
       )}
-
-      {isLoading && <Typography>Loading tokens...</Typography>}
-      {error && <Typography color='error'>Error loading tokens</Typography>}
-
       <Box
         sx={{
           backgroundColor: grey[400],
@@ -224,64 +321,40 @@ const APITokenManager = () => {
         <Typography variant='h4'>Existing API Tokens</Typography>
       </Box>
 
-      <Box sx={{ p: 0, m: 0 }}>
-        {tokens.length === 0 ? (
-          <Alert severity='info' sx={{ m: 2 }}>
-            You have no API tokens. Create one using the buttons above.
-          </Alert>
+      <Box
+        sx={{
+          height: '100%',
+          width: '100%',
+          p: 2
+        }}
+      >
+        {isLoading ? (
+          <Typography>Loading tokens...</Typography>
+        ) : error ? (
+          <Typography color='error'>Error loading tokens</Typography>
+        ) : tokens.length === 0 ? (
+          <Alert severity='info'>No API tokens yet. Create one above.</Alert>
         ) : (
-          <List sx={{ p: 1, m: 0 }}>
-            {tokens.map((token, index) => (
-              <Box
-                key={token._id?.toString()}
-                sx={{
-                  borderBottom: index < tokens.length - 1 ? 1 : 0,
-                  borderColor: grey[500]
-                }}
-              >
-                <ListItem
-                  secondaryAction={
-                    <IconButton
-                      edge='end'
-                      onClick={() => handleDelete(token._id!.toString())}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  }
-                >
-                  <ListItemText
-                    primary={
-                      <Chip
-                        label={token.label}
-                        color={
-                          token.label === 'green'
-                            ? 'success'
-                            : token.label === 'yellow'
-                              ? 'warning'
-                              : 'error'
-                        }
-                        size='small'
-                        sx={{ fontWeight: 'bold', width: '80px' }}
-                      />
-                    }
-                    secondary={
-                      <Box>
-                        Created: {new Date(token.createdAt).toLocaleString()}
-                        <br />
-                        {token.expiresAt
-                          ? `Expires in ${Math.ceil(
-                              (new Date(token.expiresAt).getTime() -
-                                Date.now()) /
-                                (1000 * 60 * 60 * 24)
-                            )} day(s)`
-                          : 'No expiration'}
-                      </Box>
-                    }
-                  />
-                </ListItem>
-              </Box>
-            ))}
-          </List>
+          <Box sx={{ backgroundColor: grey[200], borderRadius: 1 }}>
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              hideFooter
+              disableColumnFilter
+              disableColumnSelector
+              disableColumnMenu
+              disableColumnSorting
+              sx={{
+                '--DataGrid-containerBackground': green[100],
+                '.MuiDataGrid-columnHeaders': {
+                  backgroundColor: green[100]
+                },
+                '.MuiDataGrid-columnSeparator': {
+                  color: green[700]
+                }
+              }}
+            />
+          </Box>
         )}
       </Box>
     </Box>
