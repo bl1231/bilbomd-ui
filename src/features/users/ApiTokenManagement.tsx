@@ -67,7 +67,8 @@ const APITokenManager = () => {
         border: 1,
         borderRadius: 1,
         borderColor: grey[500],
-        backgroundColor: grey[300]
+        backgroundColor: grey[300],
+        width: '800px'
       }}
     >
       <Box

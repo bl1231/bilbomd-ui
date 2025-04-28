@@ -22,19 +22,27 @@ const settingsMenu = [
   {
     text: 'Preferences',
     path: '/settings/preferences',
-    icon: <ManageAccountsIcon />
+    icon: <ManageAccountsIcon />,
+    visibility: false
   },
   {
     text: 'Email and Security',
     path: '/settings/security',
-    icon: <EmailIcon />
+    icon: <EmailIcon />,
+    visibility: false
   },
   {
     text: 'Safety Zone',
     path: '/settings/safety',
-    icon: <HealthAndSafetyIcon />
+    icon: <HealthAndSafetyIcon />,
+    visibility: false
   },
-  { text: 'API Tokens', path: '/settings/api-tokens', icon: <ApiIcon /> }
+  {
+    text: 'API Tokens',
+    path: '/settings/api-tokens',
+    icon: <ApiIcon />,
+    visibility: true
+  }
 ]
 
 const SettingsLayout = () => {
@@ -63,21 +71,23 @@ const SettingsLayout = () => {
           status={user.status}
         />
         <List>
-          {settingsMenu.map(({ text, path, icon }) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton
-                selected={
-                  location.pathname === path ||
-                  (path === '/settings/preferences' &&
-                    location.pathname === '/settings')
-                }
-                onClick={() => navigate(path)}
-              >
-                <ListItemIcon>{icon}</ListItemIcon>
-                <ListItemText primary={text} sx={{ ml: 1 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+          {settingsMenu
+            .filter(({ visibility }) => visibility)
+            .map(({ text, path, icon }) => (
+              <ListItem key={text} disablePadding>
+                <ListItemButton
+                  selected={
+                    location.pathname === path ||
+                    (path === '/settings/preferences' &&
+                      location.pathname === '/settings')
+                  }
+                  onClick={() => navigate(path)}
+                >
+                  <ListItemIcon>{icon}</ListItemIcon>
+                  <ListItemText primary={text} sx={{ ml: 1 }} />
+                </ListItemButton>
+              </ListItem>
+            ))}
         </List>
       </Drawer>
 
