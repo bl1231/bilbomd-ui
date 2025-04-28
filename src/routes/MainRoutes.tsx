@@ -186,7 +186,7 @@ const ProtectedMainRoutes = {
                   path: 'settings',
                   element: <SettingsLayout />,
                   children: [
-                    { index: true, element: <Preferences /> },
+                    { index: true, element: <APITokenManager /> },
                     { path: 'preferences', element: <Preferences /> },
                     { path: 'security', element: <Security /> },
                     { path: 'safety', element: <SafetyZone /> },
