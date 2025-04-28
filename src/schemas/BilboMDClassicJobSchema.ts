@@ -52,14 +52,14 @@ const BilboMDClassicJobSchema = object().shape({
         .concat(fileNameLengthTest()),
     otherwise: () => mixed().notRequired()
   }),
-  constinp: mixed()
+  inp_file: mixed()
     .concat(requiredFile('A CONST.INP file is required'))
     .concat(constInpCheck())
     .concat(fileSizeTest(2_000_000))
     .concat(fileExtTest('inp'))
     .concat(noSpacesTest())
     .concat(fileNameLengthTest()),
-  expdata: mixed()
+  dat_file: mixed()
     .concat(requiredFile('A SAXS data file is required'))
     .concat(fileSizeTest(2_000_000))
     .concat(fileExtTest('dat'))

@@ -8,5 +8,4 @@ export interface NewSANSJobFormValues {
   inp_file: string
   d2o_fraction: number
   [key: `deuteration_fraction_${string}`]: number
-  email: string
 }

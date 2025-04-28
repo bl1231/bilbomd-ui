@@ -77,6 +77,34 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         method: 'DELETE'
       }),
       invalidatesTags: (_result, _error, arg) => [{ type: 'User', id: arg.id }]
+    }),
+    getAPITokens: builder.query({
+      query: (username: string) => ({
+        url: `/users/${username}/tokens`,
+        method: 'GET'
+      }),
+      providesTags: (_result, _error, username) => [
+        { type: 'Token', id: username }
+      ]
+    }),
+    createAPIToken: builder.mutation({
+      query: ({ username, label, expiresAt }) => ({
+        url: `/users/${username}/tokens`,
+        method: 'POST',
+        body: { label, expiresAt }
+      }),
+      invalidatesTags: (_result, _error, { username }) => [
+        { type: 'Token', id: username }
+      ]
+    }),
+    deleteAPIToken: builder.mutation({
+      query: ({ username, id }) => ({
+        url: `/users/${username}/tokens/${id}`,
+        method: 'DELETE'
+      }),
+      invalidatesTags: (_result, _error, { username }) => [
+        { type: 'Token', id: username }
+      ]
     })
   })
 })
@@ -85,7 +113,10 @@ export const {
   useGetUsersQuery,
   useAddNewUserMutation,
   useUpdateUserMutation,
-  useDeleteUserMutation
+  useDeleteUserMutation,
+  useGetAPITokensQuery,
+  useCreateAPITokenMutation,
+  useDeleteAPITokenMutation
 } = usersApiSlice
 
 // returns the query result object

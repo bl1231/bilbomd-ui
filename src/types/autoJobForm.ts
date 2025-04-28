@@ -4,5 +4,4 @@ export type BilboMDAutoJobFormValues = {
   pdb_file: File | string
   pae_file: File | string
   data_file: File | string
-  email: string
 }

@@ -102,8 +102,8 @@ const ResubmitJobForm = () => {
   const normalizedFileCheckData = fileCheckData
     ? {
         ...fileCheckData,
-        expdata: fileCheckData.data_file,
-        constinp: fileCheckData.const_inp_file
+        dat_file: fileCheckData.data_file,
+        inp_file: fileCheckData.const_inp_file
       }
     : {}
 
@@ -122,13 +122,12 @@ const ResubmitJobForm = () => {
         psf_file: job.psf_file ?? '',
         crd_file: job.crd_file ?? '',
         pdb_file: job.pdb_file ?? '',
-        constinp: job.const_inp_file ?? '',
-        expdata: job.data_file ?? '',
+        inp_file: job.const_inp_file ?? '',
+        dat_file: job.data_file ?? '',
         num_conf: job.conformational_sampling?.toString() ?? '',
         rg: job.rg?.toString() ?? '',
         rg_min: job.rg_min?.toString() ?? '',
-        rg_max: job.rg_max?.toString() ?? '',
-        email: email
+        rg_max: job.rg_max?.toString() ?? ''
       }
     : {
         bilbomd_mode: 'pdb',
@@ -136,13 +135,12 @@ const ResubmitJobForm = () => {
         psf_file: '',
         crd_file: '',
         pdb_file: '',
-        constinp: '',
-        expdata: '',
+        inp_file: '',
+        dat_file: '',
         num_conf: '',
         rg: '',
         rg_min: '',
-        rg_max: '',
-        email: email
+        rg_max: ''
       }
 
   const onSubmit = async (
@@ -178,19 +176,17 @@ const ResubmitJobForm = () => {
     form.append('rg_min', values.rg_min)
     form.append('rg_max', values.rg_max)
 
-    if (values.expdata instanceof File) {
-      form.append('expdata', values.expdata)
-    } else if (normalizedFileCheckData.expdata) {
-      form.append('reuse_expdata', 'true')
+    if (values.dat_file instanceof File) {
+      form.append('dat_file', values.dat_file)
+    } else if (normalizedFileCheckData.dat_file) {
+      form.append('reuse_dat_file', 'true')
     }
 
-    if (values.constinp instanceof File) {
-      form.append('constinp', values.constinp)
-    } else if (normalizedFileCheckData.constinp) {
-      form.append('reuse_constinp', 'true')
+    if (values.inp_file instanceof File) {
+      form.append('inp_file', values.inp_file)
+    } else if (normalizedFileCheckData.inp_file) {
+      form.append('reuse_inp_file', 'true')
     }
-
-    form.append('email', values.email)
 
     try {
       const newJob = await addNewJob(form).unwrap()
@@ -251,8 +247,8 @@ const ResubmitJobForm = () => {
     const hasPDB = values.pdb_file instanceof File || reuseFlags.pdb_file
     const hasPSF = values.psf_file instanceof File || reuseFlags.psf_file
     const hasCRD = values.crd_file instanceof File || reuseFlags.crd_file
-    const hasExpData = values.expdata instanceof File || reuseFlags.expdata
-    const hasConstInp = values.constinp instanceof File || reuseFlags.constinp
+    const hasExpData = values.dat_file instanceof File || reuseFlags.dat_file
+    const hasConstInp = values.inp_file instanceof File || reuseFlags.inp_file
 
     const hasTitle = values.title.trim() !== ''
     const hasRgFields =
@@ -520,8 +516,8 @@ const ResubmitJobForm = () => {
                       >
                         <Grid>
                           <Field
-                            name='constinp'
-                            id='constinp-file-upload'
+                            name='inp_file'
+                            id='inp_file-file-upload'
                             as={FileSelect}
                             title='Select File'
                             existingFileName={
@@ -533,9 +529,9 @@ const ResubmitJobForm = () => {
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
                             onBlur={handleBlur}
-                            error={errors.constinp && touched.constinp}
+                            error={errors.inp_file && touched.inp_file}
                             errorMessage={
-                              errors.constinp ? errors.constinp : ''
+                              errors.inp_file ? errors.inp_file : ''
                             }
                             fileType='const.inp'
                             fileExt='.inp'
@@ -590,8 +586,8 @@ const ResubmitJobForm = () => {
                       >
                         <Grid>
                           <Field
-                            name='expdata'
-                            id='expdata-file-upload'
+                            name='dat_file'
+                            id='dat_file-file-upload'
                             as={FileSelect}
                             title='Select File'
                             existingFileName={
@@ -602,8 +598,10 @@ const ResubmitJobForm = () => {
                             disabled={isSubmitting}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
-                            error={errors.expdata && touched.expdata}
-                            errorMessage={errors.expdata ? errors.expdata : ''}
+                            error={errors.dat_file && touched.dat_file}
+                            errorMessage={
+                              errors.dat_file ? errors.dat_file : ''
+                            }
                             fileType='experimental SAXS data'
                             fileExt='.dat'
                             onFileChange={async (selectedFile: File) => {
@@ -612,7 +610,7 @@ const ResubmitJobForm = () => {
                               if (isExpdataValid) {
                                 const formData = new FormData()
                                 formData.append('email', email)
-                                formData.append('expdata', selectedFile)
+                                formData.append('dat_file', selectedFile)
                                 try {
                                   const { rg, rg_min, rg_max } =
                                     await calculateAutoRg(formData).unwrap()
