@@ -63,12 +63,13 @@ const APITokenManager = () => {
     <Box
       sx={{
         p: 0,
-        m: 0,
         border: 1,
         borderRadius: 1,
         borderColor: grey[500],
         backgroundColor: grey[300],
-        width: '800px'
+        width: '100%',
+        maxWidth: '960px',
+        mx: 'auto'
       }}
     >
       <Box
