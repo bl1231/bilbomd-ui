@@ -14,7 +14,7 @@ import {
   Button,
   Chip,
   CircularProgress,
-  Paper,
+  Grid,
   Typography,
   LinearProgress,
   MenuItem,
@@ -23,8 +23,6 @@ import {
   Select,
   SelectChangeEvent
 } from '@mui/material'
-import Grid from '@mui/material/Grid'
-import { styled } from '@mui/material/styles'
 import DeleteJob from './DeleteJob'
 import JobDetails from './JobDetails'
 import BullMQSummary from '../bullmq/BullMQSummary'
@@ -37,12 +35,7 @@ import {
   IJob,
   jobTypeDisplayNames
 } from '@bl1231/bilbomd-mongodb-schema/frontend'
-
-const Item = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(1),
-  borderTopLeftRadius: 0,
-  borderTopRightRadius: 0
-}))
+import Item from 'themes/components/Item'
 
 const getHoursInQueue = (nersc: INerscInfo | undefined) => {
   if (!nersc?.time_submitted) return ''
@@ -290,12 +283,12 @@ const Jobs = () => {
     })
 
     const columns: GridColDef[] = [
-      { field: 'title', headerName: 'Title', width: 180 },
+      { field: 'title', headerName: 'Title', flex: 0.5 },
       {
         field: 'time_submitted',
         headerName: 'Submitted',
         type: 'dateTime',
-        width: 135,
+        flex: 0.6,
         valueFormatter: (value) => {
           if (value) {
             return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
@@ -308,7 +301,7 @@ const Jobs = () => {
         field: 'time_completed',
         headerName: 'Completed',
         type: 'dateTime',
-        width: 135,
+        flex: 0.6,
         valueFormatter: (value) => {
           if (value) {
             return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
@@ -322,20 +315,20 @@ const Jobs = () => {
             {
               field: 'queueHours',
               headerName: 'Queue Time (hrs)',
-              width: 120
+              width: 130
             },
             {
               field: 'runTimeHours',
               headerName: 'Run Time (hrs)',
-              width: 120
+              width: 130
             }
           ]
         : []),
-      { field: 'username', headerName: 'User' },
+      { field: 'username', headerName: 'User', width: 130 },
       {
         field: 'status',
         headerName: 'Status',
-        width: 90,
+        width: 130,
         cellClassName: (params) => {
           if (params.value == null) return ''
           return clsx('bilbomd', {
@@ -353,7 +346,7 @@ const Jobs = () => {
       {
         field: 'progress',
         headerName: 'Progress',
-        width: 140,
+        width: 130,
         renderCell: (params) => {
           if (params.value === undefined || params.value === null) {
             return null
@@ -401,7 +394,7 @@ const Jobs = () => {
             {
               field: 'position',
               headerName: 'Position',
-              width: 150
+              width: 100
             }
           ]),
       {
@@ -409,6 +402,7 @@ const Jobs = () => {
         type: 'actions',
         sortable: false,
         headerName: 'Manage',
+        width: 150,
         getActions: (params: GridRowParams) => {
           if (
             params.row.status !== 'Submitted' &&
@@ -447,7 +441,7 @@ const Jobs = () => {
     ]
 
     content = (
-      <Grid container spacing={4}>
+      <Grid container spacing={2}>
         {!useNersc && (
           <Grid size={{ xs: 12 }}>
             <BullMQSummary />
@@ -455,7 +449,7 @@ const Jobs = () => {
         )}
 
         {useNersc && (
-          <Grid size={{ xs: 12 }}>
+          <Grid>
             <NerscStatus />
           </Grid>
         )}
@@ -482,10 +476,15 @@ const Jobs = () => {
             {rows.length > 0 ? (
               <Box
                 sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  width: 'calc(100vw - 260px)',
+                  overflow: 'hidden',
                   '& .bilbomd.completed': {
                     backgroundColor: green[500],
                     color: '#1a3e72',
-                    fontWeight: '800'
+                    fontWeight: '600',
+                    fontFamily: 'monospace'
                   },
                   '& .bilbomd.error': {
                     backgroundColor: red[600],
@@ -527,9 +526,9 @@ const Jobs = () => {
               >
                 <Box
                   sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '99%'
+                    flexGrow: 1,
+                    minWidth: 0,
+                    overflow: 'auto'
                   }}
                 >
                   <DataGrid
@@ -543,6 +542,10 @@ const Jobs = () => {
                       setPage(model.page)
                       searchParams.set('page', model.page.toString())
                       setSearchParams(searchParams)
+                    }}
+                    sx={{
+                      width: '100%',
+                      minWidth: 0
                     }}
                   />
                 </Box>
