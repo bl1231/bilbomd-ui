@@ -33,7 +33,6 @@ import {
 import SendIcon from '@mui/icons-material/Send'
 import { expdataSchema } from 'schemas/ExpdataSchema'
 import { BilboMDClassicJobSchema } from 'schemas/BilboMDClassicJobSchema'
-import useAuth from 'hooks/useAuth'
 import HeaderBox from 'components/HeaderBox'
 import useTitle from 'hooks/useTitle'
 import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
@@ -51,7 +50,6 @@ const ResubmitJobForm = () => {
   const isDarkMode = theme.palette.mode === 'dark'
   const [addNewJob, { isSuccess }] = useAddNewJobMutation()
   const [calculateAutoRg, { isLoading }] = useCalculateAutoRgMutation()
-  const { email } = useAuth()
   const { id } = useParams()
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
   const [selectedMode, setSelectedMode] = useState<'pdb' | 'crd_psf'>('pdb')
@@ -609,7 +607,6 @@ const ResubmitJobForm = () => {
                                 await expdataSchema.isValid(selectedFile)
                               if (isExpdataValid) {
                                 const formData = new FormData()
-                                formData.append('email', email)
                                 formData.append('dat_file', selectedFile)
                                 try {
                                   const { rg, rg_min, rg_max } =

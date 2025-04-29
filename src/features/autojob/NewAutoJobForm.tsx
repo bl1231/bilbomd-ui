@@ -16,7 +16,6 @@ import { useAddNewAutoJobMutation } from '../../slices/jobsApiSlice'
 import SendIcon from '@mui/icons-material/Send'
 import NewAutoJobFormInstructions from './AutoJobFormInstructions'
 import { BilboMDAutoJobSchema } from 'schemas/BilboMDAutoJobSchema'
-import useAuth from 'hooks/useAuth'
 import { Debug } from 'components/Debug'
 import LinearProgress from '@mui/material/LinearProgress'
 import HeaderBox from 'components/HeaderBox'
@@ -31,13 +30,11 @@ interface SubmitValues {
   pdb_file: string
   pae_file: string
   dat_file: string
-  email: string
 }
 
 const NewAutoJobForm = () => {
   useTitle('BilboMD: New Auto Job')
   const [addNewAutoJob, { isSuccess }] = useAddNewAutoJobMutation()
-  const { email } = useAuth()
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
 
   // Fetch the configuration object
@@ -57,7 +54,6 @@ const NewAutoJobForm = () => {
   const useNersc = config.useNersc?.toLowerCase() === 'true'
 
   const handleStatusCheck = (isUnavailable: boolean) => {
-    // Update the state based on the system's availability
     setIsPerlmutterUnavailable(isUnavailable)
   }
 
@@ -65,8 +61,7 @@ const NewAutoJobForm = () => {
     title: '',
     pdb_file: '',
     pae_file: '',
-    dat_file: '',
-    email: email
+    dat_file: ''
   }
 
   const onSubmit = async (
@@ -78,7 +73,6 @@ const NewAutoJobForm = () => {
     form.append('pdb_file', values.pdb_file)
     form.append('dat_file', values.dat_file)
     form.append('pae_file', values.pae_file)
-    form.append('email', values.email)
     form.append('bilbomd_mode', 'auto')
 
     try {

@@ -52,7 +52,8 @@ const PipelineSchematic = ({ isDarkMode }: { isDarkMode: boolean }) => (
 
 const NewSANSJob = () => {
   useTitle('BilboMD: New SANS Job')
-  const [addNewSANSJob, { isSuccess }] = useAddNewSANSJobMutation()
+  const [addNewSANSJob, { isSuccess, isError, error }] =
+    useAddNewSANSJobMutation()
   const [calculateAutoRg, { isLoading }] = useCalculateAutoRgMutation()
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
   const [chainIds, setChainIds] = useState<string[]>([])
@@ -457,6 +458,33 @@ const NewSANSJob = () => {
                         <Alert severity='success'>{status}</Alert>
                       ) : (
                         ''
+                      )}
+                      {isError && (
+                        <Alert severity='error' sx={{ my: 2 }}>
+                          <AlertTitle>Error</AlertTitle>
+                          {(() => {
+                            if (!error) return 'An unknown error occurred.'
+                            if (typeof error === 'string') return error
+                            if (
+                              'data' in error &&
+                              typeof error.data === 'object' &&
+                              error.data !== null &&
+                              'message' in error.data
+                            ) {
+                              return (
+                                (error.data as { message?: string }).message ||
+                                'An error occurred.'
+                              )
+                            }
+                            if ('message' in error) {
+                              return (
+                                (error as { message?: string }).message ||
+                                'An error occurred.'
+                              )
+                            }
+                            return 'An unknown error occurred.'
+                          })()}
+                        </Alert>
                       )}
                     </Grid>
                   </Grid>
