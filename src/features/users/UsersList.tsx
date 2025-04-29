@@ -4,15 +4,9 @@ import EditIcon from '@mui/icons-material/Edit'
 import useTitle from 'hooks/useTitle'
 import { Box } from '@mui/system'
 import { useNavigate } from 'react-router'
-import { CircularProgress, Typography, Paper, Alert } from '@mui/material'
+import { CircularProgress, Typography, Alert } from '@mui/material'
 import HeaderBox from 'components/HeaderBox'
-import { styled } from '@mui/material/styles'
-
-const Item = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(1),
-  borderTopLeftRadius: 0,
-  borderTopRightRadius: 0
-}))
+import Item from 'themes/components/Item'
 
 type ContentType = React.ReactNode | string
 

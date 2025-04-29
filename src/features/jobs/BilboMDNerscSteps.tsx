@@ -1,6 +1,4 @@
 import { BilboMDJob } from 'types/interfaces'
-import Paper from '@mui/material/Paper'
-import { styled } from '@mui/material/styles'
 import BilboMDNerscStep from './BilboMDNerscStep'
 import {
   Accordion,
@@ -13,12 +11,7 @@ import {
 import Grid from '@mui/material/Grid'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import HeaderBox from 'components/HeaderBox'
-
-const Item = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(1),
-  borderTopLeftRadius: 0,
-  borderTopRightRadius: 0
-}))
+import Item from 'themes/components/Item'
 
 interface BilboMDStepsProps {
   job: BilboMDJob

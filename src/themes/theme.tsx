@@ -1,18 +1,10 @@
 import { PaletteMode } from '@mui/material'
 import { createTheme } from '@mui/material/styles'
-// import { useMemo } from 'react'
-// import { amber, deepOrange, grey } from '@mui/material/colors'
 import Typography from './typography'
-// import CustomShadows from './shadows'
 import componentsOverride from './overrides'
 
-// import Palette from './palette'
-
 const getDesignTokens = (mode: PaletteMode) => {
-  // console.log(mode)
-  // const theme = Palette(mode)
   const themeTypography = Typography(`'Quicksand'`)
-  // const themeCustomShadows = useMemo(() => CustomShadows(theme), [theme])
   const theme = createTheme({
     palette: { mode },
     breakpoints: {

@@ -2,15 +2,8 @@ import { useMemo } from 'react'
 import FoXSChart from './FoXSChart'
 import { Alert, AlertTitle } from '@mui/material'
 import Grid from '@mui/material/Grid'
-import Paper from '@mui/material/Paper'
-import { styled } from '@mui/material/styles'
 import { useGetFoxsAnalysisByIdQuery } from 'slices/jobsApiSlice'
-
-const Item = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(1),
-  borderTopLeftRadius: 0,
-  borderTopRightRadius: 0
-}))
+import Item from 'themes/components/Item'
 
 interface FoxsDataPoint {
   q: number
