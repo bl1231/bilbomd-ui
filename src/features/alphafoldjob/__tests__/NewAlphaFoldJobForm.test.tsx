@@ -9,12 +9,10 @@ import { useGetConfigsQuery } from 'slices/configsApiSlice'
 vi.mock('slices/jobsApiSlice', () => ({
   useAddNewAlphaFoldJobMutation: vi.fn()
 }))
+
 vi.mock('slices/configsApiSlice', () => ({
   useGetConfigsQuery: vi.fn()
 }))
-// vi.mock('hooks/useAuth', () => ({
-//   default: vi.fn(() => ({ email: 'test@example.com' }))
-// }))
 
 vi.mock('react-router', () => ({
   Link: ({ children }: { children: React.ReactNode }) => <span>{children}</span>
