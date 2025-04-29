@@ -21,7 +21,6 @@ import { useAddNewScoperJobMutation } from 'slices/jobsApiSlice'
 import SendIcon from '@mui/icons-material/Send'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { bilbomdScoperJobSchema } from 'schemas/ScoperValidationSchema'
-import useAuth from 'hooks/useAuth'
 import { Debug } from 'components/Debug'
 import LinearProgress from '@mui/material/LinearProgress'
 import HeaderBox from 'components/HeaderBox'
@@ -30,14 +29,12 @@ import useTitle from 'hooks/useTitle'
 const NewScoperJobForm = () => {
   useTitle('New Scoper Job')
   const [addNewScoperJob, { isSuccess }] = useAddNewScoperJobMutation()
-  const { email } = useAuth()
 
   const initialValues = {
     title: '',
     pdb_file: '',
     dat_file: '',
-    fixc1c2: false,
-    email: email
+    fixc1c2: false
   }
 
   interface FormValues {
@@ -45,7 +42,6 @@ const NewScoperJobForm = () => {
     pdb_file: string
     dat_file: string
     fixc1c2: boolean
-    email: string
   }
 
   const onSubmit = async (
@@ -57,7 +53,6 @@ const NewScoperJobForm = () => {
     form.append('pdb_file', values.pdb_file)
     form.append('dat_file', values.dat_file)
     form.append('fixc1c2', values.fixc1c2.toString())
-    form.append('email', values.email)
     form.append('bilbomd_mode', 'scoper')
 
     try {

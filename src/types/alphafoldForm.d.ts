@@ -10,6 +10,5 @@ export interface Entity {
 export interface NewAlphaFoldJobFormValues {
   title: string
   dat_file: string
-  email: string
   entities: Entity[]
 }

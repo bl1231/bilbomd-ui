@@ -29,7 +29,6 @@ import FileSelect from 'features/jobs/FileSelect'
 import { useAddNewAlphaFoldJobMutation } from 'slices/jobsApiSlice'
 import SendIcon from '@mui/icons-material/Send'
 import { BilboMDAlphaFoldJobSchema } from 'schemas/BilboMDAlphaFoldJobSchema'
-import useAuth from 'hooks/useAuth'
 import { Debug } from 'components/Debug'
 import LinearProgress from '@mui/material/LinearProgress'
 import HeaderBox from 'components/HeaderBox'
@@ -412,7 +411,6 @@ const SubmitButton = ({
 const NewAlphaFoldJob = () => {
   useTitle('BilboMD: New AlphaFold Job')
   const [addNewAlphaFoldJob, { isSuccess }] = useAddNewAlphaFoldJobMutation()
-  const { email } = useAuth()
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
 
   // Fetch configuration object
@@ -439,7 +437,6 @@ const NewAlphaFoldJob = () => {
   const initialValues: NewAlphaFoldJobFormValues = {
     title: '',
     dat_file: '',
-    email: email,
     entities: [
       {
         id: '1',
@@ -459,7 +456,6 @@ const NewAlphaFoldJob = () => {
     const form = new FormData()
     form.append('title', values.title)
     form.append('dat_file', values.dat_file)
-    form.append('email', values.email)
     form.append('bilbomd_mode', 'alphafold')
     values.entities.forEach((entity, index) => {
       form.append(`entities[${index}][id]`, entity.id)

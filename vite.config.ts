@@ -53,6 +53,9 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     reporters: ['default'],
     globals: true,
-    css: true
+    css: true,
+    deps: {
+      inline: ['@mui/x-data-grid']
+    }
   }
 })

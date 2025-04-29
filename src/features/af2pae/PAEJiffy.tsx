@@ -12,7 +12,6 @@ import {
 } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import { Form, Formik, Field, FormikHelpers } from 'formik'
-import useAuth from 'hooks/useAuth'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { af2paeJiffySchema } from 'schemas/Alphafold2PAEValidationSchema'
@@ -41,7 +40,6 @@ interface FormValues {
   pae_file: FileWithDeets | null
   pae_power: string
   plddt_cutoff: string
-  email: string
 }
 
 const Alphafold2PAEJiffy = () => {
@@ -52,7 +50,6 @@ const Alphafold2PAEJiffy = () => {
 
   const [calculateAf2PaeJiffy, { error, isError }] = useAf2PaeJiffyMutation({})
   const navigate = useNavigate()
-  const { email } = useAuth()
   const [success, setSuccess] = useState(false)
   const [uuid, setUuid] = useState('')
   const [constfile, setConstfile] = useState('')
@@ -62,8 +59,7 @@ const Alphafold2PAEJiffy = () => {
     pdb_file: originalFiles.pdb_file,
     pae_file: originalFiles.pae_file,
     pae_power: '2.0',
-    plddt_cutoff: '50',
-    email: email
+    plddt_cutoff: '50'
   })
 
   const onSubmit = async (values: FormValues) => {
@@ -76,7 +72,6 @@ const Alphafold2PAEJiffy = () => {
     form.append('pae_file', values.pae_file, values.pae_file.name)
     form.append('pae_power', values.pae_power)
     form.append('plddt_cutoff', values.plddt_cutoff)
-    form.append('email', values.email)
     try {
       const response = await calculateAf2PaeJiffy(form).unwrap()
       setUuid(response.uuid)
@@ -273,9 +268,31 @@ const Alphafold2PAEJiffy = () => {
                       sx={{ display: 'flex' }}
                     >
                       {isError && (
-                        <Typography color='error'>
-                          An error occurred: {error && error.toString()}
-                        </Typography>
+                        <Alert severity='error' sx={{ my: 2 }}>
+                          <AlertTitle>Error</AlertTitle>
+                          {(() => {
+                            if (!error) return 'An unknown error occurred.'
+                            if (typeof error === 'string') return error
+                            if (
+                              'data' in error &&
+                              typeof error.data === 'object' &&
+                              error.data !== null &&
+                              'message' in error.data
+                            ) {
+                              return (
+                                (error.data as { message?: string }).message ||
+                                'An error occurred.'
+                              )
+                            }
+                            if ('message' in error) {
+                              return (
+                                (error as { message?: string }).message ||
+                                'An error occurred.'
+                              )
+                            }
+                            return 'An unknown error occurred.'
+                          })()}
+                        </Alert>
                       )}
                       <Field
                         name='pdb_file'

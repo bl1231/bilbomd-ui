@@ -20,7 +20,6 @@ import {
 import SendIcon from '@mui/icons-material/Send'
 import AutoJobFormInstructions from './AutoJobFormInstructions'
 import { BilboMDAutoJobSchema } from 'schemas/BilboMDAutoJobSchema'
-import useAuth from 'hooks/useAuth'
 import { Debug } from 'components/Debug'
 import LinearProgress from '@mui/material/LinearProgress'
 import HeaderBox from 'components/HeaderBox'
@@ -35,7 +34,6 @@ import { IBilboMDAutoJob } from '@bl1231/bilbomd-mongodb-schema'
 const ResubmitAutoJobForm = () => {
   useTitle('BilboMD: Resubmit Auto Job')
   const [addNewAutoJob, { isSuccess }] = useAddNewAutoJobMutation()
-  const { email } = useAuth()
   const { id } = useParams()
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
 
@@ -111,16 +109,14 @@ const ResubmitAutoJobForm = () => {
         title: 'resubmit_' + job.title,
         pdb_file: job.pdb_file ?? '',
         pae_file: job.pdb_file ?? '',
-        data_file: job.pdb_file ?? '',
-        email: email
+        data_file: job.pdb_file ?? ''
       }
     : {
         bilbomd_mode: 'auto',
         title: '',
         pdb_file: '',
         pae_file: '',
-        data_file: '',
-        email: email
+        data_file: ''
       }
 
   const onSubmit = async (
@@ -153,8 +149,6 @@ const ResubmitAutoJobForm = () => {
     } else if (fileCheckData.pae_file) {
       form.append('reuse_pae_file', 'true')
     }
-
-    form.append('email', values.email)
 
     try {
       const newJob = await addNewAutoJob(form).unwrap()

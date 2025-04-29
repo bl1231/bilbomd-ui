@@ -12,9 +12,9 @@ vi.mock('slices/jobsApiSlice', () => ({
 vi.mock('slices/configsApiSlice', () => ({
   useGetConfigsQuery: vi.fn()
 }))
-vi.mock('hooks/useAuth', () => ({
-  default: vi.fn(() => ({ email: 'test@example.com' }))
-}))
+// vi.mock('hooks/useAuth', () => ({
+//   default: vi.fn(() => ({ email: 'test@example.com' }))
+// }))
 
 vi.mock('react-router', () => ({
   Link: ({ children }: { children: React.ReactNode }) => <span>{children}</span>
