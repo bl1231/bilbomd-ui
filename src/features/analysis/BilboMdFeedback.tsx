@@ -1,15 +1,8 @@
 import { Chip, Divider, Typography } from '@mui/material'
-import Paper from '@mui/material/Paper'
-import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import FeedbackChart from './FeedbackChart'
 import { IFeedbackData } from '@bl1231/bilbomd-mongodb-schema'
-
-const Item = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(1),
-  borderTopLeftRadius: 0,
-  borderTopRightRadius: 0
-}))
+import Item from 'themes/components/Item'
 
 interface FeedbackProps {
   feedback: IFeedbackData

@@ -1,21 +1,15 @@
 import { useState } from 'react'
-import { Alert, Divider, Typography, Paper, IconButton } from '@mui/material'
+import { Alert, Divider, Typography, IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import Grid from '@mui/material/Grid'
 import NerscSystemStatuses from './SystemStatuses'
 import ProjectHours from './ProjectHours'
 import TokenExpirationChip from './TokenExpirationChip'
 import HeaderBox from 'components/HeaderBox'
-import { styled } from '@mui/material/styles'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useGetNerscOutagesQuery } from 'slices/nerscApiSlice'
 import { differenceInDays, parseISO, format } from 'date-fns'
-
-const Item = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(1),
-  borderTopLeftRadius: 0,
-  borderTopRightRadius: 0
-}))
+import Item from 'themes/components/Item'
 
 const NerscStatusList = () => {
   const [showAlert, setShowAlert] = useState(true)

@@ -1,7 +1,6 @@
 import { ReactNode } from 'react'
 import {
   Typography,
-  Paper,
   Box,
   Chip,
   CircularProgress,
@@ -12,13 +11,7 @@ import Grid from '@mui/material/Grid'
 import Divider from '@mui/material/Divider'
 import { useGetQueueStateQuery } from 'features/bullmq/bullmqApiSlice'
 import HeaderBox from 'components/HeaderBox'
-import { styled } from '@mui/material/styles'
-
-const Item = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(1),
-  borderTopLeftRadius: 0,
-  borderTopRightRadius: 0
-}))
+import Item from 'themes/components/Item'
 
 interface QueueStatus {
   bilbomd: {

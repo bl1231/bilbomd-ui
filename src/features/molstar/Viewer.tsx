@@ -1,7 +1,5 @@
 import { useEffect, useRef, createRef } from 'react'
 import Grid from '@mui/material/Grid'
-import { styled } from '@mui/material/styles'
-import Paper from '@mui/material/Paper'
 import { axiosInstance } from 'app/api/axios'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '../../slices/authSlice'
@@ -14,7 +12,6 @@ import {
 import { PluginLayoutControlsDisplay } from 'molstar/lib/mol-plugin/layout'
 import { ObjectKeys } from 'molstar/lib/mol-util/type-helpers'
 import { PluginConfig } from 'molstar/lib/mol-plugin/config'
-// import { ColorListName } from 'molstar/lib/mol-util/color/lists'
 import { PluginSpec } from 'molstar/lib/mol-plugin/spec'
 import { PluginBehaviors } from 'molstar/lib/mol-plugin/behavior'
 import { renderReact18 } from 'molstar/lib/mol-plugin-ui/react18'
@@ -22,12 +19,7 @@ import { PluginUIContext } from 'molstar/lib/mol-plugin-ui/context'
 import { ShowButtons, ViewportComponent } from './Viewport'
 import { BuiltInTrajectoryFormat } from 'molstar/lib/mol-plugin-state/formats/trajectory'
 import 'molstar/lib/mol-plugin-ui/skin/light.scss'
-
-const Item = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(1),
-  borderTopLeftRadius: 0,
-  borderTopRightRadius: 0
-}))
+import Item from 'themes/components/Item'
 
 declare global {
   interface Window {

@@ -12,8 +12,7 @@ import {
 import Grid from '@mui/material/Grid'
 import LinearProgress from '@mui/material/LinearProgress'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
-import Paper from '@mui/material/Paper'
-import { styled, useTheme, Theme } from '@mui/material/styles'
+import { useTheme, Theme } from '@mui/material/styles'
 import { axiosInstance } from 'app/api/axios'
 import MissingJob from 'components/MissingJob'
 import { useSelector } from 'react-redux'
@@ -34,12 +33,7 @@ import { useGetJobByIdQuery } from 'slices/jobsApiSlice'
 import BilboMdFeedback from 'features/analysis/BilboMdFeedback'
 import { BilboMDJob, BilboMDMultiJob } from 'types/interfaces'
 import { JobStatusEnum } from '@bl1231/bilbomd-mongodb-schema/frontend'
-
-const Item = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(1),
-  borderTopLeftRadius: 0,
-  borderTopRightRadius: 0
-}))
+import Item from 'themes/components/Item'
 
 const jobTypeToRoute: Record<string, string> = {
   BilboMdPDB: 'classic',
