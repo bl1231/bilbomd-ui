@@ -478,7 +478,8 @@ const Jobs = () => {
                 sx={{
                   display: 'flex',
                   flexDirection: 'column',
-                  width: 'calc(100vw - 260px)',
+                  width: '100%',
+                  maxWidth: 'calc(100vw - 260px)',
                   overflow: 'hidden',
                   '& .bilbomd.completed': {
                     backgroundColor: green[500],
