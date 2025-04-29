@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.19.3 (4/29/2025)
+  - Fix the bug that caused the Jobs MuiDataGrid to jitter when resizing.
 - 1.19.2 (4/28/2025)
   - Add API Token management component to support job submission via external API endpoints.
 - 1.19.1 (4/17/2025)
