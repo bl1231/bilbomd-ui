@@ -485,43 +485,56 @@ const Jobs = () => {
                     backgroundColor: green[500],
                     color: '#1a3e72',
                     fontWeight: '600',
-                    fontFamily: 'monospace'
+                    fontFamily: 'monospace',
+                    textAlign: 'center' // Align text in the center
                   },
                   '& .bilbomd.error': {
                     backgroundColor: red[600],
                     color: '#1a3e72',
-                    fontWeight: '600'
+                    fontWeight: '600',
+                    fontFamily: 'monospace',
+                    textAlign: 'center' // Align text in the center
                   },
                   '& .bilbomd.running': {
                     backgroundColor: amber[200],
                     color: '#1a3e72',
-                    fontWeight: '600'
+                    fontWeight: '600',
+                    fontFamily: 'monospace',
+                    textAlign: 'center' // Align text in the center
                   },
                   '& .bilbomd.submitted': {
                     backgroundColor: amber[100],
                     color: '#1a3e72',
-                    fontWeight: '600'
+                    fontWeight: '600',
+                    fontFamily: 'monospace',
+                    textAlign: 'center' // Align text in the center
                   },
                   '& .bilbomd.pending': {
                     backgroundColor: green[100],
                     color: '#1a3e72',
-                    fontWeight: '500'
+                    fontWeight: '500',
+                    fontFamily: 'monospace',
+                    textAlign: 'center' // Align text in the center
                   },
                   '& .bilbomd.failed': {
                     backgroundColor: red[300],
                     color: '#1a3e72',
-                    fontWeight: '600'
+                    fontWeight: '600',
+                    fontFamily: 'monospace',
+                    textAlign: 'center' // Align text in the center
                   },
                   '& .bilbomd.cancelled': {
                     backgroundColor: grey[200],
                     color: '#616161',
                     fontStyle: 'italic',
-                    fontWeight: '500'
+                    fontWeight: '500',
+                    textAlign: 'center' // Align text in the center
                   },
                   '& .bilbomd.unknown': {
                     backgroundColor: '#f3e5f5',
                     color: '#4a148c',
-                    fontWeight: '500'
+                    fontWeight: '500',
+                    textAlign: 'center' // Align text in the center
                   }
                 }}
               >
