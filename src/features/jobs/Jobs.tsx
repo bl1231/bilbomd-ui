@@ -6,7 +6,6 @@ import { useGetJobsQuery } from 'slices/jobsApiSlice'
 import useTitle from 'hooks/useTitle'
 import { clsx } from 'clsx'
 import { Box } from '@mui/system'
-import { green, red, amber, grey } from '@mui/material/colors'
 import useAuth from 'hooks/useAuth'
 import {
   Alert,
@@ -480,62 +479,7 @@ const Jobs = () => {
                   flexDirection: 'column',
                   width: '100%',
                   maxWidth: 'calc(100vw - 260px)',
-                  overflow: 'hidden',
-                  '& .bilbomd.completed': {
-                    backgroundColor: green[500],
-                    color: '#1a3e72',
-                    fontWeight: '600',
-                    fontFamily: 'monospace',
-                    textAlign: 'center' // Align text in the center
-                  },
-                  '& .bilbomd.error': {
-                    backgroundColor: red[600],
-                    color: '#1a3e72',
-                    fontWeight: '600',
-                    fontFamily: 'monospace',
-                    textAlign: 'center' // Align text in the center
-                  },
-                  '& .bilbomd.running': {
-                    backgroundColor: amber[200],
-                    color: '#1a3e72',
-                    fontWeight: '600',
-                    fontFamily: 'monospace',
-                    textAlign: 'center' // Align text in the center
-                  },
-                  '& .bilbomd.submitted': {
-                    backgroundColor: amber[100],
-                    color: '#1a3e72',
-                    fontWeight: '600',
-                    fontFamily: 'monospace',
-                    textAlign: 'center' // Align text in the center
-                  },
-                  '& .bilbomd.pending': {
-                    backgroundColor: green[100],
-                    color: '#1a3e72',
-                    fontWeight: '500',
-                    fontFamily: 'monospace',
-                    textAlign: 'center' // Align text in the center
-                  },
-                  '& .bilbomd.failed': {
-                    backgroundColor: red[300],
-                    color: '#1a3e72',
-                    fontWeight: '600',
-                    fontFamily: 'monospace',
-                    textAlign: 'center' // Align text in the center
-                  },
-                  '& .bilbomd.cancelled': {
-                    backgroundColor: grey[200],
-                    color: '#616161',
-                    fontStyle: 'italic',
-                    fontWeight: '500',
-                    textAlign: 'center' // Align text in the center
-                  },
-                  '& .bilbomd.unknown': {
-                    backgroundColor: '#f3e5f5',
-                    color: '#4a148c',
-                    fontWeight: '500',
-                    textAlign: 'center' // Align text in the center
-                  }
+                  overflow: 'hidden'
                 }}
               >
                 <Box
