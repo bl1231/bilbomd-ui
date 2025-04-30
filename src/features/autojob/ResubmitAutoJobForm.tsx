@@ -103,20 +103,27 @@ const ResubmitAutoJobForm = () => {
     )
   }
 
+  const normalizedFileCheckData = fileCheckData
+    ? {
+        ...fileCheckData,
+        dat_file: fileCheckData.data_file
+      }
+    : {}
+
   const initialValues: BilboMDAutoJobFormValues = job
     ? {
         bilbomd_mode: 'auto',
         title: 'resubmit_' + job.title,
         pdb_file: job.pdb_file ?? '',
-        pae_file: job.pdb_file ?? '',
-        data_file: job.pdb_file ?? ''
+        pae_file: job.pae_file ?? '',
+        dat_file: job.data_file ?? ''
       }
     : {
         bilbomd_mode: 'auto',
         title: '',
         pdb_file: '',
         pae_file: '',
-        data_file: ''
+        dat_file: ''
       }
 
   const onSubmit = async (
@@ -134,19 +141,19 @@ const ResubmitAutoJobForm = () => {
 
     if (values.pdb_file instanceof File) {
       form.append('pdb_file', values.pdb_file)
-    } else if (fileCheckData.pdb_file) {
+    } else if (normalizedFileCheckData.pdb_file) {
       form.append('reuse_pdb_file', 'true')
     }
 
-    if (values.data_file instanceof File) {
-      form.append('data_file', values.data_file)
-    } else if (fileCheckData.data_file) {
-      form.append('reuse_data_file', 'true')
+    if (values.dat_file instanceof File) {
+      form.append('dat_file', values.dat_file)
+    } else if (normalizedFileCheckData.dat_file) {
+      form.append('reuse_dat_file', 'true')
     }
 
     if (values.pae_file instanceof File) {
       form.append('pae_file', values.pae_file)
-    } else if (fileCheckData.pae_file) {
+    } else if (normalizedFileCheckData.pae_file) {
       form.append('reuse_pae_file', 'true')
     }
 
@@ -160,10 +167,10 @@ const ResubmitAutoJobForm = () => {
 
   const isFormValid = (
     values: BilboMDAutoJobFormValues,
-    reuseFlags: typeof fileCheckData
+    reuseFlags: typeof normalizedFileCheckData
   ) => {
     const hasPDB = values.pdb_file instanceof File || reuseFlags.pdb_file
-    const hasDAT = values.data_file instanceof File || reuseFlags.data_file
+    const hasDAT = values.dat_file instanceof File || reuseFlags.dat_file
     const hasPAE = values.pae_file instanceof File || reuseFlags.pae_file
     const hasTitle = values.title.trim() !== ''
     return !isPerlmutterUnavailable && hasPDB && hasDAT && hasPAE && hasTitle
@@ -243,7 +250,9 @@ const ResubmitAutoJobForm = () => {
                           as={FileSelect}
                           title='Select File'
                           existingFileName={
-                            fileCheckData.pdb_file ? job?.pdb_file : undefined
+                            normalizedFileCheckData.pdb_file
+                              ? job?.pdb_file
+                              : undefined
                           }
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
@@ -262,7 +271,9 @@ const ResubmitAutoJobForm = () => {
                           as={FileSelect}
                           title='Select File'
                           existingFileName={
-                            fileCheckData.pae_file ? job?.pae_file : undefined
+                            normalizedFileCheckData.pae_file
+                              ? job?.pae_file
+                              : undefined
                           }
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
@@ -275,20 +286,20 @@ const ResubmitAutoJobForm = () => {
                       </Grid>
                       <Grid>
                         <Field
-                          name='data_file'
+                          name='dat_file'
                           id='dat-file-upload'
                           as={FileSelect}
                           title='Select File'
                           existingFileName={
-                            fileCheckData.data_file ? job?.data_file : undefined
+                            normalizedFileCheckData.data_file
+                              ? job?.data_file
+                              : undefined
                           }
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
-                          error={errors.data_file && touched.data_file}
-                          errorMessage={
-                            errors.data_file ? errors.data_file : ''
-                          }
+                          error={errors.dat_file && touched.dat_file}
+                          errorMessage={errors.dat_file ? errors.dat_file : ''}
                           fileType='experimental SAXS data *.dat'
                           fileExt='.dat'
                         />
@@ -305,7 +316,7 @@ const ResubmitAutoJobForm = () => {
                           disabled={
                             !isValid ||
                             isSubmitting ||
-                            !isFormValid(values, fileCheckData)
+                            !isFormValid(values, normalizedFileCheckData)
                           }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}
