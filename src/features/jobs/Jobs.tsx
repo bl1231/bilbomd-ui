@@ -22,7 +22,16 @@ import {
   Select,
   SelectChangeEvent
 } from '@mui/material'
-import DeleteJob from './DeleteJob'
+import Menu, { MenuProps } from '@mui/material/Menu'
+import { styled, alpha } from '@mui/material/styles'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import { useDeleteJobMutation } from 'slices/jobsApiSlice'
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
+} from '@mui/material'
 import JobDetails from './JobDetails'
 import BullMQSummary from '../bullmq/BullMQSummary'
 import NerscStatus from '../nersc/NerscStatus'
@@ -35,6 +44,9 @@ import {
   jobTypeDisplayNames
 } from '@bl1231/bilbomd-mongodb-schema/frontend'
 import Item from 'themes/components/Item'
+import AutorenewIcon from '@mui/icons-material/Autorenew'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { useNavigate } from 'react-router'
 
 const getHoursInQueue = (nersc: INerscInfo | undefined) => {
   if (!nersc?.time_submitted) return ''
@@ -77,10 +89,63 @@ const filteredJobCountChip = (count: number) => {
   )
 }
 
+const StyledMenu = styled((props: MenuProps) => (
+  <Menu
+    elevation={0}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'right'
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'right'
+    }}
+    {...props}
+  />
+))(({ theme }) => ({
+  '& .MuiPaper-root': {
+    borderRadius: 6,
+    marginTop: theme.spacing(1),
+    minWidth: 140,
+    color:
+      theme.palette.mode === 'light'
+        ? 'rgb(55, 65, 81)'
+        : theme.palette.grey[300],
+    boxShadow:
+      'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+    '& .MuiMenu-list': {
+      padding: '4px 0'
+    },
+    '& .MuiMenuItem-root': {
+      '& .MuiSvgIcon-root': {
+        fontSize: 18,
+        color: theme.palette.text.secondary,
+        marginRight: theme.spacing(1.5)
+      },
+      '&:active': {
+        backgroundColor: alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity
+        )
+      }
+    }
+  }
+}))
+
+const jobTypeToRoute: Record<string, string> = {
+  BilboMdPDB: 'classic',
+  BilboMdCRD: 'classic',
+  BilboMdAuto: 'auto',
+  BilboMdScoper: 'scoper',
+  BilboMdAlphaFold: 'alphafold',
+  BilboMdSANS: 'sans'
+}
+
 const Jobs = () => {
   useTitle('BilboMD: Jobs List')
 
   const { username, isManager, isAdmin } = useAuth()
+  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
 
   const typeFilter = searchParams.get('type') || 'All'
@@ -88,6 +153,41 @@ const Jobs = () => {
   const userFilter = searchParams.get('user') || 'All'
   const pageParam = parseInt(searchParams.get('page') || '0', 10)
   const [page, setPage] = useState(pageParam)
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [menuJobId, setMenuJobId] = useState<string | null>(null)
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [deleteTargetJobId, setDeleteTargetJobId] = useState<string | null>(
+    null
+  )
+  const [deleteTargetTitle, setDeleteTargetTitle] = useState<string | null>(
+    null
+  )
+  const [deleteJob, { isLoading: isDeleting }] = useDeleteJobMutation()
+
+  const openDeleteDialog = (id: string, title: string) => {
+    setDeleteTargetJobId(id)
+    setDeleteTargetTitle(title)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDeleteConfirm = async () => {
+    if (deleteTargetJobId) {
+      await deleteJob({ id: deleteTargetJobId })
+      setDeleteDialogOpen(false)
+      setDeleteTargetJobId(null)
+      setDeleteTargetTitle(null)
+    }
+  }
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, id: string) => {
+    setAnchorEl(event.currentTarget)
+    setMenuJobId(id)
+  }
+  const handleMenuClose = () => {
+    setAnchorEl(null)
+    setMenuJobId(null)
+  }
 
   const {
     data: jobs,
@@ -139,6 +239,12 @@ const Jobs = () => {
     searchParams.delete('status')
     searchParams.delete('user')
     setSearchParams(searchParams)
+  }
+
+  const handleResubmit = (id: string, jobType: string) => {
+    const routeSegment = jobTypeToRoute[jobType]
+    if (!routeSegment) return
+    navigate(`/dashboard/jobs/${routeSegment}/resubmit/${id}`)
   }
 
   const jobTypeFilterDropdown = (
@@ -401,40 +507,59 @@ const Jobs = () => {
         type: 'actions',
         sortable: false,
         headerName: 'Manage',
-        width: 150,
+        flex: 0.6,
         getActions: (params: GridRowParams) => {
-          if (
-            params.row.status !== 'Submitted' &&
-            params.row.status !== 'Running'
-          ) {
-            return [
-              <DeleteJob
-                key={params.id}
-                id={params.row.id}
-                title={params.row.title}
-                hide={false}
-              />,
-              <JobDetails
-                key={params.id}
-                id={params.row.id}
-                title={params.row.title}
-              />
-            ]
-          } else {
-            return [
-              <DeleteJob
-                key={params.id}
-                id={params.row.id}
-                title={params.row.title}
-                hide={true}
-              />,
-              <JobDetails
-                key={params.id}
-                id={params.row.id}
-                title={params.row.title}
-              />
-            ]
-          }
+          const id = params.row.id
+          const title = params.row.title
+          const isOpen = Boolean(anchorEl) && menuJobId === id
+
+          return [
+            <JobDetails key={`${id}-details`} id={id} />,
+            <Button
+              key={`${id}-menu-btn`}
+              variant='outlined'
+              disableElevation
+              size='small'
+              className='job-details-button'
+              onClick={(e) => handleMenuOpen(e, id)}
+              endIcon={<KeyboardArrowDownIcon />}
+            >
+              More Actions
+            </Button>,
+            <StyledMenu
+              key={`${id}-menu`}
+              anchorEl={anchorEl}
+              open={isOpen}
+              onClose={handleMenuClose}
+            >
+              <MenuItem
+                onClick={() => {
+                  handleResubmit(id, params.row.__t)
+                  handleMenuClose()
+                }}
+                disableRipple
+                disabled={
+                  !['BilboMdPDB', 'BilboMdCRD', 'BilboMdAuto'].includes(
+                    params.row.__t
+                  )
+                }
+              >
+                <AutorenewIcon />
+                Resubmit
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  openDeleteDialog(id, title)
+                  handleMenuClose()
+                }}
+                disableRipple
+                disabled={['Running', 'Submitted'].includes(params.row.status)}
+              >
+                <DeleteIcon />
+                Delete
+              </MenuItem>
+            </StyledMenu>
+          ]
         }
       }
     ]
@@ -492,6 +617,7 @@ const Jobs = () => {
                   <DataGrid
                     rows={rows}
                     columns={columns}
+                    rowHeight={35}
                     initialState={{
                       pagination: { paginationModel: { pageSize: 20, page } }
                     }}
@@ -506,6 +632,35 @@ const Jobs = () => {
                       minWidth: 0
                     }}
                   />
+                  {/* Delete confirmation dialog */}
+                  <Dialog
+                    open={deleteDialogOpen}
+                    onClose={() => setDeleteDialogOpen(false)}
+                  >
+                    <DialogTitle>Confirm Delete</DialogTitle>
+                    <DialogContent>
+                      <Typography>
+                        Are you sure you want to delete the job{' '}
+                        <strong>{deleteTargetTitle}</strong>?
+                      </Typography>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button
+                        onClick={() => setDeleteDialogOpen(false)}
+                        disabled={isDeleting}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={handleDeleteConfirm}
+                        color='error'
+                        disabled={isDeleting}
+                        variant='contained'
+                      >
+                        {isDeleting ? 'Deleting...' : 'Delete'}
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
                 </Box>
               </Box>
             ) : (

@@ -15,7 +15,14 @@ export default function Button(theme: Theme) {
       },
       styleOverrides: {
         root: {
-          fontWeight: 500
+          fontWeight: 500,
+          '&.job-details-button': {
+            height: '24px',
+            backgroundColor: theme.palette.grey[200],
+            '&:hover': {
+              backgroundColor: 'white'
+            }
+          }
         },
         contained: {
           ...disabledStyle

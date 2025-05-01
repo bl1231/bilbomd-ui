@@ -4,7 +4,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
-import { Button, Tooltip, IconButton } from '@mui/material'
+import { Button } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import LinearProgress from '@mui/material/LinearProgress'
 
@@ -12,36 +12,33 @@ interface DeleteJobProps {
   id: string
   title: string
   hide: boolean
+  onClose?: () => void
 }
 
-const DeleteJob = ({ id, title, hide }: DeleteJobProps) => {
+const DeleteJob = ({ id, title, hide, onClose }: DeleteJobProps) => {
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [deleteJob, { isSuccess, isError, error }] = useDeleteJobMutation()
-  // console.log('title:', title, 'hide:', hide)
   const onClickDelete = async () => {
-    setDeleting(true) // Start deletion process
-    // const start = Date.now()
-    // console.log('onClickDelete start', start)
+    setDeleting(true)
     await deleteJob({ id })
-    // const end = Date.now()
-    // console.log('onClickDelete end', end)
-    // const duration = end - start
-    // console.log(`Deletion took ${duration} milliseconds.`)
-    setDeleting(false) // End deletion process
+    setDeleting(false)
   }
 
   const handleCloseDialog = () => {
     setConfirmOpen(false)
     if (deleting) {
-      // If the dialog is closed while deleting, stop hideing the progress
       setDeleting(false)
+    }
+    if (onClose) {
+      onClose()
     }
   }
 
   useEffect(() => {
     if (isSuccess) {
       console.log('DeleteJob isSuccess:', isSuccess, 'error:', error)
+      if (onClose) onClose()
     }
     if (isError) {
       console.log('DeleteJob isError:', isError, 'error:', error)
@@ -50,23 +47,17 @@ const DeleteJob = ({ id, title, hide }: DeleteJobProps) => {
 
   return (
     <>
-      <Tooltip
-        title={
-          deleting || hide
-            ? 'Cannot delete a Running or Submitted job'
-            : `Delete ${title}`
-        }
-        arrow
-      >
-        <span>
-          <IconButton
-            onClick={() => setConfirmOpen(true)}
-            disabled={deleting || hide}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </span>
-      </Tooltip>
+      <span>
+        <Button
+          onClick={() => setConfirmOpen(true)}
+          disabled={deleting || hide}
+          startIcon={<DeleteIcon />}
+          variant='outlined'
+          className='job-details-button'
+        >
+          Trash
+        </Button>
+      </span>
 
       <Dialog open={confirmOpen} onClose={handleCloseDialog}>
         <DialogContent>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   Box,
   Button,
@@ -46,13 +46,15 @@ import { BilboMDClassicJobFormValues } from '../../types/classicJobForm'
 
 const ResubmitJobForm = () => {
   useTitle('BilboMD: Resubmit Classic Job')
+  console.log('[Hook 1] useTheme')
   const theme = useTheme()
   const isDarkMode = theme.palette.mode === 'dark'
   const [addNewJob, { isSuccess }] = useAddNewJobMutation()
   const [calculateAutoRg, { isLoading }] = useCalculateAutoRgMutation()
+  console.log('[Hook 2] useParams')
   const { id } = useParams()
+  if (!id) return <LinearProgress />
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
-  const [selectedMode, setSelectedMode] = useState<'pdb' | 'crd_psf'>('pdb')
 
   // Fetch the configuration object
   const {
@@ -75,19 +77,28 @@ const ResubmitJobForm = () => {
     data: jobdata,
     isLoading: jobIsLoading,
     isError: jobIsError
-  } = useGetJobByIdQuery(id, {})
-  if (jobIsLoading) return <LinearProgress />
+  } = useGetJobByIdQuery(id, {
+    skip: !id // avoids running until ID is available
+  })
+
+  if (jobIsLoading || !jobdata) return <LinearProgress />
   if (jobIsError)
     return <Alert severity='error'>Error retrieving parent job info</Alert>
   const job = jobdata?.mongo
 
-  const { data: fileCheckData, error: fileCheckError } = useCheckJobFilesQuery(
-    jobdata?.id ?? '',
-    {
-      skip: !jobdata?.id // avoids running until ID is available
-    }
-  )
+  // console.log('Rendering ResubmitJobForm')
+  // console.log('id:', id)
+  // console.log('jobdata:', jobdata)
+  // console.log('job.__t:', job?.__t)
 
+  const fileCheckQuery = jobdata?.id
+    ? useCheckJobFilesQuery(jobdata.id)
+    : undefined
+
+  const fileCheckData = fileCheckQuery?.data
+  const fileCheckError = fileCheckQuery?.error
+
+  if (!fileCheckData) return <LinearProgress />
   if (fileCheckError) {
     return (
       <Alert severity='error'>
@@ -97,20 +108,35 @@ const ResubmitJobForm = () => {
     )
   }
 
-  useEffect(() => {
-    if (!job) return
-    const derivedMode = job.__t === 'BilboMdCRD' ? 'crd_psf' : 'pdb'
-    setSelectedMode(derivedMode)
-  }, [job])
+  const selectedMode: 'pdb' | 'crd_psf' =
+    job?.__t === 'BilboMdCRD' ? 'crd_psf' : 'pdb'
 
   // console.log('job', job)
 
-  const initialValues: BilboMDClassicJobFormValues = job
-    ? {
-        bilbomd_mode: selectedMode,
+  let initialValues: BilboMDClassicJobFormValues
+
+  switch (job.__t) {
+    case 'BilboMdCRD':
+      initialValues = {
+        bilbomd_mode: 'crd_psf',
         title: 'resubmit_' + job.title,
         psf_file: job.psf_file ?? '',
         crd_file: job.crd_file ?? '',
+        pdb_file: '',
+        inp_file: job.const_inp_file ?? '',
+        dat_file: job.data_file ?? '',
+        num_conf: job.conformational_sampling?.toString() ?? '',
+        rg: job.rg?.toString() ?? '',
+        rg_min: job.rg_min?.toString() ?? '',
+        rg_max: job.rg_max?.toString() ?? ''
+      }
+      break
+    case 'BilboMdPDB':
+      initialValues = {
+        bilbomd_mode: 'pdb',
+        title: 'resubmit_' + job.title,
+        psf_file: '',
+        crd_file: '',
         pdb_file: job.pdb_file ?? '',
         inp_file: job.const_inp_file ?? '',
         dat_file: job.data_file ?? '',
@@ -119,19 +145,10 @@ const ResubmitJobForm = () => {
         rg_min: job.rg_min?.toString() ?? '',
         rg_max: job.rg_max?.toString() ?? ''
       }
-    : {
-        bilbomd_mode: 'pdb',
-        title: '',
-        psf_file: '',
-        crd_file: '',
-        pdb_file: '',
-        inp_file: '',
-        dat_file: '',
-        num_conf: '',
-        rg: '',
-        rg_min: '',
-        rg_max: ''
-      }
+      break
+    default:
+      throw new Error(`Unsupported job type: ${job.__t}`)
+  }
 
   const onSubmit = async (
     values: BilboMDClassicJobFormValues,
@@ -195,7 +212,7 @@ const ResubmitJobForm = () => {
       values?: Partial<typeof initialValues>
     ) => Promise<FormikErrors<typeof initialValues>>
   ) => {
-    setSelectedMode(mode)
+    // setSelectedMode(mode)
 
     if (mode === 'pdb') {
       resetForm({

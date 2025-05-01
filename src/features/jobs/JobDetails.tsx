@@ -1,28 +1,27 @@
 import InfoIcon from '@mui/icons-material/Info'
-import { IconButton, Tooltip } from '@mui/material'
+import { Button } from '@mui/material'
 import { useLocation, Link } from 'react-router'
 
 interface JobDetailsProps {
   id: string
-  title: string
 }
 
-const JobDetails = ({ id, title }: JobDetailsProps) => {
+const JobDetails = ({ id }: JobDetailsProps) => {
   const location = useLocation()
   const search = location.search
 
   return (
-    <>
-      <Tooltip title={`Details for ${title}`} arrow>
-        <IconButton
-          component={Link}
-          to={`/dashboard/jobs/${id}`}
-          state={{ returnParams: search }}
-        >
-          <InfoIcon />
-        </IconButton>
-      </Tooltip>
-    </>
+    <Button
+      variant='outlined'
+      size='small'
+      className='job-details-button'
+      startIcon={<InfoIcon />}
+      component={Link}
+      to={`/dashboard/jobs/${id}`}
+      state={{ returnParams: search }}
+    >
+      Details
+    </Button>
   )
 }
 
