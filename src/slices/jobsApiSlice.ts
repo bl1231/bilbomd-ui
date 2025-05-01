@@ -1,6 +1,7 @@
 import { createEntityAdapter } from '@reduxjs/toolkit'
 import { apiSlice } from 'app/api/apiSlice'
 import { BilboMDJob } from 'types/interfaces'
+import { FileCheckResult } from 'types/jobCheckResults'
 
 const jobsAdapter = createEntityAdapter({})
 
@@ -20,7 +21,7 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
         }
         const loadedJobs = responseData.map((job) => {
           job.mongo.id = job.mongo._id
-          job.id = job.mongo._id as string
+          job.id = job.mongo._id
           return job
         })
         jobsAdapter.setAll(initialState, loadedJobs)
@@ -44,7 +45,7 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
       }),
       transformResponse: (responseData: BilboMDJob) => {
         responseData.mongo.id = responseData.mongo._id
-        responseData.id = responseData.mongo._id as string
+        responseData.id = responseData.mongo._id
         return responseData
       },
       providesTags: (_, __, id) => [{ type: 'Job', id }]
@@ -81,7 +82,7 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (_, __, arg) => [{ type: 'Job', id: arg.id }]
     }),
-    checkJobFiles: builder.query({
+    checkJobFiles: builder.query<FileCheckResult, string>({
       query: (id: string) => ({
         url: `/jobs/${id}/check-files`,
         method: 'GET'

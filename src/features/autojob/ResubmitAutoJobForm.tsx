@@ -72,7 +72,20 @@ const ResubmitAutoJobForm = () => {
     return <Alert severity='error'>Job data not found</Alert>
   }
 
-  const job = jobdata?.mongo as IBilboMDAutoJob
+  function isBilboMDAutoJob(job: unknown): job is IBilboMDAutoJob {
+    return (
+      typeof job === 'object' &&
+      job !== null &&
+      '__t' in job &&
+      (job as { __t?: unknown }).__t === 'BilboMdAuto'
+    )
+  }
+
+  if (!isBilboMDAutoJob(jobdata.mongo)) {
+    return <Alert severity='error'>Job is not a valid AutoJob</Alert>
+  }
+
+  const job = jobdata.mongo
 
   // console.log('job', job)
 
@@ -85,8 +98,6 @@ const ResubmitAutoJobForm = () => {
   } = useCheckJobFilesQuery(jobId!, {
     skip: !jobId
   })
-
-  // console.log('fileCheckData', fileCheckData)
 
   if (!jobdata?.mongo) {
     return <Alert severity='error'>Job data not found</Alert>
@@ -108,15 +119,15 @@ const ResubmitAutoJobForm = () => {
         bilbomd_mode: 'auto',
         title: 'resubmit_' + job.title,
         pdb_file: job.pdb_file ?? '',
-        pae_file: job.pdb_file ?? '',
-        data_file: job.pdb_file ?? ''
+        pae_file: job.pae_file ?? '',
+        dat_file: job.data_file ?? ''
       }
     : {
         bilbomd_mode: 'auto',
         title: '',
         pdb_file: '',
         pae_file: '',
-        data_file: ''
+        dat_file: ''
       }
 
   const onSubmit = async (
@@ -134,19 +145,19 @@ const ResubmitAutoJobForm = () => {
 
     if (values.pdb_file instanceof File) {
       form.append('pdb_file', values.pdb_file)
-    } else if (fileCheckData.pdb_file) {
+    } else if (fileCheckData?.pdb_file) {
       form.append('reuse_pdb_file', 'true')
     }
 
-    if (values.data_file instanceof File) {
-      form.append('data_file', values.data_file)
-    } else if (fileCheckData.data_file) {
-      form.append('reuse_data_file', 'true')
+    if (values.dat_file instanceof File) {
+      form.append('dat_file', values.dat_file)
+    } else if (fileCheckData?.dat_file) {
+      form.append('reuse_dat_file', 'true')
     }
 
     if (values.pae_file instanceof File) {
       form.append('pae_file', values.pae_file)
-    } else if (fileCheckData.pae_file) {
+    } else if (fileCheckData?.pae_file) {
       form.append('reuse_pae_file', 'true')
     }
 
@@ -162,9 +173,9 @@ const ResubmitAutoJobForm = () => {
     values: BilboMDAutoJobFormValues,
     reuseFlags: typeof fileCheckData
   ) => {
-    const hasPDB = values.pdb_file instanceof File || reuseFlags.pdb_file
-    const hasDAT = values.data_file instanceof File || reuseFlags.data_file
-    const hasPAE = values.pae_file instanceof File || reuseFlags.pae_file
+    const hasPDB = values.pdb_file instanceof File || reuseFlags?.pdb_file
+    const hasDAT = values.dat_file instanceof File || reuseFlags?.dat_file
+    const hasPAE = values.pae_file instanceof File || reuseFlags?.pae_file
     const hasTitle = values.title.trim() !== ''
     return !isPerlmutterUnavailable && hasPDB && hasDAT && hasPAE && hasTitle
   }
@@ -243,7 +254,7 @@ const ResubmitAutoJobForm = () => {
                           as={FileSelect}
                           title='Select File'
                           existingFileName={
-                            fileCheckData.pdb_file ? job?.pdb_file : undefined
+                            fileCheckData?.pdb_file ? job?.pdb_file : undefined
                           }
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
@@ -262,7 +273,7 @@ const ResubmitAutoJobForm = () => {
                           as={FileSelect}
                           title='Select File'
                           existingFileName={
-                            fileCheckData.pae_file ? job?.pae_file : undefined
+                            fileCheckData?.pae_file ? job?.pae_file : undefined
                           }
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
@@ -275,20 +286,18 @@ const ResubmitAutoJobForm = () => {
                       </Grid>
                       <Grid>
                         <Field
-                          name='data_file'
+                          name='dat_file'
                           id='dat-file-upload'
                           as={FileSelect}
                           title='Select File'
                           existingFileName={
-                            fileCheckData.data_file ? job?.data_file : undefined
+                            fileCheckData?.dat_file ? job?.data_file : undefined
                           }
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
-                          error={errors.data_file && touched.data_file}
-                          errorMessage={
-                            errors.data_file ? errors.data_file : ''
-                          }
+                          error={errors.dat_file && touched.dat_file}
+                          errorMessage={errors.dat_file ? errors.dat_file : ''}
                           fileType='experimental SAXS data *.dat'
                           fileExt='.dat'
                         />

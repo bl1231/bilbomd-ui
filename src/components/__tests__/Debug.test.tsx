@@ -15,7 +15,7 @@ vi.mock('@mui/material/styles', () => ({
 describe('Debug Component', () => {
   it('should render the Formik state header', () => {
     // Mock Formik context value with empty values object
-    const mockFormikContext: FormikContextType<any> = {
+    const mockFormikContext: FormikContextType<Record<string, unknown>> = {
       values: {},
       errors: {},
       touched: {},

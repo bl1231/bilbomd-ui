@@ -1,11 +1,11 @@
-import { Theme } from '@mui/material/styles'
+import { blueGrey } from '@mui/material/colors'
 
-export default function Checkbox(theme: Theme) {
+export default function Checkbox() {
   return {
     MuiCheckbox: {
       styleOverrides: {
         root: {
-          color: theme.palette.secondary[300]
+          color: blueGrey[200]
         }
       }
     }

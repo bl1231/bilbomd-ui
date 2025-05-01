@@ -3,5 +3,5 @@ export type BilboMDAutoJobFormValues = {
   title: string
   pdb_file: File | string
   pae_file: File | string
-  data_file: File | string
+  dat_file: File | string
 }

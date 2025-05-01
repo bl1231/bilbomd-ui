@@ -51,8 +51,9 @@ describe('useLogout', () => {
     await act(async () => {
       try {
         await result.current()
-      } catch (e) {
+      } catch (error) {
         // Catch any thrown errors (optional, depending on implementation)
+        console.error('Error during logout:', error)
       }
     })
 
