@@ -97,14 +97,6 @@ const ResubmitJobForm = () => {
     )
   }
 
-  const normalizedFileCheckData = fileCheckData
-    ? {
-        ...fileCheckData,
-        dat_file: fileCheckData.data_file,
-        inp_file: fileCheckData.const_inp_file
-      }
-    : {}
-
   useEffect(() => {
     if (!job) return
     const derivedMode = job.__t === 'BilboMdCRD' ? 'crd_psf' : 'pdb'
@@ -155,17 +147,17 @@ const ResubmitJobForm = () => {
 
     if (values.psf_file instanceof File) {
       form.append('psf_file', values.psf_file)
-    } else if (normalizedFileCheckData.psf_file) {
+    } else if (fileCheckData?.psf_file) {
       form.append('reuse_psf_file', 'true')
     }
     if (values.crd_file instanceof File) {
       form.append('crd_file', values.crd_file)
-    } else if (normalizedFileCheckData.crd_file) {
+    } else if (fileCheckData?.crd_file) {
       form.append('reuse_crd_file', 'true')
     }
     if (values.pdb_file instanceof File) {
       form.append('pdb_file', values.pdb_file)
-    } else if (normalizedFileCheckData.pdb_file) {
+    } else if (fileCheckData?.pdb_file) {
       form.append('reuse_pdb_file', 'true')
     }
 
@@ -176,13 +168,13 @@ const ResubmitJobForm = () => {
 
     if (values.dat_file instanceof File) {
       form.append('dat_file', values.dat_file)
-    } else if (normalizedFileCheckData.dat_file) {
+    } else if (fileCheckData?.dat_file) {
       form.append('reuse_dat_file', 'true')
     }
 
     if (values.inp_file instanceof File) {
       form.append('inp_file', values.inp_file)
-    } else if (normalizedFileCheckData.inp_file) {
+    } else if (fileCheckData?.inp_file) {
       form.append('reuse_inp_file', 'true')
     }
 
@@ -240,13 +232,13 @@ const ResubmitJobForm = () => {
 
   const isFormValid = (
     values: BilboMDClassicJobFormValues,
-    reuseFlags: typeof normalizedFileCheckData
+    reuseFlags: typeof fileCheckData
   ) => {
-    const hasPDB = values.pdb_file instanceof File || reuseFlags.pdb_file
-    const hasPSF = values.psf_file instanceof File || reuseFlags.psf_file
-    const hasCRD = values.crd_file instanceof File || reuseFlags.crd_file
-    const hasExpData = values.dat_file instanceof File || reuseFlags.dat_file
-    const hasConstInp = values.inp_file instanceof File || reuseFlags.inp_file
+    const hasPDB = values.pdb_file instanceof File || reuseFlags?.pdb_file
+    const hasPSF = values.psf_file instanceof File || reuseFlags?.psf_file
+    const hasCRD = values.crd_file instanceof File || reuseFlags?.crd_file
+    const hasExpData = values.dat_file instanceof File || reuseFlags?.dat_file
+    const hasConstInp = values.inp_file instanceof File || reuseFlags?.inp_file
 
     const hasTitle = values.title.trim() !== ''
     const hasRgFields =
@@ -417,7 +409,7 @@ const ResubmitJobForm = () => {
                                 as={FileSelect}
                                 title='Select File'
                                 existingFileName={
-                                  normalizedFileCheckData.crd_file
+                                  fileCheckData?.crd_file
                                     ? job?.crd_file
                                     : undefined
                                 }
@@ -449,7 +441,7 @@ const ResubmitJobForm = () => {
                                 as={FileSelect}
                                 title='Select File'
                                 existingFileName={
-                                  normalizedFileCheckData.psf_file
+                                  fileCheckData?.psf_file
                                     ? job?.psf_file
                                     : undefined
                                 }
@@ -485,7 +477,7 @@ const ResubmitJobForm = () => {
                                 as={FileSelect}
                                 title='Select File'
                                 existingFileName={
-                                  normalizedFileCheckData.pdb_file
+                                  fileCheckData?.pdb_file
                                     ? job?.pdb_file
                                     : undefined
                                 }
@@ -519,7 +511,7 @@ const ResubmitJobForm = () => {
                             as={FileSelect}
                             title='Select File'
                             existingFileName={
-                              normalizedFileCheckData.const_inp_file
+                              fileCheckData?.inp_file
                                 ? job?.const_inp_file
                                 : undefined
                             }
@@ -589,7 +581,7 @@ const ResubmitJobForm = () => {
                             as={FileSelect}
                             title='Select File'
                             existingFileName={
-                              normalizedFileCheckData.data_file
+                              fileCheckData?.dat_file
                                 ? job?.data_file
                                 : undefined
                             }
@@ -718,8 +710,7 @@ const ResubmitJobForm = () => {
                         <Button
                           type='submit'
                           disabled={
-                            !isFormValid(values, normalizedFileCheckData) ||
-                            !isValid
+                            !isFormValid(values, fileCheckData) || !isValid
                           }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}

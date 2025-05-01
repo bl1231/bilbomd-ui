@@ -86,8 +86,6 @@ const ResubmitAutoJobForm = () => {
     skip: !jobId
   })
 
-  // console.log('fileCheckData', fileCheckData)
-
   if (!jobdata?.mongo) {
     return <Alert severity='error'>Job data not found</Alert>
   }
@@ -102,13 +100,6 @@ const ResubmitAutoJobForm = () => {
       </Alert>
     )
   }
-
-  const normalizedFileCheckData = fileCheckData
-    ? {
-        ...fileCheckData,
-        dat_file: fileCheckData.data_file
-      }
-    : {}
 
   const initialValues: BilboMDAutoJobFormValues = job
     ? {
@@ -141,19 +132,19 @@ const ResubmitAutoJobForm = () => {
 
     if (values.pdb_file instanceof File) {
       form.append('pdb_file', values.pdb_file)
-    } else if (normalizedFileCheckData.pdb_file) {
+    } else if (fileCheckData?.pdb_file) {
       form.append('reuse_pdb_file', 'true')
     }
 
     if (values.dat_file instanceof File) {
       form.append('dat_file', values.dat_file)
-    } else if (normalizedFileCheckData.dat_file) {
+    } else if (fileCheckData?.dat_file) {
       form.append('reuse_dat_file', 'true')
     }
 
     if (values.pae_file instanceof File) {
       form.append('pae_file', values.pae_file)
-    } else if (normalizedFileCheckData.pae_file) {
+    } else if (fileCheckData?.pae_file) {
       form.append('reuse_pae_file', 'true')
     }
 
@@ -167,11 +158,11 @@ const ResubmitAutoJobForm = () => {
 
   const isFormValid = (
     values: BilboMDAutoJobFormValues,
-    reuseFlags: typeof normalizedFileCheckData
+    reuseFlags: typeof fileCheckData
   ) => {
-    const hasPDB = values.pdb_file instanceof File || reuseFlags.pdb_file
-    const hasDAT = values.dat_file instanceof File || reuseFlags.dat_file
-    const hasPAE = values.pae_file instanceof File || reuseFlags.pae_file
+    const hasPDB = values.pdb_file instanceof File || reuseFlags?.pdb_file
+    const hasDAT = values.dat_file instanceof File || reuseFlags?.dat_file
+    const hasPAE = values.pae_file instanceof File || reuseFlags?.pae_file
     const hasTitle = values.title.trim() !== ''
     return !isPerlmutterUnavailable && hasPDB && hasDAT && hasPAE && hasTitle
   }
@@ -250,9 +241,7 @@ const ResubmitAutoJobForm = () => {
                           as={FileSelect}
                           title='Select File'
                           existingFileName={
-                            normalizedFileCheckData.pdb_file
-                              ? job?.pdb_file
-                              : undefined
+                            fileCheckData?.pdb_file ? job?.pdb_file : undefined
                           }
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
@@ -271,9 +260,7 @@ const ResubmitAutoJobForm = () => {
                           as={FileSelect}
                           title='Select File'
                           existingFileName={
-                            normalizedFileCheckData.pae_file
-                              ? job?.pae_file
-                              : undefined
+                            fileCheckData?.pae_file ? job?.pae_file : undefined
                           }
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
@@ -291,9 +278,7 @@ const ResubmitAutoJobForm = () => {
                           as={FileSelect}
                           title='Select File'
                           existingFileName={
-                            normalizedFileCheckData.data_file
-                              ? job?.data_file
-                              : undefined
+                            fileCheckData?.dat_file ? job?.data_file : undefined
                           }
                           disabled={isSubmitting}
                           setFieldValue={setFieldValue}
@@ -316,7 +301,7 @@ const ResubmitAutoJobForm = () => {
                           disabled={
                             !isValid ||
                             isSubmitting ||
-                            !isFormValid(values, normalizedFileCheckData)
+                            !isFormValid(values, fileCheckData)
                           }
                           loading={isSubmitting}
                           endIcon={<SendIcon />}
