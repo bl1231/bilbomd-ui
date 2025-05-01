@@ -76,8 +76,8 @@ const ResubmitAutoJobForm = () => {
     return (
       typeof job === 'object' &&
       job !== null &&
-      'bilbomd_mode' in job &&
-      (job as { bilbomd_mode?: unknown }).bilbomd_mode === 'auto'
+      '__t' in job &&
+      (job as { __t?: unknown }).__t === 'BilboMdAuto'
     )
   }
 
