@@ -60,8 +60,11 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.9.5 (5/1/2025)
+  - Show MolStar viewer for Scoper jobs.
+  - Make Scoper detail page more compact.
 - 1.19.4 (4/30/2025)
-  - Fix teh broken resubmit logic for PDB, CRD, and Auto jobs
+  - Fix the broken resubmit logic for PDB, CRD, and Auto jobs
   - Moved Jobs table status css to themes folder
   - Typescript improvements
   - Improve FileSelect component to remain disabled when isSubmitting or isLoading
