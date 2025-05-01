@@ -4,7 +4,8 @@ import {
   IBilboMDAutoJob,
   IBilboMDSANSJob,
   IBilboMDAlphaFoldJob,
-  IMultiJob
+  IMultiJob,
+  IBilboMDScoperJob
 } from '@bl1231/bilbomd-mongodb-schema'
 
 export interface Chain {
@@ -124,6 +125,7 @@ export type BilboMDJob = {
     | MongoWithIdString<IBilboMDAutoJob>
     | MongoWithIdString<IBilboMDSANSJob>
     | MongoWithIdString<IBilboMDAlphaFoldJob>
+    | MongoWithIdString<IBilboMDScoperJob>
   bullmq: BilboMDBullMQ
   scoper?: BilboMDScoperSteps
 }
