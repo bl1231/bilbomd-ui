@@ -47,7 +47,7 @@ const NewJobForm = () => {
   const [calculateAutoRg, { isLoading }] = useCalculateAutoRgMutation()
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
   const [selectedMode, setSelectedMode] = useState('pdb')
-
+  const [autoRgError, setAutoRgError] = useState<string | null>(null)
   // Fetch the configuration object
   const {
     data: config,
@@ -456,14 +456,16 @@ const NewJobForm = () => {
                           id='dat_file-file-upload'
                           as={FileSelect}
                           title='Select File'
-                          disabled={isSubmitting}
+                          disabled={isSubmitting || isLoading}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
                           error={errors.dat_file && touched.dat_file}
                           errorMessage={errors.dat_file ? errors.dat_file : ''}
                           fileType='experimental SAXS data'
                           fileExt='.dat'
+                          isLoading={isLoading}
                           onFileChange={async (selectedFile: File) => {
+                            setAutoRgError(null)
                             const isExpdataValid =
                               await expdataSchema.isValid(selectedFile)
                             if (isExpdataValid) {
@@ -476,11 +478,16 @@ const NewJobForm = () => {
                                 setFieldValue('rg_min', rg_min)
                                 setFieldValue('rg_max', rg_max)
                               } catch (error) {
-                                console.error('Error:', error)
+                                setAutoRgError(
+                                  `Failed to calculate Rg from .dat file. Please check the file format and try again. ${error}`
+                                )
                                 setFieldValue('rg_min', '')
                                 setFieldValue('rg_max', '')
                               }
                             } else {
+                              setAutoRgError(
+                                `Invalid .dat file format.Please check the file format and try again.`
+                              )
                               setFieldValue('rg_min', '')
                               setFieldValue('rg_max', '')
                             }
@@ -498,6 +505,11 @@ const NewJobForm = () => {
                     {isLoading && (
                       <Box sx={{ my: 1, width: '520px' }}>
                         <LinearProgress />
+                      </Box>
+                    )}
+                    {autoRgError && (
+                      <Box sx={{ my: 1, width: '520px' }}>
+                        <Alert severity='error'>{autoRgError}</Alert>
                       </Box>
                     )}
                     <Grid sx={{ my: 2, display: 'flex', width: '520px' }}>
