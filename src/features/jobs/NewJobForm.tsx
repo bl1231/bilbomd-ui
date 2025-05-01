@@ -479,14 +479,14 @@ const NewJobForm = () => {
                                 setFieldValue('rg_max', rg_max)
                               } catch (error) {
                                 setAutoRgError(
-                                  `Failed to calculate Rg from .dat file. Please check the file format and try again. ${error}`
+                                  `Failed to calculate Rg from *.dat file. Please check the file format and try again. ${error}`
                                 )
                                 setFieldValue('rg_min', '')
                                 setFieldValue('rg_max', '')
                               }
                             } else {
                               setAutoRgError(
-                                `Invalid .dat file format.Please check the file format and try again.`
+                                `Invalid *.dat file format. Please check the file format and try again.`
                               )
                               setFieldValue('rg_min', '')
                               setFieldValue('rg_max', '')
