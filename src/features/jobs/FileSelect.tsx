@@ -28,6 +28,7 @@ interface FileSelectProps extends FormControlProps {
   ) => void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleBlur: (event: React.FocusEvent<any>) => void
+  disabled?: boolean
 }
 
 const FileSelect = (props: FileSelectProps) => {
@@ -78,12 +79,14 @@ const FileSelect = (props: FileSelectProps) => {
             onChange={handleFileChange}
             onBlur={handleBlur}
             inputProps={{ accept: props.fileExt }}
+            disabled={props.disabled}
           />
           <label htmlFor={props.id}>
             <Button
               variant='contained'
               component='span'
               sx={{ width: '110px' }}
+              disabled={props.disabled}
             >
               {props.title}
             </Button>
