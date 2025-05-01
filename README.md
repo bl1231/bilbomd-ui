@@ -60,6 +60,11 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.19.4 (4/30/2025)
+  - Fix teh broken resubmit logic for PDB, CRD, and Auto jobs
+  - Moved Jobs table status css to themes folder
+  - Typescript improvements
+  - Improve FileSelect component to remain disabled when isSubmitting or isLoading
 - 1.19.3 (4/29/2025)
   - Fix the bug that caused the Jobs MuiDataGrid to jitter when resizing.
 - 1.19.2 (4/28/2025)
