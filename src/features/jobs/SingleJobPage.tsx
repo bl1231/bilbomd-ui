@@ -297,9 +297,9 @@ const SingleJobPage = () => {
 
         {/* Scoper steps */}
         {job.scoper && (
-          <Grid size={{ xs: 12 }}>
+          <Grid size={{ xs: 6 }}>
             <HeaderBox sx={{ py: '6px' }}>
-              <Typography>Scoper Details</Typography>
+              <Typography>Scoper Steps</Typography>
             </HeaderBox>
             <BilboMDScoperSteps job={job} />
             <BilboMDScoperTable scoper={job.scoper} />
@@ -312,7 +312,6 @@ const SingleJobPage = () => {
           sx={{
             minWidth: '450px',
             flexGrow: 1,
-
             overflow: 'hidden'
           }}
         >

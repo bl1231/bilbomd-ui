@@ -114,7 +114,7 @@ export type BilboMDBullMQ = {
   bullmq: BullMQJob
 }
 
-type MongoWithIdString<T> = Omit<T, '_id'> & { _id: string }
+export type MongoWithIdString<T> = Omit<T, '_id'> & { _id: string }
 
 export type BilboMDJob = {
   id: string
@@ -129,6 +129,12 @@ export type BilboMDJob = {
   bullmq: BilboMDBullMQ
   scoper?: BilboMDScoperSteps
 }
+
+export type AnyBilboJob =
+  | IBilboMDPDBJob
+  | IBilboMDCRDJob
+  | IBilboMDAutoJob
+  | IBilboMDSANSJob
 
 export type BilboMDMultiJob = {
   id: string

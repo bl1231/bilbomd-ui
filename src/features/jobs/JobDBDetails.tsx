@@ -24,16 +24,10 @@ import CloseIcon from '@mui/icons-material/Close'
 import HeaderBox from 'components/HeaderBox'
 import { displayPropertiesByJobType } from './JobDBDisplayProperties'
 import { format } from 'date-fns'
-import { BilboMDJob } from 'types/interfaces'
+import { BilboMDJob, AnyBilboJob, MongoWithIdString } from 'types/interfaces'
 import CopyableChip from 'components/CopyableChip'
 import { useLazyGetFileByIdAndNameQuery } from 'slices/jobsApiSlice'
 import { green } from '@mui/material/colors'
-import {
-  IBilboMDPDBJob,
-  IBilboMDCRDJob,
-  IBilboMDAutoJob,
-  IBilboMDSANSJob
-} from '@bl1231/bilbomd-mongodb-schema'
 
 interface JobDBDetailsProps {
   job: BilboMDJob
@@ -90,9 +84,7 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
   const getJobTypeDisplayName = (type: string | undefined) =>
     type ? jobTypeDisplayName[type] || 'Unknown Job Type' : 'Unknown Job Type'
 
-  const getNumConformations = (
-    job: IBilboMDPDBJob | IBilboMDCRDJob | IBilboMDAutoJob | IBilboMDSANSJob
-  ) => {
+  const getNumConformations = (job: MongoWithIdString<AnyBilboJob>) => {
     const { rg_min = 0, rg_max = 0, conformational_sampling } = job
     const stepSize = Math.max(Math.round((rg_max - rg_min) / 5), 1)
     const rgList: number[] = []
@@ -123,7 +115,7 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
     // Add dynamic properties
     const dynamicProperties: MongoDBProperty[] = []
     if (job.mongo.__t === 'BilboMdSANS') {
-      const specificJob = job.mongo as IBilboMDSANSJob
+      const specificJob = job.mongo
 
       const { stepSize, numSteps, numConformations, rgList } =
         getNumConformations(specificJob)
@@ -195,10 +187,7 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
       job.mongo.__t === 'BilboMdCRD' ||
       job.mongo.__t === 'BilboMdAuto'
     ) {
-      const specificJob = job.mongo as
-        | IBilboMDPDBJob
-        | IBilboMDCRDJob
-        | IBilboMDAutoJob
+      const specificJob = job.mongo
       const { stepSize, numSteps, numConformations, rgList } =
         getNumConformations(specificJob)
       dynamicProperties.push(
