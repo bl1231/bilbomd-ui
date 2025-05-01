@@ -72,7 +72,20 @@ const ResubmitAutoJobForm = () => {
     return <Alert severity='error'>Job data not found</Alert>
   }
 
-  const job = jobdata?.mongo as IBilboMDAutoJob
+  function isBilboMDAutoJob(job: unknown): job is IBilboMDAutoJob {
+    return (
+      typeof job === 'object' &&
+      job !== null &&
+      'bilbomd_mode' in job &&
+      (job as { bilbomd_mode?: unknown }).bilbomd_mode === 'auto'
+    )
+  }
+
+  if (!isBilboMDAutoJob(jobdata.mongo)) {
+    return <Alert severity='error'>Job is not a valid AutoJob</Alert>
+  }
+
+  const job = jobdata.mongo
 
   // console.log('job', job)
 
