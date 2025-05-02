@@ -16,11 +16,31 @@ describe('JobDBDetails', () => {
     vi.clearAllMocks()
   })
 
-  it('renders basic job information', () => {
-    renderWithProviders(<JobDBDetails job={createMockBilboMDJob()} />)
-    expect(screen.getByText('Details')).toBeInTheDocument()
-    expect(screen.getByText('MongoDB ID:')).toBeInTheDocument()
-    expect(screen.getByText('example.dat')).toBeInTheDocument()
+  const jobTypes = [
+    'BilboMdPDB',
+    'BilboMdAuto',
+    'BilboMdAlphaFold',
+    'BilboMdSANS',
+    'BilboMdCRD',
+    'BilboMdScoper'
+  ]
+
+  jobTypes.forEach((type) => {
+    it(`renders basic job information for ${type}`, () => {
+      const job = createMockBilboMDJob({
+        mongo: {
+          __t: type as
+            | 'BilboMdPDB'
+            | 'BilboMdCRD'
+            | 'BilboMdAuto'
+            | 'BilboMdSANS'
+        }
+      })
+      renderWithProviders(<JobDBDetails job={job} />)
+      expect(screen.getByText('Details')).toBeInTheDocument()
+      expect(screen.getByText('MongoDB ID:')).toBeInTheDocument()
+      expect(screen.getByText('example.dat')).toBeInTheDocument()
+    })
   })
 
   it('opens the dialog when constraint chip is clicked', async () => {
