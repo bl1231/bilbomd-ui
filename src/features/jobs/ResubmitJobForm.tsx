@@ -46,67 +46,78 @@ import { BilboMDClassicJobFormValues } from '../../types/classicJobForm'
 
 const ResubmitJobForm = () => {
   useTitle('BilboMD: Resubmit Classic Job')
-  console.log('[Hook 1] useTheme')
+
+  // Theme and routing
   const theme = useTheme()
   const isDarkMode = theme.palette.mode === 'dark'
+  const { id } = useParams()
+
+  // State, RTK mutations and queries
   const [addNewJob, { isSuccess }] = useAddNewJobMutation()
   const [calculateAutoRg, { isLoading }] = useCalculateAutoRgMutation()
-  console.log('[Hook 2] useParams')
-  const { id } = useParams()
-  if (!id) return <LinearProgress />
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
+  const handleStatusCheck = (isUnavailable: boolean) => {
+    setIsPerlmutterUnavailable(isUnavailable)
+  }
 
-  // Fetch the configuration object
+  // RTK Query to fetch the configuration
   const {
     data: config,
     error: configError,
     isLoading: configIsLoading
   } = useGetConfigsQuery('configData')
 
-  if (configIsLoading) return <LinearProgress />
-  if (configError)
-    return <Alert severity='error'>Error loading configuration</Alert>
-
-  const useNersc = config.useNersc?.toLowerCase() === 'true'
-
-  const handleStatusCheck = (isUnavailable: boolean) => {
-    setIsPerlmutterUnavailable(isUnavailable)
-  }
-
+  // RTK Query to fetch the job data
   const {
     data: jobdata,
     isLoading: jobIsLoading,
     isError: jobIsError
   } = useGetJobByIdQuery(id, {
-    skip: !id // avoids running until ID is available
+    skip: !id
   })
 
-  if (jobIsLoading || !jobdata) return <LinearProgress />
-  if (jobIsError)
-    return <Alert severity='error'>Error retrieving parent job info</Alert>
-  const job = jobdata?.mongo
+  // RTK Query to check if the files are still on disk and available for reuse
+  const fileCheckQuery = useCheckJobFilesQuery(jobdata?.id ?? '', {
+    skip: !jobdata?.id
+  })
 
-  // console.log('Rendering ResubmitJobForm')
-  // console.log('id:', id)
-  // console.log('jobdata:', jobdata)
-  // console.log('job.__t:', job?.__t)
+  // Are we running on NERSC?
+  const useNersc = config.useNersc?.toLowerCase() === 'true'
 
-  const fileCheckQuery = jobdata?.id
-    ? useCheckJobFilesQuery(jobdata.id)
-    : undefined
-
-  const fileCheckData = fileCheckQuery?.data
-  const fileCheckError = fileCheckQuery?.error
-
-  if (!fileCheckData) return <LinearProgress />
-  if (fileCheckError) {
-    return (
-      <Alert severity='error'>
-        Error checking job files:{' '}
-        {'message' in fileCheckError ? fileCheckError.message : 'Unknown error'}
-      </Alert>
-    )
+  // Grouped early return for loading and error states
+  {
+    // Loading states
+    if (
+      configIsLoading ||
+      jobIsLoading ||
+      !jobdata ||
+      !fileCheckQuery ||
+      !fileCheckQuery.data
+    ) {
+      return <LinearProgress />
+    }
+    // Error states
+    if (configError) {
+      return <Alert severity='error'>Error loading configuration</Alert>
+    }
+    if (jobIsError) {
+      return <Alert severity='error'>Error retrieving parent job info</Alert>
+    }
+    if (fileCheckQuery.error) {
+      const fileCheckError = fileCheckQuery.error
+      return (
+        <Alert severity='error'>
+          Error checking job files:{' '}
+          {'message' in fileCheckError
+            ? fileCheckError.message
+            : 'Unknown error'}
+        </Alert>
+      )
+    }
   }
+
+  const job = jobdata.mongo
+  const fileCheckData = fileCheckQuery.data
 
   const selectedMode: 'pdb' | 'crd_psf' =
     job?.__t === 'BilboMdCRD' ? 'crd_psf' : 'pdb'
