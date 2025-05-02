@@ -40,7 +40,7 @@ export default function DataGrid(theme: Theme) {
           '& .bilbomd.pending': {
             backgroundColor: theme.palette.bilbomdStatus.pending,
             color: '#1a3e72',
-            fontWeight: 500,
+            fontWeight: 600,
             fontFamily: 'monospace',
             textAlign: 'center'
           },
