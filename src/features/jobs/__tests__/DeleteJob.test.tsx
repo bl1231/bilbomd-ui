@@ -1,9 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { screen, fireEvent, waitFor } from '@testing-library/react'
 import DeleteJob from '../DeleteJob'
-import { Provider } from 'react-redux'
-import { setupStore } from 'app/store'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
+import { renderWithProviders } from 'test/rendersWithProviders'
 
 // Mock the RTK Query hook
 vi.mock('slices/jobsApiSlice', () => ({
@@ -12,16 +10,6 @@ vi.mock('slices/jobsApiSlice', () => ({
     { isSuccess: true, isError: false, error: null }
   ]
 }))
-
-const renderWithProviders = (ui: React.ReactElement) => {
-  const store = setupStore()
-  const theme = createTheme()
-  return render(
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>{ui}</ThemeProvider>
-    </Provider>
-  )
-}
 
 describe('DeleteJob', () => {
   it('renders delete button with label', () => {

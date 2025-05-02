@@ -1,28 +1,13 @@
-import { MemoryRouter } from 'react-router'
 import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import JobSummary from '../JobSummary'
-import { Provider } from 'react-redux'
-import { setupStore } from 'app/store'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
+import { renderWithProviders } from 'test/rendersWithProviders'
 import { BilboMDJob, MongoWithIdString } from 'types/interfaces'
 import {
   IBilboMDCRDJob,
   IUser,
   JobStatusEnum
 } from '@bl1231/bilbomd-mongodb-schema'
-
-const renderWithProviders = (ui: React.ReactElement) => {
-  const store = setupStore()
-  const theme = createTheme()
-  return render(
-    <MemoryRouter>
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>{ui}</ThemeProvider>
-      </Provider>
-    </MemoryRouter>
-  )
-}
 
 function createMockCRDJob(
   overrides: Partial<MongoWithIdString<IBilboMDCRDJob>> = {}
