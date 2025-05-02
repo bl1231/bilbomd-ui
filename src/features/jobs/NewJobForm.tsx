@@ -66,7 +66,7 @@ const NewJobForm = () => {
     isLoading: configIsLoading
   } = useGetConfigsQuery('configData')
 
-  // Early return adn Error handling
+  // Early return and Error handling
   if (configIsLoading) return <LinearProgress />
   if (configError)
     return <Alert severity='error'>Error loading configuration</Alert>
