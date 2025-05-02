@@ -60,7 +60,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
-- 1.9.5 (5/1/2025)
+- 1.19.6 (5/2/2025)
+  - Improvements to the Jobs Table job actions
+- 1.19.5 (5/1/2025)
   - Show MolStar viewer for Scoper jobs.
   - Make Scoper detail page more compact.
 - 1.19.4 (4/30/2025)
