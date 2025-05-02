@@ -433,7 +433,7 @@ const Jobs = () => {
       {
         field: 'status',
         headerName: 'Status',
-        width: 130,
+        width: 120,
         cellClassName: (params) => {
           if (params.value == null) return ''
           return clsx('bilbomd', {
@@ -499,7 +499,7 @@ const Jobs = () => {
             {
               field: 'position',
               headerName: 'Position',
-              width: 100
+              width: 80
             }
           ]),
       {
@@ -507,7 +507,7 @@ const Jobs = () => {
         type: 'actions',
         sortable: false,
         headerName: 'Manage',
-        flex: 0.6,
+        width: 250,
         getActions: (params: GridRowParams) => {
           const id = params.row.id
           const title = params.row.title
