@@ -45,18 +45,6 @@ import Item from 'themes/components/Item'
 import { useNavigate } from 'react-router'
 import { JobActionsMenu } from './JobActionsMenu'
 
-const getHoursInQueue = (nersc: INerscInfo | undefined) => {
-  if (!nersc?.time_submitted) return ''
-  const start = new Date(nersc.time_submitted)
-  const end = nersc.time_started ? new Date(nersc.time_started) : new Date()
-
-  if (isNaN(start.getTime()) || isNaN(end.getTime())) return ''
-
-  const diffMs = end.getTime() - start.getTime()
-  const diffHours = diffMs / (1000 * 60 * 60)
-  return diffHours.toFixed(2)
-}
-
 const getRunTimeInHours = (nersc: INerscInfo | undefined) => {
   if (!nersc?.time_started || !nersc?.time_completed) return ''
   const start = new Date(nersc.time_started)
@@ -65,8 +53,24 @@ const getRunTimeInHours = (nersc: INerscInfo | undefined) => {
   if (isNaN(start.getTime()) || isNaN(end.getTime())) return ''
 
   const diffMs = end.getTime() - start.getTime()
-  const diffHours = diffMs / (1000 * 60 * 60)
-  return diffHours.toFixed(2)
+  const totalMinutes = Math.round(diffMs / 60000)
+  const hrs = Math.floor(totalMinutes / 60)
+  const mins = totalMinutes % 60
+  return hrs > 0 ? `${hrs}hr${mins > 0 ? ` ${mins}min` : ''}` : `${mins}min`
+}
+
+const getHoursInQueue = (nersc: INerscInfo | undefined) => {
+  if (!nersc?.time_submitted) return ''
+  const start = new Date(nersc.time_submitted)
+  const end = nersc.time_started ? new Date(nersc.time_started) : new Date()
+
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) return ''
+
+  const diffMs = end.getTime() - start.getTime()
+  const totalMinutes = Math.round(diffMs / 60000)
+  const hrs = Math.floor(totalMinutes / 60)
+  const mins = totalMinutes % 60
+  return hrs > 0 ? `${hrs}hr${mins > 0 ? ` ${mins}min` : ''}` : `${mins}min`
 }
 
 const filteredJobCountChip = (count: number) => {
@@ -342,12 +346,12 @@ const Jobs = () => {
     })
 
     const columns: GridColDef[] = [
-      { field: 'title', headerName: 'Title', flex: 0.5 },
+      { field: 'title', headerName: 'Title', flex: 0.4, minWidth: 180 },
       {
         field: 'time_submitted',
         headerName: 'Submitted',
         type: 'dateTime',
-        flex: 0.6,
+        width: 150,
         valueFormatter: (value) => {
           if (value) {
             return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
@@ -360,7 +364,7 @@ const Jobs = () => {
         field: 'time_completed',
         headerName: 'Completed',
         type: 'dateTime',
-        flex: 0.6,
+        width: 150,
         valueFormatter: (value) => {
           if (value) {
             return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
@@ -373,21 +377,23 @@ const Jobs = () => {
         ? [
             {
               field: 'queueHours',
-              headerName: 'Queue Time (hrs)',
-              width: 130
+              headerName: 'Queue Time',
+              width: 100
             },
             {
               field: 'runTimeHours',
-              headerName: 'Run Time (hrs)',
-              width: 130
+              headerName: 'Run Time',
+              width: 100
             }
           ]
         : []),
-      { field: 'username', headerName: 'User', width: 130 },
+      ...(isAdmin
+        ? [{ field: 'username', headerName: 'User', width: 100 }]
+        : []),
       {
         field: 'status',
         headerName: 'Status',
-        width: 120,
+        width: 110,
         cellClassName: (params) => {
           if (params.value == null) return ''
           return clsx('bilbomd', {
@@ -441,12 +447,12 @@ const Jobs = () => {
             {
               field: 'nerscJobid',
               headerName: 'NERSC JobID',
-              width: 100
+              width: 110
             },
             {
               field: 'nerscStatus',
               headerName: 'NERSC Status',
-              width: 100
+              width: 110
             }
           ]
         : [
@@ -505,7 +511,7 @@ const Jobs = () => {
         )}
 
         {useNersc && (
-          <Grid>
+          <Grid size={{ xs: 12 }}>
             <NerscStatus />
           </Grid>
         )}
@@ -551,7 +557,12 @@ const Jobs = () => {
                     columns={columns}
                     rowHeight={35}
                     initialState={{
-                      pagination: { paginationModel: { pageSize: 20, page } }
+                      pagination: { paginationModel: { pageSize: 20, page } },
+                      columns: {
+                        columnVisibilityModel: {
+                          time_completed: false
+                        }
+                      }
                     }}
                     pageSizeOptions={[5, 10, 20, 40]}
                     onPaginationModelChange={(model) => {
