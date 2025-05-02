@@ -22,7 +22,6 @@ import {
   Select,
   SelectChangeEvent
 } from '@mui/material'
-import { StyledMenu } from 'themes/components/StyledDropdownMenu'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { useDeleteJobMutation } from 'slices/jobsApiSlice'
 import {
@@ -43,9 +42,8 @@ import {
   jobTypeDisplayNames
 } from '@bl1231/bilbomd-mongodb-schema/frontend'
 import Item from 'themes/components/Item'
-import AutorenewIcon from '@mui/icons-material/Autorenew'
-import DeleteIcon from '@mui/icons-material/Delete'
 import { useNavigate } from 'react-router'
+import { JobActionsMenu } from './JobActionsMenu'
 
 const getHoursInQueue = (nersc: INerscInfo | undefined) => {
   if (!nersc?.time_submitted) return ''
@@ -466,7 +464,6 @@ const Jobs = () => {
         width: 250,
         getActions: (params: GridRowParams) => {
           const id = params.row.id
-          const title = params.row.title
           const isOpen = Boolean(anchorEl) && menuJobId === id
 
           return [
@@ -482,42 +479,18 @@ const Jobs = () => {
             >
               More Actions
             </Button>,
-            <StyledMenu
+            <JobActionsMenu
               key={`${id}-menu`}
+              jobId={id}
+              jobType={params.row.__t}
+              jobTitle={params.row.title}
+              jobStatus={params.row.status}
               anchorEl={anchorEl}
               open={isOpen}
               onClose={handleMenuClose}
-            >
-              <MenuItem
-                onClick={() => {
-                  handleResubmit(id, params.row.__t)
-                  handleMenuClose()
-                }}
-                disableRipple
-                disabled={
-                  !['BilboMdPDB', 'BilboMdCRD', 'BilboMdAuto'].includes(
-                    params.row.__t
-                  )
-                }
-              >
-                <AutorenewIcon />
-                Resubmit
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  openDeleteDialog(id, title)
-                  handleMenuClose()
-                }}
-                disableRipple
-                disabled={['Running', 'Submitted'].includes(params.row.status)}
-                sx={{
-                  color: 'error.main'
-                }}
-              >
-                <DeleteIcon color='error' />
-                Delete
-              </MenuItem>
-            </StyledMenu>
+              onResubmit={handleResubmit}
+              onDelete={openDeleteDialog}
+            />
           ]
         }
       }

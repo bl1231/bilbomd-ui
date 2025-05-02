@@ -223,8 +223,6 @@ const ResubmitJobForm = () => {
       values?: Partial<typeof initialValues>
     ) => Promise<FormikErrors<typeof initialValues>>
   ) => {
-    // setSelectedMode(mode)
-
     if (mode === 'pdb') {
       resetForm({
         values: { ...values, crd_file: '', psf_file: '', bilbomd_mode: 'pdb' },
