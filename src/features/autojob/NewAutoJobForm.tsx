@@ -24,40 +24,38 @@ import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useTheme } from '@mui/material/styles'
 import PipelineSchematic from './PipelineSchematic'
-
-interface SubmitValues {
-  title: string
-  pdb_file: string
-  pae_file: string
-  dat_file: string
-}
+import { BilboMDAutoJobFormValues } from '../../types/autoJobForm'
 
 const NewAutoJobForm = () => {
   useTitle('BilboMD: New Auto Job')
+
+  // Theme and routing
+  const theme = useTheme()
+  const isDarkMode = theme.palette.mode === 'dark'
+
+  // State, RTK mutations and queries
   const [addNewAutoJob, { isSuccess }] = useAddNewAutoJobMutation()
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
+  const handleStatusCheck = (isUnavailable: boolean) => {
+    setIsPerlmutterUnavailable(isUnavailable)
+  }
 
-  // Fetch the configuration object
+  // RTK Query to fetch the configuration
   const {
     data: config,
     error: configError,
     isLoading: configIsLoading
   } = useGetConfigsQuery('configData')
 
-  const theme = useTheme()
-  const isDarkMode = theme.palette.mode === 'dark'
-
   if (configIsLoading) return <LinearProgress />
   if (configError)
     return <Alert severity='error'>Error loading configuration</Alert>
 
+  // Are we running on NERSC?
   const useNersc = config.useNersc?.toLowerCase() === 'true'
 
-  const handleStatusCheck = (isUnavailable: boolean) => {
-    setIsPerlmutterUnavailable(isUnavailable)
-  }
-
-  const initialValues: SubmitValues = {
+  const initialValues: BilboMDAutoJobFormValues = {
+    bilbomd_mode: 'auto',
     title: '',
     pdb_file: '',
     pae_file: '',
@@ -65,7 +63,7 @@ const NewAutoJobForm = () => {
   }
 
   const onSubmit = async (
-    values: SubmitValues,
+    values: BilboMDAutoJobFormValues,
     { setStatus }: { setStatus: (status: string) => void }
   ) => {
     const form = new FormData()
@@ -83,7 +81,7 @@ const NewAutoJobForm = () => {
     }
   }
 
-  const isFormValid = (values: SubmitValues) => {
+  const isFormValid = (values: BilboMDAutoJobFormValues) => {
     return (
       !isPerlmutterUnavailable &&
       values.title !== '' &&
