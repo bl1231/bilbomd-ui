@@ -66,12 +66,13 @@ const FileSelect = (props: FileSelectProps) => {
 
   return (
     <FormControl margin='normal'>
-      <FormLabel sx={{ marginBottom: '0.6em' }}>
+      <FormLabel data-testid='file-input-label' sx={{ marginBottom: '0.6em' }}>
         Upload your <b>{props.fileType}</b> file
       </FormLabel>
       <Grid container spacing={2} alignItems='center'>
         <Grid>
           <Input
+            data-testid='file-input'
             style={{ display: 'none' }}
             id={props.id}
             name={props.name}

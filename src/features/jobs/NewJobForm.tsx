@@ -34,39 +34,47 @@ import { BilboMDClassicJobSchema } from 'schemas/BilboMDClassicJobSchema'
 import HeaderBox from 'components/HeaderBox'
 import NerscStatusChecker from 'features/nersc/NerscStatusChecker'
 import FileSelect from './FileSelect'
+import useTitle from 'hooks/useTitle'
 import { Debug } from 'components/Debug'
 import NewJobFormInstructions from './NewJobFormInstructions'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useTheme } from '@mui/material/styles'
 import PipelineSchematic from './PipelineSchematic'
+import { BilboMDClassicJobFormValues } from '../../types/classicJobForm'
 
 const NewJobForm = () => {
+  useTitle('BilboMD: New Classic Job')
+
+  // Theme and routing
   const theme = useTheme()
   const isDarkMode = theme.palette.mode === 'dark'
+
+  // State, RTK mutations and queries
   const [addNewJob, { isSuccess }] = useAddNewJobMutation()
   const [calculateAutoRg, { isLoading }] = useCalculateAutoRgMutation()
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
+  const handleStatusCheck = (isUnavailable: boolean) => {
+    setIsPerlmutterUnavailable(isUnavailable)
+  }
   const [selectedMode, setSelectedMode] = useState('pdb')
   const [autoRgError, setAutoRgError] = useState<string | null>(null)
-  // Fetch the configuration object
+
+  // RTK Query to fetch the configuration
   const {
     data: config,
     error: configError,
     isLoading: configIsLoading
   } = useGetConfigsQuery('configData')
 
+  // Early return and Error handling
   if (configIsLoading) return <LinearProgress />
   if (configError)
     return <Alert severity='error'>Error loading configuration</Alert>
 
+  // Are we running on NERSC?
   const useNersc = config.useNersc?.toLowerCase() === 'true'
 
-  const handleStatusCheck = (isUnavailable: boolean) => {
-    // Update the state based on the system's availability
-    setIsPerlmutterUnavailable(isUnavailable)
-  }
-
-  const initialValues = {
+  const initialValues: BilboMDClassicJobFormValues = {
     bilbomd_mode: 'pdb',
     title: '',
     psf_file: '',
@@ -81,7 +89,7 @@ const NewJobForm = () => {
   }
 
   const onSubmit = async (
-    values: typeof initialValues,
+    values: BilboMDClassicJobFormValues,
     { setStatus }: { setStatus: (status: string) => void }
   ) => {
     const form = new FormData()
@@ -107,12 +115,12 @@ const NewJobForm = () => {
 
   const handleCheckboxChange =
     (
-      resetForm: FormikHelpers<typeof initialValues>['resetForm'],
-      values: typeof initialValues,
+      resetForm: FormikHelpers<BilboMDClassicJobFormValues>['resetForm'],
+      values: BilboMDClassicJobFormValues,
       validateForm: (
-        values?: Partial<typeof initialValues>
-      ) => Promise<FormikErrors<typeof initialValues>>,
-      touched: FormikTouched<typeof initialValues>
+        values?: Partial<BilboMDClassicJobFormValues>
+      ) => Promise<FormikErrors<BilboMDClassicJobFormValues>>,
+      touched: FormikTouched<BilboMDClassicJobFormValues>
     ) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const newBilboMDMode =
@@ -146,7 +154,7 @@ const NewJobForm = () => {
       }, 0)
     }
 
-  const isFormValid = (values: typeof initialValues) => {
+  const isFormValid = (values: BilboMDClassicJobFormValues) => {
     return (
       !isPerlmutterUnavailable &&
       values.title !== '' &&

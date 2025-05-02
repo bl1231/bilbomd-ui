@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   Box,
   Drawer,
@@ -74,19 +75,21 @@ const SettingsLayout = () => {
           {settingsMenu
             .filter(({ visibility }) => visibility)
             .map(({ text, path, icon }) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton
-                  selected={
-                    location.pathname === path ||
-                    (path === '/settings/preferences' &&
-                      location.pathname === '/settings')
-                  }
-                  onClick={() => navigate(path)}
-                >
-                  <ListItemIcon>{icon}</ListItemIcon>
-                  <ListItemText primary={text} sx={{ ml: 1 }} />
-                </ListItemButton>
-              </ListItem>
+              <React.Fragment key={text}>
+                <ListItem key={text} disablePadding>
+                  <ListItemButton
+                    selected={
+                      location.pathname === path ||
+                      (path === '/settings/preferences' &&
+                        location.pathname === '/settings')
+                    }
+                    onClick={() => navigate(path)}
+                  >
+                    <ListItemIcon>{icon}</ListItemIcon>
+                    <ListItemText primary={text} sx={{ ml: 1 }} />
+                  </ListItemButton>
+                </ListItem>
+              </React.Fragment>
             ))}
         </List>
       </Drawer>

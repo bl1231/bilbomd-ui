@@ -20,7 +20,7 @@ const APITokenManager = Loadable(
 
 // render - dashboard
 const Prefetch = Loadable(lazy(() => import('features/auth/Prefetch')))
-const NewJob = Loadable(lazy(() => import('features/jobs/NewJob')))
+const NewJobForm = Loadable(lazy(() => import('features/jobs/NewJobForm')))
 const ResubmitJob = Loadable(
   lazy(() => import('features/jobs/ResubmitJobForm'))
 )
@@ -138,7 +138,7 @@ const ProtectedMainRoutes = {
                     },
                     {
                       path: 'jobs/classic',
-                      element: <NewJob />
+                      element: <NewJobForm />
                     },
                     {
                       path: 'jobs/classic/resubmit/:id',

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   Box,
   Button,
@@ -46,71 +46,108 @@ import { BilboMDClassicJobFormValues } from '../../types/classicJobForm'
 
 const ResubmitJobForm = () => {
   useTitle('BilboMD: Resubmit Classic Job')
+
+  // Theme and routing
   const theme = useTheme()
   const isDarkMode = theme.palette.mode === 'dark'
+  const { id } = useParams()
+
+  // State, RTK mutations and queries
   const [addNewJob, { isSuccess }] = useAddNewJobMutation()
   const [calculateAutoRg, { isLoading }] = useCalculateAutoRgMutation()
-  const { id } = useParams()
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
-  const [selectedMode, setSelectedMode] = useState<'pdb' | 'crd_psf'>('pdb')
+  const handleStatusCheck = (isUnavailable: boolean) => {
+    setIsPerlmutterUnavailable(isUnavailable)
+  }
 
-  // Fetch the configuration object
+  // RTK Query to fetch the configuration
   const {
     data: config,
     error: configError,
     isLoading: configIsLoading
   } = useGetConfigsQuery('configData')
 
-  if (configIsLoading) return <LinearProgress />
-  if (configError)
-    return <Alert severity='error'>Error loading configuration</Alert>
-
-  const useNersc = config.useNersc?.toLowerCase() === 'true'
-
-  const handleStatusCheck = (isUnavailable: boolean) => {
-    setIsPerlmutterUnavailable(isUnavailable)
-  }
-
+  // RTK Query to fetch the job data
   const {
     data: jobdata,
     isLoading: jobIsLoading,
     isError: jobIsError
-  } = useGetJobByIdQuery(id, {})
-  if (jobIsLoading) return <LinearProgress />
-  if (jobIsError)
-    return <Alert severity='error'>Error retrieving parent job info</Alert>
-  const job = jobdata?.mongo
+  } = useGetJobByIdQuery(id, {
+    skip: !id
+  })
 
-  const { data: fileCheckData, error: fileCheckError } = useCheckJobFilesQuery(
-    jobdata?.id ?? '',
-    {
-      skip: !jobdata?.id // avoids running until ID is available
+  // RTK Query to check if the files are still on disk and available for reuse
+  const fileCheckQuery = useCheckJobFilesQuery(jobdata?.id ?? '', {
+    skip: !jobdata?.id
+  })
+
+  // Are we running on NERSC?
+  const useNersc = config.useNersc?.toLowerCase() === 'true'
+
+  // Grouped early return for loading and error states
+  {
+    // Loading states
+    if (
+      configIsLoading ||
+      jobIsLoading ||
+      !jobdata ||
+      !fileCheckQuery ||
+      !fileCheckQuery.data
+    ) {
+      return <LinearProgress />
     }
-  )
-
-  if (fileCheckError) {
-    return (
-      <Alert severity='error'>
-        Error checking job files:{' '}
-        {'message' in fileCheckError ? fileCheckError.message : 'Unknown error'}
-      </Alert>
-    )
+    // Error states
+    if (configError) {
+      return <Alert severity='error'>Error loading configuration</Alert>
+    }
+    if (jobIsError) {
+      return <Alert severity='error'>Error retrieving parent job info</Alert>
+    }
+    if (fileCheckQuery.error) {
+      const fileCheckError = fileCheckQuery.error
+      return (
+        <Alert severity='error'>
+          Error checking job files:{' '}
+          {'message' in fileCheckError
+            ? fileCheckError.message
+            : 'Unknown error'}
+        </Alert>
+      )
+    }
   }
 
-  useEffect(() => {
-    if (!job) return
-    const derivedMode = job.__t === 'BilboMdCRD' ? 'crd_psf' : 'pdb'
-    setSelectedMode(derivedMode)
-  }, [job])
+  const job = jobdata.mongo
+  const fileCheckData = fileCheckQuery.data
+
+  const selectedMode: 'pdb' | 'crd_psf' =
+    job?.__t === 'BilboMdCRD' ? 'crd_psf' : 'pdb'
 
   // console.log('job', job)
 
-  const initialValues: BilboMDClassicJobFormValues = job
-    ? {
-        bilbomd_mode: selectedMode,
+  let initialValues: BilboMDClassicJobFormValues
+
+  switch (job.__t) {
+    case 'BilboMdCRD':
+      initialValues = {
+        bilbomd_mode: 'crd_psf',
         title: 'resubmit_' + job.title,
         psf_file: job.psf_file ?? '',
         crd_file: job.crd_file ?? '',
+        pdb_file: '',
+        inp_file: job.const_inp_file ?? '',
+        dat_file: job.data_file ?? '',
+        num_conf: job.conformational_sampling?.toString() ?? '',
+        rg: job.rg?.toString() ?? '',
+        rg_min: job.rg_min?.toString() ?? '',
+        rg_max: job.rg_max?.toString() ?? ''
+      }
+      break
+    case 'BilboMdPDB':
+      initialValues = {
+        bilbomd_mode: 'pdb',
+        title: 'resubmit_' + job.title,
+        psf_file: '',
+        crd_file: '',
         pdb_file: job.pdb_file ?? '',
         inp_file: job.const_inp_file ?? '',
         dat_file: job.data_file ?? '',
@@ -119,19 +156,10 @@ const ResubmitJobForm = () => {
         rg_min: job.rg_min?.toString() ?? '',
         rg_max: job.rg_max?.toString() ?? ''
       }
-    : {
-        bilbomd_mode: 'pdb',
-        title: '',
-        psf_file: '',
-        crd_file: '',
-        pdb_file: '',
-        inp_file: '',
-        dat_file: '',
-        num_conf: '',
-        rg: '',
-        rg_min: '',
-        rg_max: ''
-      }
+      break
+    default:
+      throw new Error(`Unsupported job type: ${job.__t}`)
+  }
 
   const onSubmit = async (
     values: BilboMDClassicJobFormValues,
@@ -195,8 +223,6 @@ const ResubmitJobForm = () => {
       values?: Partial<typeof initialValues>
     ) => Promise<FormikErrors<typeof initialValues>>
   ) => {
-    setSelectedMode(mode)
-
     if (mode === 'pdb') {
       resetForm({
         values: { ...values, crd_file: '', psf_file: '', bilbomd_mode: 'pdb' },

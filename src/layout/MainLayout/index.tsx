@@ -1,3 +1,4 @@
+import React from 'react'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
@@ -172,8 +173,8 @@ export default function ClippedDrawer() {
   const buttonContent = (
     <>
       {menuItems.map((item) => (
-        <>
-          <ListItem key={item.text} disablePadding>
+        <React.Fragment key={item.text}>
+          <ListItem disablePadding>
             <ListItemButton
               onClick={item.onclick}
               sx={{
@@ -192,7 +193,7 @@ export default function ClippedDrawer() {
             </ListItemButton>
           </ListItem>
           {item.divider && <Divider />}
-        </>
+        </React.Fragment>
       ))}
     </>
   )

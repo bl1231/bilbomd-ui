@@ -22,7 +22,14 @@ import {
   Select,
   SelectChangeEvent
 } from '@mui/material'
-import DeleteJob from './DeleteJob'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import { useDeleteJobMutation } from 'slices/jobsApiSlice'
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
+} from '@mui/material'
 import JobDetails from './JobDetails'
 import BullMQSummary from '../bullmq/BullMQSummary'
 import NerscStatus from '../nersc/NerscStatus'
@@ -35,6 +42,8 @@ import {
   jobTypeDisplayNames
 } from '@bl1231/bilbomd-mongodb-schema/frontend'
 import Item from 'themes/components/Item'
+import { useNavigate } from 'react-router'
+import { JobActionsMenu } from './JobActionsMenu'
 
 const getHoursInQueue = (nersc: INerscInfo | undefined) => {
   if (!nersc?.time_submitted) return ''
@@ -77,10 +86,20 @@ const filteredJobCountChip = (count: number) => {
   )
 }
 
+const jobTypeToRoute: Record<string, string> = {
+  BilboMdPDB: 'classic',
+  BilboMdCRD: 'classic',
+  BilboMdAuto: 'auto',
+  BilboMdScoper: 'scoper',
+  BilboMdAlphaFold: 'alphafold',
+  BilboMdSANS: 'sans'
+}
+
 const Jobs = () => {
   useTitle('BilboMD: Jobs List')
 
   const { username, isManager, isAdmin } = useAuth()
+  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
 
   const typeFilter = searchParams.get('type') || 'All'
@@ -88,6 +107,41 @@ const Jobs = () => {
   const userFilter = searchParams.get('user') || 'All'
   const pageParam = parseInt(searchParams.get('page') || '0', 10)
   const [page, setPage] = useState(pageParam)
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [menuJobId, setMenuJobId] = useState<string | null>(null)
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [deleteTargetJobId, setDeleteTargetJobId] = useState<string | null>(
+    null
+  )
+  const [deleteTargetTitle, setDeleteTargetTitle] = useState<string | null>(
+    null
+  )
+  const [deleteJob, { isLoading: isDeleting }] = useDeleteJobMutation()
+
+  const openDeleteDialog = (id: string, title: string) => {
+    setDeleteTargetJobId(id)
+    setDeleteTargetTitle(title)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDeleteConfirm = async () => {
+    if (deleteTargetJobId) {
+      await deleteJob({ id: deleteTargetJobId })
+      setDeleteDialogOpen(false)
+      setDeleteTargetJobId(null)
+      setDeleteTargetTitle(null)
+    }
+  }
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, id: string) => {
+    setAnchorEl(event.currentTarget)
+    setMenuJobId(id)
+  }
+  const handleMenuClose = () => {
+    setAnchorEl(null)
+    setMenuJobId(null)
+  }
 
   const {
     data: jobs,
@@ -139,6 +193,12 @@ const Jobs = () => {
     searchParams.delete('status')
     searchParams.delete('user')
     setSearchParams(searchParams)
+  }
+
+  const handleResubmit = (id: string, jobType: string) => {
+    const routeSegment = jobTypeToRoute[jobType]
+    if (!routeSegment) return
+    navigate(`/dashboard/jobs/${routeSegment}/resubmit/${id}`)
   }
 
   const jobTypeFilterDropdown = (
@@ -327,7 +387,7 @@ const Jobs = () => {
       {
         field: 'status',
         headerName: 'Status',
-        width: 130,
+        width: 120,
         cellClassName: (params) => {
           if (params.value == null) return ''
           return clsx('bilbomd', {
@@ -393,7 +453,7 @@ const Jobs = () => {
             {
               field: 'position',
               headerName: 'Position',
-              width: 100
+              width: 80
             }
           ]),
       {
@@ -401,40 +461,37 @@ const Jobs = () => {
         type: 'actions',
         sortable: false,
         headerName: 'Manage',
-        width: 150,
+        width: 250,
         getActions: (params: GridRowParams) => {
-          if (
-            params.row.status !== 'Submitted' &&
-            params.row.status !== 'Running'
-          ) {
-            return [
-              <DeleteJob
-                key={params.id}
-                id={params.row.id}
-                title={params.row.title}
-                hide={false}
-              />,
-              <JobDetails
-                key={params.id}
-                id={params.row.id}
-                title={params.row.title}
-              />
-            ]
-          } else {
-            return [
-              <DeleteJob
-                key={params.id}
-                id={params.row.id}
-                title={params.row.title}
-                hide={true}
-              />,
-              <JobDetails
-                key={params.id}
-                id={params.row.id}
-                title={params.row.title}
-              />
-            ]
-          }
+          const id = params.row.id
+          const isOpen = Boolean(anchorEl) && menuJobId === id
+
+          return [
+            <JobDetails key={`${id}-details`} id={id} />,
+            <Button
+              key={`${id}-menu-btn`}
+              variant='outlined'
+              disableElevation
+              size='small'
+              className='job-details-button'
+              onClick={(e) => handleMenuOpen(e, id)}
+              endIcon={<KeyboardArrowDownIcon />}
+            >
+              More Actions
+            </Button>,
+            <JobActionsMenu
+              key={`${id}-menu`}
+              jobId={id}
+              jobType={params.row.__t}
+              jobTitle={params.row.title}
+              jobStatus={params.row.status}
+              anchorEl={anchorEl}
+              open={isOpen}
+              onClose={handleMenuClose}
+              onResubmit={handleResubmit}
+              onDelete={openDeleteDialog}
+            />
+          ]
         }
       }
     ]
@@ -492,6 +549,7 @@ const Jobs = () => {
                   <DataGrid
                     rows={rows}
                     columns={columns}
+                    rowHeight={35}
                     initialState={{
                       pagination: { paginationModel: { pageSize: 20, page } }
                     }}
@@ -506,6 +564,35 @@ const Jobs = () => {
                       minWidth: 0
                     }}
                   />
+                  {/* Delete confirmation dialog */}
+                  <Dialog
+                    open={deleteDialogOpen}
+                    onClose={() => setDeleteDialogOpen(false)}
+                  >
+                    <DialogTitle>Confirm Delete</DialogTitle>
+                    <DialogContent>
+                      <Typography>
+                        Are you sure you want to delete the job{' '}
+                        <strong>{deleteTargetTitle}</strong>?
+                      </Typography>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button
+                        onClick={() => setDeleteDialogOpen(false)}
+                        disabled={isDeleting}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={handleDeleteConfirm}
+                        color='error'
+                        disabled={isDeleting}
+                        variant='contained'
+                      >
+                        {isDeleting ? 'Deleting...' : 'Delete'}
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
                 </Box>
               </Box>
             ) : (

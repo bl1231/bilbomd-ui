@@ -340,6 +340,7 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
           CHARMM Constraint File
           <Tooltip title='Copy to clipboard'>
             <IconButton
+              aria-label='copy-constraint-file'
               onClick={handleCopyToClipboard}
               sx={{
                 position: 'absolute',
