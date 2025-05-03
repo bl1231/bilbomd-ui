@@ -6,8 +6,12 @@ import {
   TableCell,
   TableRow,
   Paper,
-  Typography
+  Typography,
+  CircularProgress,
+  Box,
+  Alert
 } from '@mui/material'
+import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
 export interface ConfigPanelProps {
   config: Record<string, unknown> | null
@@ -20,9 +24,35 @@ const formatValue = (value: unknown): string => {
   return String(value)
 }
 
-const ConfigPanel = ({ config }: ConfigPanelProps) => {
-  if (!config) return null
-
+const ConfigPanel = () => {
+  const {
+    data: config,
+    error: configError,
+    isLoading: configIsLoading
+  } = useGetConfigsQuery('configData', {
+    pollingInterval: 10000
+  })
+  // Loading state
+  if (configIsLoading) {
+    return (
+      <Box display='flex' justifyContent='center' mt={4}>
+        <CircularProgress />
+      </Box>
+    )
+  }
+  // Error state
+  if (configError) {
+    return (
+      <Alert severity='error'>
+        Error loading data: {configError ? 'configuration' : ''}{' '}
+        {configError ? 'and' : ''}{' '}
+      </Alert>
+    )
+  }
+  // Handle empty/fallback data
+  if (!config) {
+    return <Alert severity='warning'>No configuration data available</Alert>
+  }
   return (
     <>
       <Typography variant='h6' gutterBottom>
@@ -37,7 +67,7 @@ const ConfigPanel = ({ config }: ConfigPanelProps) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.entries(config).map(([key, value]) => (
+            {Object.entries(config ?? {}).map(([key, value]) => (
               <TableRow key={key}>
                 <TableCell>{key}</TableCell>
                 <TableCell>{formatValue(value)}</TableCell>

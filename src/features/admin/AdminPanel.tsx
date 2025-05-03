@@ -1,82 +1,62 @@
-import { Alert, CircularProgress, Typography, Box } from '@mui/material'
-import { useGetConfigsQuery } from 'slices/configsApiSlice'
-import { useGetStatsQuery } from 'slices/statsApiSlice'
+import React from 'react'
+import { Box } from '@mui/material'
 import useTitle from 'hooks/useTitle'
 import StatsPanel from './BilboMDStats'
-import ConfigPanel from './ConfigPanel'
-
+// import ConfigPanel from './ConfigPanel'
+import QueueOverviewPanel from './QueueOverviewPanel'
+import { grey } from '@mui/material/colors'
 const AdminPanel = () => {
   useTitle('BilboMD: Admin Panel')
-  const bullBoardUrl = '/admin/bullmq'
-
-  const {
-    data: config,
-    error: configError,
-    isLoading: configIsLoading
-  } = useGetConfigsQuery('configData', {
-    pollingInterval: 10000
-  })
-
-  const {
-    data: stats,
-    error: statsError,
-    isLoading: statsIsLoading
-  } = useGetStatsQuery('statsData', {
-    pollingInterval: 10000
-  })
-
-  // Combined loading state
-  if (configIsLoading || statsIsLoading) {
-    return (
-      <Box display='flex' justifyContent='center' mt={4}>
-        <CircularProgress />
-      </Box>
-    )
-  }
-
-  // Combined error state
-  if (configError || statsError) {
-    return (
-      <Alert severity='error'>
-        Error loading data: {configError ? 'configuration' : ''}{' '}
-        {configError && statsError ? 'and' : ''}{' '}
-        {statsError ? 'statistics' : ''}
-      </Alert>
-    )
-  }
-
-  // Handle empty/fallback data
-  if (!config) {
-    return <Alert severity='warning'>No configuration data available</Alert>
-  }
-
-  if (!stats) {
-    return <Alert severity='warning'>No statistics data available</Alert>
-  }
 
   return (
-    <>
-      <Typography variant='h4' gutterBottom>
-        Admin Panel - Stats
-      </Typography>
-      <StatsPanel stats={stats} />
-
-      <Typography variant='h4' gutterBottom mt={4}>
-        Admin Panel - Configuration
-      </Typography>
-      <ConfigPanel config={config} />
-
-      <Typography variant='h4' gutterBottom mt={4}>
-        Admin Panel - Job Queue Management
-      </Typography>
-      <iframe
-        src={bullBoardUrl}
-        width='100%'
-        height='800'
-        style={{ border: 'none' }}
-        title='BullBoard'
-      />
-    </>
+    <React.Fragment>
+      <Box
+        sx={{
+          p: 0,
+          border: 1,
+          borderRadius: 1,
+          borderColor: grey[500],
+          backgroundColor: grey[200],
+          mx: 'auto',
+          mb: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          maxWidth: 'calc(100vw - 260px)',
+          overflow: 'hidden'
+        }}
+      >
+        <Box>
+          <QueueOverviewPanel />
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          p: 0,
+          border: 1,
+          borderRadius: 1,
+          borderColor: grey[500],
+          backgroundColor: grey[200],
+          mx: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          maxWidth: 'calc(100vw - 260px)',
+          overflow: 'hidden'
+        }}
+      >
+        <Box>
+          <StatsPanel />
+        </Box>
+      </Box>
+      {/* <Box>
+          {' '}
+          <Typography variant='h4' gutterBottom mt={4}>
+            Admin Panel - Configuration
+          </Typography>
+          <ConfigPanel />
+        </Box> */}
+    </React.Fragment>
   )
 }
 
