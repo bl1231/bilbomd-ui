@@ -19,6 +19,30 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         method: 'POST'
       }),
       invalidatesTags: ['AdminQueue']
+    }),
+    getJobsByQueue: builder.query({
+      query: (queueName: string) => `/admin/queues/${queueName}/jobs`
+    }),
+    retryQueueJob: builder.mutation({
+      query: ({ queueName, jobId }: { queueName: string; jobId: string }) => ({
+        url: `/admin/queues/${queueName}/jobs/${jobId}/retry`,
+        method: 'POST'
+      }),
+      invalidatesTags: ['AdminQueue']
+    }),
+    deleteQueueJob: builder.mutation({
+      query: ({ queueName, jobId }: { queueName: string; jobId: string }) => ({
+        url: `/admin/queues/${queueName}/jobs/${jobId}`,
+        method: 'DELETE'
+      }),
+      invalidatesTags: ['AdminQueue']
+    }),
+    drainQueue: builder.mutation({
+      query: (queueName: string) => ({
+        url: `/admin/queues/${queueName}/drain`,
+        method: 'POST'
+      }),
+      invalidatesTags: ['AdminQueue']
     })
   })
 })
@@ -26,5 +50,9 @@ export const adminApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetQueuesQuery,
   usePauseQueueMutation,
-  useResumeQueueMutation
+  useResumeQueueMutation,
+  useGetJobsByQueueQuery,
+  useRetryQueueJobMutation,
+  useDeleteQueueJobMutation,
+  useDrainQueueMutation
 } = adminApiSlice

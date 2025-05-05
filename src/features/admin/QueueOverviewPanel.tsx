@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import { FormControlLabel, Switch } from '@mui/material'
 import { Box, Typography, CircularProgress, Alert, Chip } from '@mui/material'
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import {
-  useGetQueuesQuery,
-  usePauseQueueMutation,
-  useResumeQueueMutation
-} from '../../slices/adminApiSlice'
+import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid'
+import { useGetQueuesQuery } from '../../slices/adminApiSlice'
 import { grey } from '@mui/material/colors'
 import AutorenewIcon from '@mui/icons-material/Autorenew'
+import { QueueToggleControl } from './QueueToggleControl'
+import QueueDetails from './QueueDetails'
+
 interface QueueInfo {
   name: string
   isPaused: boolean
@@ -26,8 +25,6 @@ interface QueueInfo {
 
 const QueueOverviewPanel = () => {
   const [pollingEnabled, setPollingEnabled] = useState(false)
-  const [pauseQueue] = usePauseQueueMutation()
-  const [resumeQueue] = useResumeQueueMutation()
 
   const {
     data: queues,
@@ -45,11 +42,11 @@ const QueueOverviewPanel = () => {
   if (error) return <Alert severity='error'>Failed to load queue data</Alert>
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Queue', flex: 1 },
+    { field: 'name', headerName: 'Queue', width: 120 },
     {
       field: 'isPaused',
       headerName: 'Queue Paused?',
-      flex: 1,
+      flex: 0.3,
       renderCell: (params) => (
         <Chip
           label={params.value ? 'Yes' : 'No'}
@@ -58,39 +55,27 @@ const QueueOverviewPanel = () => {
         />
       )
     },
-    { field: 'active', headerName: 'Active', type: 'number', flex: 1 },
-    { field: 'paused', headerName: 'Paused', type: 'number', flex: 1 },
-    { field: 'waiting', headerName: 'Waiting', type: 'number', flex: 1 },
-    { field: 'completed', headerName: 'Completed', type: 'number', flex: 1 },
-    { field: 'failed', headerName: 'Failed', type: 'number', flex: 1 },
-    { field: 'delayed', headerName: 'Delayed', type: 'number', flex: 1 },
+    { field: 'active', headerName: 'Active', type: 'number', width: 110 },
+    { field: 'paused', headerName: 'Paused', type: 'number', width: 110 },
+    { field: 'waiting', headerName: 'Waiting', type: 'number', width: 110 },
+    { field: 'completed', headerName: 'Completed', type: 'number', width: 110 },
+    { field: 'failed', headerName: 'Failed', type: 'number', width: 110 },
+    { field: 'delayed', headerName: 'Delayed', type: 'number', width: 110 },
     {
       field: 'actions',
+      type: 'actions',
+      sortable: false,
       headerName: 'Controls',
-      flex: 1,
-      renderCell: (params) => {
-        const isPaused = params.row.isPaused
-        const handleToggle = () => {
-          if (isPaused) {
-            resumeQueue(params.row.name)
-          } else {
-            pauseQueue(params.row.name)
-          }
-        }
-
-        return (
-          <FormControlLabel
-            control={
-              <Switch
-                checked={!isPaused}
-                onChange={handleToggle}
-                size='small'
-                color='primary'
-              />
-            }
-            label={isPaused ? 'Paused' : 'Running'}
-          />
-        )
+      width: 220,
+      getActions: (params: GridRowParams) => {
+        return [
+          <QueueToggleControl
+            key={`${params.id}-toggle`}
+            queueName={params.row.name}
+            isPaused={params.row.isPaused}
+          />,
+          <QueueDetails key={`${params.id}-details`} queue={params.row.name} />
+        ]
       }
     }
   ]
