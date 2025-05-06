@@ -28,6 +28,7 @@ import {
 } from '../../slices/adminApiSlice'
 import { FrontendBullMQJob } from '../../types/bullmq'
 import { QueueJobActionsMenu } from './QueueJobActionsMenu'
+import BoxDataGridWrapper from '../../themes/components/BoxDataGridWrapper'
 
 interface BilboMDJobData {
   type: string
@@ -219,22 +220,7 @@ const QueueDetailsPage = () => {
   )
 
   return (
-    <Box
-      sx={{
-        p: 0,
-        border: 1,
-        borderRadius: 1,
-        borderColor: grey[500],
-        backgroundColor: grey[200],
-        mx: 'auto',
-        mb: 2,
-        display: 'flex',
-        flexDirection: 'column',
-        width: '100%',
-        maxWidth: 'calc(100vw - 260px)',
-        overflow: 'hidden'
-      }}
-    >
+    <BoxDataGridWrapper>
       <Box
         sx={{
           backgroundColor: grey[500],
@@ -415,7 +401,7 @@ const QueueDetailsPage = () => {
           </Box>
         )}
       </Box>
-    </Box>
+    </BoxDataGridWrapper>
   )
 }
 
