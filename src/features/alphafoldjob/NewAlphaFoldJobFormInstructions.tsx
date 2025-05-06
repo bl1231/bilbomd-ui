@@ -24,8 +24,8 @@ const NewAlphaFoldJobFormInstructions = () => (
       <Typography
         sx={{
           textTransform: 'uppercase',
-          fontSize: 12,
-          fontWeight: 500,
+          fontSize: '0.875rem',
+          fontWeight: 400,
           color: '#fff',
           letterSpacing: '1px'
         }}

@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router'
 import { CircularProgress, Typography, Alert } from '@mui/material'
 import HeaderBox from 'components/HeaderBox'
 import Item from 'themes/components/Item'
+import BoxDataGridWrapper from 'themes/components/BoxDataGridWrapper'
 
 type ContentType = React.ReactNode | string
 
@@ -62,25 +63,27 @@ const UsersList = () => {
     ]
 
     content = (
-      <Box>
-        <HeaderBox>
-          <Typography>Users</Typography>
-        </HeaderBox>
-        <Item>
-          <DataGrid
-            rows={users}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10
+      <BoxDataGridWrapper>
+        <Box>
+          <HeaderBox>
+            <Typography>Users</Typography>
+          </HeaderBox>
+          <Item>
+            <DataGrid
+              rows={users}
+              columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10
+                  }
                 }
-              }
-            }}
-            pageSizeOptions={[5, 10, 15, 25]}
-          />
-        </Item>
-      </Box>
+              }}
+              pageSizeOptions={[5, 10, 15, 25]}
+            />
+          </Item>
+        </Box>
+      </BoxDataGridWrapper>
     )
   }
 
