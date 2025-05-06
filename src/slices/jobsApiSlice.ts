@@ -1,9 +1,10 @@
-import { createEntityAdapter } from '@reduxjs/toolkit'
+import { createEntityAdapter, createSelector, EntityId } from '@reduxjs/toolkit'
 import { apiSlice } from 'app/api/apiSlice'
 import { BilboMDJob } from 'types/interfaces'
 import { FileCheckResult } from 'types/jobCheckResults'
+import { RootState } from 'app/store'
 
-const jobsAdapter = createEntityAdapter({})
+const jobsAdapter = createEntityAdapter<BilboMDJob>()
 
 const initialState = jobsAdapter.getInitialState()
 
@@ -17,23 +18,22 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
       transformResponse: (responseData: BilboMDJob[]) => {
         // Handle the case where there's no content (204)
         if (!responseData || responseData.length === 0) {
-          return [] // Return an empty array if there are no jobs
+          return jobsAdapter.getInitialState()
         }
         const loadedJobs = responseData.map((job) => {
           job.mongo.id = job.mongo._id
           job.id = job.mongo._id
           return job
         })
-        jobsAdapter.setAll(initialState, loadedJobs)
-        return loadedJobs
+        return jobsAdapter.setAll(initialState, loadedJobs)
       },
       providesTags: (result) =>
         result
           ? [
               { type: 'Job', id: 'LIST' },
-              ...result.map((job) => ({
+              ...result.ids.map((id: EntityId) => ({
                 type: 'Job' as const,
-                id: job.mongo.id
+                id
               }))
             ]
           : [{ type: 'Job', id: 'LIST' }]
@@ -191,3 +191,20 @@ export const {
   useGetFileByIdAndNameQuery,
   useLazyGetFileByIdAndNameQuery
 } = jobsApiSlice
+
+// Select the query result object from the cache
+export const selectJobsResult =
+  jobsApiSlice.endpoints.getJobs.select('jobsList')
+
+// Memoized selector to get the normalized jobs data (if available)
+const selectJobsData = createSelector(
+  selectJobsResult,
+  (jobsResult) => jobsResult.data ?? initialState
+)
+
+// Export selectors for use in components
+export const {
+  selectAll: selectAllJobs,
+  selectById: selectJobById,
+  selectIds: selectJobIds
+} = jobsAdapter.getSelectors<RootState>((state) => selectJobsData(state))

@@ -222,22 +222,22 @@ const NewMultiMDJobForm: React.FC = () => {
                                 </TableRow>
                               </TableHead>
                               <TableBody>
-                                {jobs
-                                  .filter((job: BilboMDJob) => {
-                                    if (job.username !== username) {
-                                      return false
-                                    }
-                                    return (
-                                      job.mongo.status === 'Completed' &&
-                                      [
-                                        'BilboMdPDB',
-                                        'BilboMdCRD',
-                                        'BilboMdAuto',
-                                        'BilboMdAlphaFold'
-                                      ].includes(job.mongo.__t)
+                                {jobs.ids
+                                  .map((id) => jobs.entities[id])
+                                  .filter((job): job is BilboMDJob =>
+                                    Boolean(
+                                      job &&
+                                        job.username === username &&
+                                        job.mongo.status === 'Completed' &&
+                                        [
+                                          'BilboMdPDB',
+                                          'BilboMdCRD',
+                                          'BilboMdAuto',
+                                          'BilboMdAlphaFold'
+                                        ].includes(job.mongo.__t)
                                     )
-                                  })
-                                  .map((job: BilboMDJob) => (
+                                  )
+                                  .map((job) => (
                                     <TableRow key={job.mongo.uuid}>
                                       <TableCell>
                                         <Checkbox
@@ -299,20 +299,21 @@ const NewMultiMDJobForm: React.FC = () => {
                                   ))}
 
                                 {/* Render an alert when no jobs are available */}
-                                {jobs.filter((job: BilboMDJob) => {
-                                  if (job.username !== username) {
-                                    return false
-                                  }
-                                  return (
-                                    job.mongo.status === 'Completed' &&
-                                    [
-                                      'BilboMdPDB',
-                                      'BilboMdCRD',
-                                      'BilboMdAuto',
-                                      'BilboMdAlphaFold'
-                                    ].includes(job.mongo.__t)
-                                  )
-                                }).length === 0 && (
+                                {jobs.ids
+                                  .map((id) => jobs.entities[id])
+                                  .filter((job): job is BilboMDJob =>
+                                    Boolean(
+                                      job &&
+                                        job.username === username &&
+                                        job.mongo.status === 'Completed' &&
+                                        [
+                                          'BilboMdPDB',
+                                          'BilboMdCRD',
+                                          'BilboMdAuto',
+                                          'BilboMdAlphaFold'
+                                        ].includes(job.mongo.__t)
+                                    )
+                                  ).length === 0 && (
                                   <TableRow>
                                     <TableCell colSpan={7}>
                                       <Alert severity='warning'>
