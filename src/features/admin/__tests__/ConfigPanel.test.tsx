@@ -1,41 +1,90 @@
-import { render, screen } from '@testing-library/react'
-import ConfigPanel, { ConfigPanelProps } from '../ConfigPanel'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
+import { screen } from '@testing-library/react'
+import { renderWithProviders } from '../../../test/test-utils'
+import ConfigPanel from '../ConfigPanel'
+import { useGetConfigsQuery } from 'slices/configsApiSlice'
+
+vi.mock('slices/configsApiSlice', async () => {
+  const actual = await vi.importActual('slices/configsApiSlice')
+  return {
+    ...actual,
+    useGetConfigsQuery: vi.fn()
+  }
+})
+
+const mockedUseGetConfigsQuery = vi.mocked(useGetConfigsQuery)
 
 describe('ConfigPanel', () => {
-  const baseConfig: ConfigPanelProps['config'] = {
-    stringKey: 'value',
-    numberKey: 123,
-    boolTrue: true,
-    boolFalse: false,
-    nullKey: null,
-    objectKey: { nested: 'yes' },
-    arrayKey: ['a', 'b']
-  }
+  it('renders a spinner while loading', () => {
+    mockedUseGetConfigsQuery.mockReturnValue({
+      data: null,
+      error: null,
+      isLoading: true,
+      isFetching: true,
+      isSuccess: false,
+      isError: false,
+      refetch: vi.fn()
+    })
 
-  it('renders table rows for each key-value pair', () => {
-    render(<ConfigPanel config={baseConfig} />)
-
-    expect(screen.getByText(/stringKey/i)).toBeInTheDocument()
-    expect(screen.getByText('value')).toBeInTheDocument()
-    expect(screen.getByText(/numberKey/i)).toBeInTheDocument()
-    expect(screen.getByText('123')).toBeInTheDocument()
-    expect(screen.getByText(/boolTrue/i)).toBeInTheDocument()
-    expect(screen.getByText('true')).toBeInTheDocument()
-    expect(screen.getByText(/boolFalse/i)).toBeInTheDocument()
-    expect(screen.getByText('false')).toBeInTheDocument()
-    expect(screen.getByText(/nullKey/i)).toBeInTheDocument()
-    expect(screen.getByText('—')).toBeInTheDocument()
-    expect(screen.getByText(/objectKey/i)).toBeInTheDocument()
-    expect(
-      screen.getByText(JSON.stringify({ nested: 'yes' }))
-    ).toBeInTheDocument()
-    expect(screen.getByText(/arrayKey/i)).toBeInTheDocument()
-    expect(screen.getByText(JSON.stringify(['a', 'b']))).toBeInTheDocument()
+    renderWithProviders(<ConfigPanel />)
+    expect(screen.getByRole('progressbar')).toBeInTheDocument()
   })
 
-  it('renders nothing when config is null', () => {
-    const { container } = render(<ConfigPanel config={null} />)
-    expect(container.firstChild).toBeNull()
+  it('renders an error alert on error', () => {
+    mockedUseGetConfigsQuery.mockReturnValue({
+      data: null,
+      error: { message: 'Error' },
+      isLoading: false,
+      isFetching: false,
+      isSuccess: false,
+      isError: true,
+      refetch: vi.fn()
+    })
+
+    renderWithProviders(<ConfigPanel />)
+    expect(screen.getByText(/error loading data/i)).toBeInTheDocument()
+  })
+
+  it('renders a warning when no data is returned', () => {
+    mockedUseGetConfigsQuery.mockReturnValue({
+      data: null,
+      error: null,
+      isLoading: false,
+      isFetching: false,
+      isSuccess: true,
+      isError: false,
+      refetch: vi.fn()
+    })
+
+    renderWithProviders(<ConfigPanel />)
+    expect(
+      screen.getByText(/no configuration data available/i)
+    ).toBeInTheDocument()
+  })
+
+  it('renders a table with configuration data', () => {
+    mockedUseGetConfigsQuery.mockReturnValue({
+      data: {
+        tokenExpires: 900,
+        useNersc: true,
+        nerscProject: 'ABC123'
+      },
+      error: null,
+      isLoading: false,
+      isFetching: false,
+      isSuccess: true,
+      isError: false,
+      refetch: vi.fn()
+    })
+
+    renderWithProviders(<ConfigPanel />)
+
+    expect(screen.getByText(/configuration/i)).toBeInTheDocument()
+    expect(screen.getByText('tokenExpires')).toBeInTheDocument()
+    expect(screen.getByText('900')).toBeInTheDocument()
+    expect(screen.getByText('useNersc')).toBeInTheDocument()
+    expect(screen.getByText('true')).toBeInTheDocument()
+    expect(screen.getByText('nerscProject')).toBeInTheDocument()
+    expect(screen.getByText('ABC123')).toBeInTheDocument()
   })
 })

@@ -55,8 +55,10 @@ export default defineConfig({
     reporters: ['default'],
     globals: true,
     css: true,
-    deps: {
-      inline: ['@mui/x-data-grid']
+    server: {
+      deps: {
+        inline: ['@mui/x-data-grid']
+      }
     }
   }
 })

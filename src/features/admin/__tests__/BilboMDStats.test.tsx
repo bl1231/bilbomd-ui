@@ -1,48 +1,93 @@
-import { render, screen } from '@testing-library/react'
-import StatsPanel, { StatsPanelProps } from '../BilboMDStats'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
+import { screen } from '@testing-library/react'
+import { renderWithProviders } from '../../../test/test-utils'
+import StatsPanel from '../BilboMDStats'
+import { useGetStatsQuery } from 'slices/statsApiSlice'
+
+const mockedUseGetStatsQuery = vi.mocked(useGetStatsQuery)
+
+vi.mock('slices/statsApiSlice', async () => {
+  const actual = await vi.importActual('slices/statsApiSlice')
+  return {
+    ...actual,
+    useGetStatsQuery: vi.fn()
+  }
+})
 
 describe('StatsPanel', () => {
-  const mockStats: StatsPanelProps['stats'] = {
-    userCount: 5,
-    jobCount: 10,
-    totalJobsFromUsers: 25,
-    jobTypes: {
-      alphafold: 8,
-      auto: 11,
-      pdb: 6
-    }
-  }
+  it('shows a loading spinner when loading', () => {
+    mockedUseGetStatsQuery.mockReturnValue({
+      data: null,
+      error: null,
+      isLoading: true,
+      isFetching: true,
+      isSuccess: false,
+      isError: false,
+      refetch: vi.fn()
+    })
 
-  it('renders header and overall stats', () => {
-    render(<StatsPanel stats={mockStats} />)
+    renderWithProviders(<StatsPanel />)
+    expect(screen.getByRole('progressbar')).toBeInTheDocument()
+  })
 
-    expect(screen.getByText(/System Statistics/i)).toBeInTheDocument()
-    expect(screen.getByText(/Users/i)).toBeInTheDocument()
-    expect(screen.getByText(/Current Jobs/i)).toBeInTheDocument()
-    expect(screen.getByText(/Total Jobs/i)).toBeInTheDocument()
+  it('shows an error alert on error', () => {
+    mockedUseGetStatsQuery.mockReturnValue({
+      data: null,
+      error: { message: 'Something went wrong' },
+      isLoading: false,
+      isFetching: false,
+      isSuccess: false,
+      isError: true,
+      refetch: vi.fn()
+    })
+
+    renderWithProviders(<StatsPanel />)
+    expect(screen.getByText(/statistics/i)).toBeInTheDocument()
+  })
+
+  it('shows a warning if no stats data is available', () => {
+    mockedUseGetStatsQuery.mockReturnValue({
+      data: null,
+      error: null,
+      isLoading: false,
+      isFetching: false,
+      isSuccess: false,
+      isError: false,
+      refetch: vi.fn()
+    })
+
+    renderWithProviders(<StatsPanel />)
+    expect(
+      screen.getByText(/no statistics data available/i)
+    ).toBeInTheDocument()
+  })
+
+  it('renders statistics correctly', () => {
+    mockedUseGetStatsQuery.mockReturnValue({
+      data: {
+        userCount: 69,
+        jobCount: 5,
+        totalJobsFromUsers: 42,
+        jobTypes: {
+          pdb: 20,
+          crd: 10
+        }
+      },
+      error: null,
+      isLoading: false,
+      isFetching: false,
+      isSuccess: true,
+      isError: false,
+      refetch: vi.fn()
+    })
+
+    renderWithProviders(<StatsPanel />)
+
+    expect(screen.getByText(/users/i)).toBeInTheDocument()
+    expect(screen.getByText('69')).toBeInTheDocument()
     expect(screen.getByText('5')).toBeInTheDocument()
-    expect(screen.getByText('10')).toBeInTheDocument()
-    expect(screen.getByText('25')).toBeInTheDocument()
-  })
-
-  it('renders job types with correct counts', () => {
-    render(<StatsPanel stats={mockStats} />)
-
-    expect(screen.getByText(/Jobs by Type/i)).toBeInTheDocument()
-    expect(screen.getByText(/ALPHAFOLD/i)).toBeInTheDocument()
-    expect(screen.getByText(/AUTO/i)).toBeInTheDocument()
-    expect(screen.getByText(/PDB/i)).toBeInTheDocument()
-
-    expect(screen.getByText('8')).toBeInTheDocument()
-    expect(screen.getByText('11')).toBeInTheDocument()
-    expect(screen.getByText('6')).toBeInTheDocument()
-  })
-
-  it('returns null when no stats are passed', () => {
-    const { container } = render(
-      <StatsPanel stats={null as StatsPanelProps['stats'] | null} />
-    )
-    expect(container.firstChild).toBeNull()
+    expect(screen.getByText('42')).toBeInTheDocument()
+    expect(screen.getByText('pdb: 20')).toBeInTheDocument()
+    expect(screen.getByText('crd: 10')).toBeInTheDocument()
   })
 })

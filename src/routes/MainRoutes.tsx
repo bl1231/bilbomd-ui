@@ -57,6 +57,9 @@ const UsersList = Loadable(lazy(() => import('features/users/UsersList')))
 const EditUser = Loadable(lazy(() => import('features/users/EditUser')))
 const UserAccount = Loadable(lazy(() => import('features/users/UserAccount')))
 const AdminPanel = Loadable(lazy(() => import('features/admin/AdminPanel')))
+const QueueDetailsPage = Loadable(
+  lazy(() => import('features/admin/QueueDetailsPage'))
+)
 const Unauthorized = Loadable(lazy(() => import('components/Unauthorized')))
 const Missing = Loadable(lazy(() => import('components/Missing')))
 
@@ -79,6 +82,10 @@ const ProtectedMainRoutes = {
             {
               path: 'admin',
               element: <AdminPanel />
+            },
+            {
+              path: 'queue/:queueName',
+              element: <QueueDetailsPage />
             }
           ]
         },
