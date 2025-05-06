@@ -108,7 +108,8 @@ export const {
 } = usersApiSlice
 
 // returns the query result object
-export const selectUsersResult = usersApiSlice.endpoints.getUsers.select({})
+export const selectUsersResult =
+  usersApiSlice.endpoints.getUsers.select('usersList')
 
 import { createSelector } from '@reduxjs/toolkit'
 import type { RootState } from 'app/store'

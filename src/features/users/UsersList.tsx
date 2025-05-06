@@ -1,4 +1,6 @@
 import { useGetUsersQuery } from 'slices/usersApiSlice'
+import { useSelector } from 'react-redux'
+import { selectAllUsers } from 'slices/usersApiSlice'
 import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
 import EditIcon from '@mui/icons-material/Edit'
 import useTitle from 'hooks/useTitle'
@@ -14,16 +16,12 @@ type ContentType = React.ReactNode | string
 const UsersList = () => {
   useTitle('BilboMD: Users List')
   const navigate = useNavigate()
-  const {
-    data: users,
-    isLoading,
-    isSuccess,
-    isError
-  } = useGetUsersQuery('usersList', {
+  const { isLoading, isSuccess, isError } = useGetUsersQuery('usersList', {
     pollingInterval: 60000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
   })
+  const users = useSelector(selectAllUsers)
 
   let content: ContentType
 
@@ -40,7 +38,7 @@ const UsersList = () => {
     )
   }
 
-  if (isSuccess && users && Array.isArray(users)) {
+  if (isSuccess && users.length > 0) {
     // console.log('Users:', users)
     const columns: GridColDef[] = [
       { field: 'username', headerName: 'Username' },
@@ -87,7 +85,7 @@ const UsersList = () => {
     )
   }
 
-  if (isSuccess && (!users || !Array.isArray(users))) {
+  if (isSuccess && users.length === 0) {
     // console.warn('Unexpected data format for users:', users)
     content = (
       <Typography color='error'>

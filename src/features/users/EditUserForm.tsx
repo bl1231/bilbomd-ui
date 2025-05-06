@@ -25,11 +25,11 @@ import EditIcon from '@mui/icons-material/Edit'
 import { Field, Form, Formik } from 'formik'
 import { format } from 'date-fns'
 import {
-  User,
   useUpdateUserMutation,
   useDeleteUserMutation
 } from 'slices/usersApiSlice'
-import { useGetJobsQuery } from 'slices/jobsApiSlice'
+import { useGetJobsQuery, selectAllJobs } from 'slices/jobsApiSlice'
+import { useSelector } from 'react-redux'
 import JobSummary from 'features/jobs/JobSummary'
 import { ROLES } from 'config/roles'
 import { useNavigate } from 'react-router'
@@ -38,9 +38,10 @@ import { Box } from '@mui/system'
 import Paper from '@mui/material/Paper'
 import Chip from '@mui/material/Chip'
 import HeaderBox from 'components/HeaderBox'
+import { IUser } from '@bl1231/bilbomd-mongodb-schema'
 
 interface EditUserFormProps {
-  user: User
+  user: IUser
 }
 
 const ITEM_HEIGHT = 48
@@ -64,15 +65,12 @@ interface EditUserFormValues {
 const EditUserForm = ({ user }: EditUserFormProps) => {
   const [open, setOpen] = useState(false)
 
-  const { data: jobs } = useGetJobsQuery('jobsList')
+  useGetJobsQuery('jobsList') // To trigger query lifecycle
+  const allJobs = useSelector(selectAllJobs)
 
-  const filteredJobs = jobs
-    ? jobs.ids
-        .map((id) => jobs.entities[id])
-        .filter((job): job is typeof job =>
-          Boolean(job && job.mongo?.user?._id.toString() === user.id)
-        )
-    : []
+  const filteredJobs = allJobs.filter(
+    (job) => job.mongo?.user?._id?.toString() === user.id
+  )
 
   const handleClickOpen = () => {
     setOpen(true)
