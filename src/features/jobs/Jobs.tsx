@@ -171,11 +171,7 @@ const Jobs = () => {
   if (!config) return <div>No configuration data available</div>
   const useNersc = config.useNersc?.toLowerCase() === 'true'
 
-  const availableJobTypes = Array.from(
-    new Set((jobs ?? []).map((job) => job.mongo?.__t).filter(Boolean))
-  ) as IJob['__t'][]
-
-  const jobTypes = ['All', ...availableJobTypes]
+  // jobTypes will be defined later, after jobs is confirmed available
 
   const handleTypeChange = (event: SelectChangeEvent<string>) => {
     searchParams.set('type', event.target.value)
@@ -205,72 +201,12 @@ const Jobs = () => {
     navigate(`/dashboard/jobs/${routeSegment}/resubmit/${id}`)
   }
 
-  const jobTypeFilterDropdown = (
-    <FormControl sx={{ m: 2, minWidth: 200 }} size='small'>
-      <InputLabel id='job-type-select-label'>Job Type</InputLabel>
-      <Select
-        labelId='job-type-select-label'
-        id='job-type-select'
-        value={typeFilter}
-        label='Job Type'
-        onChange={handleTypeChange}
-      >
-        {jobTypes.map((type) => (
-          <MenuItem key={type} value={type}>
-            {type === 'All'
-              ? 'All'
-              : (jobTypeDisplayNames[type as IJob['__t']] ?? type)}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  )
-
-  const availableStatuses = Array.from(
-    new Set((jobs ?? []).map((job) => job.mongo?.status).filter(Boolean))
-  ) as string[]
-
-  const statusFilterDropdown = (
-    <FormControl sx={{ m: 2, minWidth: 200 }} size='small'>
-      <InputLabel id='status-select-label'>Status</InputLabel>
-      <Select
-        labelId='status-select-label'
-        id='status-select'
-        value={statusFilter}
-        label='Status'
-        onChange={handleStatusChange}
-      >
-        {['All', ...availableStatuses].map((status) => (
-          <MenuItem key={status} value={status}>
-            {status}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  )
-
-  const availableUsers = Array.from(
-    new Set((jobs ?? []).map((job) => job.username).filter(Boolean))
-  )
-
-  const userFilterDropdown = (isAdmin || isManager) && (
-    <FormControl sx={{ m: 2, minWidth: 200 }} size='small'>
-      <InputLabel id='user-select-label'>User</InputLabel>
-      <Select
-        labelId='user-select-label'
-        id='user-select'
-        value={userFilter}
-        label='User'
-        onChange={handleUserChange}
-      >
-        {['All', ...availableUsers].map((user) => (
-          <MenuItem key={user} value={user}>
-            {user}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  )
+  let jobTypes: string[] = []
+  let availableStatuses: string[] = []
+  let availableUsers: string[] = []
+  let jobTypeFilterDropdown: ReactNode = null
+  let statusFilterDropdown: ReactNode = null
+  let userFilterDropdown: ReactNode = null
 
   let content: ReactNode
 
@@ -306,28 +242,115 @@ const Jobs = () => {
     )
   }
 
-  if (isSuccess) {
-    let filteredIds: BilboMDJob[]
+  if (isSuccess && jobs) {
+    const availableJobTypes = Array.from(
+      new Set(
+        (jobs.ids ?? [])
+          .map((id) => jobs.entities[id]?.mongo?.__t)
+          .filter(Boolean)
+      )
+    ) as IJob['__t'][]
 
-    if (isManager || isAdmin) {
-      filteredIds = [...jobs]
-    } else {
-      filteredIds = jobs.filter((job) => job.username === username)
+    jobTypes = ['All', ...availableJobTypes]
+
+    availableStatuses = Array.from(
+      new Set(
+        (jobs.ids ?? [])
+          .map((id) => jobs.entities[id]?.mongo?.status)
+          .filter(Boolean)
+      )
+    )
+
+    availableUsers = Array.from(
+      new Set(
+        (jobs.ids ?? [])
+          .map((id) => jobs.entities[id]?.username)
+          .filter(Boolean)
+      )
+    )
+
+    jobTypeFilterDropdown = (
+      <FormControl sx={{ m: 2, minWidth: 200 }} size='small'>
+        <InputLabel id='job-type-select-label'>Job Type</InputLabel>
+        <Select
+          labelId='job-type-select-label'
+          id='job-type-select'
+          value={typeFilter}
+          label='Job Type'
+          onChange={handleTypeChange}
+        >
+          {jobTypes.map((type) => (
+            <MenuItem key={type} value={type}>
+              {type === 'All'
+                ? 'All'
+                : (jobTypeDisplayNames[type as IJob['__t']] ?? type)}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    )
+
+    statusFilterDropdown = (
+      <FormControl sx={{ m: 2, minWidth: 200 }} size='small'>
+        <InputLabel id='status-select-label'>Status</InputLabel>
+        <Select
+          labelId='status-select-label'
+          id='status-select'
+          value={statusFilter}
+          label='Status'
+          onChange={handleStatusChange}
+        >
+          {['All', ...availableStatuses].map((status) => (
+            <MenuItem key={status} value={status}>
+              {status}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    )
+
+    userFilterDropdown = (isAdmin || isManager) && (
+      <FormControl sx={{ m: 2, minWidth: 200 }} size='small'>
+        <InputLabel id='user-select-label'>User</InputLabel>
+        <Select
+          labelId='user-select-label'
+          id='user-select'
+          value={userFilter}
+          label='User'
+          onChange={handleUserChange}
+        >
+          {['All', ...availableUsers].map((user) => (
+            <MenuItem key={user} value={user}>
+              {user}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    )
+
+    let filteredJobs: BilboMDJob[] = (jobs!.ids ?? [])
+      .map((id) => jobs!.entities[id])
+      .filter((job): job is BilboMDJob => Boolean(job))
+
+    if (!(isManager || isAdmin)) {
+      filteredJobs = filteredJobs.filter((job) => job.username === username)
     }
 
     if (typeFilter !== 'All') {
-      filteredIds = filteredIds.filter((job) => job.mongo?.__t === typeFilter)
+      filteredJobs = filteredJobs.filter((job) => job.mongo?.__t === typeFilter)
     }
+
     if (statusFilter !== 'All') {
-      filteredIds = filteredIds.filter(
+      filteredJobs = filteredJobs.filter(
         (job) => job.mongo?.status === statusFilter
       )
     }
+
     if ((isAdmin || isManager) && userFilter !== 'All') {
-      filteredIds = filteredIds.filter((job) => job.username === userFilter)
+      filteredJobs = filteredJobs.filter((job) => job.username === userFilter)
     }
 
-    const rows = filteredIds.map((job) => {
+    const rows = filteredJobs.map((job) => {
       const nerscJobid = job.mongo.nersc?.jobid || ''
       const nerscStatus = job.mongo.nersc?.state || ''
       const queueHours = getHoursInQueue(job.mongo.nersc)

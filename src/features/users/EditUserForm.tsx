@@ -67,7 +67,11 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
   const { data: jobs } = useGetJobsQuery('jobsList')
 
   const filteredJobs = jobs
-    ? jobs.filter((job) => job.mongo.user._id === user.id)
+    ? jobs.ids
+        .map((id) => jobs.entities[id])
+        .filter((job): job is typeof job =>
+          Boolean(job && job.mongo?.user?._id.toString() === user.id)
+        )
     : []
 
   const handleClickOpen = () => {

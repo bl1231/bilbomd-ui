@@ -7,14 +7,33 @@ import {
   useDeleteUserMutation
 } from 'slices/usersApiSlice'
 
-// Mocking the hooks and components used in EditUserForm
+// Mocking the hooks and components used in EditUserForm.
 vi.mock('slices/usersApiSlice', () => ({
   useUpdateUserMutation: vi.fn(() => [vi.fn(), {}]),
   useDeleteUserMutation: vi.fn(() => [vi.fn(), {}])
 }))
 
 vi.mock('slices/jobsApiSlice', () => ({
-  useGetJobsQuery: vi.fn(() => ({ data: [] }))
+  useGetJobsQuery: vi.fn(() => ({
+    data: {
+      ids: ['job1'],
+      entities: {
+        job1: {
+          id: 'job1',
+          username: 'testuser',
+          mongo: {
+            _id: 'job1',
+            status: 'Completed',
+            user: { _id: '1' },
+            __t: 'BilboMdPDB',
+            time_submitted: new Date().toISOString()
+          }
+        }
+      }
+    },
+    isSuccess: true
+  })),
+  useDeleteJobMutation: vi.fn(() => [vi.fn(), {}])
 }))
 
 vi.mock('react-router', async () => {
