@@ -1,10 +1,10 @@
-import { Box } from '@mui/material'
+import { Box, SxProps } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { ReactNode } from 'react'
 
 interface Props {
   children: ReactNode
-  sx?: object
+  sx?: SxProps
 }
 
 const BoxDataGridWrapper = ({ children, sx = {} }: Props) => {
