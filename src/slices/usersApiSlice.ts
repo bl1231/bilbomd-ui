@@ -1,23 +1,10 @@
-// import { createEntityAdapter } from '@reduxjs/toolkit'
-// import { UseQueryState } from '@reduxjs/toolkit/dist/query/react/buildHooks'
 import { createEntityAdapter } from '@reduxjs/toolkit'
 import { apiSlice } from 'app/api/apiSlice'
-// import type { RootState } from '../../app/store'
+import { IUser } from '@bl1231/bilbomd-mongodb-schema'
 
-export type User = {
-  id: string
-  _id: string
-  UUID: string
-  active: boolean
-  createdAt: string
-  email: string
-  status: string
-  updatedAt: string
-  username: string
-  roles: string[]
-}
+type NormalizedUser = IUser & { id: string }
 
-const usersAdapter = createEntityAdapter<User>({})
+const usersAdapter = createEntityAdapter<NormalizedUser>()
 
 const initialState = usersAdapter.getInitialState()
 
@@ -31,23 +18,24 @@ export const usersApiSlice = apiSlice.injectEndpoints({
           return response.status === 200 && !result.isError
         }
       }),
-      transformResponse: (responseData: { success: boolean; data: User[] }) => {
-        // Access the `data` field from the response
-        const loadedUsers = responseData.data.map((user) => {
-          user.id = user._id // Assign 'id' for each user
-          return user
-        })
-        usersAdapter.setAll(initialState, loadedUsers)
-        return loadedUsers
+      transformResponse: (responseData: {
+        success: boolean
+        data: IUser[]
+      }) => {
+        const loadedUsers = responseData.data.map((user) => ({
+          ...(user as IUser),
+          id: user._id.toString()
+        })) as NormalizedUser[]
+        return usersAdapter.setAll(initialState, loadedUsers)
       },
       transformErrorResponse: (response: { status: string | number }) => {
         return response.status
       },
       providesTags: (result) =>
-        result
+        result?.ids
           ? [
-              ...result.map(({ id }) => ({ type: 'User' as const, id })),
-              { type: 'User', id: 'LIST' }
+              { type: 'User', id: 'LIST' },
+              ...result.ids.map((id) => ({ type: 'User' as const, id }))
             ]
           : [{ type: 'User', id: 'LIST' }]
     }),
@@ -121,3 +109,17 @@ export const {
 
 // returns the query result object
 export const selectUsersResult = usersApiSlice.endpoints.getUsers.select({})
+
+import { createSelector } from '@reduxjs/toolkit'
+import type { RootState } from 'app/store'
+
+const selectUsersData = createSelector(
+  selectUsersResult,
+  (usersResult) => usersResult.data ?? initialState
+)
+
+export const {
+  selectAll: selectAllUsers,
+  selectById: selectUserById,
+  selectIds: selectUserIds
+} = usersAdapter.getSelectors<RootState>((state) => selectUsersData(state))
