@@ -306,8 +306,8 @@ const QueueDetailsPage = () => {
                       <QueueJobActionsMenu
                         key={`${id}-menu`}
                         jobId={id}
-                        jobType={params.row.__t}
-                        jobTitle={params.row.title}
+                        jobType={params.row.type}
+                        jobTitle={params.row.name}
                         jobStatus={params.row.status}
                         anchorEl={anchorEl}
                         open={isOpen}
