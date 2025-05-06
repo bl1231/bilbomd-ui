@@ -60,6 +60,10 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.19.8 (5/6/2025)
+  - Refactor Admin panel
+  - Add better BullMQ Queue monitoring and control
+  - Fix flexbos css layout bug with DataGrids
 - 1.19.7 (5/2/2025)
   - Improvements to the Jobs Table for NERSC deployed BilboMD
 - 1.19.6 (5/2/2025)
