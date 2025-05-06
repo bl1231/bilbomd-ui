@@ -2,7 +2,12 @@ import { ReactNode, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid'
 import { format, parseISO } from 'date-fns'
-import { useGetJobsQuery } from 'slices/jobsApiSlice'
+import {
+  useGetJobsQuery,
+  useDeleteJobMutation,
+  selectAllJobs
+} from 'slices/jobsApiSlice'
+import { useSelector } from 'react-redux'
 import useTitle from 'hooks/useTitle'
 import { clsx } from 'clsx'
 import { Box } from '@mui/system'
@@ -23,7 +28,6 @@ import {
   SelectChangeEvent
 } from '@mui/material'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import { useDeleteJobMutation } from 'slices/jobsApiSlice'
 import {
   Dialog,
   DialogTitle,
@@ -34,7 +38,6 @@ import JobDetails from './JobDetails'
 import BullMQSummary from '../bullmq/BullMQSummary'
 import NerscStatus from '../nersc/NerscStatus'
 import HeaderBox from 'components/HeaderBox'
-import { BilboMDJob } from 'types/interfaces'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import {
   INerscInfo,
@@ -160,6 +163,8 @@ const Jobs = () => {
   })
   // console.log('jobs data --->', jobs)
 
+  const allJobs = useSelector(selectAllJobs)
+
   const {
     data: config,
     error: configError,
@@ -244,29 +249,17 @@ const Jobs = () => {
 
   if (isSuccess && jobs) {
     const availableJobTypes = Array.from(
-      new Set(
-        (jobs.ids ?? [])
-          .map((id) => jobs.entities[id]?.mongo?.__t)
-          .filter(Boolean)
-      )
+      new Set(allJobs.map((job) => job.mongo?.__t).filter(Boolean))
     ) as IJob['__t'][]
 
     jobTypes = ['All', ...availableJobTypes]
 
     availableStatuses = Array.from(
-      new Set(
-        (jobs.ids ?? [])
-          .map((id) => jobs.entities[id]?.mongo?.status)
-          .filter(Boolean)
-      )
+      new Set(allJobs.map((job) => job.mongo?.status).filter(Boolean))
     )
 
     availableUsers = Array.from(
-      new Set(
-        (jobs.ids ?? [])
-          .map((id) => jobs.entities[id]?.username)
-          .filter(Boolean)
-      )
+      new Set(allJobs.map((job) => job.username).filter(Boolean))
     )
 
     jobTypeFilterDropdown = (
@@ -328,9 +321,7 @@ const Jobs = () => {
       </FormControl>
     )
 
-    let filteredJobs: BilboMDJob[] = (jobs!.ids ?? [])
-      .map((id) => jobs!.entities[id])
-      .filter((job): job is BilboMDJob => Boolean(job))
+    let filteredJobs = allJobs
 
     if (!(isManager || isAdmin)) {
       filteredJobs = filteredJobs.filter((job) => job.username === username)

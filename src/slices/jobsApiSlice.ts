@@ -193,7 +193,8 @@ export const {
 } = jobsApiSlice
 
 // Select the query result object from the cache
-export const selectJobsResult = jobsApiSlice.endpoints.getJobs.select(undefined)
+export const selectJobsResult =
+  jobsApiSlice.endpoints.getJobs.select('jobsList')
 
 // Memoized selector to get the normalized jobs data (if available)
 const selectJobsData = createSelector(
