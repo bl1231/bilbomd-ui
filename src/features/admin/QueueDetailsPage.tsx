@@ -17,6 +17,7 @@ import {
   DialogContent,
   DialogActions
 } from '@mui/material'
+import { grey } from '@mui/material/colors'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid'
 import {
@@ -218,144 +219,202 @@ const QueueDetailsPage = () => {
   )
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Typography variant='h4' gutterBottom>
-        Queue Details: {matchedQueue?.name}
-      </Typography>
-
-      <Typography variant='h6' gutterBottom>
-        Status: {matchedQueue?.isPaused ? 'Paused' : 'Running'}
-      </Typography>
-
-      <Typography variant='h6' gutterBottom>
-        Job Counts:
-      </Typography>
-      <Box component='ul' sx={{ pl: 2 }}>
-        {Object.entries(matchedQueue?.jobCounts).map(([key, value]) => (
-          <li key={key}>
-            <strong>{key}</strong>: {value}
-          </li>
-        ))}
-      </Box>
-
-      <Typography variant='h6' gutterBottom>
-        Jobs in Queue:
-      </Typography>
-      {jobsLoading && (
-        <Box display='flex' justifyContent='center' mt={2}>
-          <CircularProgress size={20} />
-        </Box>
-      )}
-      {jobsError && (
-        <Alert severity='error'>Failed to load jobs: {String(jobsError)}</Alert>
-      )}
-      {jobTypeFilterDropdown}
-      {statusFilterDropdown}
-      {/* {userFilterDropdown} */}
-      <Button
-        variant='contained'
-        color='primary'
-        onClick={resetFilters}
-        sx={{ m: 2, height: '36px' }}
+    <Box
+      sx={{
+        p: 0,
+        border: 1,
+        borderRadius: 1,
+        borderColor: grey[500],
+        backgroundColor: grey[200],
+        mx: 'auto',
+        mb: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        maxWidth: 'calc(100vw - 260px)',
+        overflow: 'hidden'
+      }}
+    >
+      <Box
+        sx={{
+          backgroundColor: grey[500],
+          p: 1,
+          m: 0,
+          borderTopLeftRadius: 3,
+          borderTopRightRadius: 3,
+          borderBottom: 1,
+          borderColor: grey[500]
+        }}
       >
-        Reset Filters
-      </Button>
-      {jobs && filteredJobCountChip(filteredJobs.length)}
-      {jobs && (
-        <Box sx={{ height: 500, width: '100%', mt: 2 }}>
-          <DataGrid
-            rows={filteredJobs.map((job) => ({
-              id: job.id,
-              name: job.name,
-              type: job.data?.type,
-              status: job.status,
-              attemptsMade: job.attemptsMade,
-              submitted: new Date(job.timestamp).toLocaleString(),
-              uuid: job.data?.uuid
-            }))}
-            columns={
-              [
-                { field: 'name', headerName: 'Name', flex: 0.25 },
-                { field: 'type', headerName: 'Type', width: 120 },
-                { field: 'status', headerName: 'Status', width: 120 },
-                { field: 'attemptsMade', headerName: 'Attempts', width: 100 },
-                { field: 'submitted', headerName: 'Submitted', width: 180 },
-                { field: 'uuid', headerName: 'UUID', flex: 0.25 },
-                {
-                  field: 'actions',
-                  type: 'actions',
-                  sortable: false,
-                  headerName: 'Manage',
-                  width: 250,
-                  getActions: (params: GridRowParams) => {
-                    const id = params.row.id
-                    const isOpen = Boolean(anchorEl) && menuJobId === id
-
-                    return [
-                      <Button
-                        key={`${id}-menu-btn`}
-                        variant='outlined'
-                        disableElevation
-                        size='small'
-                        className='job-details-button'
-                        onClick={(e) => handleMenuOpen(e, id)}
-                        endIcon={<KeyboardArrowDownIcon />}
-                      >
-                        More Actions
-                      </Button>,
-                      <QueueJobActionsMenu
-                        key={`${id}-menu`}
-                        jobId={id}
-                        jobType={params.row.type}
-                        jobTitle={params.row.name}
-                        jobStatus={params.row.status}
-                        anchorEl={anchorEl}
-                        open={isOpen}
-                        onClose={handleMenuClose}
-                        onRetry={handleRetry}
-                        onDelete={openDeleteDialog}
-                      />
-                    ]
-                  }
-                }
-              ] as GridColDef[]
-            }
-            pageSizeOptions={[10, 25, 50]}
-            initialState={{
-              pagination: { paginationModel: { pageSize: 10, page: 0 } }
+        <Typography variant='h4'>
+          Queue Details: {matchedQueue?.name}
+        </Typography>
+      </Box>
+      <Box>
+        <Box sx={{ p: 2 }}>
+          {' '}
+          Status:
+          <Chip
+            label={matchedQueue?.isPaused ? 'Paused' : 'Running'}
+            sx={{
+              backgroundColor: matchedQueue?.isPaused ? '#f5222d' : '#52c41a',
+              color: '#fff',
+              fontSize: '1em',
+              fontWeight: 'bold',
+              p: 1,
+              m: 1,
+              height: '36px'
             }}
           />
-          {/* Delete confirmation dialog */}
-          <Dialog
-            open={deleteDialogOpen}
-            onClose={() => setDeleteDialogOpen(false)}
-          >
-            <DialogTitle>Confirm Delete</DialogTitle>
-            <DialogContent>
-              <Typography>
-                Are you sure you want to delete the job{' '}
-                <strong>{deleteTargetTitle}</strong>?
-              </Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={() => setDeleteDialogOpen(false)}
-                disabled={isDeleting}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={handleDeleteConfirm}
-                color='error'
-                disabled={isDeleting}
-                variant='contained'
-              >
-                {isDeleting ? 'Deleting...' : 'Delete'}
-              </Button>
-            </DialogActions>
-          </Dialog>
         </Box>
-      )}
+        <Box sx={{ px: 2 }}>
+          {' '}
+          <Typography variant='h6' gutterBottom>
+            Job Counts:
+          </Typography>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
+            {Object.entries(matchedQueue?.jobCounts).map(([key, value]) => (
+              <Chip
+                key={key}
+                label={`${key}: ${value}`}
+                sx={{
+                  backgroundColor: '#262626',
+                  color: '#bae637',
+                  fontSize: '1em',
+                  fontWeight: 'bold',
+                  p: 1,
+                  height: '36px'
+                }}
+              />
+            ))}
+          </Box>
+        </Box>
+
+        <Box sx={{ p: 2 }}>
+          {' '}
+          <Typography variant='h6' gutterBottom>
+            Jobs in Queue:
+          </Typography>
+          {jobsLoading && (
+            <Box display='flex' justifyContent='center' mt={2}>
+              <CircularProgress size={20} />
+            </Box>
+          )}
+          {jobsError && (
+            <Alert severity='error'>
+              Failed to load jobs: {String(jobsError)}
+            </Alert>
+          )}
+          {jobTypeFilterDropdown}
+          {statusFilterDropdown}
+          {/* {userFilterDropdown} */}
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={resetFilters}
+            sx={{ m: 2, height: '36px' }}
+          >
+            Reset Filters
+          </Button>
+          {jobs && filteredJobCountChip(filteredJobs.length)}
+        </Box>
+
+        {jobs && (
+          <Box sx={{ height: 500, width: '100%', mt: 2 }}>
+            <DataGrid
+              rows={filteredJobs.map((job) => ({
+                id: job.id,
+                name: job.name,
+                type: job.data?.type,
+                status: job.status,
+                attemptsMade: job.attemptsMade,
+                submitted: new Date(job.timestamp).toLocaleString(),
+                uuid: job.data?.uuid
+              }))}
+              columns={
+                [
+                  { field: 'name', headerName: 'Name', flex: 0.25 },
+                  { field: 'type', headerName: 'Type', width: 120 },
+                  { field: 'status', headerName: 'Status', width: 120 },
+                  { field: 'attemptsMade', headerName: 'Attempts', width: 100 },
+                  { field: 'submitted', headerName: 'Submitted', width: 180 },
+                  { field: 'uuid', headerName: 'UUID', flex: 0.25 },
+                  {
+                    field: 'actions',
+                    type: 'actions',
+                    sortable: false,
+                    headerName: 'Manage',
+                    width: 250,
+                    getActions: (params: GridRowParams) => {
+                      const id = params.row.id
+                      const isOpen = Boolean(anchorEl) && menuJobId === id
+
+                      return [
+                        <Button
+                          key={`${id}-menu-btn`}
+                          variant='outlined'
+                          disableElevation
+                          size='small'
+                          className='job-details-button'
+                          onClick={(e) => handleMenuOpen(e, id)}
+                          endIcon={<KeyboardArrowDownIcon />}
+                        >
+                          More Actions
+                        </Button>,
+                        <QueueJobActionsMenu
+                          key={`${id}-menu`}
+                          jobId={id}
+                          jobType={params.row.type}
+                          jobTitle={params.row.name}
+                          jobStatus={params.row.status}
+                          anchorEl={anchorEl}
+                          open={isOpen}
+                          onClose={handleMenuClose}
+                          onRetry={handleRetry}
+                          onDelete={openDeleteDialog}
+                        />
+                      ]
+                    }
+                  }
+                ] as GridColDef[]
+              }
+              pageSizeOptions={[10, 25, 50]}
+              initialState={{
+                pagination: { paginationModel: { pageSize: 10, page: 0 } }
+              }}
+            />
+            {/* Delete confirmation dialog */}
+            <Dialog
+              open={deleteDialogOpen}
+              onClose={() => setDeleteDialogOpen(false)}
+            >
+              <DialogTitle>Confirm Delete</DialogTitle>
+              <DialogContent>
+                <Typography>
+                  Are you sure you want to delete the job{' '}
+                  <strong>{deleteTargetTitle}</strong>?
+                </Typography>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={() => setDeleteDialogOpen(false)}
+                  disabled={isDeleting}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleDeleteConfirm}
+                  color='error'
+                  disabled={isDeleting}
+                  variant='contained'
+                >
+                  {isDeleting ? 'Deleting...' : 'Delete'}
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Box>
+        )}
+      </Box>
     </Box>
   )
 }
