@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import { useParams, useLocation, useNavigate } from 'react-router'
 import PulseLoader from 'react-spinners/PulseLoader'
 import useTitle from 'hooks/useTitle'
@@ -8,6 +9,14 @@ import {
   AlertTitle,
   Box,
   CircularProgress
+} from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
 } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import LinearProgress from '@mui/material/LinearProgress'
@@ -29,7 +38,7 @@ import { BilboMDScoperTable } from '../scoperjob/BilboMDScoperTable'
 import ScoperFoXSAnalysis from 'features/scoperjob/ScoperFoXSAnalysis'
 import FoXSAnalysis from './FoXSAnalysis'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
-import { useGetJobByIdQuery } from 'slices/jobsApiSlice'
+import { useGetJobByIdQuery, useDeleteJobMutation } from 'slices/jobsApiSlice'
 import BilboMdFeedback from 'features/analysis/BilboMdFeedback'
 import { BilboMDJob, BilboMDMultiJob } from 'types/interfaces'
 import { JobStatusEnum } from '@bl1231/bilbomd-mongodb-schema/frontend'
@@ -52,6 +61,19 @@ const SingleJobPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const returnParams = location.state?.returnParams ?? ''
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  const [deleteJob] = useDeleteJobMutation()
+
+  const handleDeleteJob = async () => {
+    // console.log('Deleting job with ID:', id)
+    try {
+      await deleteJob({ id })
+      navigate('/dashboard/jobs')
+    } catch (err) {
+      console.error('Failed to delete the job:', err)
+    }
+  }
 
   const {
     data: job,
@@ -401,6 +423,7 @@ const SingleJobPage = () => {
               >
                 Download Results
               </Button>
+
               {(job.mongo.__t === 'BilboMdPDB' ||
                 job.mongo.__t === 'BilboMdCRD' ||
                 job.mongo.__t === 'BilboMdAuto') && (
@@ -411,11 +434,21 @@ const SingleJobPage = () => {
                       `/dashboard/jobs/${jobTypeRouteSegment}/resubmit/${job.id}`
                     )
                   }
-                  sx={{ my: 2 }}
+                  sx={{ my: 2, mr: 2 }}
                 >
                   Resubmit
                 </Button>
               )}
+
+              <Button
+                variant='outlined'
+                color='error'
+                startIcon={<DeleteIcon />}
+                onClick={() => setOpenDeleteDialog(true)}
+              >
+                Delete
+              </Button>
+
               <Typography>
                 The{' '}
                 <span
@@ -457,7 +490,31 @@ const SingleJobPage = () => {
     </>
   )
 
-  return content
+  return (
+    <>
+      {content}
+      <Dialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+      >
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this job? This action cannot be
+            undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDeleteDialog(false)} color='primary'>
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteJob} color='error' variant='contained'>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  )
 }
 
 export default SingleJobPage

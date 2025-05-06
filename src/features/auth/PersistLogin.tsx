@@ -20,7 +20,7 @@ const PersistLogin = () => {
 
   useEffect(() => {
     const verifyRefreshToken = async () => {
-      console.log('verifying refresh token')
+      // console.log('verifying refresh token')
       try {
         await refresh({})
         // needed to differentiate the isSuccess from refresh
