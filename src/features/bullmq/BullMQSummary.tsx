@@ -1,12 +1,4 @@
-import { ReactNode } from 'react'
-import {
-  Typography,
-  Box,
-  Chip,
-  CircularProgress,
-  Alert,
-  AlertTitle
-} from '@mui/material'
+import { Typography, Box, Chip, Alert, AlertTitle } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import Divider from '@mui/material/Divider'
 import { useGetQueueStateQuery } from 'features/bullmq/bullmqApiSlice'
@@ -29,7 +21,7 @@ interface QueueStatus {
 const BullMQSummary = () => {
   const {
     data: queueStatus,
-    isLoading,
+
     isSuccess,
     isError,
     error
@@ -44,41 +36,40 @@ const BullMQSummary = () => {
     isError: boolean
     error: Error
   }
-  // console.log('queue data', queueStatus)
 
-  let content: ReactNode
+  const content = (
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <HeaderBox>
+        <Typography>BullMQ Status</Typography>
+      </HeaderBox>
 
-  if (isLoading) content = <CircularProgress />
+      <Item sx={{ p: 1 }}>
+        {isError && (
+          <Alert severity='error' variant='outlined' sx={{ mb: 2 }}>
+            <AlertTitle>Error</AlertTitle>
+            <Typography variant='body2'>
+              Failed to load BullMQ Queue Status from the backend.
+            </Typography>
+            {'status' in error && (
+              <Typography variant='caption' sx={{ fontStyle: 'italic' }}>
+                {`Status ${error.status}: ${
+                  'data' in error
+                    ? JSON.stringify(error.data)
+                    : 'No additional details'
+                }`}
+              </Typography>
+            )}
+            {!('status' in error) && error?.message && (
+              <Typography variant='caption' sx={{ fontStyle: 'italic' }}>
+                Details: {error.message}
+              </Typography>
+            )}
+          </Alert>
+        )}
 
-  if (isError) {
-    let errorMessage: string = 'An unknown error occurred'
-
-    if (error && typeof error === 'object' && 'message' in error) {
-      errorMessage = error.message
-    } else if (typeof error === 'string') {
-      errorMessage = error
-    }
-
-    console.log('BullMQSummary error:', error)
-
-    content = (
-      <Alert severity='error'>
-        <AlertTitle>Error</AlertTitle>
-        Error loading BullMQ Queue Status. {errorMessage}
-      </Alert>
-    )
-  }
-
-  if (isSuccess) {
-    content = (
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <HeaderBox>
-          <Typography>BullMQ Status</Typography>
-        </HeaderBox>
-
-        <Item sx={{ p: 1 }}>
+        {isSuccess && queueStatus && (
           <Grid container spacing={2} sx={{ display: 'flex' }}>
-            <Grid size={{ xs: 6 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Divider textAlign='left' variant='fullWidth'>
                 <Chip label='BilboMD Queue' />
               </Divider>
@@ -87,7 +78,7 @@ const BullMQSummary = () => {
                   <b>Active</b>:
                 </Typography>
                 <Chip
-                  label={queueStatus?.bilbomd.active_count}
+                  label={queueStatus.bilbomd.active_count}
                   sx={{
                     mx: 1,
                     backgroundColor: '#262626',
@@ -98,7 +89,7 @@ const BullMQSummary = () => {
                 />
                 <Typography sx={{ ml: 4 }}>Queued:</Typography>
                 <Chip
-                  label={queueStatus?.bilbomd.waiting_count}
+                  label={queueStatus.bilbomd.waiting_count}
                   sx={{
                     mx: 1,
                     backgroundColor: '#262626',
@@ -109,7 +100,7 @@ const BullMQSummary = () => {
                 />
                 <Typography sx={{ ml: 4 }}>Workers:</Typography>
                 <Chip
-                  label={queueStatus?.bilbomd.worker_count}
+                  label={queueStatus.bilbomd.worker_count}
                   sx={{
                     mx: 1,
                     backgroundColor: '#262626',
@@ -121,7 +112,7 @@ const BullMQSummary = () => {
               </Grid>
             </Grid>
 
-            <Grid size={{ xs: 6 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Divider textAlign='left' variant='fullWidth'>
                 <Chip label='Scoper Queue' />
               </Divider>
@@ -130,7 +121,7 @@ const BullMQSummary = () => {
                   <b>Active</b>:
                 </Typography>
                 <Chip
-                  label={queueStatus?.scoper.active_count}
+                  label={queueStatus.scoper.active_count}
                   sx={{
                     mx: 1,
                     backgroundColor: '#262626',
@@ -141,7 +132,7 @@ const BullMQSummary = () => {
                 />
                 <Typography sx={{ ml: 4 }}>Queued:</Typography>
                 <Chip
-                  label={queueStatus?.scoper.waiting_count}
+                  label={queueStatus.scoper.waiting_count}
                   sx={{
                     mx: 1,
                     backgroundColor: '#262626',
@@ -152,7 +143,7 @@ const BullMQSummary = () => {
                 />
                 <Typography sx={{ ml: 4 }}>Workers:</Typography>
                 <Chip
-                  label={queueStatus?.scoper.worker_count}
+                  label={queueStatus.scoper.worker_count}
                   sx={{
                     mx: 1,
                     backgroundColor: '#262626',
@@ -164,10 +155,10 @@ const BullMQSummary = () => {
               </Grid>
             </Grid>
           </Grid>
-        </Item>
-      </Box>
-    )
-  }
+        )}
+      </Item>
+    </Box>
+  )
 
   return content
 }
