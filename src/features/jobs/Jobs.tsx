@@ -161,7 +161,7 @@ const Jobs = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
   })
-  // console.log('jobs data --->', jobs)
+  console.log('jobs data --->', jobs)
 
   const allJobs = useSelector(selectAllJobs)
 
@@ -217,37 +217,10 @@ const Jobs = () => {
 
   if (isLoading) content = <CircularProgress />
 
-  if (isError) {
-    let errorMessage: string = ''
-    let severity: 'error' | 'warning' | 'info' = 'info'
+  if ((isSuccess && jobs) || (isError && allJobs.length > 0)) {
+    const showStaleWarning = isError && allJobs.length > 0
+    console.log('showStaleWarning', showStaleWarning)
 
-    if (error && 'status' in error) {
-      if (error.status === 204) {
-        console.log(error)
-        errorMessage = 'No jobs found. Please run some jobs first.'
-        severity = 'info'
-      } else if (error.status === 404) {
-        errorMessage = 'User not found. Please contact support.'
-        severity = 'error'
-      } else {
-        errorMessage =
-          'error' in error ? error.error : JSON.stringify(error.data)
-      }
-    } else {
-      errorMessage = 'Backend server may be down. Please call Scott'
-      severity = 'error'
-    }
-
-    content = (
-      <Box>
-        <Alert severity={severity} variant='outlined'>
-          <AlertTitle>{errorMessage}</AlertTitle>
-        </Alert>
-      </Box>
-    )
-  }
-
-  if (isSuccess && jobs) {
     const availableJobTypes = Array.from(
       new Set(allJobs.map((job) => job.mongo?.__t).filter(Boolean))
     ) as IJob['__t'][]
@@ -536,6 +509,12 @@ const Jobs = () => {
           </HeaderBox>
 
           <Item>
+            {showStaleWarning && (
+              <Alert severity='error' variant='outlined' sx={{ mb: 2 }}>
+                <AlertTitle>Backend unavailable</AlertTitle>
+                Job data may be stale.
+              </Alert>
+            )}
             {jobTypeFilterDropdown}
             {statusFilterDropdown}
             {userFilterDropdown}
@@ -629,6 +608,38 @@ const Jobs = () => {
           </Item>
         </Grid>
       </Grid>
+    )
+  } else if (isError) {
+    let errorMessage: string = ''
+    let severity: 'error' | 'warning' | 'info' = 'info'
+
+    if (error && 'status' in error) {
+      if (error.status === 204) {
+        errorMessage = 'No jobs found. Please run some jobs first.'
+        severity = 'info'
+      } else if (error.status === 404) {
+        errorMessage = 'User not found. Please contact support.'
+        severity = 'error'
+      } else {
+        if ('error' in error && error.error) {
+          errorMessage = error.error
+        } else if ('data' in error && error.data) {
+          errorMessage = JSON.stringify(error.data)
+        } else {
+          errorMessage = 'An unknown error occurred while fetching jobs.'
+        }
+      }
+    } else {
+      errorMessage = 'Backend server may be down. Please call Scott'
+      severity = 'error'
+    }
+
+    content = (
+      <Box>
+        <Alert severity={severity} variant='outlined'>
+          <AlertTitle>{errorMessage}</AlertTitle>
+        </Alert>
+      </Box>
     )
   }
 
