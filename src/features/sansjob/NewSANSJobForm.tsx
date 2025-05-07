@@ -57,7 +57,7 @@ const NewSANSJob = () => {
   const [calculateAutoRg, { isLoading }] = useCalculateAutoRgMutation()
   const [isPerlmutterUnavailable, setIsPerlmutterUnavailable] = useState(false)
   const [chainIds, setChainIds] = useState<string[]>([])
-
+  const [autoRgError, setAutoRgError] = useState<string | null>(null)
   const theme = useTheme()
   const isDarkMode = theme.palette.mode === 'dark'
 
@@ -268,19 +268,19 @@ const NewSANSJob = () => {
                         id='dat-file-upload'
                         as={FileSelect}
                         title='Select File'
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || isLoading}
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}
                         error={errors.dat_file && touched.dat_file}
                         errorMessage={errors.dat_file ? errors.dat_file : ''}
-                        fileType='experimental SANS data *.dat'
+                        fileType='experimental SANS data'
                         fileExt='.dat'
                         onFileChange={async (selectedFile: File) => {
+                          setAutoRgError(null)
                           const isExpdataValid =
                             await expdataSchema.isValid(selectedFile)
                           if (isExpdataValid) {
                             const formData = new FormData()
-
                             formData.append('dat_file', selectedFile)
                             try {
                               const { rg, rg_min, rg_max } =
@@ -289,11 +289,16 @@ const NewSANSJob = () => {
                               setFieldValue('rg_min', rg_min)
                               setFieldValue('rg_max', rg_max)
                             } catch (error) {
-                              console.error('Error:', error)
+                              setAutoRgError(
+                                `Failed to calculate Rg from *.dat file. Please check the file format and try again. ${error}`
+                              )
                               setFieldValue('rg_min', '')
                               setFieldValue('rg_max', '')
                             }
                           } else {
+                            setAutoRgError(
+                              `Invalid *.dat file format. Please check the file format and try again.`
+                            )
                             setFieldValue('rg_min', '')
                             setFieldValue('rg_max', '')
                           }
@@ -314,7 +319,11 @@ const NewSANSJob = () => {
                         <LinearProgress />
                       </Box>
                     )}
-
+                    {autoRgError && (
+                      <Box sx={{ my: 1, width: '520px' }}>
+                        <Alert severity='error'>{autoRgError}</Alert>
+                      </Box>
+                    )}
                     {/* Rg Min */}
                     <Grid sx={{ my: 2, display: 'flex', width: '520px' }}>
                       <Field
@@ -451,7 +460,7 @@ const NewSANSJob = () => {
                         variant='contained'
                         sx={{ width: '110px' }}
                       >
-                        <span>Submit</span>
+                        Submit
                       </Button>
 
                       {isSuccess ? (

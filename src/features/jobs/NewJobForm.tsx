@@ -607,7 +607,7 @@ const NewJobForm = () => {
                         variant='contained'
                         sx={{ width: '110px' }}
                       >
-                        <span>Submit</span>
+                        Submit
                       </Button>
 
                       {isSuccess ? (
