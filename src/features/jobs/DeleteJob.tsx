@@ -43,7 +43,7 @@ const DeleteJob = ({ id, title, hide, onClose }: DeleteJobProps) => {
     if (isError) {
       console.log('DeleteJob isError:', isError, 'error:', error)
     }
-  }, [isSuccess, isError, error])
+  }, [isSuccess, isError, error, onClose])
 
   return (
     <>

@@ -10,7 +10,7 @@ import useTitle from 'hooks/useTitle'
 const VerifyEmail = () => {
   useTitle('BilboMD: Verify Email')
   const { code } = useParams()
-  const data = JSON.stringify({ code })
+  // const data = JSON.stringify({ code })
   // console.log(data)
 
   const isMountedRef = useRef(false) // Create a ref to track the initial mount
@@ -21,10 +21,14 @@ const VerifyEmail = () => {
   useEffect(() => {
     const verify = async () => {
       try {
-        const response = await axiosInstance.post('/verify', data, {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true
-        })
+        const response = await axiosInstance.post(
+          '/verify',
+          JSON.stringify({ code }),
+          {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true
+          }
+        )
         // console.log('res1:', response.data.message)
         if (response.data.message === 'Verified') {
           // console.log('seems we should be verified')
@@ -44,7 +48,7 @@ const VerifyEmail = () => {
       isMountedRef.current = true
       verify()
     }
-  }, [])
+  }, [code])
 
   return (
     <Grid

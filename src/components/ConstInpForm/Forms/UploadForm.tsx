@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect } from 'react'
+import { ChangeEvent, useEffect, useCallback } from 'react'
 import { Field, useFormikContext } from 'formik'
 import {
   Typography,
@@ -97,19 +97,17 @@ const carbResidues = new Set([
 ])
 
 interface UploadFormProps {
-  setStepIsValid(...args: unknown[]): unknown;
+  setStepIsValid(...args: unknown[]): unknown
 }
 
-const UploadForm = ({
-  setStepIsValid
-}: UploadFormProps) => {
+const UploadForm = ({ setStepIsValid }: UploadFormProps) => {
   useTitle('BilboMD: Upload PDB file')
   const theme = useTheme()
   const { values, setFieldValue, setFieldError, isValid, dirty, errors } =
     useFormikContext<MyFormValues>()
   const { name, src, chains, rigid_bodies } = values.pdb_file
 
-  const parsePdbFile = () => {
+  const parsePdbFile = useCallback(() => {
     const src = values.pdb_file.src
     let atomLines: string[] = []
 
@@ -253,7 +251,7 @@ const UploadForm = ({
       setFieldValue('pdb_file.chains', charmmChains)
       setFieldValue('pdb_file.rigid_bodies', demRigidBodies)
     }
-  }
+  }, [values.pdb_file.src, chains, rigid_bodies, setFieldError, setFieldValue])
 
   const onChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -282,11 +280,11 @@ const UploadForm = ({
     if (src) {
       parsePdbFile()
     }
-  }, [src])
+  }, [src, parsePdbFile])
 
   useEffect(() => {
     setStepIsValid(isValid && dirty)
-  }, [isValid, dirty])
+  }, [isValid, dirty, setStepIsValid])
 
   const customColors: Record<string, string> = {
     PRO: theme.palette.mode === 'light' ? '#E6A8A8' : '#b76e79',

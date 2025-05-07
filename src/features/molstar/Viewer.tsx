@@ -146,6 +146,7 @@ const MolstarViewer = ({ job }: MolstarViewerProps) => {
   // Attempt to prevent React Strictmode from loading molstar twice in dev mode.
   const hasRun = useRef(false)
 
+   
   useEffect(() => {
     if (hasRun.current) {
       return

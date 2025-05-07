@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useFormikContext, FormikValues } from 'formik'
 import { Typography } from '@mui/material'
 import Grid from '@mui/material/Grid'
@@ -18,142 +18,134 @@ const Preview = () => {
   const rigid_bodies = values.pdb_file.rigid_bodies as RigidBody[]
   const chains = values.pdb_file.chains
 
-  const prepareConstInputFile = (rigidBodies: RigidBody[], chains: Chain[]) => {
-    const contentArray: string[] = []
-    let dockCount = 1
-    let rigidCount = 1
+  const pushWrappedLine = useCallback(
+    (contentArray: string[], line: string) => {
+      const maxLength = 77
+      let currentLine = ''
+      let numCharacters = 0
 
-    rigidBodies.forEach((rb) => {
-      if (rb.id === 'PRIMARY') {
-        const rigid_domains: string[] = []
-        rb.domains.forEach(({ chainid, start, end }, d_index) => {
-          const rd_index = d_index + 1
-          const chain = chains.find((c) => c.id === chainid)
-          let chainType = chain ? chain.type : '' // Get chain type
-          chainType = chainType.toUpperCase() // Ensure chainType is uppercase
+      for (let i = 0; i < line.length; i++) {
+        const char = line.charAt(i)
+        if (numCharacters + 1 > maxLength) {
+          contentArray.push(currentLine)
+          currentLine = ''
+          numCharacters = 0
+        }
+        currentLine += char
+        numCharacters++
 
-          // Check if chainid is lowercase
-          if (chainid.toLowerCase() === chainid) {
-            // Replace the last character of chainType with 'L'
-            chainType = chainType.slice(0, -1) + 'L'
-            // Append the uppercase version of chainid
-            chainid = chainid.toUpperCase()
-          }
-
-          const line =
-            'define fixed' +
-            rd_index +
-            ' sele ( resid ' +
-            start +
-            ':' +
-            end +
-            ' .and. segid ' +
-            chainType +
-            chainid +
-            ' ) ' +
-            'end'
-
-          // Push the line with line wrapping
-          pushWrappedLine(contentArray, line)
-          rigid_domains.push('fixed' + rd_index, '.or.')
-        })
-
-        rigid_domains.pop()
-        rigid_domains.push('end')
-        const consFixSeleString = 'cons fix sele ' + rigid_domains.join(' ')
-
-        // Push the line with line wrapping
-        pushWrappedLine(contentArray, consFixSeleString)
-
-        contentArray.push(' ')
-      } else {
-        const rigid_domains: string[] = []
-        rb.domains.forEach(({ chainid, start, end }) => {
-          const chain = chains.find((c) => c.id === chainid)
-          let chainType = chain ? chain.type : '' // Get chain type
-          chainType = chainType.toUpperCase() // Ensure chainType is uppercase
-
-          // Check if chainid is lowercase
-          if (chainid.toLowerCase() === chainid) {
-            // Replace the last character of chainType with 'L'
-            chainType = chainType.slice(0, -1) + 'L'
-            // Append the uppercase version of chainid
-            chainid = chainid.toUpperCase()
-          }
-
-          const line =
-            'define rigid' +
-            rigidCount +
-            ' sele ( resid ' +
-            start +
-            ':' +
-            end +
-            ' .and. segid ' +
-            chainType +
-            chainid +
-            ' ) ' +
-            'end'
-
-          // Push the line with line wrapping
-          pushWrappedLine(contentArray, line)
-          rigid_domains.push('rigid' + rigidCount, '.or.')
-          rigidCount++
-        })
-
-        rigid_domains.pop()
-        rigid_domains.push('end')
-        const shapeDescLine =
-          'shape desc dock' +
-          dockCount +
-          ' rigid sele ' +
-          rigid_domains.join(' ')
-
-        // Push the line with line wrapping
-        pushWrappedLine(contentArray, shapeDescLine)
-
-        contentArray.push(' ')
-        dockCount++
+        if (numCharacters === maxLength && i !== line.length - 1) {
+          currentLine += '-'
+          numCharacters++
+        }
       }
-    })
 
-    contentArray.push('return')
-    const content = contentArray.join('\n')
-    setConstFilePreview(content)
-    const file = new Blob([content], { type: 'text/plain' })
-    setConstFileBlob(file)
-  }
+      contentArray.push(currentLine)
+    },
+    []
+  )
 
-  const pushWrappedLine = (contentArray: string[], line: string) => {
-    const maxLength = 77
-    let currentLine = ''
-    let numCharacters = 0
+  const prepareConstInputFile = useCallback(
+    (rigidBodies: RigidBody[], chains: Chain[]) => {
+      const contentArray: string[] = []
+      let dockCount = 1
+      let rigidCount = 1
 
-    for (let i = 0; i < line.length; i++) {
-      const char = line.charAt(i)
-      if (numCharacters + 1 > maxLength) {
-        // Check if adding the next character exceeds max length
-        contentArray.push(currentLine) // Push the current line to contentArray
-        currentLine = '' // Reset current line
-        numCharacters = 0 // Reset character count
-      }
-      currentLine += char // Add the character to current line
-      numCharacters++ // Increment character count
+      rigidBodies.forEach((rb) => {
+        if (rb.id === 'PRIMARY') {
+          const rigid_domains: string[] = []
+          rb.domains.forEach(
+            ({ chainid: originalChainid, start, end }, d_index) => {
+              let chainid = originalChainid
+              const rd_index = d_index + 1
+              const chain = chains.find((c) => c.id === chainid)
+              let chainType = chain ? chain.type : ''
+              chainType = chainType.toUpperCase()
 
-      // Add a hyphen at the end of lines that continue to the next
-      if (numCharacters === maxLength && i !== line.length - 1) {
-        currentLine += '-'
-        numCharacters++ // Increment character count for hyphen
-      }
-    }
+              if (chainid.toLowerCase() === chainid) {
+                chainType = chainType.slice(0, -1) + 'L'
+                chainid = chainid.toUpperCase()
+              }
 
-    contentArray.push(currentLine) // Push the last line
-  }
+              const line =
+                'define fixed' +
+                rd_index +
+                ' sele ( resid ' +
+                start +
+                ':' +
+                end +
+                ' .and. segid ' +
+                chainType +
+                chainid +
+                ' ) end'
+
+              pushWrappedLine(contentArray, line)
+              rigid_domains.push('fixed' + rd_index, '.or.')
+            }
+          )
+
+          rigid_domains.pop()
+          rigid_domains.push('end')
+          const consFixSeleString = 'cons fix sele ' + rigid_domains.join(' ')
+          pushWrappedLine(contentArray, consFixSeleString)
+          contentArray.push(' ')
+        } else {
+          const rigid_domains: string[] = []
+          rb.domains.forEach(({ chainid: originalChainid, start, end }) => {
+            let chainid = originalChainid
+            const chain = chains.find((c) => c.id === chainid)
+            let chainType = chain ? chain.type : ''
+            chainType = chainType.toUpperCase()
+
+            if (chainid.toLowerCase() === chainid) {
+              chainType = chainType.slice(0, -1) + 'L'
+              chainid = chainid.toUpperCase()
+            }
+
+            const line =
+              'define rigid' +
+              rigidCount +
+              ' sele ( resid ' +
+              start +
+              ':' +
+              end +
+              ' .and. segid ' +
+              chainType +
+              chainid +
+              ' ) end'
+
+            pushWrappedLine(contentArray, line)
+            rigid_domains.push('rigid' + rigidCount, '.or.')
+            rigidCount++
+          })
+
+          rigid_domains.pop()
+          rigid_domains.push('end')
+          const shapeDescLine =
+            'shape desc dock' +
+            dockCount +
+            ' rigid sele ' +
+            rigid_domains.join(' ')
+          pushWrappedLine(contentArray, shapeDescLine)
+          contentArray.push(' ')
+          dockCount++
+        }
+      })
+
+      contentArray.push('return')
+      const content = contentArray.join('\n')
+      setConstFilePreview(content)
+      const file = new Blob([content], { type: 'text/plain' })
+      setConstFileBlob(file)
+    },
+    [pushWrappedLine]
+  )
 
   useEffect(() => {
     if (values) {
       prepareConstInputFile(rigid_bodies, chains)
     }
-  }, [values])
+  }, [values, rigid_bodies, chains, prepareConstInputFile])
 
   return (
     <>

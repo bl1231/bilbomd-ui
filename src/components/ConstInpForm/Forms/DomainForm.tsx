@@ -11,12 +11,10 @@ import RigidBody from '../Helpers/RigidBody'
 import type { Chain, RigidBody as IRigidBody } from 'types/interfaces'
 
 interface DomainFormProps {
-  setStepIsValid(...args: unknown[]): unknown;
+  setStepIsValid(...args: unknown[]): unknown
 }
 
-const DomainForm = ({
-  setStepIsValid
-}: DomainFormProps) => {
+const DomainForm = ({ setStepIsValid }: DomainFormProps) => {
   useTitle('BilboMD: Define domains')
   const theme = useTheme()
   const { values, isValid } = useFormikContext<FormikValues>()
@@ -46,7 +44,7 @@ const DomainForm = ({
     return () => {
       effectRan.current = true
     }
-  }, [isValid])
+  }, [isValid, setStepIsValid])
 
   const macroMolecules = ['PRO', 'DNA', 'RNA', 'CAR', 'Other']
 

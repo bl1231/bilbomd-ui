@@ -20,22 +20,21 @@ const PersistLogin = () => {
 
   useEffect(() => {
     const verifyRefreshToken = async () => {
-      // console.log('verifying refresh token')
       try {
-        await refresh({})
-        // needed to differentiate the isSuccess from refresh
+        await refresh({}).unwrap()
         setTrueSuccess(true)
-      } catch (error) {
-        console.error(error)
+      } catch (err) {
+        console.error('Refresh failed:', err)
       }
     }
+
     if (!isMountedRef.current) {
-      // Only execute verifyRefreshToken on initial mount
       isMountedRef.current = true
-      // and only if there is not existing token AND persist is true
-      if (!token && persist) verifyRefreshToken()
+      if (!token && persist) {
+        verifyRefreshToken()
+      }
     }
-  }, [])
+  }, [persist, refresh, token])
 
   let content
 
