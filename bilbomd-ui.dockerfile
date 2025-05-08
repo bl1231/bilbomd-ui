@@ -39,7 +39,7 @@ RUN npm run build
 
 # Generate version.json during the build
 # this json is served up from /version-info
-RUN echo "{ \"version\": \"${BILBOMD_UI_VERSION}\", \"gitHash\": \"${BILBOMD_UI_GIT_HASH}\" }" > /app/dist/version.json
+RUN echo "{ \"version\": \"${BILBOMD_UI_VERSION}\", \"gitHash\": \"${BILBOMD_UI_GIT_HASH}\" }" > /app/build/version.json
 
 
 # -----------------------------------------------------------------------------
