@@ -22,8 +22,8 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import { Outlet, useLocation, useNavigate } from 'react-router'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import useAuth from 'hooks/useAuth'
-
 import Header from './Header'
+import Breadcrumbs from './Breadcrumbs'
 import Footer from './Footer'
 
 const drawerWidth = 190
@@ -231,6 +231,7 @@ export default function ClippedDrawer() {
           </Drawer>
         )}
         <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
+          <Breadcrumbs />
           <Outlet />
         </Box>
       </Box>
