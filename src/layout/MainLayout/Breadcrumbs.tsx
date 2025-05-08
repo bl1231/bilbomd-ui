@@ -1,25 +1,45 @@
 import { Breadcrumbs, Link, Typography } from '@mui/material'
-import { useLocation, Link as RouterLink, useParams } from 'react-router'
+import { useLocation, Link as RouterLink } from 'react-router'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-import { useGetJobByIdQuery } from '../../slices/jobsApiSlice'
+import { selectJobById } from 'slices/jobsApiSlice'
+import { selectUserById } from 'slices/usersApiSlice'
+import { useSelector } from 'react-redux'
+import type { RootState } from 'app/store'
 
-// Optional label mapping
 const labelMap: Record<string, string> = {
   jobs: 'Jobs',
   admin: 'Admin',
   config: 'Config',
   upload: 'Upload',
   dashboard: 'Dashboard',
-  welcome: 'Home'
-  // fallback to path segment if not defined
+  welcome: 'Home',
+  about: 'About',
+  alphafold: 'AlphaFold',
+  classic: 'Classic',
+  auto: 'Auto',
+  multimd: 'MultiMD',
+  sans: 'SANS',
+  scoper: 'Scoper',
+  constinp: 'INP Jiffy',
+  af2pae: 'PAE Jiffy',
+  users: 'Users'
 }
 
 export default function AppBreadcrumbs() {
   const location = useLocation()
   const pathnames = location.pathname.split('/').filter(Boolean)
-  const { id } = useParams()
-  const { data: job } = useGetJobByIdQuery(id!, { skip: !id })
-  // console.log('breadcrumbs job:', JSON.stringify(job))
+
+  const maybeId = pathnames.at(-1)
+  const parentSegment = pathnames.at(-2)
+
+  const isJob = parentSegment === 'jobs'
+  const isUser = parentSegment === 'users'
+
+  const job = useSelector((state: RootState) => selectJobById(state, maybeId!))
+  const user = useSelector((state: RootState) =>
+    selectUserById(state, maybeId!)
+  )
+
   return (
     <Breadcrumbs
       aria-label='breadcrumb'
@@ -29,15 +49,19 @@ export default function AppBreadcrumbs() {
       <Link component={RouterLink} to='/welcome'>
         Home
       </Link>
+
       {pathnames
         .filter((segment, i) => !(i === 0 && segment === 'welcome'))
         .map((segment, index) => {
           const to = `/${pathnames.slice(0, index + 1).join('/')}`
-          // const label = labelMap[segment] || decodeURIComponent(segment)
+
           let label = labelMap[segment] || decodeURIComponent(segment)
-          if (segment === id && job?.mongo.title) {
-            label = job.mongo.title
+
+          if (segment === maybeId) {
+            if (isJob && job?.mongo?.title) label = job.mongo.title
+            if (isUser && user?.username) label = user.username
           }
+
           const isLast = index === pathnames.length - 1
           return isLast ? (
             <Typography key={to} color='text.primary'>
