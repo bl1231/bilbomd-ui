@@ -35,7 +35,7 @@ ENV BILBOMD_UI_GIT_HASH=${BILBOMD_UI_GIT_HASH}
 RUN npm run build
 
 # Copy over the version.json created in GitHub Actions
-# COPY version.json /app/dist/version.json
+# COPY version.json /app/build/version.json
 
 # Generate version.json during the build
 # this json is served up from /version-info
@@ -48,7 +48,7 @@ FROM docker.io/nginx:alpine
 RUN apk add --no-cache bash
 
 # Copy the built app to nginx serving directory
-COPY --from=build-stage /app/dist /usr/share/nginx/html
+COPY --from=build-stage /app/build /usr/share/nginx/html
 
 # Optionally, customize nginx configuration
 COPY nginx.default.conf /etc/nginx/conf.d/default.conf
