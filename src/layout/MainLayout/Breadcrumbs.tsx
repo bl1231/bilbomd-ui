@@ -36,7 +36,7 @@ export default function AppBreadcrumbs() {
           // const label = labelMap[segment] || decodeURIComponent(segment)
           let label = labelMap[segment] || decodeURIComponent(segment)
           if (segment === id && job?.mongo.title) {
-            label = job.mongo.uuid
+            label = job.mongo.title
           }
           const isLast = index === pathnames.length - 1
           return isLast ? (
