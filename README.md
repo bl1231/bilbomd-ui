@@ -60,6 +60,11 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.20.0 (5/8/2025)
+  - Memoize Users and Jobs RTK queries
+  - Improve Alerts in Jobs list when backend is unavailable
+  - Disable File Select button when AutoRG is running for SANS job form
+  - Add MUI Breadcrumbs, but conditionally render for now
 - 1.19.8 (5/6/2025)
   - Refactor Admin panel
   - Add better BullMQ Queue monitoring and control
