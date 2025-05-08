@@ -161,7 +161,7 @@ const Jobs = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
   })
-  console.log('jobs data --->', jobs)
+  // console.log('jobs data --->', jobs)
 
   const allJobs = useSelector(selectAllJobs)
 
@@ -219,7 +219,7 @@ const Jobs = () => {
 
   if ((isSuccess && jobs) || (isError && allJobs.length > 0)) {
     const showStaleWarning = isError && allJobs.length > 0
-    console.log('showStaleWarning', showStaleWarning)
+    // console.log('showStaleWarning', showStaleWarning)
 
     const availableJobTypes = Array.from(
       new Set(allJobs.map((job) => job.mongo?.__t).filter(Boolean))
