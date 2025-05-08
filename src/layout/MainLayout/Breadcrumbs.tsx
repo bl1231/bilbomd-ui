@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 import type { RootState } from 'app/store'
 
 // Map of path segments to labels
-// This is used to convert the path segments to human-readable labels
+// This is used to convert the path segments to human-readable labels.
 const labelMap: Record<string, string> = {
   jobs: 'Jobs',
   admin: 'Admin',
