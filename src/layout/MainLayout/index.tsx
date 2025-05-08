@@ -22,8 +22,8 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import { Outlet, useLocation, useNavigate } from 'react-router'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import useAuth from 'hooks/useAuth'
-
 import Header from './Header'
+import Breadcrumbs from './Breadcrumbs'
 import Footer from './Footer'
 
 const drawerWidth = 190
@@ -40,6 +40,7 @@ export default function ClippedDrawer() {
   const location = useLocation()
   const theme = useTheme()
   const isSettingsPage = location.pathname.startsWith('/settings')
+  const showBreadcrumbs = config?.showBreadcrumbs?.toLowerCase() === 'true'
 
   if (configIsLoading) return <CircularProgress />
   if (configError)
@@ -231,6 +232,7 @@ export default function ClippedDrawer() {
           </Drawer>
         )}
         <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
+          {showBreadcrumbs && <Breadcrumbs />}
           <Outlet />
         </Box>
       </Box>

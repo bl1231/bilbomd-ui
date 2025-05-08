@@ -73,6 +73,10 @@ const ProtectedMainRoutes = {
       path: '/',
       children: [
         {
+          index: true,
+          element: <Welcome />
+        },
+        {
           path: 'welcome',
           element: <Welcome />
         },
