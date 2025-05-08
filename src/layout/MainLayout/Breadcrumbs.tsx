@@ -19,7 +19,6 @@ export default function AppBreadcrumbs() {
   const pathnames = location.pathname.split('/').filter(Boolean)
   const { id } = useParams()
   const { data: job } = useGetJobByIdQuery(id!, { skip: !id })
-  console.log('breadcrumbs id:', id)
   // console.log('breadcrumbs job:', JSON.stringify(job))
   return (
     <Breadcrumbs
