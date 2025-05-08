@@ -40,6 +40,7 @@ export default function ClippedDrawer() {
   const location = useLocation()
   const theme = useTheme()
   const isSettingsPage = location.pathname.startsWith('/settings')
+  const showBreadcrumbs = config?.showBreadcrumbs?.toLowerCase() === 'true'
 
   if (configIsLoading) return <CircularProgress />
   if (configError)
@@ -231,7 +232,7 @@ export default function ClippedDrawer() {
           </Drawer>
         )}
         <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
-          <Breadcrumbs />
+          {showBreadcrumbs && <Breadcrumbs />}
           <Outlet />
         </Box>
       </Box>
