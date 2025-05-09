@@ -1,5 +1,6 @@
 import { describe, it, vi, expect } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { SnackbarProvider } from 'notistack'
 import CopyToClipboardButton from './CopyToClipboardButton'
 
 // Mock the clipboard API
@@ -28,21 +29,18 @@ describe('CopyToClipboardButton', () => {
   })
 
   it('displays a snackbar when the button is clicked', async () => {
-    render(<CopyToClipboardButton text='Test text' />)
+    render(
+      <SnackbarProvider>
+        <CopyToClipboardButton text='Test text' />
+      </SnackbarProvider>
+    )
 
     const button = screen.getByRole('button', { name: /copy/i })
     fireEvent.click(button)
 
-    // Verify that the snackbar message appears
-    const snackbar = await screen.findByText(/copied to clipboard/i)
-    expect(snackbar).toBeInTheDocument()
-
-    // Wait for the snackbar to disappear
-    await waitFor(
-      () => {
-        expect(snackbar).not.toBeInTheDocument()
-      },
-      { timeout: 3000 }
-    ) // Allow for autoHideDuration + buffer
+    await waitFor(() => {
+      const snackbar = screen.queryByText(/copied to clipboard/i)
+      expect(snackbar).toBeTruthy()
+    })
   })
 })

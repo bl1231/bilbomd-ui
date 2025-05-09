@@ -11,7 +11,6 @@ import {
   Link,
   IconButton,
   Chip,
-  Snackbar,
   Alert
 } from '@mui/material'
 import { purple, grey, blueGrey, green } from '@mui/material/colors'
@@ -22,15 +21,16 @@ import { IAPIToken } from '@bl1231/bilbomd-mongodb-schema'
 import useAuth from 'hooks/useAuth'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { format, parseISO, formatDistanceToNowStrict } from 'date-fns'
+import { useSnackbar } from 'notistack'
 
 const APITokenManager = () => {
   const { username } = useAuth()
+  const { enqueueSnackbar } = useSnackbar()
   const { data, refetch, isLoading, error } = useGetAPITokensQuery(username)
   const tokens: IAPIToken[] = data?.tokens || []
   const [createToken] = useCreateAPITokenMutation()
   const [deleteToken] = useDeleteAPITokenMutation()
   const [newToken, setNewToken] = useState<string | null>(null)
-  const [copySuccess, setCopySuccess] = useState(false)
   const tokenLimit = 3
 
   const rows = tokens.map((token) => ({
@@ -129,18 +129,22 @@ const APITokenManager = () => {
         expiresAt: expiresAt.toISOString()
       }).unwrap()
       setNewToken(res.token)
+      enqueueSnackbar(`${label} Token created.`, { variant: 'default' })
       refetch()
     } catch (err) {
       console.error('Failed to create token:', err)
+      enqueueSnackbar('Failed to create token.', { variant: 'error' })
     }
   }
 
   const handleDelete = async (id: string) => {
     try {
       await deleteToken({ username, id }).unwrap()
+      enqueueSnackbar('Token deleted.', { variant: 'default' })
       refetch()
     } catch (err) {
       console.error('Failed to delete token:', err)
+      enqueueSnackbar('Failed to delete token.', { variant: 'error' })
     }
   }
 
@@ -204,7 +208,6 @@ const APITokenManager = () => {
             size='small'
             onClick={() => {
               setNewToken(null)
-              setCopySuccess(false)
             }}
             sx={{ position: 'absolute', top: 4, right: 4 }}
             aria-label='Dismiss'
@@ -218,14 +221,12 @@ const APITokenManager = () => {
           </Typography>
           <Chip
             label={newToken}
+            icon={<ContentCopyIcon />}
             onClick={() => {
               navigator.clipboard.writeText(newToken)
-              setCopySuccess(true)
-            }}
-            deleteIcon={<ContentCopyIcon />}
-            onDelete={() => {
-              navigator.clipboard.writeText(newToken)
-              setCopySuccess(true)
+              enqueueSnackbar('Token copied to clipboard!', {
+                variant: 'default'
+              })
             }}
             sx={{
               bgcolor: purple[100],
@@ -289,22 +290,6 @@ const APITokenManager = () => {
             Create Red Token
           </Button>
         </Box>
-      )}
-      {newToken && (
-        <Snackbar
-          open={copySuccess}
-          autoHideDuration={2000}
-          onClose={() => setCopySuccess(false)}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        >
-          <Alert
-            onClose={() => setCopySuccess(false)}
-            severity='success'
-            sx={{ width: '100%' }}
-          >
-            Token copied to clipboard!
-          </Alert>
-        </Snackbar>
       )}
       <Box
         sx={{
