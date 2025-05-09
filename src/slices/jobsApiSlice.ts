@@ -80,6 +80,20 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
         url: `/jobs/${id}`,
         method: 'DELETE'
       }),
+      async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          jobsApiSlice.util.updateQueryData('getJobs', undefined, (draft) => {
+            if ('ids' in draft && 'entities' in draft) {
+              jobsAdapter.removeOne(draft, id)
+            }
+          })
+        )
+        try {
+          await queryFulfilled
+        } catch {
+          patchResult.undo()
+        }
+      },
       invalidatesTags: (_, __, arg) => [{ type: 'Job', id: arg.id }]
     }),
     checkJobFiles: builder.query<FileCheckResult, string>({
