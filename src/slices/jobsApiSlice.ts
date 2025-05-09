@@ -81,7 +81,8 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
         method: 'DELETE'
       }),
       // Optimistically remove the job from the cache before the server confirms deletion.
-      // If the server request fails, the rollback mechanism (patchResult.undo()) restores the cache to its previous state.
+      // If the server request fails, the rollback mechanism (patchResult.undo())
+      // restores the cache to its previous state.
       async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
           jobsApiSlice.util.updateQueryData('getJobs', undefined, (draft) => {

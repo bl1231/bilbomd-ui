@@ -142,23 +142,28 @@ const Jobs = () => {
   }
 
   const handleDeleteConfirm = async () => {
-    if (deleteTargetJobId) {
-      try {
-        await deleteJob({ id: deleteTargetJobId }).unwrap()
-        enqueueSnackbar('Job deletion has been queued.', { variant: 'success' })
-      } catch (err) {
-        enqueueSnackbar('Failed to queue job deletion.', { variant: 'error' })
-      } finally {
-        setDeleteDialogOpen(false)
-        setDeleteTargetJobId(null)
-        setDeleteTargetTitle(null)
-      }
+    if (!deleteTargetJobId) return
+
+    try {
+      await deleteJob({ id: deleteTargetJobId }).unwrap()
+      enqueueSnackbar('Job deletion queued.', { variant: 'success' })
+    } catch (err) {
+      console.error('Failed to delete job:', err)
+      enqueueSnackbar('Failed to delete job. Please try again.', {
+        variant: 'error'
+      })
+    } finally {
+      setDeleteDialogOpen(false)
+      setDeleteTargetJobId(null)
+      setDeleteTargetTitle(null)
     }
   }
+
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, id: string) => {
     setAnchorEl(event.currentTarget)
     setMenuJobId(id)
   }
+
   const handleMenuClose = () => {
     setAnchorEl(null)
     setMenuJobId(null)
