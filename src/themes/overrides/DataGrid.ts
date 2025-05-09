@@ -63,6 +63,10 @@ export default function DataGrid(theme: Theme) {
             color: theme.palette.secondary.dark,
             fontWeight: 500,
             textAlign: 'center'
+          },
+          '& .nersc.running': {
+            backgroundColor: theme.palette.nerscStatus.running,
+            fontWeight: 600
           }
         },
         columnHeaders: {

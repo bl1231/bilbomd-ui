@@ -1,6 +1,11 @@
 import { ReactNode, useState } from 'react'
 import { useSearchParams } from 'react-router'
-import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid'
+import {
+  DataGrid,
+  GridColDef,
+  GridRowParams,
+  GridCellParams
+} from '@mui/x-data-grid'
 import { format, parseISO } from 'date-fns'
 import {
   useGetJobsQuery,
@@ -49,9 +54,10 @@ import { useNavigate } from 'react-router'
 import { JobActionsMenu } from './JobActionsMenu'
 
 const getRunTimeInHours = (nersc: INerscInfo | undefined) => {
-  if (!nersc?.time_started || !nersc?.time_completed) return ''
+  if (!nersc?.time_started) return ''
   const start = new Date(nersc.time_started)
-  const end = new Date(nersc.time_completed)
+  // If time_completed is missing, assume the job is still running and use the current date as the end time.
+  const end = nersc.time_completed ? new Date(nersc.time_completed) : new Date()
 
   if (isNaN(start.getTime()) || isNaN(end.getTime())) return ''
 
@@ -374,7 +380,13 @@ const Jobs = () => {
             {
               field: 'runTimeHours',
               headerName: 'Run Time',
-              width: 100
+              width: 100,
+              cellClassName: (params: GridCellParams) => {
+                const status = params.row.status
+                return clsx('nersc', {
+                  running: status === 'Running'
+                })
+              }
             }
           ]
         : []),
@@ -385,7 +397,7 @@ const Jobs = () => {
         field: 'status',
         headerName: 'Status',
         width: 110,
-        cellClassName: (params) => {
+        cellClassName: (params: GridCellParams) => {
           if (params.value == null) return ''
           return clsx('bilbomd', {
             submitted: params.value === 'Submitted',
@@ -403,7 +415,7 @@ const Jobs = () => {
         field: 'progress',
         headerName: 'Progress',
         width: 130,
-        renderCell: (params) => {
+        renderCell: (params: GridCellParams) => {
           if (params.value === undefined || params.value === null) {
             return null
           }

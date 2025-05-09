@@ -17,6 +17,9 @@ declare module '@mui/material/styles' {
       cancelled: string
       unknown: string
     }
+    nerscStatus: {
+      running: string
+    }
   }
 
   interface PaletteOptions {
@@ -30,6 +33,9 @@ declare module '@mui/material/styles' {
       failed?: string
       cancelled?: string
       unknown?: string
+    }
+    nerscStatus?: {
+      running?: string
     }
   }
 }
@@ -55,6 +61,9 @@ const getDesignTokens = (mode: PaletteMode) => {
         failed: red[300],
         cancelled: grey[200],
         unknown: grey[300]
+      },
+      nerscStatus: {
+        running: amber[100]
       }
     },
     breakpoints: {
