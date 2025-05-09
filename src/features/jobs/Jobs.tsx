@@ -56,6 +56,7 @@ import { JobActionsMenu } from './JobActionsMenu'
 const getRunTimeInHours = (nersc: INerscInfo | undefined) => {
   if (!nersc?.time_started) return ''
   const start = new Date(nersc.time_started)
+  // If time_completed is missing, assume the job is still running and use the current date as the end time.
   const end = nersc.time_completed ? new Date(nersc.time_completed) : new Date()
 
   if (isNaN(start.getTime()) || isNaN(end.getTime())) return ''
