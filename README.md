@@ -60,6 +60,10 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.20.2 (5/9/2025)
+  - Add dynamic run time conditional coloring for NERSC jobs
+  - Improve handling of deleted jobs in redux state
+  - Migrate to `notistack` for all Snackbar requirements app-wide
 - 1.20.1 (5/9/2025)
   - Fix Date formatting bug
 - 1.20.0 (5/8/2025)
