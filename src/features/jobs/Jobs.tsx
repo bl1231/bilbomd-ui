@@ -341,10 +341,12 @@ const Jobs = () => {
         width: 150,
         valueFormatter: (value) => {
           if (value) {
-            return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
-          } else {
-            return ''
+            const parsed = parseISO(value)
+            return isNaN(parsed.getTime())
+              ? 'Invalid date'
+              : format(parsed, 'MM/dd/yyyy HH:mm:ss')
           }
+          return ''
         }
       },
       {
@@ -354,10 +356,12 @@ const Jobs = () => {
         width: 150,
         valueFormatter: (value) => {
           if (value) {
-            return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
-          } else {
-            return ''
+            const parsed = parseISO(value)
+            return isNaN(parsed.getTime())
+              ? 'Invalid date'
+              : format(parsed, 'MM/dd/yyyy HH:mm:ss')
           }
+          return ''
         }
       },
       ...(useNersc
