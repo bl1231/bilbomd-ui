@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Chip, IconButton, Tooltip, Snackbar, Alert } from '@mui/material'
+import { Chip, IconButton, Tooltip } from '@mui/material'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import LaunchIcon from '@mui/icons-material/Launch'
 import { Box } from '@mui/system'
 import { green } from '@mui/material/colors'
 import { useNavigate } from 'react-router'
+import { useSnackbar } from 'notistack'
 
 interface CopyableChipProps {
   label: string
@@ -13,24 +14,14 @@ interface CopyableChipProps {
 }
 
 const CopyableChip: React.FC<CopyableChipProps> = ({ label, value, url }) => {
-  const [open, setOpen] = useState(false)
   const navigate = useNavigate()
+  const { enqueueSnackbar } = useSnackbar()
 
   const handleCopy = () => {
     if (value) {
       navigator.clipboard.writeText(value)
+      enqueueSnackbar(`${label} copied to clipboard!`, { variant: 'default' })
     }
-    setOpen(true)
-  }
-
-  const handleClose = (
-    _event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === 'clickaway') {
-      return
-    }
-    setOpen(false)
   }
 
   const handleLaunch = (e: React.MouseEvent) => {
@@ -82,16 +73,6 @@ const CopyableChip: React.FC<CopyableChipProps> = ({ label, value, url }) => {
           backgroundColor: green[100]
         }}
       />
-      <Snackbar
-        open={open}
-        autoHideDuration={3000}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert onClose={handleClose} severity='success' sx={{ width: '100%' }}>
-          {label} copied to clipboard!
-        </Alert>
-      </Snackbar>
     </>
   )
 }

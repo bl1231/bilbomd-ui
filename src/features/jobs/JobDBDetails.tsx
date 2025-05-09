@@ -12,10 +12,9 @@ import {
   Box,
   Tooltip,
   IconButton,
-  Chip,
-  Snackbar,
-  Alert
+  Chip
 } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import Grid from '@mui/material/Grid'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import VisibilityIcon from '@mui/icons-material/Visibility'
@@ -42,7 +41,7 @@ type MongoDBProperty = {
 
 const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
   const [open, setOpen] = useState(false)
-  const [toastOpen, setToastOpen] = useState(false)
+  const { enqueueSnackbar } = useSnackbar()
   const [triggerGetFile, { data: fileContents, isLoading, error }] =
     useLazyGetFileByIdAndNameQuery()
 
@@ -66,11 +65,11 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
   const handleCopyToClipboard = () => {
     if (fileContents) {
       navigator.clipboard.writeText(fileContents)
-      setToastOpen(true)
+      enqueueSnackbar('File contents copied to clipboard!', {
+        variant: 'default'
+      })
     }
   }
-
-  const handleToastClose = () => setToastOpen(false)
 
   const jobTypeDisplayName: Record<string, string> = {
     BilboMdPDB: 'BilboMD Classic w/PDB',
@@ -392,21 +391,6 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
           )}
         </DialogContent>
       </Dialog>
-
-      <Snackbar
-        open={toastOpen}
-        onClose={handleToastClose}
-        autoHideDuration={3000}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert
-          onClose={handleToastClose}
-          severity='success'
-          sx={{ width: '100%' }}
-        >
-          File contents copied to clipboard!
-        </Alert>
-      </Snackbar>
     </Box>
   )
 }
