@@ -93,7 +93,8 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
         )
         try {
           await queryFulfilled
-        } catch {
+        } catch (error) {
+          console.error('Error occurred during job deletion:', error)
           patchResult.undo()
         }
       },
