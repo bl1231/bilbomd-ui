@@ -1,5 +1,4 @@
 import { Theme } from '@mui/material/styles'
-import { yellow } from '@mui/material/colors'
 
 export default function DataGrid(theme: Theme) {
   return {
