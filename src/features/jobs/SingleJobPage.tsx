@@ -106,19 +106,20 @@ const SingleJobPage = () => {
 
   if (isError) {
     return (
-      <Alert severity='error' variant='outlined'>
-        <AlertTitle>Error loading job.</AlertTitle>
-        <ul>
-          <li>The backend server may be temporarily unavailable.</li>
-          <li>
-            Please try again making sure to include the entire job ID in request
-            URL.
-          </li>
-          <li>
-            It is also possible that the job has been deleted. We keep results
-            for 60 days.
-          </li>
-        </ul>
+      <Alert severity='warning' variant='outlined'>
+        <AlertTitle>Job Not Found or Deleted</AlertTitle>
+        <Typography variant='body2'>
+          This job could not be loaded. It may have been deleted or expired, or
+          there may be a problem communicating with the backend server.
+        </Typography>
+        <Box mt={2}>
+          <Button
+            variant='contained'
+            onClick={() => navigate('/dashboard/jobs')}
+          >
+            Return to Jobs List
+          </Button>
+        </Box>
       </Alert>
     )
   }

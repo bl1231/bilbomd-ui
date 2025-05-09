@@ -80,6 +80,24 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
         url: `/jobs/${id}`,
         method: 'DELETE'
       }),
+      // Optimistically remove the job from the cache before the server confirms deletion.
+      // If the server request fails, the rollback mechanism (patchResult.undo())
+      // restores the cache to its previous state.
+      async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          jobsApiSlice.util.updateQueryData('getJobs', undefined, (draft) => {
+            if ('ids' in draft && 'entities' in draft) {
+              jobsAdapter.removeOne(draft, id)
+            }
+          })
+        )
+        try {
+          await queryFulfilled
+        } catch (error) {
+          console.error('Error occurred during job deletion:', error)
+          patchResult.undo()
+        }
+      },
       invalidatesTags: (_, __, arg) => [{ type: 'Job', id: arg.id }]
     }),
     checkJobFiles: builder.query<FileCheckResult, string>({

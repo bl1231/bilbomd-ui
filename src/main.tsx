@@ -8,6 +8,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router'
 import { ThemeContextProvider } from 'themes/ThemeContextProvider'
 import { StyledEngineProvider } from '@mui/system'
 import { ErrorBoundary } from 'react-error-boundary'
+import { SnackbarProvider } from 'notistack'
 import ErrorFallback from 'components/ErrorFallback'
 
 const router = createBrowserRouter([
@@ -26,9 +27,17 @@ if (rootElement) {
       <ThemeContextProvider>
         <StyledEngineProvider injectFirst>
           <ReduxProvider store={setupStore()}>
-            <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {}}>
-              <RouterProvider router={router} />
-            </ErrorBoundary>
+            <SnackbarProvider
+              maxSnack={3}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+            >
+              <ErrorBoundary
+                FallbackComponent={ErrorFallback}
+                onReset={() => {}}
+              >
+                <RouterProvider router={router} />
+              </ErrorBoundary>
+            </SnackbarProvider>
           </ReduxProvider>
         </StyledEngineProvider>
       </ThemeContextProvider>

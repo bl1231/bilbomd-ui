@@ -52,6 +52,7 @@ import {
 import Item from 'themes/components/Item'
 import { useNavigate } from 'react-router'
 import { JobActionsMenu } from './JobActionsMenu'
+import { useSnackbar } from 'notistack'
 
 const getRunTimeInHours = (nersc: INerscInfo | undefined) => {
   if (!nersc?.time_started) return ''
@@ -123,6 +124,7 @@ const Jobs = () => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [menuJobId, setMenuJobId] = useState<string | null>(null)
+  const { enqueueSnackbar } = useSnackbar()
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [deleteTargetJobId, setDeleteTargetJobId] = useState<string | null>(
@@ -140,17 +142,28 @@ const Jobs = () => {
   }
 
   const handleDeleteConfirm = async () => {
-    if (deleteTargetJobId) {
-      await deleteJob({ id: deleteTargetJobId })
+    if (!deleteTargetJobId) return
+
+    try {
+      await deleteJob({ id: deleteTargetJobId }).unwrap()
+      enqueueSnackbar('Job deletion queued.', { variant: 'success' })
+    } catch (err) {
+      console.error('Failed to delete job:', err)
+      enqueueSnackbar('Failed to delete job. Please try again.', {
+        variant: 'error'
+      })
+    } finally {
       setDeleteDialogOpen(false)
       setDeleteTargetJobId(null)
       setDeleteTargetTitle(null)
     }
   }
+
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, id: string) => {
     setAnchorEl(event.currentTarget)
     setMenuJobId(id)
   }
+
   const handleMenuClose = () => {
     setAnchorEl(null)
     setMenuJobId(null)
