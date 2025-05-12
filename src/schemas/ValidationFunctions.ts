@@ -282,14 +282,6 @@ const isValidConstInpFile = (
       const text = e.target.result as string
       const lines = text.split('\n').filter((line) => line.trim() !== '') // Filter out empty lines
 
-      // Check if any line exceeds 70 characters
-      // for (let i = 0; i < lines.length; i++) {
-      //   if (lines[i].length > 70) {
-      //     resolve(`Line ${i + 1} exceeds 70 characters.`)
-      //     return
-      //   }
-      // }
-
       // Check if the last non-empty line is exactly 'return'
       if (lines.length === 0 || lines[lines.length - 1].trim() !== 'return') {
         resolve('The last line must be "return".')
@@ -333,6 +325,13 @@ const isValidConstInpFile = (
           resolve('segid must contain 4 uppercase letters [A-Z]')
           return
         }
+      }
+
+      // Check that there are at most 20 "shape" commands
+      const shapeCount = lines.filter((line) => line.startsWith('shape')).length
+      if (shapeCount > 20) {
+        resolve('Too many CHARMM shape commands. Maximum allowed is 20.')
+        return
       }
 
       resolve(true) // All checks passed
