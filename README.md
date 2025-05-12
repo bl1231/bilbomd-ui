@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.20.3 (5/12/2025)
+  - Temporary fix for bug when fetching job log files for failed runs
 - 1.20.2 (5/9/2025)
   - Add dynamic run time conditional coloring for NERSC jobs
   - Improve handling of deleted jobs in redux state
