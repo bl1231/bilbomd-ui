@@ -30,7 +30,7 @@ import BilboMDNerscSteps from './BilboMDNerscSteps'
 import BilboMDMongoSteps from './BilboMDMongoSteps'
 import { BilboMDScoperSteps } from './BilboMDScoperSteps'
 import HeaderBox from 'components/HeaderBox'
-import JobError from './JobError'
+// import JobError from './JobError'
 import JobDBDetails from './JobDBDetails'
 import MultiMDJobDBDetails from 'features/multimd/MultiMDJobDBDetails'
 import MolstarViewer from 'features/molstar/Viewer'
@@ -479,7 +479,7 @@ const SingleJobPage = () => {
                 again and if things still don&apos;t work contact Scott or
                 Michal.
               </Alert>
-              <JobError job={job} />
+              {/* <JobError job={job} /> */}
             </Item>
           </Grid>
         )}
