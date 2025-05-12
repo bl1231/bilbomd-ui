@@ -327,7 +327,7 @@ const isValidConstInpFile = (
         }
       }
 
-      // Check that there are fewer than 20 "shape" commands
+      // Check that there are at most 20 "shape" commands
       const shapeCount = lines.filter((line) => line.startsWith('shape')).length
       if (shapeCount > 20) {
         resolve('Too many CHARMM shape commands. Maximum allowed is 20.')
