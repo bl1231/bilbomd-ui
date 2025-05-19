@@ -3,6 +3,7 @@ import {
   noSpaces,
   isSaxsData,
   isValidConstInpFile,
+  hasAllowedResiduesOnly,
   isPsfData,
   isCRD,
   containsChainId
@@ -86,6 +87,21 @@ export const crdCheck = () =>
       return true
     }
   )
+
+export const pdbCheck = () =>
+  mixed().test('pdb-check', '', async function (file) {
+    const { path, createError } = this
+
+    if (!(file instanceof File)) return true
+
+    const result = await hasAllowedResiduesOnly(file)
+    if (result.valid) return true
+
+    return createError({
+      path,
+      message: `Unsupported residues found: ${result.unsupportedResidues.join(', ')} Please ask Scott to add them to the list of supported residues.`
+    })
+  })
 
 export const chainIdCheck = () =>
   mixed().test(
