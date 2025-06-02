@@ -1,3 +1,114 @@
+const hasAllowedResiduesOnly = (
+  file: File
+): Promise<{ valid: boolean; unsupportedResidues: string[] }> => {
+  const allowedResidues = new Set([
+    // Protein
+    'ALA',
+    'CYS',
+    'ASP',
+    'GLU',
+    'PHE',
+    'GLY',
+    'HIS',
+    'HSD',
+    'ILE',
+    'LYS',
+    'LEU',
+    'MET',
+    'ASN',
+    'PRO',
+    'GLN',
+    'ARG',
+    'SER',
+    'THR',
+    'VAL',
+    'TRP',
+    'TYR',
+    // Modified Amino Acids
+    'SEP',
+    'TPO',
+    'PTR',
+    // DNA
+    'DA',
+    'DC',
+    'DG',
+    'DT',
+    'DI',
+    'ADE',
+    'CYT',
+    'GUA',
+    'THY',
+    // RNA
+    'A',
+    'C',
+    'G',
+    'U',
+    'I',
+    // Carbohydrates
+    'AFL',
+    'ALL',
+    'BMA',
+    'BGC',
+    'BOG',
+    'FCA',
+    'FCB',
+    'FMF',
+    'FUC',
+    'FUL',
+    'G4S',
+    'GAL',
+    'GLA',
+    'GLB',
+    'GLC',
+    'GLS',
+    'GSA',
+    'LAK',
+    'LAT',
+    'MAF',
+    'MAL',
+    'NAG',
+    'NAN',
+    'NGA',
+    'SIA',
+    'SLB',
+    // MISC removed in pdb2crd.py
+    'HOH'
+  ])
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = (e) => {
+      const text = e.target?.result as string | undefined
+      if (!text) {
+        reject(new Error('File load error: Event target or result is null'))
+        return
+      }
+
+      const lines = text.split(/\r?\n/)
+      const unsupportedResidues = new Set<string>()
+
+      for (const line of lines) {
+        if (line.startsWith('ATOM') || line.startsWith('HETATM')) {
+          const resName = line.substring(17, 20).trim()
+          if (!allowedResidues.has(resName)) {
+            unsupportedResidues.add(resName)
+          }
+        }
+      }
+
+      resolve({
+        valid: unsupportedResidues.size === 0,
+        unsupportedResidues: Array.from(unsupportedResidues)
+      })
+    }
+
+    reader.onerror = () => reject(new Error('Error reading file'))
+
+    reader.readAsText(file)
+  })
+}
+
 const fromCharmmGui = (file: File): Promise<boolean> => {
   const charmmGui = /CHARMM-GUI/
   return new Promise((resolve) => {
@@ -350,5 +461,6 @@ export {
   isSaxsData,
   isRNA,
   containsChainId,
-  isValidConstInpFile
+  isValidConstInpFile,
+  hasAllowedResiduesOnly
 }
