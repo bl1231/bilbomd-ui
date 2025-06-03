@@ -6,7 +6,8 @@ import {
   hasAllowedResiduesOnly,
   isPsfData,
   isCRD,
-  containsChainId
+  containsChainId,
+  noLeadingSpaceOnPDBLines
 } from '../ValidationFunctions'
 
 const isFileOrString = (file: unknown): boolean =>
@@ -109,6 +110,16 @@ export const chainIdCheck = () =>
     'Missing Chain ID in column 22',
     async (file) => {
       if (file instanceof File) return containsChainId(file)
+      return true
+    }
+  )
+
+export const pdbLineStartCheck = () =>
+  mixed().test(
+    'pdb-line-start-check',
+    'PDB file contains lines with invalid leading spaces (e.g., " ATOM" instead of "ATOM")',
+    async (file) => {
+      if (file instanceof File) return noLeadingSpaceOnPDBLines(file)
       return true
     }
   )
