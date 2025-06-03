@@ -47,32 +47,76 @@ const hasAllowedResiduesOnly = (
     // Carbohydrates
     'AFL',
     'ALL',
+    'ALT',
     'BMA',
     'BGC',
-    'BOG',
-    'FCA',
-    'FCB',
-    'FMF',
     'FUC',
     'FUL',
-    'G4S',
     'GAL',
-    'GLA',
-    'GLB',
     'GLC',
-    'GLS',
-    'GSA',
-    'LAK',
-    'LAT',
-    'MAF',
-    'MAL',
+    'GUL',
+    'IDO',
     'NAG',
-    'NAN',
-    'NGA',
+    'RHM',
+    'RIB',
     'SIA',
-    'SLB',
+    'TAL',
+    'XYL',
+    'MAN',
     // MISC removed in pdb2crd.py
     'HOH'
+  ])
+
+  const allowedIons = new Set([
+    // Alkali metals
+    'LI',
+    'NA',
+    'K',
+    'RB',
+    'CS',
+
+    // Alkaline earth metals
+    'MG',
+    'CA',
+    'SR',
+    'BA',
+
+    // Transition metals
+    'SC',
+    'TI',
+    'V',
+    'CR',
+    'MN',
+    'FE',
+    'CO',
+    'NI',
+    'CU',
+    'ZN',
+    'MO',
+    'CD',
+    'HG',
+
+    // Post-transition/metalloids
+    'AL',
+    'GA',
+    'IN',
+    'SN',
+    'PB',
+
+    // Metalloids and others
+    'B',
+    'SE',
+    'AS',
+
+    // Non-metal anions commonly found as ions
+    'CL',
+    'BR',
+    'I',
+    'F',
+    'SO4',
+    'PO4',
+    'NO3',
+    'CN'
   ])
 
   return new Promise((resolve, reject) => {
@@ -90,8 +134,8 @@ const hasAllowedResiduesOnly = (
 
       for (const line of lines) {
         if (line.startsWith('ATOM') || line.startsWith('HETATM')) {
-          const resName = line.substring(17, 20).trim()
-          if (!allowedResidues.has(resName)) {
+          const resName = line.substring(17, 20).trim().toUpperCase()
+          if (!allowedResidues.has(resName) && !allowedIons.has(resName)) {
             unsupportedResidues.add(resName)
           }
         }
@@ -338,6 +382,29 @@ const containsChainId = (file: File): Promise<boolean> => {
   })
 }
 
+const noLeadingSpaceOnPDBLines = (file: File): Promise<boolean> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const text = e.target?.result as string | undefined
+      if (!text) {
+        reject(new Error('File load error: Event target or result is null'))
+        return
+      }
+
+      const lines = text.split(/\r?\n/)
+      const hasBadStart = lines.some(
+        (line) => line.startsWith(' ATOM') || line.startsWith(' HETATM')
+      )
+
+      resolve(!hasBadStart)
+    }
+
+    reader.onerror = (e) => reject(new Error('Error reading file: ' + e))
+    reader.readAsText(file)
+  })
+}
+
 const isRNA = (file: File): Promise<{ valid: boolean; message?: string }> => {
   return new Promise((resolve) => {
     const reader = new FileReader()
@@ -461,6 +528,7 @@ export {
   isSaxsData,
   isRNA,
   containsChainId,
+  noLeadingSpaceOnPDBLines,
   isValidConstInpFile,
   hasAllowedResiduesOnly
 }
