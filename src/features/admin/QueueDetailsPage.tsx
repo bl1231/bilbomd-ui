@@ -24,7 +24,8 @@ import {
   useGetQueuesQuery,
   useGetJobsByQueueQuery,
   useDeleteQueueJobMutation,
-  useRetryQueueJobMutation
+  useRetryQueueJobMutation,
+  useFailQueueJobMutation
 } from '../../slices/adminApiSlice'
 import { FrontendBullMQJob } from '../../types/bullmq'
 import { QueueJobActionsMenu } from './QueueJobActionsMenu'
@@ -36,7 +37,16 @@ interface BilboMDJobData {
   uuid: string
   jobid: string
 }
-
+interface QueueJobRow {
+  id: string
+  name: string
+  type: string
+  status: string
+  attemptsMade: number
+  submitted: string
+  uuid: string
+  lockExpiresAtFormatted: string | null
+}
 const QueueDetailsPage = () => {
   const { queueName } = useParams<{ queueName: string }>()
   const [searchParams, setSearchParams] = useSearchParams()
@@ -53,6 +63,12 @@ const QueueDetailsPage = () => {
   )
   const [deleteJob, { isLoading: isDeleting }] = useDeleteQueueJobMutation()
   const [retryQueueJob] = useRetryQueueJobMutation()
+  const [failQueueJob] = useFailQueueJobMutation()
+
+  const handleMoveToFailed = (jobId: string) => {
+    if (!queueName) return
+    failQueueJob({ queueName, jobId })
+  }
 
   const handleRetry = (jobId: string) => {
     if (!queueName) return
@@ -119,7 +135,7 @@ const QueueDetailsPage = () => {
     return <Alert severity='warning'>Queue not found.</Alert>
   }
 
-  // console.log('Jobs:', jobs)
+  console.log('Jobs:', jobs)
 
   const typedJobs: FrontendBullMQJob<BilboMDJobData>[] = jobs?.jobs ?? []
 
@@ -219,6 +235,59 @@ const QueueDetailsPage = () => {
     </FormControl>
   )
 
+  const columns: GridColDef<QueueJobRow>[] = [
+    { field: 'name', headerName: 'Name', flex: 0.25 },
+    { field: 'id', headerName: 'JobID', width: 60 },
+    { field: 'type', headerName: 'Type', width: 120 },
+    { field: 'status', headerName: 'Status', width: 120 },
+    { field: 'attemptsMade', headerName: 'Attempts', width: 100 },
+    { field: 'submitted', headerName: 'Submitted', width: 180 },
+    { field: 'uuid', headerName: 'UUID', flex: 0.25 },
+    {
+      field: 'lockExpiresAtFormatted',
+      headerName: 'Lock Expires At',
+      width: 200
+    },
+    {
+      field: 'actions',
+      type: 'actions',
+      sortable: false,
+      headerName: 'Manage',
+      width: 250,
+      getActions: (params: GridRowParams<QueueJobRow>) => {
+        const id = params.row.id
+        const isOpen = Boolean(anchorEl) && menuJobId === id
+
+        return [
+          <Button
+            key={`${id}-menu-btn`}
+            variant='outlined'
+            disableElevation
+            size='small'
+            className='job-details-button'
+            onClick={(e) => handleMenuOpen(e, id)}
+            endIcon={<KeyboardArrowDownIcon />}
+          >
+            More Actions
+          </Button>,
+          <QueueJobActionsMenu
+            key={`${id}-menu`}
+            jobId={id}
+            jobType={params.row.type}
+            jobTitle={params.row.name}
+            jobStatus={params.row.status}
+            anchorEl={anchorEl}
+            open={isOpen}
+            onClose={handleMenuClose}
+            onRetry={handleRetry}
+            onDelete={openDeleteDialog}
+            onFail={handleMoveToFailed}
+          />
+        ]
+      }
+    }
+  ]
+
   return (
     <BoxDataGridWrapper>
       <Box
@@ -307,7 +376,7 @@ const QueueDetailsPage = () => {
 
         {jobs && (
           <Box sx={{ height: 500, width: '100%', mt: 2 }}>
-            <DataGrid
+            <DataGrid<QueueJobRow>
               rows={filteredJobs.map((job) => ({
                 id: job.id,
                 name: job.name,
@@ -315,55 +384,12 @@ const QueueDetailsPage = () => {
                 status: job.status,
                 attemptsMade: job.attemptsMade,
                 submitted: new Date(job.timestamp).toLocaleString(),
-                uuid: job.data?.uuid
+                uuid: job.data?.uuid,
+                lockExpiresAtFormatted: job.lockExpiresAt
+                  ? new Date(job.lockExpiresAt).toLocaleString()
+                  : null
               }))}
-              columns={
-                [
-                  { field: 'name', headerName: 'Name', flex: 0.25 },
-                  { field: 'type', headerName: 'Type', width: 120 },
-                  { field: 'status', headerName: 'Status', width: 120 },
-                  { field: 'attemptsMade', headerName: 'Attempts', width: 100 },
-                  { field: 'submitted', headerName: 'Submitted', width: 180 },
-                  { field: 'uuid', headerName: 'UUID', flex: 0.25 },
-                  {
-                    field: 'actions',
-                    type: 'actions',
-                    sortable: false,
-                    headerName: 'Manage',
-                    width: 250,
-                    getActions: (params: GridRowParams) => {
-                      const id = params.row.id
-                      const isOpen = Boolean(anchorEl) && menuJobId === id
-
-                      return [
-                        <Button
-                          key={`${id}-menu-btn`}
-                          variant='outlined'
-                          disableElevation
-                          size='small'
-                          className='job-details-button'
-                          onClick={(e) => handleMenuOpen(e, id)}
-                          endIcon={<KeyboardArrowDownIcon />}
-                        >
-                          More Actions
-                        </Button>,
-                        <QueueJobActionsMenu
-                          key={`${id}-menu`}
-                          jobId={id}
-                          jobType={params.row.type}
-                          jobTitle={params.row.name}
-                          jobStatus={params.row.status}
-                          anchorEl={anchorEl}
-                          open={isOpen}
-                          onClose={handleMenuClose}
-                          onRetry={handleRetry}
-                          onDelete={openDeleteDialog}
-                        />
-                      ]
-                    }
-                  }
-                ] as GridColDef[]
-              }
+              columns={columns}
               pageSizeOptions={[10, 25, 50]}
               initialState={{
                 pagination: { paginationModel: { pageSize: 10, page: 0 } }

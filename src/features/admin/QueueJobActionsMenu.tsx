@@ -15,6 +15,7 @@ interface QueueJobActionsMenuProps {
   onClose: () => void
   onRetry: (id: string) => void
   onDelete: (id: string) => void
+  onFail: (id: string) => void
 }
 
 const QueueJobActionsMenu: React.FC<QueueJobActionsMenuProps> = ({
@@ -24,7 +25,8 @@ const QueueJobActionsMenu: React.FC<QueueJobActionsMenuProps> = ({
   open,
   onClose,
   onRetry,
-  onDelete
+  onDelete,
+  onFail
 }) => {
   const handleRetryClick = () => {
     onRetry(jobId)
@@ -36,11 +38,25 @@ const QueueJobActionsMenu: React.FC<QueueJobActionsMenuProps> = ({
     onClose()
   }
 
+  const handleFailClick = () => {
+    onFail(jobId)
+    onClose()
+  }
+
   return (
     <StyledMenu anchorEl={anchorEl} open={open} onClose={onClose}>
       <MenuItem onClick={handleRetryClick} disableRipple>
         <AutorenewIcon />
         Retry
+      </MenuItem>
+      <MenuItem
+        onClick={handleFailClick}
+        disableRipple
+        disabled={jobStatus !== 'active'}
+        sx={{ color: 'warning.main' }}
+      >
+        <AutorenewIcon color='warning' />
+        Mark as Failed
       </MenuItem>
       <Divider />
       <MenuItem

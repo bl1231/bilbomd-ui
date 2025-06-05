@@ -43,6 +43,13 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         method: 'POST'
       }),
       invalidatesTags: ['AdminQueue']
+    }),
+    failQueueJob: builder.mutation({
+      query: ({ queueName, jobId }: { queueName: string; jobId: string }) => ({
+        url: `/admin/queues/${queueName}/jobs/${jobId}/fail`,
+        method: 'POST'
+      }),
+      invalidatesTags: ['AdminQueue']
     })
   })
 })
@@ -54,5 +61,6 @@ export const {
   useGetJobsByQueueQuery,
   useRetryQueueJobMutation,
   useDeleteQueueJobMutation,
-  useDrainQueueMutation
+  useDrainQueueMutation,
+  useFailQueueJobMutation
 } = adminApiSlice

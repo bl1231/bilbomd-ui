@@ -5,4 +5,5 @@ export interface FrontendBullMQJob<T = Record<string, unknown>> {
   status: string
   timestamp: number
   attemptsMade: number
+  lockExpiresAt: number | null
 }
