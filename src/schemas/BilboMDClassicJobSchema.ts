@@ -10,6 +10,7 @@ import {
   crdCheck,
   pdbCheck,
   chainIdCheck,
+  pdbLineStartCheck,
   constInpCheck
 } from './fieldTests/fieldTests'
 
@@ -51,6 +52,7 @@ const BilboMDClassicJobSchema = object().shape({
         .concat(fileSizeTest(10_000_000))
         .concat(noSpacesTest())
         .concat(fileNameLengthTest())
+        .concat(pdbLineStartCheck())
         .concat(pdbCheck()),
     otherwise: () => mixed().notRequired()
   }),
