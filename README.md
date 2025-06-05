@@ -60,6 +60,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.20.5 (6/5/2025)
+  - Improvements to PDB file validation
+  - Improvments to Admin BullMQ tasks
 - 1.20.4 (6/2/2025)
   - Update dependencies.
   - Add improved validation checks for PDB files.
