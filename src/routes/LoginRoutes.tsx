@@ -9,6 +9,7 @@ const VerifyEmail = Loadable(lazy(() => import('features/auth/VerifyEmail')))
 const MagickLinkAuth = Loadable(
   lazy(() => import('features/auth/MagickLinkAuth'))
 )
+const Login = Loadable(lazy(() => import('features/auth/Login')))
 
 const LoginRoutes = {
   element: <MinimalLayout />,
@@ -36,7 +37,7 @@ const LoginRoutes = {
     },
     {
       path: 'login',
-      element: <MagickLink />
+      element: <Login />
     }
   ]
 }
