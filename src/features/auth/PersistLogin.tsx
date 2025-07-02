@@ -1,5 +1,5 @@
 import { Outlet, Link } from 'react-router'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRefreshMutation } from 'slices/authApiSlice'
 import usePersist from '../../hooks/usePersist'
 import { useSelector } from 'react-redux'
@@ -11,7 +11,6 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 const PersistLogin = () => {
   const [persist] = usePersist()
   const token = useSelector(selectCurrentToken)
-  const isMountedRef = useRef(false) // Create a ref to track the initial mount
 
   const [trueSuccess, setTrueSuccess] = useState(false)
 
@@ -27,14 +26,12 @@ const PersistLogin = () => {
         console.error('Refresh failed:', err)
       }
     }
-
-    if (!isMountedRef.current) {
-      isMountedRef.current = true
-      if (!token && persist) {
-        verifyRefreshToken()
-      }
+    if (persist && !token) {
+      verifyRefreshToken()
     }
   }, [persist, refresh, token])
+
+  console.log('PersistLogin:', { token, persist })
 
   let content
 
@@ -67,7 +64,7 @@ const PersistLogin = () => {
             color='primary'
             startIcon={<AutoFixHighIcon />}
             component={Link}
-            to='magicklink'
+            to='/magicklink'
           >
             Request A New MagickLink&#8482;
           </Button>
