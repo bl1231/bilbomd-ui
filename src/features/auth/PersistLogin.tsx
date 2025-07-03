@@ -53,16 +53,24 @@ const PersistLogin = () => {
         justifyContent='center'
       >
         <Grid sx={{ width: '300px' }}>
-          <Alert variant='outlined' severity='error'>
+          <Alert variant='outlined' severity='error' sx={{ mb: 2 }}>
             {error ? 'Session has expired' : ''}
           </Alert>
           <Button
             fullWidth
-            sx={{ my: 2 }}
             variant='contained'
-            type='button'
             color='primary'
             startIcon={<AutoFixHighIcon />}
+            component={Link}
+            to='/auth/orcid-error?reason=session-expired'
+            sx={{ mb: 1 }}
+          >
+            Continue with ORCID
+          </Button>
+          <Button
+            fullWidth
+            variant='outlined'
+            color='secondary'
             component={Link}
             to='/magicklink'
           >
