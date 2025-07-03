@@ -35,16 +35,16 @@ const LoginRoutes = {
       element: <MagickLink />
     },
     {
+      path: 'auth/orcid-confirmation',
+      element: <OrcidConfirmation />
+    },
+    {
       path: 'auth/:otp',
       element: <MagickLinkAuth />
     },
     {
       path: 'login',
       element: <Login />
-    },
-    {
-      path: 'auth/orcid-confirmation',
-      element: <OrcidConfirmation />
     }
   ]
 }

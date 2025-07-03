@@ -58,11 +58,14 @@ describe('LoginRoutes', () => {
     expect(routes[3].path).toBe('magicklink')
     expect(routes[3].element).toBeDefined()
 
-    expect(routes[4].path).toBe('auth/:otp')
+    expect(routes[4].path).toBe('auth/orcid-confirmation')
     expect(routes[4].element).toBeDefined()
 
-    expect(routes[5].path).toBe('login')
+    expect(routes[5].path).toBe('auth/:otp')
     expect(routes[5].element).toBeDefined()
+
+    expect(routes[6].path).toBe('login')
+    expect(routes[6].element).toBeDefined()
   })
 
   it('should render MinimalLayout element', () => {
