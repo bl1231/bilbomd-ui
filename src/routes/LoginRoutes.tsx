@@ -13,6 +13,7 @@ const Login = Loadable(lazy(() => import('features/auth/Login')))
 const OrcidConfirmation = Loadable(
   lazy(() => import('features/auth/OrcidConfirmation'))
 )
+const OrcidError = Loadable(lazy(() => import('features/auth/OrcidError')))
 
 const LoginRoutes = {
   element: <MinimalLayout />,
@@ -37,6 +38,10 @@ const LoginRoutes = {
     {
       path: 'auth/orcid-confirmation',
       element: <OrcidConfirmation />
+    },
+    {
+      path: 'auth/orcid-error',
+      element: <OrcidError />
     },
     {
       path: 'auth/:otp',

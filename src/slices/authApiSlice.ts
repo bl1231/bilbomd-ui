@@ -46,7 +46,10 @@ export const authApiSlice = apiSlice.injectEndpoints({
       }
     }),
     getOrcidSession: builder.query({
-      query: () => '/auth/orcid/confirmation'
+      query: () => ({
+        url: '/auth/orcid/confirmation',
+        method: 'GET'
+      })
     }),
     finalizeOrcid: builder.mutation({
       query: (body) => ({

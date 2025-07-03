@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@ant-design/colors": "^8.0.0",
-    "@bl1231/bilbomd-mongodb-schema": "^1.7.2",
+    "@bl1231/bilbomd-mongodb-schema": "^1.8.1",
     "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
