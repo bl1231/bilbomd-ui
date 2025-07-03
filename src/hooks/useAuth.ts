@@ -1,4 +1,3 @@
-// import { useSelector } from 'react-redux'
 import { selectCurrentToken } from 'slices/authSlice'
 import { jwtDecode } from 'jwt-decode'
 import { useAppSelector } from 'app/hooks'
@@ -15,6 +14,7 @@ interface BilboMDJwtPayload {
 
 const useAuth = () => {
   const token = useAppSelector(selectCurrentToken)
+  // console.log('useAuth: token from store:', token)
   let isManager = false
   let isAdmin = false
   let status = 'User'
@@ -22,7 +22,7 @@ const useAuth = () => {
   if (token) {
     const decoded = jwtDecode<JwtPayload>(token)
     const { username, roles, email } = decoded.UserInfo
-    //console.log('useAuth1:', username, roles, email)
+    // console.log('useAuth1:', username, roles, email)
 
     isManager = roles.includes('Manager')
     isAdmin = roles.includes('Admin')

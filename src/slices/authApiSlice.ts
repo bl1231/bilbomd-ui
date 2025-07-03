@@ -44,9 +44,27 @@ export const authApiSlice = apiSlice.injectEndpoints({
           console.log(error)
         }
       }
+    }),
+    getOrcidSession: builder.query({
+      query: () => ({
+        url: '/auth/orcid/confirmation',
+        method: 'GET'
+      })
+    }),
+    finalizeOrcid: builder.mutation({
+      query: (body) => ({
+        url: '/auth/orcid/finalize',
+        method: 'POST',
+        body
+      })
     })
   })
 })
 
-export const { useLoginMutation, useSendLogoutMutation, useRefreshMutation } =
-  authApiSlice
+export const {
+  useLoginMutation,
+  useSendLogoutMutation,
+  useRefreshMutation,
+  useGetOrcidSessionQuery,
+  useFinalizeOrcidMutation
+} = authApiSlice
