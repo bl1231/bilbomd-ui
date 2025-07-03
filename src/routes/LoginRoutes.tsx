@@ -10,6 +10,9 @@ const MagickLinkAuth = Loadable(
   lazy(() => import('features/auth/MagickLinkAuth'))
 )
 const Login = Loadable(lazy(() => import('features/auth/Login')))
+const OrcidConfirmation = Loadable(
+  lazy(() => import('features/auth/OrcidConfirmation'))
+)
 
 const LoginRoutes = {
   element: <MinimalLayout />,
@@ -38,6 +41,10 @@ const LoginRoutes = {
     {
       path: 'login',
       element: <Login />
+    },
+    {
+      path: 'auth/orcid-confirmation',
+      element: <OrcidConfirmation />
     }
   ]
 }
