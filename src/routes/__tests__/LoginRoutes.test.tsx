@@ -40,7 +40,7 @@ describe('LoginRoutes', () => {
   it('should have correct base configuration', () => {
     expect(LoginRoutes.path).toBe('/')
     expect(LoginRoutes.element).toBeDefined()
-    expect(LoginRoutes.children).toHaveLength(6)
+    expect(LoginRoutes.children).toHaveLength(7)
   })
 
   it('should have correct route configurations', () => {
