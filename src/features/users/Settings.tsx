@@ -30,7 +30,7 @@ const settingsMenu = [
     text: 'Email and Security',
     path: '/settings/security',
     icon: <EmailIcon />,
-    visibility: false
+    visibility: true
   },
   {
     text: 'Safety Zone',
