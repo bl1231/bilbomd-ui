@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.20.6 (7/10/2025)
+  - Add Alert feedback for BilboMD AF jobs when SAXS data fails the AutoRg check
 - 1.20.5 (6/5/2025)
   - Improvements to PDB file validation
   - Improvments to Admin BullMQ tasks
