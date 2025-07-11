@@ -400,11 +400,15 @@ const SubmitButton = ({
       endIcon={<SendIcon />}
       loadingPosition='end'
       variant='contained'
-      sx={{ width: '110px' }}
+      sx={{ width: '110px', mb: 2 }}
     >
       <span>Submit</span>
     </Button>
-    {status && <Alert severity='success'>{status}</Alert>}
+    {status?.startsWith('Error') ? (
+      <Alert severity='error'>{status.replace('Error: ', '')}</Alert>
+    ) : (
+      status && <Alert severity='success'>{status}</Alert>
+    )}
   </Grid>
 )
 
@@ -466,14 +470,25 @@ const NewAlphaFoldJob = () => {
     })
     try {
       const newJob = await addNewAlphaFoldJob(form).unwrap()
-      // setStatus(newJob)
-      // ✅ Set only a string value
       setStatus(`Job Submitted: ${newJob.jobid}`)
-    } catch (error) {
-      console.error('rejected', error)
-      setTimeout(() => {
-        throw error
-      })
+    } catch (error: unknown) {
+      console.error('Job submission failed:', error)
+
+      let backendMessage = 'Submission failed due to server error.'
+
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'data' in error &&
+        typeof (error as Record<string, unknown>).data === 'object' &&
+        error.data !== null &&
+        'message' in (error.data as Record<string, unknown>) &&
+        typeof (error.data as Record<string, unknown>).message === 'string'
+      ) {
+        backendMessage = (error.data as { message: string }).message
+      }
+
+      setStatus(`Error: ${backendMessage}`)
     }
   }
 
