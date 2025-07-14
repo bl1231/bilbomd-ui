@@ -49,7 +49,7 @@
     "@mui/icons-material": "^7.2.0",
     "@mui/material": "^7.2.0",
     "@mui/system": "^7.2.0",
-    "@mui/x-data-grid": "^8.7.0",
+    "@mui/x-data-grid": "^8.8.0",
     "@reduxjs/toolkit": "^2.8.2",
     "axios": "^1.10.0",
     "axios-retry": "^4.5.0",
