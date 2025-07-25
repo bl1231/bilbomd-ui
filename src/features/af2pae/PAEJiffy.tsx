@@ -22,6 +22,7 @@ import Download from './DownloadAF2PAEfile'
 import { Box } from '@mui/system'
 import {
   useAf2PaeJiffyMutation,
+  useGetAf2PaeStatusQuery,
   useGetAf2PaeConstFileQuery
 } from 'slices/jobsApiSlice'
 import LinearProgress from '@mui/material/LinearProgress'
@@ -52,8 +53,24 @@ const Alphafold2PAEJiffy = () => {
   const navigate = useNavigate()
   const [success, setSuccess] = useState(false)
   const [uuid, setUuid] = useState('')
+  const [status, setStatus] = useState('')
   const [constfile, setConstfile] = useState('')
   const [shapeCount, setShapeCount] = useState(0)
+
+  const {
+    data: statusData,
+    isLoading: statusIsLoading,
+    isError: statusIsError
+  } = useGetAf2PaeStatusQuery(uuid, {
+    skip: !uuid || !success,
+    pollingInterval: 5000
+  })
+
+  useEffect(() => {
+    if (statusData?.status) {
+      setStatus(statusData.status)
+    }
+  }, [statusData])
 
   const [formInitialValues, setFormInitialValues] = useState<FormValues>({
     pdb_file: originalFiles.pdb_file,
@@ -104,7 +121,7 @@ const Alphafold2PAEJiffy = () => {
     navigate('/dashboard/af2pae')
   }
 
-  const skipQuery = !uuid
+  const skipQuery = !uuid || status !== 'done'
 
   const {
     data: constInpData,
@@ -164,6 +181,16 @@ const Alphafold2PAEJiffy = () => {
               if (success) {
                 return (
                   <>
+                    {success && status !== 'done' && (
+                      <Typography>
+                        Waiting for job to complete... current status: {status}
+                      </Typography>
+                    )}
+                    {statusIsError && (
+                      <Typography color='error'>
+                        Error checking job status
+                      </Typography>
+                    )}
                     {constFileIsLoading && (
                       <Typography>Loading const.inp file...</Typography>
                     )}

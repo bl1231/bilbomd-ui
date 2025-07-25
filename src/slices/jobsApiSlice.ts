@@ -174,6 +174,12 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
         return text
       }
     }),
+    getAf2PaeStatus: builder.query({
+      query: (uuid: string) => ({
+        url: `/af2pae/status?uuid=${uuid}`,
+        method: 'GET'
+      })
+    }),
     getFileByIdAndName: builder.query<string, { id: string; filename: string }>(
       {
         query: ({ id, filename }) => ({
@@ -206,6 +212,7 @@ export const {
   useAddNewMultiJobMutation,
   useAf2PaeJiffyMutation,
   useGetAf2PaeConstFileQuery,
+  useGetAf2PaeStatusQuery,
   useGetFileByIdAndNameQuery,
   useLazyGetFileByIdAndNameQuery
 } = jobsApiSlice
