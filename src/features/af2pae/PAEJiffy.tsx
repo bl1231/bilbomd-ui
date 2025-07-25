@@ -119,7 +119,11 @@ const Alphafold2PAEJiffy = () => {
 
   const handleReset = () => {
     setSuccess(false)
-    navigate('/dashboard/af2pae')
+    setUuid('')
+    setStatus('')
+    setConstfile('')
+    setShapeCount(0)
+    setOriginalFiles({ pdb_file: null, pae_file: null })
   }
 
   const skipQuery = !uuid || status !== 'done'
@@ -299,7 +303,10 @@ const Alphafold2PAEJiffy = () => {
                           <Button
                             variant='outlined'
                             type='button'
-                            onClick={handleReset}
+                            onClick={() => {
+                              handleReset()
+                              resetForm()
+                            }}
                             sx={{ ml: 2 }}
                           >
                             Reset
