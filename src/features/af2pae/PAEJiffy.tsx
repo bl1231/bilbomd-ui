@@ -10,6 +10,7 @@ import {
   TableContainer,
   TableRow
 } from '@mui/material'
+import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'
 import { Form, Formik, Field, FormikHelpers } from 'formik'
 import { useState, useEffect } from 'react'
@@ -182,9 +183,20 @@ const Alphafold2PAEJiffy = () => {
                 return (
                   <>
                     {success && status !== 'done' && (
-                      <Typography>
-                        Waiting for job to complete... current status: {status}
-                      </Typography>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          my: 3
+                        }}
+                      >
+                        <CircularProgress />
+                        <Typography sx={{ mt: 2 }}>
+                          Waiting for job to complete... current status:{' '}
+                          {status}
+                        </Typography>
+                      </Box>
                     )}
                     {statusIsError && (
                       <Typography color='error'>
@@ -200,89 +212,101 @@ const Alphafold2PAEJiffy = () => {
                       </Typography>
                     )}
 
-                    <Alert severity={shapeCount >= 20 ? 'error' : 'success'}>
-                      <AlertTitle>
-                        {shapeCount >= 20 ? 'Error' : 'Success'}
-                      </AlertTitle>
-                      Your CHARMM-compatible <code>const.inp</code> file was
-                      successfully created!{' '}
-                      {values && shapeCount >= 20
-                        ? `But with Clustering Weight = ${parseFloat(values.pae_power).toFixed(1)} there are ${shapeCount} rigid bodies which is too many for CHARMM to handle.`
-                        : ''}
-                      <br />
-                      {values && (
-                        <>
-                          <TableContainer sx={{ width: '400px' }}>
-                            <Table aria-label='simple table'>
-                              <TableBody>
-                                <TableRow>
-                                  <TableCell>
-                                    <b>PDB File</b>
-                                  </TableCell>
-                                  <TableCell align='right'>
-                                    {values.pdb_file?.name}
-                                  </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                  <TableCell>
-                                    <b>PAE File</b>
-                                  </TableCell>
-                                  <TableCell align='right'>
-                                    {values.pae_file?.name}
-                                  </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                  <TableCell>
-                                    <b>Clustering Weight</b>
-                                  </TableCell>
-                                  <TableCell align='right'>
-                                    {parseFloat(values.pae_power).toFixed(1)}
-                                  </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                  <TableCell>
-                                    <b>pLDDT Cutoff</b>
-                                  </TableCell>
-                                  <TableCell align='right'>
-                                    {parseFloat(values.plddt_cutoff).toFixed(1)}
-                                  </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                  <TableCell>
-                                    <b>CHARMM shapes (max 20)</b>
-                                  </TableCell>
-                                  <TableCell align='right'>
-                                    {shapeCount}
-                                  </TableCell>
-                                </TableRow>
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                        </>
-                      )}
-                    </Alert>
+                    {status === 'done' && (
+                      <>
+                        <Alert
+                          severity={shapeCount >= 20 ? 'error' : 'success'}
+                        >
+                          <AlertTitle>
+                            {shapeCount >= 20 ? 'Error' : 'Success'}
+                          </AlertTitle>
+                          Your CHARMM-compatible <code>const.inp</code> file was
+                          successfully created!{' '}
+                          {values && shapeCount >= 20
+                            ? `But with Clustering Weight = ${parseFloat(values.pae_power).toFixed(1)} there are ${shapeCount} rigid bodies which is too many for CHARMM to handle.`
+                            : ''}
+                          <br />
+                          {values && (
+                            <>
+                              <TableContainer sx={{ width: '400px' }}>
+                                <Table aria-label='simple table'>
+                                  <TableBody>
+                                    <TableRow>
+                                      <TableCell>
+                                        <b>PDB File</b>
+                                      </TableCell>
+                                      <TableCell align='right'>
+                                        {values.pdb_file?.name}
+                                      </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                      <TableCell>
+                                        <b>PAE File</b>
+                                      </TableCell>
+                                      <TableCell align='right'>
+                                        {values.pae_file?.name}
+                                      </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                      <TableCell>
+                                        <b>Clustering Weight</b>
+                                      </TableCell>
+                                      <TableCell align='right'>
+                                        {parseFloat(values.pae_power).toFixed(
+                                          1
+                                        )}
+                                      </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                      <TableCell>
+                                        <b>pLDDT Cutoff</b>
+                                      </TableCell>
+                                      <TableCell align='right'>
+                                        {parseFloat(
+                                          values.plddt_cutoff
+                                        ).toFixed(1)}
+                                      </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                      <TableCell>
+                                        <b>CHARMM shapes (max 20)</b>
+                                      </TableCell>
+                                      <TableCell align='right'>
+                                        {shapeCount}
+                                      </TableCell>
+                                    </TableRow>
+                                  </TableBody>
+                                </Table>
+                              </TableContainer>
+                            </>
+                          )}
+                        </Alert>
 
-                    <ConstInpFile constfile={constfile} />
+                        <ConstInpFile constfile={constfile} />
 
-                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                      <Download uuid={uuid} />
-                      <Button
-                        variant='contained'
-                        onClick={() =>
-                          handleTryNewParameters(values, resetForm)
-                        }
-                      >
-                        Try New Parameters
-                      </Button>
-                      <Button
-                        variant='outlined'
-                        type='button'
-                        onClick={handleReset}
-                        sx={{ ml: 2 }}
-                      >
-                        Reset
-                      </Button>
-                    </Box>
+                        <Box
+                          sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}
+                        >
+                          <Download uuid={uuid} />
+                          <Button
+                            variant='contained'
+                            onClick={() =>
+                              handleTryNewParameters(values, resetForm)
+                            }
+                          >
+                            Try New Parameters
+                          </Button>
+                          <Button
+                            variant='outlined'
+                            type='button'
+                            onClick={handleReset}
+                            sx={{ ml: 2 }}
+                          >
+                            Reset
+                          </Button>
+                        </Box>
+                      </>
+                    )}
                   </>
                 )
               } else {
