@@ -31,7 +31,7 @@ const PersistLogin = () => {
     }
   }, [persist, refresh, token])
 
-  console.log('PersistLogin:', { token, persist })
+  // console.log('PersistLogin:', { token, persist })
 
   let content
 

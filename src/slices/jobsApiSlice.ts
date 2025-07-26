@@ -164,15 +164,23 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
       query: (uuid) => ({
         url: `af2pae?uuid=${uuid}`,
         method: 'GET',
-        // `fetchBaseQuery` returns a Response object by default.
-        // We can transform the response in the `transformResponse` option,
-        // or handle it after the query returns.
         responseHandler: (response) => response.blob()
       }),
       async transformResponse(baseQueryReturnValue: Blob) {
         const text = await baseQueryReturnValue.text()
-        return text
+        try {
+          return JSON.parse(text) // now it's serializable!
+        } catch (e) {
+          console.warn('Failed to parse AF2PAE response as JSON:', e)
+          return text // fallback, or you could throw
+        }
       }
+    }),
+    getAf2PaeStatus: builder.query({
+      query: (uuid: string) => ({
+        url: `/af2pae/status?uuid=${uuid}`,
+        method: 'GET'
+      })
     }),
     getFileByIdAndName: builder.query<string, { id: string; filename: string }>(
       {
@@ -206,6 +214,7 @@ export const {
   useAddNewMultiJobMutation,
   useAf2PaeJiffyMutation,
   useGetAf2PaeConstFileQuery,
+  useGetAf2PaeStatusQuery,
   useGetFileByIdAndNameQuery,
   useLazyGetFileByIdAndNameQuery
 } = jobsApiSlice
