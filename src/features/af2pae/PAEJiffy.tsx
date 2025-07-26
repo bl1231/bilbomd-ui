@@ -51,12 +51,13 @@ const Alphafold2PAEJiffy = () => {
   }>({ pdb_file: null, pae_file: null })
 
   const [calculateAf2PaeJiffy, { error, isError }] = useAf2PaeJiffyMutation({})
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const [success, setSuccess] = useState(false)
   const [uuid, setUuid] = useState('')
   const [status, setStatus] = useState('')
   const [constfile, setConstfile] = useState('')
   const [shapeCount, setShapeCount] = useState(0)
+  const [jobStartTime, setJobStartTime] = useState<number | null>(null)
 
   const {
     data: statusData,
@@ -93,12 +94,20 @@ const Alphafold2PAEJiffy = () => {
     try {
       const response = await calculateAf2PaeJiffy(form).unwrap()
       setUuid(response.uuid)
+      setJobStartTime(Date.now())
       setSuccess(true)
       setFormInitialValues(values)
     } catch (error) {
       console.error('Error submitting form:', error)
     }
   }
+  useEffect(() => {
+    if (!success || status === 'completed') return
+    const interval = setInterval(() => {
+      setJobStartTime((t) => (t ? t : Date.now()))
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [success, status])
 
   const handleTryNewParameters = (
     values: FormValues,
@@ -111,7 +120,7 @@ const Alphafold2PAEJiffy = () => {
       pdb_file: originalFiles.pdb_file,
       pae_file: originalFiles.pae_file
     }
-    // console.log('New Initial Values:', newInitial)
+
     setFormInitialValues(newInitial)
     resetForm({ values: newInitial })
     setSuccess(false)
@@ -126,7 +135,7 @@ const Alphafold2PAEJiffy = () => {
     setOriginalFiles({ pdb_file: null, pae_file: null })
   }
 
-  const skipQuery = !uuid || status !== 'done'
+  const skipQuery = !uuid || status !== 'completed'
 
   const {
     data: constInpData,
@@ -151,10 +160,6 @@ const Alphafold2PAEJiffy = () => {
       pae_file: originalFiles.pae_file
     }))
   }, [originalFiles])
-
-  // useEffect(() => {
-  //   // console.log('Updated formInitialValues:', formInitialValues)
-  // }, [formInitialValues])
 
   const content = (
     <Grid container spacing={2}>
@@ -186,7 +191,7 @@ const Alphafold2PAEJiffy = () => {
               if (success) {
                 return (
                   <>
-                    {success && status !== 'done' && (
+                    {success && status !== 'completed' && (
                       <Box
                         sx={{
                           display: 'flex',
@@ -199,6 +204,24 @@ const Alphafold2PAEJiffy = () => {
                         <Typography sx={{ mt: 2 }}>
                           Waiting for job to complete... current status:{' '}
                           {status}
+                        </Typography>
+                        <Typography sx={{ mt: 1 }} color='text.secondary'>
+                          Jobs can take up to 5 minutes.
+                        </Typography>
+                        <Typography sx={{ mt: 1 }} data-testid='job-timer'>
+                          Time elapsed:{' '}
+                          {(() => {
+                            const elapsed = jobStartTime
+                              ? Math.floor((Date.now() - jobStartTime) / 1000)
+                              : 0
+                            const minutes = Math.floor(elapsed / 60)
+                              .toString()
+                              .padStart(2, '0')
+                            const seconds = (elapsed % 60)
+                              .toString()
+                              .padStart(2, '0')
+                            return `${minutes}:${seconds}`
+                          })()}
                         </Typography>
                       </Box>
                     )}
@@ -216,7 +239,7 @@ const Alphafold2PAEJiffy = () => {
                       </Typography>
                     )}
 
-                    {status === 'done' && (
+                    {status === 'completed' && (
                       <>
                         <Alert
                           severity={shapeCount >= 20 ? 'error' : 'success'}
@@ -305,7 +328,14 @@ const Alphafold2PAEJiffy = () => {
                             type='button'
                             onClick={() => {
                               handleReset()
-                              resetForm()
+                              const resetValues = {
+                                pdb_file: null,
+                                pae_file: null,
+                                pae_power: '2.0',
+                                plddt_cutoff: '50'
+                              }
+                              resetForm({ values: resetValues })
+                              setFormInitialValues(resetValues)
                             }}
                             sx={{ ml: 2 }}
                           >
