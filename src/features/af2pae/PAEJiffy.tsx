@@ -206,7 +206,7 @@ const Alphafold2PAEJiffy = () => {
                           {status}
                         </Typography>
                         <Typography sx={{ mt: 1 }} color='text.secondary'>
-                          Jobs can take up to 5 minutes.
+                          Jobs can take 5-6 minutes.
                         </Typography>
                         <Typography sx={{ mt: 1 }} data-testid='job-timer'>
                           Time elapsed:{' '}
@@ -220,7 +220,7 @@ const Alphafold2PAEJiffy = () => {
                             const seconds = (elapsed % 60)
                               .toString()
                               .padStart(2, '0')
-                            return `${minutes}:${seconds}`
+                            return `${minutes} min ${seconds} sec`
                           })()}
                         </Typography>
                       </Box>
