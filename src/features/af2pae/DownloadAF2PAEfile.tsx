@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Button } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import { Box } from '@mui/system'
@@ -11,7 +12,10 @@ interface DownloadProps {
 
 const Download = ({ uuid }: DownloadProps) => {
   const token = useSelector(selectCurrentToken)
+  const [downloading, setDownloading] = useState(false)
   const handleDownload = async () => {
+    const start = Date.now()
+    setDownloading(true)
     try {
       const response = await axiosInstance.get(`af2pae?uuid=${uuid}`, {
         responseType: 'blob',
@@ -29,11 +33,14 @@ const Download = ({ uuid }: DownloadProps) => {
         if (link.parentNode) {
           link.parentNode.removeChild(link)
         }
-        console.log('uuid: ', uuid)
-        console.log('link ', link)
+        window.URL.revokeObjectURL(url)
       }
     } catch (error) {
-      console.error('Download results.tar.gz error:', error)
+      console.error('Download const.inp error:', error)
+    } finally {
+      const elapsed = Date.now() - start
+      const delay = Math.max(0, 1000 - elapsed)
+      setTimeout(() => setDownloading(false), delay)
     }
   }
 
@@ -52,8 +59,12 @@ const Download = ({ uuid }: DownloadProps) => {
           alignSelf: 'start'
         }}
       >
-        <Button variant='contained' type='button' onClick={handleDownload}>
-          Download
+        <Button
+          variant='contained'
+          onClick={handleDownload}
+          disabled={downloading}
+        >
+          {downloading ? 'Downloading...' : 'Download'}
         </Button>
       </Grid>
     </Box>

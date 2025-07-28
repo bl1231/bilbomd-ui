@@ -160,15 +160,15 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
         body: formData
       })
     }),
-    getAf2PaeConstFile: builder.query({
+    getAf2PaeConstFile: builder.query<string, string>({
       query: (uuid) => ({
         url: `af2pae?uuid=${uuid}`,
         method: 'GET',
-        responseHandler: (response) => response.blob()
+        responseHandler: 'text'
       }),
-      async transformResponse(baseQueryReturnValue: Blob) {
-        const text = await baseQueryReturnValue.text()
-        return text
+      transformResponse(baseQueryReturnValue: string) {
+        // console.log('Received const.inp file:', baseQueryReturnValue)
+        return baseQueryReturnValue
       }
     }),
     getAf2PaeStatus: builder.query({

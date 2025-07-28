@@ -58,14 +58,13 @@ const Alphafold2PAEJiffy = () => {
   const [jobStartTime, setJobStartTime] = useState<number | null>(null)
   const [timeElapsed, setTimeElapsed] = useState(0)
 
-  const {
-    data: statusData,
-    isLoading: statusIsLoading,
-    isError: statusIsError
-  } = useGetAf2PaeStatusQuery(uuid, {
-    skip: !uuid || !success,
-    pollingInterval: 5000
-  })
+  const { data: statusData, isError: statusIsError } = useGetAf2PaeStatusQuery(
+    uuid,
+    {
+      skip: !uuid || status === 'completed' || status === 'failed',
+      pollingInterval: 5000
+    }
+  )
 
   useEffect(() => {
     if (statusData?.status) {
@@ -129,6 +128,10 @@ const Alphafold2PAEJiffy = () => {
     setFormInitialValues(newInitial)
     resetForm({ values: newInitial })
     setSuccess(false)
+    setUuid('')
+    setStatus('')
+    setConstfile('')
+    setShapeCount(0)
   }
 
   const handleReset = () => {
@@ -157,14 +160,6 @@ const Alphafold2PAEJiffy = () => {
       setConstfile(constInpData)
     }
   }, [constInpData])
-
-  useEffect(() => {
-    setFormInitialValues((prev) => ({
-      ...prev,
-      pdb_file: originalFiles.pdb_file,
-      pae_file: originalFiles.pae_file
-    }))
-  }, [originalFiles])
 
   const content = (
     <Grid container spacing={2}>
@@ -397,10 +392,10 @@ const Alphafold2PAEJiffy = () => {
                         fileExt='.pdb'
                         onFileChange={(file: FileWithDeets) => {
                           setFieldValue('pdb_file', file)
-                          setOriginalFiles((prev) => ({
-                            ...prev,
+                          setOriginalFiles({
+                            ...originalFiles,
                             pdb_file: file
-                          }))
+                          })
                         }}
                       />
                       <Field
@@ -417,10 +412,10 @@ const Alphafold2PAEJiffy = () => {
                         fileExt='.json'
                         onFileChange={(file: FileWithDeets) => {
                           setFieldValue('pae_file', file)
-                          setOriginalFiles((prev) => ({
-                            ...prev,
+                          setOriginalFiles({
+                            ...originalFiles,
                             pae_file: file
-                          }))
+                          })
                         }}
                       />
                       <Field
