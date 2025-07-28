@@ -205,7 +205,7 @@ const Alphafold2PAEJiffy = () => {
                           Waiting for job to complete... current status:{' '}
                           {status}
                         </Typography>
-                        <Typography sx={{ mt: 1 }} color='text.secondary'>
+                        <Typography sx={{ mt: 1 }} color='red'>
                           Jobs can take 5-6 minutes.
                         </Typography>
                         <Typography sx={{ mt: 1 }} data-testid='job-timer'>
