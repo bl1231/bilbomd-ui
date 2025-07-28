@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.21.1 (7/28/2025)
+  - Fix bug in PAE Jiffy that resets slider values when a file selected.
 - 1.21.0 (7/28/2025)
   - Refactor PAE Jiffy to make it more reliable for long-running jobs
 - 1.20.6 (7/10/2025)
