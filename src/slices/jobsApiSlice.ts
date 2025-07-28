@@ -168,12 +168,7 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
       }),
       async transformResponse(baseQueryReturnValue: Blob) {
         const text = await baseQueryReturnValue.text()
-        try {
-          return JSON.parse(text)
-        } catch (e) {
-          console.warn('Failed to parse AF2PAE response as JSON:', e)
-          return text
-        }
+        return text
       }
     }),
     getAf2PaeStatus: builder.query({
