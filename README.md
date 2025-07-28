@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.21.0 (7/28/2025)
+  - Refactor PAE Jiffy to make it more reliable for long-running jobs
 - 1.20.6 (7/10/2025)
   - Add Alert feedback for BilboMD AF jobs when SAXS data fails the AutoRg check
 - 1.20.5 (6/5/2025)
