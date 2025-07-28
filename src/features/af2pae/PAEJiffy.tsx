@@ -14,7 +14,6 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'
 import { Form, Formik, Field, FormikHelpers } from 'formik'
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router'
 import { af2paeJiffySchema } from 'schemas/Alphafold2PAEValidationSchema'
 import FileSelect from 'features/jobs/FileSelect'
 import { Debug } from 'components/Debug'
@@ -51,13 +50,13 @@ const Alphafold2PAEJiffy = () => {
   }>({ pdb_file: null, pae_file: null })
 
   const [calculateAf2PaeJiffy, { error, isError }] = useAf2PaeJiffyMutation({})
-  // const navigate = useNavigate()
   const [success, setSuccess] = useState(false)
   const [uuid, setUuid] = useState('')
   const [status, setStatus] = useState('')
   const [constfile, setConstfile] = useState('')
   const [shapeCount, setShapeCount] = useState(0)
   const [jobStartTime, setJobStartTime] = useState<number | null>(null)
+  const [timeElapsed, setTimeElapsed] = useState(0)
 
   const {
     data: statusData,
@@ -101,13 +100,19 @@ const Alphafold2PAEJiffy = () => {
       console.error('Error submitting form:', error)
     }
   }
+
   useEffect(() => {
     if (!success || status === 'completed') return
     const interval = setInterval(() => {
-      setJobStartTime((t) => (t ? t : Date.now()))
+      setTimeElapsed((prev) => {
+        if (jobStartTime) {
+          return Math.floor((Date.now() - jobStartTime) / 1000)
+        }
+        return prev
+      })
     }, 1000)
     return () => clearInterval(interval)
-  }, [success, status])
+  }, [success, status, jobStartTime])
 
   const handleTryNewParameters = (
     values: FormValues,
@@ -205,23 +210,19 @@ const Alphafold2PAEJiffy = () => {
                           Waiting for job to complete... current status:{' '}
                           {status}
                         </Typography>
-                        <Typography sx={{ mt: 1 }} color='red'>
+                        <Typography sx={{ mt: 1, color: 'error.main' }}>
                           Jobs can take 5-6 minutes.
                         </Typography>
-                        <Typography sx={{ mt: 1 }} data-testid='job-timer'>
+                        <Typography
+                          sx={{ mt: 1, fontSize: '1.2rem' }}
+                          data-testid='job-timer'
+                        >
                           Time elapsed:{' '}
-                          {(() => {
-                            const elapsed = jobStartTime
-                              ? Math.floor((Date.now() - jobStartTime) / 1000)
-                              : 0
-                            const minutes = Math.floor(elapsed / 60)
-                              .toString()
-                              .padStart(2, '0')
-                            const seconds = (elapsed % 60)
-                              .toString()
-                              .padStart(2, '0')
-                            return `${minutes} min ${seconds} sec`
-                          })()}
+                          {`${Math.floor(timeElapsed / 60)
+                            .toString()
+                            .padStart(2, '0')} min ${(timeElapsed % 60)
+                            .toString()
+                            .padStart(2, '0')} sec`}
                         </Typography>
                       </Box>
                     )}
