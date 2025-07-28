@@ -63,7 +63,7 @@ const Alphafold2PAEJiffy = () => {
     isLoading: statusIsLoading,
     isError: statusIsError
   } = useGetAf2PaeStatusQuery(uuid, {
-    skip: !uuid || !success,
+    skip: !uuid || status === 'completed' || status === 'failed',
     pollingInterval: 5000
   })
 
