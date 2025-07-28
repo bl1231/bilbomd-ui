@@ -169,10 +169,10 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
       async transformResponse(baseQueryReturnValue: Blob) {
         const text = await baseQueryReturnValue.text()
         try {
-          return JSON.parse(text) // now it's serializable!
+          return JSON.parse(text)
         } catch (e) {
           console.warn('Failed to parse AF2PAE response as JSON:', e)
-          return text // fallback, or you could throw
+          return text
         }
       }
     }),
@@ -187,11 +187,11 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
         query: ({ id, filename }) => ({
           url: `/jobs/${id}/${filename}`,
           method: 'GET',
-          responseHandler: (response) => response.blob() // Return file as Blob
+          responseHandler: (response) => response.blob()
         }),
         async transformResponse(baseQueryReturnValue: Blob) {
           const text = await baseQueryReturnValue.text()
-          return text // Transform the Blob to a string (assuming text file)
+          return text
         }
       }
     )
