@@ -143,17 +143,25 @@ const Header = () => {
                 flexGrow: 1
               }}
             >
-              {/* <Button
+              <Button
                 variant='contained'
                 to='register'
                 component={Link}
                 sx={{ mx: 1, borderRadius: 2 }}
               >
                 Register
+              </Button>
+              {/* <Button
+                variant='contained'
+                to='login'
+                component={Link}
+                sx={{ mx: 1, borderRadius: 2 }}
+              >
+                Login
               </Button> */}
               <Button
                 variant='contained'
-                to='login'
+                to='magicklink'
                 component={Link}
                 sx={{ mx: 1, borderRadius: 2 }}
               >
