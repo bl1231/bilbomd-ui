@@ -60,6 +60,9 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.21.2 (8/18/2025)
+  - Update NodeJS to v22.18.0
+  - Update dependencies
 - 1.21.1 (7/28/2025)
   - Fix bug in PAE Jiffy that resets slider values when a file selected.
 - 1.21.0 (7/28/2025)
