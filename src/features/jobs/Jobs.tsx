@@ -6,7 +6,8 @@ import {
   GridRowParams,
   GridCellParams
 } from '@mui/x-data-grid'
-import { format, parseISO } from 'date-fns'
+import { format } from 'date-fns'
+import { parseDateSafe } from 'utils/dates'
 import {
   useGetJobsQuery,
   useDeleteJobMutation,
@@ -56,12 +57,11 @@ import { useSnackbar } from 'notistack'
 
 const getRunTimeInHours = (nersc: INerscInfo | undefined) => {
   if (!nersc?.time_started) return ''
-  const start = new Date(nersc.time_started)
-  // If time_completed is missing, assume the job is still running and use the current date as the end time.
-  const end = nersc.time_completed ? new Date(nersc.time_completed) : new Date()
-
-  if (isNaN(start.getTime()) || isNaN(end.getTime())) return ''
-
+  const start = parseDateSafe(nersc.time_started)
+  const end = nersc.time_completed
+    ? parseDateSafe(nersc.time_completed)
+    : new Date()
+  if (!start || !end) return ''
   const diffMs = end.getTime() - start.getTime()
   const totalMinutes = Math.round(diffMs / 60000)
   const hrs = Math.floor(totalMinutes / 60)
@@ -71,11 +71,11 @@ const getRunTimeInHours = (nersc: INerscInfo | undefined) => {
 
 const getHoursInQueue = (nersc: INerscInfo | undefined) => {
   if (!nersc?.time_submitted) return ''
-  const start = new Date(nersc.time_submitted)
-  const end = nersc.time_started ? new Date(nersc.time_started) : new Date()
-
-  if (isNaN(start.getTime()) || isNaN(end.getTime())) return ''
-
+  const start = parseDateSafe(nersc.time_submitted)
+  const end = nersc.time_started
+    ? parseDateSafe(nersc.time_started)
+    : new Date()
+  if (!start || !end) return ''
   const diffMs = end.getTime() - start.getTime()
   const totalMinutes = Math.round(diffMs / 60000)
   const hrs = Math.floor(totalMinutes / 60)
@@ -358,14 +358,15 @@ const Jobs = () => {
         headerName: 'Submitted',
         type: 'dateTime',
         width: 150,
-        valueFormatter: (value) => {
-          if (value) {
-            const parsed = parseISO(value)
-            return isNaN(parsed.getTime())
-              ? 'Invalid date'
-              : format(parsed, 'MM/dd/yyyy HH:mm:ss')
+        valueGetter: (_value, row) => parseDateSafe(row.time_submitted),
+        valueFormatter: (value: unknown) => {
+          const d = value instanceof Date ? value : parseDateSafe(value)
+          if (!d) return ''
+          try {
+            return format(d, 'MM/dd/yyyy HH:mm:ss')
+          } catch {
+            return ''
           }
-          return ''
         }
       },
       {
@@ -373,14 +374,15 @@ const Jobs = () => {
         headerName: 'Completed',
         type: 'dateTime',
         width: 150,
-        valueFormatter: (value) => {
-          if (value) {
-            const parsed = parseISO(value)
-            return isNaN(parsed.getTime())
-              ? 'Invalid date'
-              : format(parsed, 'MM/dd/yyyy HH:mm:ss')
+        valueGetter: (_value, row) => parseDateSafe(row.time_completed),
+        valueFormatter: (value: unknown) => {
+          const d = value instanceof Date ? value : parseDateSafe(value)
+          if (!d) return ''
+          try {
+            return format(d, 'MM/dd/yyyy HH:mm:ss')
+          } catch {
+            return ''
           }
-          return ''
         }
       },
       ...(useNersc

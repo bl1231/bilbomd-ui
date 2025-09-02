@@ -30,6 +30,7 @@ import {
 import { FrontendBullMQJob } from '../../types/bullmq'
 import { QueueJobActionsMenu } from './QueueJobActionsMenu'
 import BoxDataGridWrapper from '../../themes/components/BoxDataGridWrapper'
+import { parseDateSafe } from 'utils/dates'
 
 interface BilboMDJobData {
   type: string
@@ -383,10 +384,16 @@ const QueueDetailsPage = () => {
                 type: job.data?.type,
                 status: job.status,
                 attemptsMade: job.attemptsMade,
-                submitted: new Date(job.timestamp).toLocaleString(),
+                submitted: (() => {
+                  const d = parseDateSafe(job.timestamp)
+                  return d?.toLocaleString() ?? ''
+                })(),
                 uuid: job.data?.uuid,
                 lockExpiresAtFormatted: job.lockExpiresAt
-                  ? new Date(job.lockExpiresAt).toLocaleString()
+                  ? (() => {
+                      const d = parseDateSafe(job.lockExpiresAt)
+                      return d?.toLocaleString() ?? ''
+                    })()
                   : null
               }))}
               columns={columns}

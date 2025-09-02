@@ -11,6 +11,7 @@ import Grid from '@mui/material/Grid'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import HeaderBox from 'components/HeaderBox'
 import { format } from 'date-fns'
+import { parseDateSafe } from 'utils/dates'
 import { BilboMDMultiJob } from 'types/interfaces'
 import CopyableChip from 'components/CopyableChip'
 
@@ -84,9 +85,11 @@ const MultiMDJobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
             >
               <Typography fontWeight='bold'>{label}:</Typography>
               <Typography>
-                {value instanceof Date ||
-                (typeof value === 'string' && !isNaN(Date.parse(value)))
-                  ? format(new Date(value), 'MM/dd/yyyy HH:mm:ss')
+                {value instanceof Date || !!parseDateSafe(value)
+                  ? (() => {
+                      const d = parseDateSafe(value)
+                      return d ? format(d, 'MM/dd/yyyy HH:mm:ss') : ''
+                    })()
                   : value}
                 {suffix}
               </Typography>

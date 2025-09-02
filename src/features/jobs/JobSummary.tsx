@@ -7,6 +7,7 @@ import Tooltip from '@mui/material/Tooltip'
 import JobDetails from './JobDetails'
 import DeleteJob from './DeleteJob'
 import { BilboMDJob } from 'types/interfaces'
+import { parseDateSafe } from 'utils/dates'
 
 interface JobSummaryProps {
   job: BilboMDJob
@@ -46,7 +47,10 @@ const JobSummary = ({ job }: JobSummaryProps) => {
           </Box>
           <Typography variant='body2'>
             Status: {job.mongo.status} — Created At:{' '}
-            {job.mongo.time_submitted?.toLocaleString()}
+            {(() => {
+              const d = parseDateSafe(job.mongo.time_submitted)
+              return d?.toLocaleString() ?? ''
+            })()}
           </Typography>
         </CardContent>
       </Card>
