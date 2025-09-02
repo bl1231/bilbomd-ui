@@ -9,7 +9,7 @@ export function parseDateSafe(input?: unknown): Date | null {
   const raw = String(input).trim()
   if (!raw) return null
   // "YYYY-MM-DD HH:mm:ss" -> "YYYY-MM-DDTHH:mm:ss"
-  const normalized = raw.replace(' ', 'T')
+  const normalized = raw.replace(/ /g, 'T')
   const hasTime = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(normalized)
   const hasTZ = /[Zz]|[+-]\d{2}:\d{2}$/.test(normalized)
   const candidate = hasTime && !hasTZ ? `${normalized}Z` : normalized
