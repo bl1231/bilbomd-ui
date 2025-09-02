@@ -8,8 +8,9 @@ import TokenExpirationChip from './TokenExpirationChip'
 import HeaderBox from 'components/HeaderBox'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useGetNerscOutagesQuery } from 'slices/nerscApiSlice'
-import { differenceInDays, parseISO, format } from 'date-fns'
+import { differenceInDays } from 'date-fns'
 import Item from 'themes/components/Item'
+import { parseDateSafe, formatDateSafe } from 'utils/dates'
 
 const NerscStatusList = () => {
   const [showAlert, setShowAlert] = useState(true)
@@ -35,12 +36,15 @@ const NerscStatusList = () => {
   const now = new Date()
   const upcomingOutage = outages
     ?.filter((outage) => {
-      const outageStartDate = parseISO(outage.start_at)
+      const outageStartDate = parseDateSafe(outage.start_at)
+      if (!outageStartDate) return false
       const daysUntilOutage = differenceInDays(outageStartDate, now)
       return daysUntilOutage >= 0 && daysUntilOutage <= 30
     })
     ?.sort(
-      (a, b) => parseISO(a.start_at).getTime() - parseISO(b.start_at).getTime()
+      (a, b) =>
+        (parseDateSafe(a.start_at)?.getTime() ?? 0) -
+        (parseDateSafe(b.start_at)?.getTime() ?? 0)
     )[0] // Get the soonest outage
   const handleCloseAlert = () => {
     setShowAlert(false)
@@ -73,12 +77,17 @@ const NerscStatusList = () => {
               </Typography>
               <Typography>
                 <b>Start:</b>{' '}
-                {format(
-                  parseISO(upcomingOutage.start_at),
-                  'MMMM d, yyyy h:mm a'
+                {formatDateSafe(
+                  upcomingOutage.start_at,
+                  'MMMM d, yyyy h:mm a',
+                  'Unknown'
                 )}{' '}
                 to <b>End:</b>{' '}
-                {format(parseISO(upcomingOutage.end_at), 'MMMM d, yyyy h:mm a')}
+                {formatDateSafe(
+                  upcomingOutage.end_at,
+                  'MMMM d, yyyy h:mm a',
+                  'Unknown'
+                )}
               </Typography>
             </Alert>
           )}

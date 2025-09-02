@@ -22,7 +22,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import CloseIcon from '@mui/icons-material/Close'
 import HeaderBox from 'components/HeaderBox'
 import { displayPropertiesByJobType } from './JobDBDisplayProperties'
-import { format } from 'date-fns'
+import { formatDateSafe } from 'utils/dates'
 import { BilboMDJob, AnyBilboJob, MongoWithIdString } from 'types/interfaces'
 import CopyableChip from 'components/CopyableChip'
 import { useLazyGetFileByIdAndNameQuery } from 'slices/jobsApiSlice'
@@ -285,10 +285,7 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
             >
               <Typography fontWeight='bold'>{label}:</Typography>
               <Typography>
-                {value instanceof Date ||
-                (typeof value === 'string' && !isNaN(Date.parse(value)))
-                  ? format(new Date(value), 'MM/dd/yyyy HH:mm:ss')
-                  : value}
+                {formatDateSafe(value) || String(value)}
                 {suffix}
               </Typography>
             </Box>

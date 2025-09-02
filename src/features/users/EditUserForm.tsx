@@ -23,7 +23,7 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import { Field, Form, Formik } from 'formik'
-import { format } from 'date-fns'
+import { formatDateSafe } from 'utils/dates'
 import {
   useUpdateUserMutation,
   useDeleteUserMutation
@@ -281,12 +281,10 @@ const EditUserForm = ({ user }: EditUserFormProps) => {
         </HeaderBox>
         <Paper sx={{ p: 1 }}>
           <Typography>
-            <b>Created:</b>{' '}
-            {format(new Date(user.createdAt), 'MM/dd/yyyy HH:mm:ss')}
+            <b>Created:</b> {formatDateSafe(user.createdAt)}
           </Typography>
           <Typography>
-            <b>Last Modified:</b>{' '}
-            {format(new Date(user.updatedAt), 'MM/dd/yyyy HH:mm:ss')}
+            <b>Last Modified:</b> {formatDateSafe(user.updatedAt)}
           </Typography>
           <Typography>
             <b>UUID:</b> {user.UUID}

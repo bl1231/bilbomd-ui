@@ -20,7 +20,8 @@ import CloseIcon from '@mui/icons-material/Close'
 import { IAPIToken } from '@bl1231/bilbomd-mongodb-schema'
 import useAuth from 'hooks/useAuth'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import { format, parseISO, formatDistanceToNowStrict } from 'date-fns'
+import { formatDistanceToNowStrict } from 'date-fns'
+import { parseDateSafe, formatDateSafe } from 'utils/dates'
 import { useSnackbar } from 'notistack'
 
 const APITokenManager = () => {
@@ -66,26 +67,17 @@ const APITokenManager = () => {
       headerName: 'Created',
       type: 'dateTime',
       width: 180,
-      valueFormatter: (value) => {
-        if (value) {
-          return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
-        } else {
-          return ''
-        }
-      }
+      valueGetter: (_value, row) => parseDateSafe(row.createdAt),
+      valueFormatter: (value) => (value ? formatDateSafe(value) : '')
     },
     {
       field: 'expiresAt',
       headerName: 'Expires',
       type: 'dateTime',
       width: 180,
-      valueFormatter: (value) => {
-        if (value) {
-          return format(parseISO(value), 'MM/dd/yyyy HH:mm:ss')
-        } else {
-          return 'No expiration'
-        }
-      }
+      valueGetter: (_value, row) => parseDateSafe(row.expiresAt),
+      valueFormatter: (value) =>
+        value ? formatDateSafe(value) : 'No expiration'
     },
     {
       field: 'expiresIn',
@@ -93,7 +85,10 @@ const APITokenManager = () => {
       width: 180,
       valueFormatter: (value) => {
         if (value) {
-          const expiresAt = parseISO(value)
+          const expiresAt = parseDateSafe(value)
+          if (!expiresAt) {
+            return ''
+          }
           if (expiresAt.getTime() < Date.now()) {
             return 'Expired'
           }

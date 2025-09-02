@@ -8,6 +8,7 @@ import {
   subWeeks,
   format
 } from 'date-fns'
+import { formatDateSafe, parseDateSafe } from 'utils/dates'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
 const TokenExpirationChip = () => {
@@ -20,32 +21,29 @@ const TokenExpirationChip = () => {
   // Check if data is undefined
   if (!data) return <div>No configuration data available</div>
 
-  const expirationDate = new Date(data?.tokenExpires)
+  const expirationDate = parseDateSafe(data?.tokenExpires)
 
   let chipColor = 'green'
-  let chipLabel = `Expires in ${formatDistanceToNow(expirationDate)}`
-  //
-  // isBefore   Is the first date before the second one?
-  //
-  if (isBefore(expirationDate, now)) {
-    console.log('Expired Condition Met')
-    chipColor = 'red'
-    chipLabel = 'Expired'
+  let chipLabel = ''
+
+  if (!expirationDate) {
+    chipColor = 'gray'
+    chipLabel = 'Expires: unknown'
   } else {
-    const twoDaysBeforeExp = subDays(expirationDate, 2)
-    const oneWeekBeforeExp = subWeeks(expirationDate, 1)
+    chipLabel = `Expires in ${formatDistanceToNow(expirationDate)}`
 
-    // console.log('Two Days Before EXP:', twoDaysBeforeExp)
-    // console.log('One Week Before EXP:', oneWeekBeforeExp)
-
-    if (!isBefore(now, twoDaysBeforeExp)) {
-      // console.log('Within 2 Days Condition Met')
-      chipColor = 'darkorange' // dark orange
-    } else if (!isBefore(now, oneWeekBeforeExp)) {
-      // console.log('Within 1 Week Condition Met')
-      chipColor = 'orange' // orange
+    if (isBefore(expirationDate, now)) {
+      chipColor = 'red'
+      chipLabel = 'Expired'
     } else {
-      // console.log('More than 1 Week Condition Met')
+      const twoDaysBeforeExp = subDays(expirationDate, 2)
+      const oneWeekBeforeExp = subWeeks(expirationDate, 1)
+
+      if (!isBefore(now, twoDaysBeforeExp)) {
+        chipColor = 'darkorange' // within 2 days
+      } else if (!isBefore(now, oneWeekBeforeExp)) {
+        chipColor = 'orange' // within 1 week
+      }
     }
   }
 
@@ -62,7 +60,7 @@ const TokenExpirationChip = () => {
       <Typography>
         <b>Expiration Date :</b>{' '}
         <span style={{ fontSize: '1.0rem' }}>
-          {format(expirationDate.toLocaleString(), 'MMMM d, yyyy h:mm a')}
+          {formatDateSafe(expirationDate, 'MMMM d, yyyy h:mm a', 'Unknown')}
         </span>
       </Typography>
     </Grid>
