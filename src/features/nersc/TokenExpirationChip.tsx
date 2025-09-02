@@ -8,7 +8,7 @@ import {
   subWeeks,
   format
 } from 'date-fns'
-import { parseDateSafe } from 'utils/dates'
+import { formatDateSafe, parseDateSafe } from 'utils/dates'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 
 const TokenExpirationChip = () => {
@@ -60,9 +60,7 @@ const TokenExpirationChip = () => {
       <Typography>
         <b>Expiration Date :</b>{' '}
         <span style={{ fontSize: '1.0rem' }}>
-          {expirationDate
-            ? format(expirationDate, 'MMMM d, yyyy h:mm a')
-            : 'Unknown'}
+          {formatDateSafe(expirationDate, 'MMMM d, yyyy h:mm a', 'Unknown')}
         </span>
       </Typography>
     </Grid>

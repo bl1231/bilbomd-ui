@@ -8,9 +8,9 @@ import TokenExpirationChip from './TokenExpirationChip'
 import HeaderBox from 'components/HeaderBox'
 import { useGetConfigsQuery } from 'slices/configsApiSlice'
 import { useGetNerscOutagesQuery } from 'slices/nerscApiSlice'
-import { differenceInDays, format } from 'date-fns'
+import { differenceInDays } from 'date-fns'
 import Item from 'themes/components/Item'
-import { parseDateSafe } from 'utils/dates'
+import { parseDateSafe, formatDateSafe } from 'utils/dates'
 
 const NerscStatusList = () => {
   const [showAlert, setShowAlert] = useState(true)
@@ -77,15 +77,17 @@ const NerscStatusList = () => {
               </Typography>
               <Typography>
                 <b>Start:</b>{' '}
-                {(() => {
-                  const d = parseDateSafe(upcomingOutage.start_at)
-                  return d ? format(d, 'MMMM d, yyyy h:mm a') : 'Unknown'
-                })()}{' '}
+                {formatDateSafe(
+                  upcomingOutage.start_at,
+                  'MMMM d, yyyy h:mm a',
+                  'Unknown'
+                )}{' '}
                 to <b>End:</b>{' '}
-                {(() => {
-                  const d = parseDateSafe(upcomingOutage.end_at)
-                  return d ? format(d, 'MMMM d, yyyy h:mm a') : 'Unknown'
-                })()}
+                {formatDateSafe(
+                  upcomingOutage.end_at,
+                  'MMMM d, yyyy h:mm a',
+                  'Unknown'
+                )}
               </Typography>
             </Alert>
           )}

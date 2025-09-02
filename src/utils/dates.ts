@@ -1,4 +1,5 @@
-// src/utils/dates.ts
+import { format } from 'date-fns'
+
 export function parseDateSafe(input?: unknown): Date | null {
   if (input === null || input === undefined) return null
   if (input instanceof Date) return isNaN(input.getTime()) ? null : input
@@ -15,4 +16,18 @@ export function parseDateSafe(input?: unknown): Date | null {
   const candidate = hasTime && !hasTZ ? `${normalized}Z` : normalized
   const d = new Date(candidate)
   return isNaN(d.getTime()) ? null : d
+}
+
+export function formatDateSafe(
+  input: unknown,
+  pattern = 'MM/dd/yyyy HH:mm:ss',
+  fallback = ''
+): string {
+  const d = parseDateSafe(input)
+  if (d === null) return fallback
+  try {
+    return format(d, pattern)
+  } catch {
+    return fallback
+  }
 }

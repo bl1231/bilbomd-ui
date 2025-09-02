@@ -6,8 +6,7 @@ import {
   GridRowParams,
   GridCellParams
 } from '@mui/x-data-grid'
-import { format } from 'date-fns'
-import { parseDateSafe } from 'utils/dates'
+import { parseDateSafe, formatDateSafe } from 'utils/dates'
 import {
   useGetJobsQuery,
   useDeleteJobMutation,
@@ -359,15 +358,7 @@ const Jobs = () => {
         type: 'dateTime',
         width: 150,
         valueGetter: (_value, row) => parseDateSafe(row.time_submitted),
-        valueFormatter: (value: unknown) => {
-          const d = value instanceof Date ? value : parseDateSafe(value)
-          if (!d) return ''
-          try {
-            return format(d, 'MM/dd/yyyy HH:mm:ss')
-          } catch {
-            return ''
-          }
-        }
+        valueFormatter: (value: unknown) => formatDateSafe(value)
       },
       {
         field: 'time_completed',
@@ -375,15 +366,7 @@ const Jobs = () => {
         type: 'dateTime',
         width: 150,
         valueGetter: (_value, row) => parseDateSafe(row.time_completed),
-        valueFormatter: (value: unknown) => {
-          const d = value instanceof Date ? value : parseDateSafe(value)
-          if (!d) return ''
-          try {
-            return format(d, 'MM/dd/yyyy HH:mm:ss')
-          } catch {
-            return ''
-          }
-        }
+        valueFormatter: (value: unknown) => formatDateSafe(value)
       },
       ...(useNersc
         ? [

@@ -31,7 +31,7 @@ import { Instructions } from './Instructions.tsx'
 import { Formik, Form, Field } from 'formik'
 import { Debug } from 'components/Debug'
 import useAuth from 'hooks/useAuth'
-import { parseDateSafe } from 'utils/dates'
+import { formatDateSafe } from 'utils/dates'
 
 interface SubmitValues {
   title: string
@@ -291,12 +291,9 @@ const NewMultiMDJobForm: React.FC = () => {
                                       </TableCell>
                                       <TableCell>
                                         {job.mongo.time_completed
-                                          ? (() => {
-                                              const d = parseDateSafe(
-                                                job.mongo.time_completed
-                                              )
-                                              return d?.toLocaleString() ?? ''
-                                            })()
+                                          ? formatDateSafe(
+                                              job.mongo.time_completed
+                                            )
                                           : 'N/A'}
                                       </TableCell>
                                     </TableRow>
