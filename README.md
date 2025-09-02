@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.21.3 (9/2/2025)
+  - Hopefully fix date/time bug for non-NA users.
 - 1.21.2 (8/18/2025)
   - Update NodeJS to v22.18.0
   - Update dependencies
