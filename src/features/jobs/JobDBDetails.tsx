@@ -285,7 +285,15 @@ const JobDBDetails: React.FC<JobDBDetailsProps> = ({ job }) => {
             >
               <Typography fontWeight='bold'>{label}:</Typography>
               <Typography>
-                {formatDateSafe(value) || String(value)}
+                {(() => {
+                  if (value instanceof Date) {
+                    return formatDateSafe(value)
+                  }
+                  if (typeof value === 'string' && !isNaN(Date.parse(value))) {
+                    return formatDateSafe(value)
+                  }
+                  return String(value)
+                })()}
                 {suffix}
               </Typography>
             </Box>
