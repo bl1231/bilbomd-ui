@@ -60,6 +60,8 @@ Then you should be able to start a local development instance of `bilbomd-ui` wi
 
 ## Version History
 
+- 1.21.4 (9/9/2025)
+  - Fix bug with non-date values being formatted as dates.
 - 1.21.3 (9/2/2025)
   - Hopefully fix date/time bug for non-NA users.
 - 1.21.2 (8/18/2025)
